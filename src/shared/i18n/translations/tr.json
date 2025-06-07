@@ -1,0 +1,167 @@
+{
+  "app": {
+    "name": "MasterFabric",
+    "tagline": "Harika Mobil Uygulamalar Geliştirin"
+  },
+  "splash": {
+    "appName": "MasterFabric",
+    "tagline": "Harika Mobil Uygulamalar Geliştirin",
+    "loading": {
+      "fonts": "Yazı tipleri yükleniyor",
+      "services": "Servisler başlatılıyor",
+      "auth": "Kimlik doğrulama kontrol ediliyor",
+      "preferences": "Kullanıcı tercihleri yükleniyor",
+      "finalizing": "Kurulum tamamlanıyor"
+    }
+  },
+  "welcome": {
+    "title": "MasterFabric'e Hoş Geldiniz",
+    "description": "Güzel uygulamalar kolayca oluşturun"
+  },
+  "common": {
+    "ok": "Tamam",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "retry": "Tekrar Dene",
+    "success": "Başarılı",
+    "previous": "Önceki",
+    "next": "İleri",
+    "skip": "Atla",
+    "getStarted": "Başla",
+    "close": "Kapat"
+  },
+  "greetings": {
+    "goodMorning": "Günaydın",
+    "goodAfternoon": "İyi Öğlenler",
+    "goodEvening": "İyi Akşamlar",
+    "hello": "Merhaba, {{name}}!"
+  },
+  "home": {
+    "title": "Ana Sayfa",
+    "greeting": "Merhaba, {{name}}!",
+    "quickActions": "Hızlı İşlemler",
+    "recentActivity": "Son Aktiviteler",
+    "noActivity": "Henüz son aktivite yok. Uygulamanızı geliştirmeye başlayın!",
+    "actions": {
+      "newProject": {
+        "title": "Yeni Proje",
+        "description": "Yeni bir mobil uygulama projesi başlatın"
+      },
+      "templates": {
+        "title": "Şablonlar",
+        "description": "Proje şablonlarına göz atın"
+      },
+      "documentation": {
+        "title": "Belgeler",
+        "description": "Geliştirme kılavuzlarını okuyun"
+      },
+      "settings": {
+        "title": "Ayarlar",
+        "description": "Çalışma alanınızı yapılandırın"
+      }
+    }
+  },
+  "explore": {
+    "title": "Keşfet",
+    "description": "Bu uygulama başlamanıza yardımcı olacak örnek kodlar içerir.",
+    "sections": {
+      "fileBasedRouting": {
+        "title": "Dosya tabanlı yönlendirme",
+        "description1": "Bu uygulamanın iki ekranı var:",
+        "description2": "Düzen dosyası",
+        "description3": "sekme navigatörünü kurar.",
+        "learnMore": "Daha fazla bilgi"
+      },
+      "platformSupport": {
+        "title": "Android, iOS ve web desteği",
+        "description": "Bu projeyi Android, iOS ve web'de açabilirsiniz. Web sürümünü açmak için",
+        "description2": "tuşuna basın."
+      },
+      "images": {
+        "title": "Görseller",
+        "description1": "Statik görseller için",
+        "description2": "ve",
+        "description3": "sonekleri kullanarak farklı ekran yoğunlukları için dosyalar sağlayabilirsiniz"
+      },
+      "customFonts": {
+        "title": "Özel fontlar",
+        "description1": "Açın",
+        "description2": "nasıl yükleneceğini görmek için",
+        "description3": "bunun gibi özel fontlar."
+      },
+      "lightDarkMode": {
+        "title": "Açık ve koyu mod bileşenleri",
+        "description1": "Bu şablon açık ve koyu mod desteğine sahiptir.",
+        "description2": "hook'u kullanıcının mevcut renk şemasının ne olduğunu incelemenizi sağlar ve UI renklerini buna göre ayarlayabilirsiniz."
+      },
+      "animations": {
+        "title": "Animasyonlar",
+        "description1": "Bu şablon animasyonlu bileşen örneği içerir.",
+        "description2": "bileşeni güçlü",
+        "description3": "kütüphanesini kullanarak el sallama animasyonu oluşturur.",
+        "description4": "",
+        "description5": "bileşeni başlık görseli için paralaks efekti sağlar."
+      }
+    }
+  },
+  "notFound": {
+    "title": "Hata!",
+    "message": "Bu ekran mevcut değil.",
+    "goHome": "Ana sayfaya git!"
+  },
+  "errors": {
+    "network": "Ağ hatası. Lütfen bağlantınızı kontrol edin.",
+    "unknown": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+    "notFound": "İstenen kaynak bulunamadı.",
+    "somethingWentWrong": "Bir şeyler ters gitti",
+    "unexpectedError": "Beklenmeyen bir hata oluştu"
+  },
+  "validation": {
+    "nameMinLength": "İsim en az 2 karakter olmalıdır",
+    "emailInvalid": "Lütfen geçerli bir e-posta adresi girin",
+    "passwordMinLength": "Şifre en az 6 karakter olmalıdır",
+    "passwordsNoMatch": "Şifreler eşleşmiyor"
+  },
+  "accessibility": {
+    "closeModal": "Modalı kapat",
+    "modalDialog": "Modal penceresi",
+    "loadingIndicator": "Yükleme göstergesi",
+    "close": "Kapat",
+    "notifications": "Bildirimleri aç",
+    "settings": "Ayarları aç",
+    "profile": "Profili aç"
+  },
+  "settings": {
+    "language": "Dil",
+    "switchTo": "Geçiş yap",
+    "theme": {
+      "title": "Görünüm",
+      "description": "Uygulamanın nasıl görünmesini istediğinizi seçin",
+      "light": "Açık",
+      "dark": "Koyu",
+      "system": "Sistem"
+    },
+    "preview": "Önizleme",
+    "previewTitle": "Örnek İçerik",
+    "previewText": "Seçilen tema ile içeriğiniz böyle görünecek.",
+    "previewButton": "Örnek Buton"
+  },
+  "notifications": {
+    "justNow": "Şimdi",
+    "minutesAgo": "{{count}} dk önce",
+    "hoursAgo": "{{count}} sa önce", 
+    "daysAgo": "{{count}} gün önce",
+    "unreadCount": "{{count}} okunmamış",
+    "allRead": "Hepsi okundu!",
+    "markAllRead": "Tümünü okundu işaretle",
+    "clearAll": "Tümünü temizle",
+    "empty": {
+      "title": "Bildirim yok",
+      "message": "Harika! Yeni bildirimler burada görünecek."
+    }
+  }
+}

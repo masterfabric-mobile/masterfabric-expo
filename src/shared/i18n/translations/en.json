@@ -1,0 +1,167 @@
+{
+  "app": {
+    "name": "MasterFabric",
+    "tagline": "Build Amazing Mobile Apps"
+  },
+  "splash": {
+    "appName": "MasterFabric",
+    "tagline": "Build Amazing Mobile Apps",
+    "loading": {
+      "fonts": "Loading fonts",
+      "services": "Initializing services",
+      "auth": "Checking authentication",
+      "preferences": "Loading user preferences",
+      "finalizing": "Finalizing setup"
+    }
+  },
+  "welcome": {
+    "title": "Welcome to MasterFabric",
+    "description": "Create beautiful applications with ease"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Try Again",
+    "success": "Success",
+    "previous": "Previous",
+    "next": "Next",
+    "skip": "Skip",
+    "getStarted": "Get Started",
+    "close": "Close"
+  },
+  "greetings": {
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon",
+    "goodEvening": "Good Evening",
+    "hello": "Hello, {{name}}!"
+  },
+  "home": {
+    "title": "Home",
+    "greeting": "Hello, {{name}}!",
+    "quickActions": "Quick Actions",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No recent activity yet. Start building your app!",
+    "actions": {
+      "newProject": {
+        "title": "New Project",
+        "description": "Start a new mobile app project"
+      },
+      "templates": {
+        "title": "Templates",
+        "description": "Browse project templates"
+      },
+      "documentation": {
+        "title": "Docs",
+        "description": "Read development guides"
+      },
+      "settings": {
+        "title": "Settings",
+        "description": "Configure your workspace"
+      }
+    }
+  },
+  "explore": {
+    "title": "Explore",
+    "description": "This app includes example code to help you get started.",
+    "sections": {
+      "fileBasedRouting": {
+        "title": "File-based routing",
+        "description1": "This app has two screens:",
+        "description2": "The layout file in",
+        "description3": "sets up the tab navigator.",
+        "learnMore": "Learn more"
+      },
+      "platformSupport": {
+        "title": "Android, iOS, and web support",
+        "description": "You can open this project on Android, iOS, and the web. To open the web version, press",
+        "description2": "in the terminal running this project."
+      },
+      "images": {
+        "title": "Images",
+        "description1": "For static images, you can use the",
+        "description2": "and",
+        "description3": "suffixes to provide files for different screen densities"
+      },
+      "customFonts": {
+        "title": "Custom fonts",
+        "description1": "Open",
+        "description2": "to see how to load",
+        "description3": "custom fonts such as this one."
+      },
+      "lightDarkMode": {
+        "title": "Light and dark mode components",
+        "description1": "This template has light and dark mode support. The",
+        "description2": "hook lets you inspect what the user's current color scheme is, and so you can adjust UI colors accordingly."
+      },
+      "animations": {
+        "title": "Animations",
+        "description1": "This template includes an example of an animated component. The",
+        "description2": "component uses the powerful",
+        "description3": "library to create a waving hand animation.",
+        "description4": "The",
+        "description5": "component provides a parallax effect for the header image."
+      }
+    }
+  },
+  "notFound": {
+    "title": "Oops!",
+    "message": "This screen does not exist.",
+    "goHome": "Go to home screen!"
+  },
+  "errors": {
+    "network": "Network error. Please check your connection.",
+    "unknown": "Something went wrong. Please try again.",
+    "notFound": "The requested resource was not found.",
+    "somethingWentWrong": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred"
+  },
+  "validation": {
+    "nameMinLength": "Name must be at least 2 characters",
+    "emailInvalid": "Please enter a valid email",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordsNoMatch": "Passwords don't match"
+  },
+  "accessibility": {
+    "closeModal": "Close modal",
+    "modalDialog": "Modal dialog",
+    "loadingIndicator": "Loading indicator",
+    "close": "Close",
+    "notifications": "Open notifications",
+    "settings": "Open settings",
+    "profile": "Open profile"
+  },
+  "settings": {
+    "language": "Language",
+    "switchTo": "Switch to",
+    "theme": {
+      "title": "Appearance",
+      "description": "Choose how you want the app to look",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "preview": "Preview",
+    "previewTitle": "Sample Content",
+    "previewText": "This is how your content will look with the selected theme.",
+    "previewButton": "Sample Button"
+  },
+  "notifications": {
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago", 
+    "daysAgo": "{{count}}d ago",
+    "unreadCount": "{{count}} unread",
+    "allRead": "All caught up!",
+    "markAllRead": "Mark all read",
+    "clearAll": "Clear all",
+    "empty": {
+      "title": "No notifications",
+      "message": "You're all caught up! New notifications will appear here."
+    }
+  }
+}
