@@ -2,7 +2,7 @@
 export { Colors } from './Colors';
 
 export const APP_CONFIG = {
-  API_URL: process.env.EXPO_PUBLIC_API_URL || 'https://api.masterfabric.com',
+  API_URL: process.env.EXPO_PUBLIC_API_URL || 'https://api.masterfabric.co',
   APP_VERSION: '1.0.0',
   ENVIRONMENT: process.env.NODE_ENV || 'development',
 } as const;

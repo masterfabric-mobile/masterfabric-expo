@@ -43,7 +43,7 @@ MasterFabric is a comprehensive mobile solution for textile professionals, desig
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/gurkanfikretgunak/masterfabric-expo.git
+   git clone https://github.com/masterfabric-mobile/masterfabric-expo.git
    cd masterfabric-expo
    ```
 
@@ -137,7 +137,7 @@ This project is licensed under the GNU Affero General Public License v3.0 (AGPL-
 
 **Gürkan Fikret Günak**
 - GitHub: [@gurkanfikretgunak](https://github.com/gurkanfikretgunak)
-- Email: gurkanfikretgunak@example.com
+- Email: gurkanfikretgunak@masterfabric.co
 
 ## 🤝 Contributing
 
