@@ -66,7 +66,7 @@ export function HomeHeader({ onNotificationPress, onSettingsPress }: HomeHeaderP
           onPress={handleSettingsPress}
           style={[
             styles.iconButton,
-            { backgroundColor: isDark ? '#1C1E1C' : '#F2F2F7' }
+            { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
           ]}
           accessibilityRole="button"
           accessibilityLabel={t('accessibility.settings')}
@@ -82,7 +82,7 @@ export function HomeHeader({ onNotificationPress, onSettingsPress }: HomeHeaderP
           onPress={handleProfilePress}
           style={[
             styles.profileButton,
-            { backgroundColor: isDark ? '#1C1E1C' : '#F2F2F7' }
+            { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
           ]}
           accessibilityRole="button"
           accessibilityLabel={t('accessibility.profile')}

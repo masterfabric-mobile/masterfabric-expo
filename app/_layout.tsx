@@ -60,6 +60,7 @@ export default function RootLayout() {
                       screenOptions={{ headerShown: false }}
                     >
                       <Stack.Screen name="splash" />
+                      <Stack.Screen name="onboarding" />
                       <Stack.Screen name="(tabs)" />
                       <Stack.Screen name="+not-found" />
                     </Stack>

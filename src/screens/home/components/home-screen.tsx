@@ -1,12 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { navigationUtils } from '@/src/navigation/utils';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { getDeviceInfoForLogging } from '@/src/shared/helpers/device-info';
+import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Alert, Clipboard, ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { HomeHeader } from './home-header';
 
@@ -30,6 +32,8 @@ export function HomeScreen() {
   const colorScheme = useColorScheme();
   const { user, greeting, quickActions } = useHomeViewModel();
   const { locale } = useLocale();
+  const deviceInfo = useBasicDeviceInfo();
+  const { compatibility, isLoading: compatibilityLoading } = useDeviceCompatibility();
 
   
   const isDark = colorScheme === 'dark';
@@ -57,12 +61,63 @@ export function HomeScreen() {
           console.log('Opening settings...');
           // TODO: Navigate to settings screen
           break;
+        case 'dev-onboarding':
+          // Handle onboarding navigation for development
+          console.log('Opening onboarding...');
+          // Navigate to onboarding screen
+          navigationUtils.replace('onboarding');
+        
+          break;
+        case 'dev-device-info':
+          // Show detailed device information
+          handleDeviceInfoPress();
+          break;
         default:
           console.log(`Unknown action: ${actionId}`);
           break;
       }
     } catch (error) {
       console.error('Error handling quick action press:', error);
+    }
+  };
+
+  const handleDeviceInfoPress = async () => {
+    try {
+      const detailedInfo = await getDeviceInfoForLogging();
+      Alert.alert(
+        '🔧 Developer Device Info', 
+        detailedInfo, 
+        [
+          { text: 'Copy to Clipboard', onPress: () => {
+            try {
+              Clipboard.setString(detailedInfo);
+              Alert.alert('✅ Copied', 'Device information copied to clipboard!', [{ text: 'OK' }], {
+                userInterfaceStyle: isDark ? 'dark' : 'light'
+              });
+            } catch (error) {
+              console.error('Failed to copy to clipboard:', error);
+              Alert.alert('❌ Error', 'Failed to copy to clipboard', [{ text: 'OK' }], {
+                userInterfaceStyle: isDark ? 'dark' : 'light'
+              });
+            }
+          }},
+          { text: 'Close', style: 'cancel' }
+        ],
+        { 
+          cancelable: true,
+          userInterfaceStyle: isDark ? 'dark' : 'light'
+        }
+      );
+    } catch (error) {
+      console.error('Error getting device info:', error);
+      Alert.alert(
+        '❌ Error', 
+        'Failed to get device information\n\nPlease check console for details.',
+        [{ text: 'OK' }],
+        { 
+          userInterfaceStyle: isDark ? 'dark' : 'light'
+        }
+      );
     }
   };
 
@@ -169,6 +224,129 @@ export function HomeScreen() {
             </ThemedText>
           </ThemedView>
         </ThemedView>
+
+        {/* Device Information Section */}
+        <ThemedView style={styles.section}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Device Information
+          </ThemedText>
+          
+          <ThemedView style={[
+            styles.deviceInfoCard,
+            { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+          ]}>
+            <ThemedText style={styles.deviceInfoText}>
+              {`Platform: ${deviceInfo.platform || 'Unknown'}`}
+            </ThemedText>
+            <ThemedText style={styles.deviceInfoText}>
+              {`Device: ${deviceInfo.deviceName || 'Unknown'}`}
+            </ThemedText>
+            <ThemedText style={styles.deviceInfoText}>
+              {`OS: ${deviceInfo.osName || 'Unknown'} ${deviceInfo.osVersion || ''}`}
+            </ThemedText>
+            <ThemedText style={styles.deviceInfoText}>
+              {`App Version: ${deviceInfo.appVersion || 'Unknown'}`}
+            </ThemedText>
+            <ThemedText style={styles.deviceInfoText}>
+              {`Screen: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}`}
+            </ThemedText>
+            <ThemedText style={styles.deviceInfoText}>
+              {`Is Device: ${deviceInfo.isDevice ? 'Yes' : 'No'}`}
+            </ThemedText>
+            {!compatibilityLoading && compatibility && (
+              <>
+                <ThemedText style={[
+                  styles.deviceInfoText,
+                  { color: compatibility.isCompatible ? '#34C759' : '#FF3B30' }
+                ]}>
+                  {`Compatible: ${compatibility.isCompatible ? 'Yes' : 'No'}`}
+                </ThemedText>
+                {compatibility.warnings.length > 0 && (
+                  <ThemedText style={[styles.deviceInfoText, { color: '#FF9500' }]}>
+                    {`Warnings: ${compatibility.warnings.length}`}
+                  </ThemedText>
+                )}
+              </>
+            )}
+          </ThemedView>
+        </ThemedView>
+
+        {/* Developer Section */}
+        {__DEV__ && (
+          <ThemedView style={styles.section}>
+            <ThemedText type="subtitle" style={styles.sectionTitle}>
+              Developer Tools
+            </ThemedText>
+            
+            <View style={styles.developerToolsList}>
+              <TouchableOpacity
+                onPress={() => handleQuickActionPress('dev-onboarding', 'View Onboarding')}
+                activeOpacity={0.7}
+              >
+                <ThemedView 
+                  style={[
+                    styles.actionCard,
+                    { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+                  ]}
+                >
+                  <View style={[
+                    styles.actionIcon,
+                    { backgroundColor: '#FF9500' }
+                  ]}>
+                    <Ionicons 
+                      name="build" 
+                      size={20} 
+                      color="#FFFFFF" 
+                    />
+                  </View>
+                  
+                  <View style={styles.actionContent}>
+                    <ThemedText type="defaultSemiBold" style={styles.actionTitle}>
+                      View Onboarding
+                    </ThemedText>
+                    
+                    <ThemedText style={styles.actionDescription}>
+                      Preview onboarding flow for development
+                    </ThemedText>
+                  </View>
+                </ThemedView>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                onPress={() => handleQuickActionPress('dev-device-info', 'Show Device Info')}
+                activeOpacity={0.7}
+              >
+                <ThemedView 
+                  style={[
+                    styles.actionCard,
+                    { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+                  ]}
+                >
+                  <View style={[
+                    styles.actionIcon,
+                    { backgroundColor: '#007AFF' }
+                  ]}>
+                    <Ionicons 
+                      name="phone-portrait" 
+                      size={20} 
+                      color="#FFFFFF" 
+                    />
+                  </View>
+                  
+                  <View style={styles.actionContent}>
+                    <ThemedText type="defaultSemiBold" style={styles.actionTitle}>
+                      Device Information
+                    </ThemedText>
+                    
+                    <ThemedText style={styles.actionDescription}>
+                      Show detailed device and system information
+                    </ThemedText>
+                  </View>
+                </ThemedView>
+              </TouchableOpacity>
+            </View>
+          </ThemedView>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -203,6 +381,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   quickActionsList: {
+    gap: 12,
+  },
+  developerToolsList: {
     gap: 12,
   },
   actionCard: {
@@ -240,5 +421,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     opacity: 0.7,
     textAlign: 'center',
+  },
+  deviceInfoCard: {
+    padding: 16,
+    borderRadius: 12,
+  },
+  deviceInfoText: {
+    fontSize: 14,
+    marginBottom: 8,
+    opacity: 0.8,
   },
 });

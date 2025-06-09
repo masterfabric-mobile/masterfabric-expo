@@ -1,6 +1,6 @@
 import { User } from '../models/home-models';
 
-interface QuickAction {
+export interface QuickAction {
   id: string;
   title: string;
   description: string;
