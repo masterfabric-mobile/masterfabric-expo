@@ -1,12 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { navigationUtils } from '@/src/navigation/utils';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { HomeHeader } from './home-header';
 
@@ -56,6 +56,11 @@ export function HomeScreen() {
           // Handle settings navigation
           console.log('Opening settings...');
           // TODO: Navigate to settings screen
+          break;
+        case 'dev-onboarding':
+          // Handle developer onboarding navigation
+          console.log('Opening onboarding for developer...');
+          navigationUtils.navigate('onboarding');
           break;
         default:
           console.log(`Unknown action: ${actionId}`);
@@ -169,6 +174,48 @@ export function HomeScreen() {
             </ThemedText>
           </ThemedView>
         </ThemedView>
+
+        {/* Developer Section */}
+        {__DEV__ && (
+          <ThemedView style={styles.section}>
+            <ThemedText type="subtitle" style={styles.sectionTitle}>
+              Developer Tools
+            </ThemedText>
+            
+            <TouchableOpacity
+              onPress={() => handleQuickActionPress('dev-onboarding', 'View Onboarding')}
+              activeOpacity={0.7}
+            >
+              <ThemedView 
+                style={[
+                  styles.actionCard,
+                  { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+                ]}
+              >
+                <View style={[
+                  styles.actionIcon,
+                  { backgroundColor: '#FF9500' }
+                ]}>
+                  <Ionicons 
+                    name="build" 
+                    size={20} 
+                    color="#FFFFFF" 
+                  />
+                </View>
+                
+                <View style={styles.actionContent}>
+                  <ThemedText type="defaultSemiBold" style={styles.actionTitle}>
+                    View Onboarding
+                  </ThemedText>
+                  
+                  <ThemedText style={styles.actionDescription}>
+                    Preview onboarding flow for development
+                  </ThemedText>
+                </View>
+              </ThemedView>
+            </TouchableOpacity>
+          </ThemedView>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

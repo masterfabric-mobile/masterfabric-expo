@@ -1,6 +1,7 @@
 import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
 import { useEffect, useState } from 'react';
+import { useOnboardingStore } from '../../onboarding/store/onboarding-store';
 import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
 
@@ -9,13 +10,25 @@ export function useSplashViewModel() {
   const [currentTask, setCurrentTask] = useState('');
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const { isLoading, setLoading, setProgress: setSplashProgress, setLoadingMessage } = useSplashStore();
+  const { hasSeenOnboarding, isCompleted, loadOnboardingStatus } = useOnboardingStore();
 
   useEffect(() => {
     initializeApp();
   }, []);
 
+  // Listen for onboarding completion
+  useEffect(() => {
+    if (isCompleted && !isLoading) {
+      console.log('🎉 Onboarding completed, navigating to home tabs');
+      navigationUtils.replace('(tabs)');
+    }
+  }, [isCompleted, isLoading]);
+
   const initializeApp = async () => {
     setLoading(true);
+    
+    // Load onboarding status first
+    await loadOnboardingStatus();
     
     const steps = createSplashSteps();
     const completed: string[] = [];
@@ -45,12 +58,19 @@ export function useSplashViewModel() {
   };
 
   const navigateToNextScreen = () => {
-
-     console.log('🧿 Splash screen completed, navigating to home tabs');
+    console.log('🧿 Splash screen completed, checking onboarding status');
+    console.log('hasSeenOnboarding:', hasSeenOnboarding);
+    console.log('isCompleted:', isCompleted);
+    
     try {
-      // Navigate directly to home tabs - no onboarding
-      console.log('Navigating to home - splash completed');
-      navigationUtils.replace('(tabs)');
+      // If onboarding is completed or user has seen it, go to home
+      if (hasSeenOnboarding || isCompleted) {
+        console.log('User has completed onboarding - navigating to home tabs');
+        navigationUtils.replace('(tabs)');
+      } else {
+        console.log('First time user - navigating to onboarding');
+        navigationUtils.replace('onboarding');
+      }
     } catch (error) {
       console.error('Navigation error from splash screen:', error);
       // Fallback to tabs
@@ -58,7 +78,6 @@ export function useSplashViewModel() {
         navigationUtils.replace('(tabs)');
       } catch (fallbackError) {
         console.error('Fallback navigation also failed:', fallbackError);
-        // Final fallback to tabs
         navigationUtils.replace('(tabs)');
       }
     }
