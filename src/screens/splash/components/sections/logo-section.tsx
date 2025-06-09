@@ -10,6 +10,7 @@ import Animated, {
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
+import { logoSectionStyles } from '../../styles/logo-section.styles';
 
 export function LogoSection() {
   const logoScale = useSharedValue(0);
@@ -36,20 +37,20 @@ export function LogoSection() {
   }));
   
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={logoSectionStyles.logoContainer}>
       <Animated.View style={logoAnimatedStyle}>
         <Image
           source={require('@/src/assets/images/splash-icon.svg')}
-          style={{ width: 120, height: 120 }}
+          style={logoSectionStyles.logo}
           contentFit="contain"
         />
       </Animated.View>
       
-      <Animated.View style={[{ alignItems: 'center', marginTop: 20 }, textAnimatedStyle]}>
-        <ThemedText type="title" style={{ fontSize: 32, fontWeight: '700', marginBottom: 8, textAlign: 'center' }}>
+      <Animated.View style={[logoSectionStyles.textContainer, textAnimatedStyle]}>
+        <ThemedText type="title" style={logoSectionStyles.appName}>
           {t('splash.appName')}
         </ThemedText>
-        <ThemedText type="subtitle" style={{ fontSize: 16, opacity: 0.7, textAlign: 'center' }}>
+        <ThemedText type="subtitle" style={logoSectionStyles.tagline}>
           {t('splash.tagline')}
         </ThemedText>
       </Animated.View>

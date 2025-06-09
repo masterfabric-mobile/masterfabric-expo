@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { stageBadgeStyles } from '../styles/stage-badge.styles';
 
 // Import package.json to access stage data
 const packageInfo = require('@/package.json');
@@ -46,7 +47,7 @@ export function StageBadge() {
   return (
     <View 
       style={[
-        styles.badge,
+        stageBadgeStyles.badge,
         {
           backgroundColor: colors.background,
           borderColor: colors.border,
@@ -56,7 +57,7 @@ export function StageBadge() {
       <ThemedText 
         type="default" 
         style={[
-          styles.badgeText,
+          stageBadgeStyles.badgeText,
           { color: colors.text }
         ]}
       >
@@ -65,19 +66,3 @@ export function StageBadge() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignSelf: 'center',
-    marginBottom: 3,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-  },
-});

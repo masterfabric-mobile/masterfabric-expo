@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { packageInfoStyles } from '../styles/package-info.styles';
 
 // Import package.json to access data
 const packageInfo = require('@/package.json');
@@ -43,11 +44,11 @@ export function PackageInfo({
   if (displayValues.length === 0) return null;
 
   return (
-    <View style={styles.container}>
+    <View style={packageInfoStyles.container}>
       <ThemedText 
         type="default" 
         style={[
-          styles.text,
+          packageInfoStyles.text,
           { color: isDark ? '#888888' : '#666666' },
           textStyle
         ]}
@@ -57,14 +58,3 @@ export function PackageInfo({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  text: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-});

@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { versionInfoStyles } from '../styles/version-info.styles';
 
 // Import package.json to access version data
 const packageInfo = require('@/package.json');
@@ -11,11 +12,11 @@ export function VersionInfo() {
   const isDark = colorScheme === 'dark';
 
   return (
-    <View style={styles.container}>
+    <View style={versionInfoStyles.container}>
       <ThemedText 
         type="default" 
         style={[
-          styles.versionText,
+          versionInfoStyles.versionText,
           { color: isDark ? '#888888' : '#666666' }
         ]}
       >
@@ -25,7 +26,7 @@ export function VersionInfo() {
         <ThemedText 
           type="default" 
           style={[
-            styles.nameText,
+            versionInfoStyles.nameText,
             { color: isDark ? '#666666' : '#999999' }
           ]}
         >
@@ -35,19 +36,3 @@ export function VersionInfo() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  versionText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  nameText: {
-    fontSize: 14,
-    marginTop: 2,
-    opacity: 0.8,
-  },
-});
