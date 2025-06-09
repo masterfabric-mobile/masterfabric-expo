@@ -32,7 +32,10 @@
     "next": "Next",
     "skip": "Skip",
     "getStarted": "Get Started",
-    "close": "Close"
+    "close": "Close",
+    "unknown": "Unknown",
+    "yes": "Yes",
+    "no": "No"
   },
   "onboarding": {
     "back": "Back",
@@ -217,6 +220,34 @@
     "empty": {
       "title": "No notifications",
       "message": "You're all caught up! New notifications will appear here."
+    }
+  },
+  "deviceInfo": {
+    "title": "Device Information",
+    "platform": "Platform",
+    "device": "Device", 
+    "brand": "Brand",
+    "os": "OS",
+    "app": "App",
+    "appVersion": "App Version",
+    "screen": "Screen",
+    "memory": "Memory",
+    "isDevice": "Is Device",
+    "session": "Session",
+    "timestamp": "Timestamp",
+    "compatible": "Compatible",
+    "warnings": "Warnings",
+    "copyToClipboard": "Copy to Clipboard",
+    "copiedMessage": "Device information copied to clipboard!",
+    "copyError": "Failed to copy to clipboard",
+    "getInfoError": "Failed to get device information\n\nPlease check console for details.",
+    "compatibility": {
+      "iosVersionTooLow": "iOS version must be 12.0 or higher",
+      "iosVersionLow": "iOS version below 14.0 may have limited functionality",
+      "androidApiTooLow": "Android API level must be 21 or higher",
+      "androidApiLow": "Android API level below 23 may have limited functionality",
+      "lowMemory": "Low device memory may affect performance",
+      "simulatorWarning": "Running on simulator/emulator - some features may not work"
     }
   }
 }

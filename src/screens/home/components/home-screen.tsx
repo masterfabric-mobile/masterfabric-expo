@@ -2,6 +2,7 @@ import { navigationUtils } from '@/src/navigation/utils';
 import { getDeviceInfoForLogging } from '@/src/shared/helpers/device-info';
 import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
 import { useLocale } from '@/src/shared/hooks/use-locale';
+import { t } from '@/src/shared/i18n';
 import React from 'react';
 import { Alert, Clipboard, ScrollView, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -72,25 +73,46 @@ export function HomeScreen() {
 
   const handleDeviceInfoPress = async () => {
     try {
-      const detailedInfo = await getDeviceInfoForLogging();
+      const deviceInfoData = await getDeviceInfoForLogging();
+      
+      // Translate the device info fields
+      const translatedFields = deviceInfoData.fields.map(field => {
+        let value = field.value;
+        
+        // Translate common values
+        if (value === 'unknown') value = t('common.unknown');
+        else if (value === 'yes') value = t('common.yes');
+        else if (value === 'no') value = t('common.no');
+        
+        return `${t(field.labelKey)}: ${value}`;
+      }).join('\n');
+      
+      const detailedInfo = `${t(deviceInfoData.titleKey)}:\n------------------\n${translatedFields}`;
+      
       Alert.alert(
-        '🔧 Developer Device Info', 
+        `🔧 ${t('home.developer.deviceInfo.title')}`, 
         detailedInfo, 
         [
-          { text: 'Copy to Clipboard', onPress: () => {
+          { text: t('deviceInfo.copyToClipboard'), onPress: () => {
             try {
               Clipboard.setString(detailedInfo);
-              Alert.alert('✅ Copied', 'Device information copied to clipboard!', [{ text: 'OK' }], {
-                userInterfaceStyle: isDark ? 'dark' : 'light'
-              });
+              Alert.alert(
+                `✅ ${t('common.success')}`, 
+                t('deviceInfo.copiedMessage'), 
+                [{ text: t('common.ok') }], 
+                { userInterfaceStyle: isDark ? 'dark' : 'light' }
+              );
             } catch (error) {
               console.error('Failed to copy to clipboard:', error);
-              Alert.alert('❌ Error', 'Failed to copy to clipboard', [{ text: 'OK' }], {
-                userInterfaceStyle: isDark ? 'dark' : 'light'
-              });
+              Alert.alert(
+                `❌ ${t('common.error')}`, 
+                t('deviceInfo.copyError'), 
+                [{ text: t('common.ok') }], 
+                { userInterfaceStyle: isDark ? 'dark' : 'light' }
+              );
             }
           }},
-          { text: 'Close', style: 'cancel' }
+          { text: t('common.close'), style: 'cancel' }
         ],
         { 
           cancelable: true,
@@ -100,9 +122,9 @@ export function HomeScreen() {
     } catch (error) {
       console.error('Error getting device info:', error);
       Alert.alert(
-        '❌ Error', 
-        'Failed to get device information\n\nPlease check console for details.',
-        [{ text: 'OK' }],
+        `❌ ${t('common.error')}`, 
+        t('deviceInfo.getInfoError'),
+        [{ text: t('common.ok') }],
         { 
           userInterfaceStyle: isDark ? 'dark' : 'light'
         }

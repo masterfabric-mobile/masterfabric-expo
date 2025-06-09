@@ -1,7 +1,8 @@
-import React from 'react';
-import { useColorScheme } from 'react-native';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { t } from '@/src/shared/i18n';
+import React from 'react';
+import { useColorScheme } from 'react-native';
 import { deviceInfoStyles } from '../../styles/device-info.styles';
 
 interface DeviceInfo {
@@ -36,7 +37,7 @@ export function DeviceInfoSection({
   return (
     <ThemedView style={deviceInfoStyles.section}>
       <ThemedText type="subtitle" style={deviceInfoStyles.sectionTitle}>
-        Device Information
+        {t('deviceInfo.title')}
       </ThemedText>
       
       <ThemedView style={[
@@ -44,22 +45,22 @@ export function DeviceInfoSection({
         { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
       ]}>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`Platform: ${deviceInfo.platform || 'Unknown'}`}
+          {`${t('deviceInfo.platform')}: ${deviceInfo.platform || t('common.unknown')}`}
         </ThemedText>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`Device: ${deviceInfo.deviceName || 'Unknown'}`}
+          {`${t('deviceInfo.device')}: ${deviceInfo.deviceName || t('common.unknown')}`}
         </ThemedText>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`OS: ${deviceInfo.osName || 'Unknown'} ${deviceInfo.osVersion || ''}`}
+          {`${t('deviceInfo.os')}: ${deviceInfo.osName || t('common.unknown')} ${deviceInfo.osVersion || ''}`}
         </ThemedText>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`App Version: ${deviceInfo.appVersion || 'Unknown'}`}
+          {`${t('deviceInfo.appVersion')}: ${deviceInfo.appVersion || t('common.unknown')}`}
         </ThemedText>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`Screen: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}`}
+          {`${t('deviceInfo.screen')}: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}`}
         </ThemedText>
         <ThemedText style={deviceInfoStyles.infoText}>
-          {`Is Device: ${deviceInfo.isDevice ? 'Yes' : 'No'}`}
+          {`${t('deviceInfo.isDevice')}: ${deviceInfo.isDevice ? t('common.yes') : t('common.no')}`}
         </ThemedText>
         {!compatibilityLoading && compatibility && (
           <>
@@ -67,11 +68,11 @@ export function DeviceInfoSection({
               deviceInfoStyles.infoText,
               { color: compatibility.isCompatible ? '#34C759' : '#FF3B30' }
             ]}>
-              {`Compatible: ${compatibility.isCompatible ? 'Yes' : 'No'}`}
+              {`${t('deviceInfo.compatible')}: ${compatibility.isCompatible ? t('common.yes') : t('common.no')}`}
             </ThemedText>
             {compatibility.warnings.length > 0 && (
               <ThemedText style={[deviceInfoStyles.infoText, { color: '#FF9500' }]}>
-                {`Warnings: ${compatibility.warnings.length}`}
+                {`${t('deviceInfo.warnings')}: ${compatibility.warnings.length}`}
               </ThemedText>
             )}
           </>
