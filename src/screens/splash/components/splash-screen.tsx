@@ -7,7 +7,6 @@ import { splashScreenStyles } from '../styles/splash-screen.styles';
 import { InfoSection } from './sections/info-section';
 import { LogoSection } from './sections/logo-section';
 import { ProgressSection } from './sections/progress-section';
-import { StageBadge } from './stage-badge';
 
 export function SplashScreen() {
   const colorScheme = useColorScheme();
@@ -29,7 +28,6 @@ export function SplashScreen() {
       {/* Body Section - Logo and branding */}
       <View style={splashScreenStyles.bodySection}>
         <LogoSection />
-        <StageBadge type="text" />
       </View>
       
       {/* Bottom Section - Progress and info */}

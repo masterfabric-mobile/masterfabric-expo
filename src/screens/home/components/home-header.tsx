@@ -64,6 +64,7 @@ export function HomeHeader({ onNotificationPress }: HomeHeaderProps) {
       </View>
 
       <View style={styles.rightSection}>
+        
         <Pressable
           onPress={handleNotificationsPress}
           style={[
