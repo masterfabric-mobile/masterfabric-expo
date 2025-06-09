@@ -6,4 +6,11 @@ export const headerActionsStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

@@ -1,5 +1,4 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
@@ -16,7 +15,7 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
   if (!__DEV__) return null;
 
   return (
-    <ThemedView style={quickActionsStyles.section}>
+    <View style={quickActionsStyles.section}>
       <ThemedText type="subtitle" style={quickActionsStyles.sectionTitle}>
         {t('home.developerTools')}
       </ThemedText>
@@ -26,7 +25,7 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
           onPress={() => onActionPress('dev-onboarding', t('home.developer.onboarding.title'))}
           activeOpacity={0.7}
         >
-          <ThemedView 
+          <View 
             style={[
               quickActionsStyles.actionCard,
               { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
@@ -52,14 +51,14 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
                 {t('home.developer.onboarding.description')}
               </ThemedText>
             </View>
-          </ThemedView>
+          </View>
         </TouchableOpacity>
         
         <TouchableOpacity
           onPress={() => onActionPress('dev-device-info', t('home.developer.deviceInfo.title'))}
           activeOpacity={0.7}
         >
-          <ThemedView 
+          <View 
             style={[
               quickActionsStyles.actionCard,
               { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
@@ -85,9 +84,9 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
                 {t('home.developer.deviceInfo.description')}
               </ThemedText>
             </View>
-          </ThemedView>
+          </View>
         </TouchableOpacity>
       </View>
-    </ThemedView>
+    </View>
   );
 }

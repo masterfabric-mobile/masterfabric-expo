@@ -1,9 +1,8 @@
+import { ThemedText } from '@/src/shared/components/ThemedText';
+import { t } from '@/src/shared/i18n';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableOpacity, useColorScheme, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
-import { t } from '@/src/shared/i18n';
 import { quickActionsStyles } from '../../styles/quick-actions.styles';
 import { QuickAction } from '../../utils';
 
@@ -21,7 +20,7 @@ export function QuickActionsSection({
   const isDark = useColorScheme() === 'dark';
 
   return (
-    <ThemedView style={quickActionsStyles.section}>
+    <View style={quickActionsStyles.section}>
       <ThemedText type="subtitle" style={quickActionsStyles.sectionTitle}>
         {t('home.quickActions')}
       </ThemedText>
@@ -33,7 +32,7 @@ export function QuickActionsSection({
             onPress={() => onActionPress(action.id, action.title)}
             activeOpacity={0.7}
           >
-            <ThemedView 
+            <View 
               style={[
                 quickActionsStyles.actionCard,
                 { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
@@ -59,10 +58,10 @@ export function QuickActionsSection({
                   {action.description}
                 </ThemedText>
               </View>
-            </ThemedView>
+            </View>
           </TouchableOpacity>
         ))}
       </View>
-    </ThemedView>
+    </View>
   );
 }

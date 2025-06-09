@@ -1,9 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { View } from 'react-native';
+import { Pressable, View, useColorScheme } from 'react-native';
 
 import { t } from '@/src/shared/i18n';
 import { headerActionsStyles } from '../styles/header-actions.styles';
-import { HeaderActionButton } from './header-action-button';
 
 interface HeaderActionsProps {
   onNotificationPress?: () => void;
@@ -16,26 +16,32 @@ export function HeaderActions({
   onSettingsPress, 
   onProfilePress 
 }: HeaderActionsProps) {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const handleNotificationsPress = () => {
+    if (onNotificationPress) {
+      onNotificationPress();
+    }
+  };
+
   return (
     <View style={headerActionsStyles.container}>
-      <HeaderActionButton
-        iconName="notifications-outline"
-        onPress={onNotificationPress}
+      <Pressable
+        onPress={handleNotificationsPress}
+        style={[
+          headerActionsStyles.iconButton,
+          { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+        ]}
+        accessibilityRole="button"
         accessibilityLabel={t('accessibility.notifications')}
-      />
-      
-      <HeaderActionButton
-        iconName="settings-outline"
-        onPress={onSettingsPress}
-        accessibilityLabel={t('accessibility.settings')}
-      />
-      
-      <HeaderActionButton
-        iconName="person-outline"
-        onPress={onProfilePress}
-        accessibilityLabel={t('accessibility.profile')}
-        variant="profile"
-      />
+      >
+        <Ionicons 
+          name="notifications-outline" 
+          size={20} 
+          color={isDark ? '#FFFFFF' : '#000000'} 
+        />
+      </Pressable>
     </View>
   );
 }

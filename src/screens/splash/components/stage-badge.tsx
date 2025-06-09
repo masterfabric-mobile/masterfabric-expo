@@ -7,7 +7,11 @@ import { stageBadgeStyles } from '../styles/stage-badge.styles';
 // Import package.json to access stage data
 const packageInfo = require('@/package.json');
 
-export function StageBadge() {
+interface StageBadgeProps {
+  type?: 'background' | 'text';
+}
+
+export function StageBadge({ type = 'background' }: StageBadgeProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   
@@ -43,6 +47,20 @@ export function StageBadge() {
   };
   
   const colors = getStageColors();
+  
+  if (type === 'text') {
+    return (
+      <ThemedText 
+        type="default" 
+        style={[
+          stageBadgeStyles.badgeText,
+          { color: colors.text }
+        ]}
+      >
+        {stage.toUpperCase()}
+      </ThemedText>
+    );
+  }
   
   return (
     <View 

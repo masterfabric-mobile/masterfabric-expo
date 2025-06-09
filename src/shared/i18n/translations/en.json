@@ -90,6 +90,7 @@
   "home": {
     "title": "Home",
     "greeting": "Hello, {{name}}!",
+    "typewriter": "You're Developer 🎉🚀",
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity",
     "developerTools": "Developer Tools",

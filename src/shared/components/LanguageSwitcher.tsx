@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, useColorScheme } from 'react-native';
 import { useLocale } from '../hooks/use-locale';
 import { getLocaleDisplayName, t } from '../i18n';
@@ -15,13 +15,32 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const availableLocales = ['en', 'tr'];
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const [isChanging, setIsChanging] = useState(false);
 
-  const handleLanguageChange = (locale: string) => {
-    console.log('Language button pressed:', locale);
-    const success = changeLocale(locale);
-    console.log('Language change success:', success);
-    if (success && onLanguageChange) {
-      onLanguageChange(locale);
+  const handleLanguageChange = async (locale: string) => {
+    if (isChanging || currentLocale.startsWith(locale)) return;
+
+    try {
+      setIsChanging(true);
+      console.log('🌐 [LanguageSwitcher] Changing language:', currentLocale, '→', locale);
+      
+      const success = changeLocale(locale);
+      console.log('🌐 [LanguageSwitcher] Language change result:', success);
+      
+      if (success) {
+        // Force immediate re-render by triggering callback
+        onLanguageChange?.(locale);
+        
+        // Small delay to allow UI to update
+        setTimeout(() => {
+          setIsChanging(false);
+        }, 100);
+      } else {
+        setIsChanging(false);
+      }
+    } catch (error) {
+      console.error('🌐 [LanguageSwitcher] Error changing language:', error);
+      setIsChanging(false);
     }
   };
 
@@ -29,40 +48,47 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     <View style={styles.container}>
       <ThemedText style={styles.label}>{t('settings.language')}</ThemedText>
       <View style={styles.languageButtons}>
-        {availableLocales.map((locale) => (
-          <TouchableOpacity
-            key={locale}
-            style={[
-              styles.languageButton,
-              {
-                borderColor: isDark ? '#3C3C3E' : '#E5E5E5',
-                backgroundColor: currentLocale.startsWith(locale) 
-                  ? '#007AFF' 
-                  : (isDark ? '#1C1C1E' : 'transparent')
-              },
-              currentLocale.startsWith(locale) && styles.activeLanguageButton,
-            ]}
-            onPress={() => handleLanguageChange(locale)}
-            activeOpacity={0.7}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel={`${t('settings.switchTo')} ${getLocaleDisplayName(locale)}`}
-          >
-            <ThemedText
+        {availableLocales.map((locale) => {
+          const isActive = currentLocale.startsWith(locale);
+          const isDisabled = isChanging;
+          
+          return (
+            <TouchableOpacity
+              key={locale}
               style={[
-                styles.languageButtonText,
+                styles.languageButton,
                 {
-                  color: currentLocale.startsWith(locale) 
-                    ? '#FFFFFF' 
-                    : (isDark ? '#FFFFFF' : '#666')
+                  borderColor: isDark ? '#3C3C3E' : '#E5E5E5',
+                  backgroundColor: isActive 
+                    ? '#007AFF' 
+                    : (isDark ? '#1C1C1E' : 'transparent'),
+                  opacity: isDisabled ? 0.6 : 1,
                 },
-                currentLocale.startsWith(locale) && styles.activeLanguageButtonText,
+                isActive && styles.activeLanguageButton,
               ]}
+              onPress={() => handleLanguageChange(locale)}
+              activeOpacity={0.7}
+              disabled={isDisabled}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel={`${t('settings.switchTo')} ${getLocaleDisplayName(locale)}`}
             >
-              {getLocaleDisplayName(locale)}
-            </ThemedText>
-          </TouchableOpacity>
-        ))}
+              <ThemedText
+                style={[
+                  styles.languageButtonText,
+                  {
+                    color: isActive 
+                      ? '#FFFFFF' 
+                      : (isDark ? '#FFFFFF' : '#666')
+                  },
+                  isActive && styles.activeLanguageButtonText,
+                ]}
+              >
+                {getLocaleDisplayName(locale)}
+              </ThemedText>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     </View>
   );

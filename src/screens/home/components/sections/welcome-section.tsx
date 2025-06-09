@@ -1,8 +1,8 @@
-import React from 'react';
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
-import { welcomeSectionStyles } from '../../styles/welcome-section.styles';
+import React from 'react';
+import { View } from 'react-native';
 import { User } from '../../models/home-models';
+import { welcomeSectionStyles } from '../../styles/welcome-section.styles';
 
 interface WelcomeSectionProps {
   greeting: string;
@@ -11,15 +11,15 @@ interface WelcomeSectionProps {
 
 export function WelcomeSection({ greeting, user }: WelcomeSectionProps) {
   return (
-    <ThemedView style={welcomeSectionStyles.container}>
+    <View style={welcomeSectionStyles.container}>
       <ThemedText type="title" style={welcomeSectionStyles.greeting}>
         {greeting}
       </ThemedText>
       {user && (
-        <ThemedText type="subtitle" style={welcomeSectionStyles.userName}>
+        <ThemedText style={welcomeSectionStyles.userName}>
           {user.name}
         </ThemedText>
       )}
-    </ThemedView>
+    </View>
   );
 }

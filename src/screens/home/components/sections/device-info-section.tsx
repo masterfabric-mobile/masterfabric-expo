@@ -1,8 +1,7 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { deviceInfoStyles } from '../../styles/device-info.styles';
 
 interface DeviceInfo {
@@ -35,12 +34,12 @@ export function DeviceInfoSection({
   const isDark = useColorScheme() === 'dark';
 
   return (
-    <ThemedView style={deviceInfoStyles.section}>
+    <View style={deviceInfoStyles.section}>
       <ThemedText type="subtitle" style={deviceInfoStyles.sectionTitle}>
         {t('deviceInfo.title')}
       </ThemedText>
       
-      <ThemedView style={[
+      <View style={[
         deviceInfoStyles.infoCard,
         { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
       ]}>
@@ -77,7 +76,7 @@ export function DeviceInfoSection({
             )}
           </>
         )}
-      </ThemedView>
-    </ThemedView>
+      </View>
+    </View>
   );
 }
