@@ -43,6 +43,7 @@
   "home": {
     "title": "Ana Sayfa",
     "greeting": "Merhaba, {{name}}!",
+    "typewriter": "Sen Geliştiricisan 🎉🚀",
     "quickActions": "Hızlı İşlemler",
     "recentActivity": "Son Aktiviteler",
     "noActivity": "Henüz son aktivite yok. Uygulamanızı geliştirmeye başlayın!",

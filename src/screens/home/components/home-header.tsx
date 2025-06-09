@@ -1,34 +1,42 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
 
+import { StageBadge } from '@/src/screens/splash/components/stage-badge';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
 
 interface HomeHeaderProps {
   onNotificationPress?: () => void;
-  onSettingsPress?: () => void;
 }
 
-export function HomeHeader({ onNotificationPress, onSettingsPress }: HomeHeaderProps) {
+export function HomeHeader({ onNotificationPress }: HomeHeaderProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const [displayText, setDisplayText] = useState('');
+  const fullText = t('home.typewriter');
 
-  const handleProfilePress = () => {
-    // Navigate to profile or show profile menu
-  };
+  useEffect(() => {
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayText(fullText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        // Reset and start over
+        currentIndex = 0;
+        setDisplayText('');
+      }
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleNotificationsPress = () => {
     if (onNotificationPress) {
       onNotificationPress();
-    }
-  };
-
-  const handleSettingsPress = () => {
-    if (onSettingsPress) {
-      onSettingsPress();
     }
   };
 
@@ -40,9 +48,19 @@ export function HomeHeader({ onNotificationPress, onSettingsPress }: HomeHeaderP
           style={styles.logo}
           contentFit="contain"
         />
-        <ThemedText type="defaultSemiBold" style={styles.appName}>
-          {t('app.name')}
-        </ThemedText>
+        <View style={styles.textContainer}>
+          <View style={styles.titleRow}>
+            <ThemedText type="defaultSemiBold" style={styles.appName}>
+              {t('app.name')}
+            </ThemedText>
+            <View style={[styles.divider, { backgroundColor: isDark ? '#3C3C43' : '#C6C6C8' }]} />
+            <StageBadge type="text" />
+          </View>
+          <ThemedText style={styles.typewriterText}>
+            {displayText}
+            <ThemedText style={styles.cursor}>|</ThemedText>
+          </ThemedText>
+        </View>
       </View>
 
       <View style={styles.rightSection}>
@@ -57,38 +75,6 @@ export function HomeHeader({ onNotificationPress, onSettingsPress }: HomeHeaderP
         >
           <Ionicons 
             name="notifications-outline" 
-            size={20} 
-            color={isDark ? '#FFFFFF' : '#000000'} 
-          />
-        </Pressable>
-
-        <Pressable
-          onPress={handleSettingsPress}
-          style={[
-            styles.iconButton,
-            { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel={t('accessibility.settings')}
-        >
-          <Ionicons 
-            name="settings-outline" 
-            size={20} 
-            color={isDark ? '#FFFFFF' : '#000000'} 
-          />
-        </Pressable>
-
-        <Pressable
-          onPress={handleProfilePress}
-          style={[
-            styles.profileButton,
-            { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel={t('accessibility.profile')}
-        >
-          <Ionicons 
-            name="person-outline" 
             size={20} 
             color={isDark ? '#FFFFFF' : '#000000'} 
           />
@@ -112,10 +98,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  textContainer: {
+    marginLeft: 12,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   logo: {
     width: 32,
     height: 32,
-    marginRight: 12,
   },
   appName: {
     fontSize: 18,
@@ -133,11 +126,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profileButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+  divider: {
+    width: 1,
+    height: 16,
+    opacity: 0.6,
+  },
+  typewriterText: {
+    fontFamily: 'Courier New',
+    fontSize: 12,
+    opacity: 0.7,
+    marginTop: 2,
+  },
+  cursor: {
+    fontFamily: 'Courier New',
+    opacity: 1,
   },
 });
