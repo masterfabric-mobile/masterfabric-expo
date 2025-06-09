@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
+import { createOnboardingSteps } from '../utils';
 
 interface OnboardingState {
   currentStepIndex: number;
@@ -27,11 +28,18 @@ const initialState = {
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   ...initialState,
   
-  setCurrentStepIndex: (index: number) => 
-    set({ currentStepIndex: index }),
+  setCurrentStepIndex: (index: number) => {
+    const totalSteps = createOnboardingSteps().length;
+    const validIndex = Math.max(0, Math.min(index, totalSteps - 1));
+    set({ currentStepIndex: validIndex });
+  },
     
-  nextStep: () => 
-    set((state) => ({ currentStepIndex: state.currentStepIndex + 1 })),
+  nextStep: () => {
+    const totalSteps = createOnboardingSteps().length;
+    set((state) => ({ 
+      currentStepIndex: Math.min(state.currentStepIndex + 1, totalSteps - 1)
+    }));
+  },
     
   previousStep: () => 
     set((state) => ({ 

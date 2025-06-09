@@ -163,5 +163,49 @@
       "title": "Bildirim yok",
       "message": "Harika! Yeni bildirimler burada görünecek."
     }
+  },
+  "onboarding": {
+    "back": "Geri",
+    "next": "İleri",
+    "skip": "Geç",
+    "getStarted": "Başlayalım",
+    "steps": {
+      "welcome": {
+        "title": "MasterFabric'e Hoş Geldiniz",
+        "subtitle": "Modern mobil uygulama geliştirme platformu",
+        "description": [
+          "React Native ve Expo ile güçlü mobil uygulamalar geliştirin",
+          "iOS, Android ve Web'de sorunsuz çapraz platform deneyimi",
+          "Profesyonel geliştiriciler için tasarlanmış modern araçlar"
+        ]
+      },
+      "features": {
+        "title": "Güçlü Geliştirme Araçları",
+        "subtitle": "Mobil uygulama geliştirmek için ihtiyacınız olan her şey",
+        "description": [
+          "TypeScript ile tip güvenli geliştirme ve daha iyi geliştirici deneyimi",
+          "Zustand + React Query ile optimize edilmiş durum yönetimi",
+          "Expo Router ile dosya tabanlı yönlendirme sistemi"
+        ]
+      },
+      "collaboration": {
+        "title": "Modern Teknolojiler",
+        "subtitle": "En son teknolojilerle geliştirildi",
+        "description": [
+          "React Native Reanimated ile 60fps akıcı animasyonlar",
+          "Material Design 3 ilkeleri ile modern arayüz tasarımı",
+          "Çevrimdışı desteği ile yerel depolama özellikleri"
+        ]
+      },
+      "ready": {
+        "title": "Başlamaya Hazır mısınız?",
+        "subtitle": "Mobil uygulama geliştirme yolculuğunuza başlayın",
+        "description": [
+          "Koyu/açık tema desteği ve çok dilli uygulama",
+          "Jest ve Testing Library ile kapsamlı test altyapısı",
+          "ESLint ve Prettier ile kod kalitesi standartları"
+        ]
+      }
+    }
   }
 }

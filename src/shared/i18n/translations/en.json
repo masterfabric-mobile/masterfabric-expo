@@ -34,6 +34,50 @@
     "getStarted": "Get Started",
     "close": "Close"
   },
+  "onboarding": {
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "getStarted": "Get Started",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to MasterFabric",
+        "subtitle": "Modern mobile application development platform",
+        "description": [
+          "Build powerful mobile applications with React Native and Expo",
+          "Seamless cross-platform experience on iOS, Android, and Web",
+          "Modern tools designed for professional developers"
+        ]
+      },
+      "features": {
+        "title": "Powerful Development Tools",
+        "subtitle": "Everything you need for mobile app development",
+        "description": [
+          "Type-safe development with TypeScript for better developer experience",
+          "Optimized state management with Zustand + React Query",
+          "File-based routing system with Expo Router"
+        ]
+      },
+      "collaboration": {
+        "title": "Modern Technologies",
+        "subtitle": "Built with cutting-edge technologies",
+        "description": [
+          "Smooth 60fps animations with React Native Reanimated",
+          "Modern UI design with Material Design 3 principles",
+          "Offline support with local storage capabilities"
+        ]
+      },
+      "ready": {
+        "title": "Ready to Start?",
+        "subtitle": "Begin your mobile app development journey",
+        "description": [
+          "Dark/light theme support with multi-language application",
+          "Comprehensive testing infrastructure with Jest and Testing Library",
+          "Code quality standards with ESLint and Prettier"
+        ]
+      }
+    }
+  },
   "greetings": {
     "goodMorning": "Good Morning",
     "goodAfternoon": "Good Afternoon",

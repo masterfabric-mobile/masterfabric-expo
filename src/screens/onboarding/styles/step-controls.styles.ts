@@ -24,6 +24,14 @@ export const stepControlsStyles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
   },
+  leftButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  rightButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
   backButton: {
     paddingVertical: 12,
     paddingHorizontal: 20,
@@ -44,14 +52,5 @@ export const stepControlsStyles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
-  },
-  skipButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-  },
-  skipButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    opacity: 0.6,
   },
 });

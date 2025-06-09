@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 export const stepContentStyles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingBottom: 20,
+    paddingHorizontal: 16,
+  },
   container: {
     alignItems: 'center',
     width: '100%',
@@ -15,7 +21,8 @@ export const stepContentStyles = StyleSheet.create({
   },
   textContainer: {
     alignItems: 'center',
-    marginBottom: 32,
+    width: '100%',
+    paddingHorizontal: 16,
   },
   title: {
     fontSize: 28,
@@ -31,13 +38,21 @@ export const stepContentStyles = StyleSheet.create({
   },
   descriptionContainer: {
     width: '100%',
+    alignItems: 'center',
   },
-  descriptionItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 16,
-    paddingHorizontal: 16,
+  paragraphContainer: {
+    padding: 16,
+    borderRadius: 12,
+    width: '100%',
+    maxWidth: 400,
+    borderLeftWidth: 3,
   },
+  paragraphText: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'left',
+  },
+  // Legacy styles kept for compatibility
   bullet: {
     width: 6,
     height: 6,
@@ -49,5 +64,13 @@ export const stepContentStyles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     flex: 1,
+  },
+  paragraphItem: {
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#007AFF',
+    width: '90%',
   },
 });

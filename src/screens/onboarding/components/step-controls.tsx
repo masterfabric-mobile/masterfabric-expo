@@ -10,7 +10,6 @@ interface StepControlsProps {
   totalSteps: number;
   onNext: () => void;
   onBack: () => void;
-  onSkip: () => void;
   isFirstStep: boolean;
   isLastStep: boolean;
 }
@@ -20,7 +19,6 @@ export function StepControls({
   totalSteps, 
   onNext, 
   onBack, 
-  onSkip,
   isFirstStep,
   isLastStep 
 }: StepControlsProps) {
@@ -48,54 +46,39 @@ export function StepControls({
 
       {/* Button Container */}
       <View style={stepControlsStyles.buttonContainer}>
-        {/* Back Button */}
-        <Pressable
-          onPress={onBack}
-          style={stepControlsStyles.backButton}
-          disabled={isFirstStep}
-        >
-          <ThemedText 
+        {/* Back Button - Left aligned */}
+        <View style={stepControlsStyles.leftButtonContainer}>
+          {!isFirstStep && (
+            <Pressable
+              onPress={onBack}
+              style={stepControlsStyles.backButton}
+            >
+              <ThemedText 
+                style={[
+                  stepControlsStyles.backButtonText,
+                  { color: isDark ? '#FFFFFF' : '#000000' }
+                ]}
+              >
+                {t('onboarding.back')}
+              </ThemedText>
+            </Pressable>
+          )}
+        </View>
+
+        {/* Next Button - Right aligned */}
+        <View style={stepControlsStyles.rightButtonContainer}>
+          <Pressable
+            onPress={onNext}
             style={[
-              stepControlsStyles.backButtonText,
-              { 
-                opacity: isFirstStep ? 0.3 : 1,
-                color: isDark ? '#FFFFFF' : '#000000'
-              }
+              stepControlsStyles.nextButton,
+              { backgroundColor: isDark ? '#007AFF' : '#0066CC' }
             ]}
           >
-            {t('onboarding.back')}
-          </ThemedText>
-        </Pressable>
-
-        {/* Next/Get Started Button */}
-        <Pressable
-          onPress={onNext}
-          style={[
-            stepControlsStyles.nextButton,
-            { backgroundColor: isDark ? '#007AFF' : '#0066CC' }
-          ]}
-        >
-          <ThemedText style={stepControlsStyles.nextButtonText}>
-            {isLastStep ? t('onboarding.getStarted') : t('onboarding.next')}
-          </ThemedText>
-        </Pressable>
-
-        {/* Skip Button */}
-        {!isLastStep && (
-          <Pressable
-            onPress={onSkip}
-            style={stepControlsStyles.skipButton}
-          >
-            <ThemedText 
-              style={[
-                stepControlsStyles.skipButtonText,
-                { color: isDark ? '#FFFFFF' : '#000000' }
-              ]}
-            >
-              {t('onboarding.skip')}
+            <ThemedText style={stepControlsStyles.nextButtonText}>
+              {isLastStep ? t('onboarding.getStarted') : t('onboarding.next')}
             </ThemedText>
           </Pressable>
-        )}
+        </View>
       </View>
     </View>
   );
