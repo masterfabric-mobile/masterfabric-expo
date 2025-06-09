@@ -13,7 +13,7 @@ export function SplashScreen() {
 
   const { isLoading, progress, currentTask } = useSplashViewModel();
   
-  const isDark = colorScheme === 'dark';
+  const isDark = colorScheme === 'dark'; 
   
   return (
     <SafeAreaView 

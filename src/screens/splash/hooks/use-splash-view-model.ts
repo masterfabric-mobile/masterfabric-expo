@@ -1,3 +1,4 @@
+import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
 import { useEffect, useState } from 'react';
 import { useSplashStore } from '../store/splash-store';
@@ -44,21 +45,23 @@ export function useSplashViewModel() {
   };
 
   const navigateToNextScreen = () => {
-    // try {
-    //   // Navigate directly to home tabs - no onboarding
-    //   console.log('Navigating to home - splash completed');
-    //   navigationUtils.replace('(tabs)');
-    // } catch (error) {
-    //   console.error('Navigation error from splash screen:', error);
-    //   // Fallback to tabs
-    //   try {
-    //     navigationUtils.replace('(tabs)');
-    //   } catch (fallbackError) {
-    //     console.error('Fallback navigation also failed:', fallbackError);
-    //     // Final fallback to tabs
-    //     navigationUtils.replace('(tabs)');
-    //   }
-    // }
+
+     console.log('🧿 Splash screen completed, navigating to home tabs');
+    try {
+      // Navigate directly to home tabs - no onboarding
+      console.log('Navigating to home - splash completed');
+      navigationUtils.replace('(tabs)');
+    } catch (error) {
+      console.error('Navigation error from splash screen:', error);
+      // Fallback to tabs
+      try {
+        navigationUtils.replace('(tabs)');
+      } catch (fallbackError) {
+        console.error('Fallback navigation also failed:', fallbackError);
+        // Final fallback to tabs
+        navigationUtils.replace('(tabs)');
+      }
+    }
   };
 
   return {
