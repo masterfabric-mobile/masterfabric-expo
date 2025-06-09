@@ -4,6 +4,7 @@
   "description": "Modern mobile app development platform for creating fabric design and management applications",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "stage": "development",
   "author": {
     "name": "Gürkan Fikret Günak",
     "email": "gurkanfikretgunak@masterfabric.co"

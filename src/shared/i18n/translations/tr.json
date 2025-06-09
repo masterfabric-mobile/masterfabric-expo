@@ -11,7 +11,7 @@
       "services": "Servisler başlatılıyor",
       "auth": "Kimlik doğrulama kontrol ediliyor",
       "preferences": "Kullanıcı tercihleri yükleniyor",
-      "finalizing": "Kurulum tamamlanıyor"
+      "finalize": "Kurulum tamamlanıyor"
     }
   },
   "welcome": {

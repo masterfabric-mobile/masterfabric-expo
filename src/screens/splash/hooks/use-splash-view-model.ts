@@ -1,11 +1,12 @@
-import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
 import { useEffect, useState } from 'react';
 import { useSplashStore } from '../store/splash-store';
+import { createSplashSteps, getProgressPercentage } from '../utils';
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState('');
+  const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const { isLoading, setLoading, setProgress: setSplashProgress, setLoadingMessage } = useSplashStore();
 
   useEffect(() => {
@@ -15,27 +16,24 @@ export function useSplashViewModel() {
   const initializeApp = async () => {
     setLoading(true);
     
-    // Simulate initialization tasks
-    const tasks = [
-      { name: 'Loading fonts', duration: 300, key: 'fonts' },
-      { name: 'Initializing services', duration: 500, key: 'services' },
-      { name: 'Checking authentication', duration: 400, key: 'auth' },
-      { name: 'Loading user preferences', duration: 300, key: 'preferences' },
-      { name: 'Finalizing setup', duration: 200, key: 'finalizing' },
-    ];
+    const steps = createSplashSteps();
+    const completed: string[] = [];
 
-    let currentProgress = 0;
-    const totalDuration = tasks.reduce((sum, task) => sum + task.duration, 0);
-
-    for (const task of tasks) {
-      const taskMessage = t(`splash.loading.${task.key}`);
+    for (const step of steps) {
+      const taskMessage = t(`splash.loading.${step.id}`);
       setCurrentTask(taskMessage);
       setLoadingMessage(taskMessage);
       
-      await new Promise(resolve => setTimeout(resolve, task.duration));
-      currentProgress += (task.duration / totalDuration) * 100;
-      setProgress(Math.round(currentProgress));
-      setSplashProgress(Math.round(currentProgress));
+      await new Promise(resolve => setTimeout(resolve, step.duration));
+      
+      completed.push(step.id);
+      setCompletedSteps([...completed]);
+      
+      const completedStepObjects = steps.filter(s => completed.includes(s.id));
+      const currentProgress = getProgressPercentage(completedStepObjects, steps);
+      
+      setProgress(currentProgress);
+      setSplashProgress(currentProgress);
     }
 
     // Navigation logic based on app state
@@ -46,26 +44,27 @@ export function useSplashViewModel() {
   };
 
   const navigateToNextScreen = () => {
-    try {
-      // Navigate directly to home tabs - no onboarding
-      console.log('Navigating to home - splash completed');
-      navigationUtils.replace('(tabs)');
-    } catch (error) {
-      console.error('Navigation error from splash screen:', error);
-      // Fallback to tabs
-      try {
-        navigationUtils.replace('(tabs)');
-      } catch (fallbackError) {
-        console.error('Fallback navigation also failed:', fallbackError);
-        // Final fallback to tabs
-        navigationUtils.replace('(tabs)');
-      }
-    }
+    // try {
+    //   // Navigate directly to home tabs - no onboarding
+    //   console.log('Navigating to home - splash completed');
+    //   navigationUtils.replace('(tabs)');
+    // } catch (error) {
+    //   console.error('Navigation error from splash screen:', error);
+    //   // Fallback to tabs
+    //   try {
+    //     navigationUtils.replace('(tabs)');
+    //   } catch (fallbackError) {
+    //     console.error('Fallback navigation also failed:', fallbackError);
+    //     // Final fallback to tabs
+    //     navigationUtils.replace('(tabs)');
+    //   }
+    // }
   };
 
   return {
     isLoading,
     progress,
     currentTask,
+    completedSteps,
   };
 }

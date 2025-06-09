@@ -11,7 +11,7 @@
       "services": "Initializing services",
       "auth": "Checking authentication",
       "preferences": "Loading user preferences",
-      "finalizing": "Finalizing setup"
+      "finalize": "Finalizing setup"
     }
   },
   "welcome": {

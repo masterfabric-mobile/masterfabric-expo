@@ -3,33 +3,23 @@ import { SplashStep } from '../models/splash-models';
 export const createSplashSteps = (): SplashStep[] => [
   {
     id: 'fonts',
-    name: 'Loading fonts',
-    description: 'Loading custom fonts and assets',
-    duration: 300,
+    duration: 200,
   },
   {
-    id: 'services',
-    name: 'Initializing services',
-    description: 'Setting up core services',
-    duration: 500,
+    id: 'services', 
+    duration: 300,
   },
   {
     id: 'auth',
-    name: 'Checking authentication',
-    description: 'Verifying user authentication',
-    duration: 400,
+    duration: 440,
   },
   {
     id: 'preferences',
-    name: 'Loading user preferences',
-    description: 'Loading user settings and preferences',
-    duration: 300,
+    duration: 580,
   },
   {
     id: 'finalize',
-    name: 'Finalizing setup',
-    description: 'Completing app initialization',
-    duration: 200,
+    duration: 730,
   },
 ];
 
