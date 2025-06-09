@@ -21,7 +21,7 @@ export interface NotificationSettings {
 export interface QuickAction {
   id: string;
   title: string;
+  description: string;
   icon: string;
-  action: () => void;
-  enabled?: boolean;
+  color: string;
 }

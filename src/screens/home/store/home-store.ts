@@ -1,12 +1,5 @@
 import { create } from 'zustand';
-
-interface QuickAction {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  color: string;
-}
+import { QuickAction } from '../utils';
 
 interface HomeState {
   quickActions: QuickAction[];

@@ -89,6 +89,7 @@
     "greeting": "Hello, {{name}}!",
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity",
+    "developerTools": "Developer Tools",
     "noActivity": "No recent activity yet. Start building your app!",
     "actions": {
       "newProject": {
@@ -106,6 +107,16 @@
       "settings": {
         "title": "Settings",
         "description": "Configure your workspace"
+      }
+    },
+    "developer": {
+      "onboarding": {
+        "title": "View Onboarding",
+        "description": "Preview onboarding flow for development"
+      },
+      "deviceInfo": {
+        "title": "Device Information",
+        "description": "Show detailed device and system information"
       }
     }
   },

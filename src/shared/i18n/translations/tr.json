@@ -45,6 +45,7 @@
     "greeting": "Merhaba, {{name}}!",
     "quickActions": "Hızlı İşlemler",
     "recentActivity": "Son Aktiviteler",
+    "developerTools": "Geliştirici Araçları",
     "noActivity": "Henüz son aktivite yok. Uygulamanızı geliştirmeye başlayın!",
     "actions": {
       "newProject": {
@@ -62,6 +63,16 @@
       "settings": {
         "title": "Ayarlar",
         "description": "Çalışma alanınızı yapılandırın"
+      }
+    },
+    "developer": {
+      "onboarding": {
+        "title": "Tanıtımı Görüntüle",
+        "description": "Geliştirme için tanıtım akışını önizleyin"
+      },
+      "deviceInfo": {
+        "title": "Cihaz Bilgileri",
+        "description": "Detaylı cihaz ve sistem bilgilerini göster"
       }
     }
   },

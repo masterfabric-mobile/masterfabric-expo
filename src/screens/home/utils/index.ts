@@ -1,6 +1,15 @@
+import { t } from '@/src/shared/i18n';
 import { User } from '../models/home-models';
 
 export interface QuickAction {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+}
+
+export interface DeveloperTools {
   id: string;
   title: string;
   description: string;
@@ -20,31 +29,59 @@ export const validateHomeAction = (action: QuickAction): boolean => {
 
 export const formatGreeting = (user: User | null): string => {
   const hour = new Date().getHours();
-  const timeGreeting = 
-    hour < 12 ? 'Good Morning' :
-    hour < 18 ? 'Good Afternoon' :
-    'Good Evening';
+  const timeKey = 
+    hour < 12 ? 'greetings.goodMorning' :
+    hour < 18 ? 'greetings.goodAfternoon' :
+    'greetings.goodEvening';
   
+  const timeGreeting = t(timeKey);
   return user ? `${timeGreeting}, ${user.name}!` : timeGreeting;
 };
 
-export const getInitials = (name: string): string => {
-  return name
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase())
-    .join('')
-    .slice(0, 2);
-};
+export const createDefaultQuickActions = (): QuickAction[] => [
+  {
+    id: 'new-project',
+    title: t('home.actions.newProject.title'),
+    description: t('home.actions.newProject.description'),
+    icon: 'rocket',
+    color: '#007AFF',
+  },
+  {
+    id: 'templates',
+    title: t('home.actions.templates.title'),
+    description: t('home.actions.templates.description'),
+    icon: 'clipboard',
+    color: '#34C759',
+  },
+  {
+    id: 'documentation',
+    title: t('home.actions.documentation.title'),
+    description: t('home.actions.documentation.description'),
+    icon: 'book',
+    color: '#FF9500',
+  },
+  {
+    id: 'settings',
+    title: t('home.actions.settings.title'),
+    description: t('home.actions.settings.description'),
+    icon: 'settings',
+    color: '#8E8E93',
+  },
+];
 
-export const formatLastSeen = (date: Date): string => {
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const minutes = Math.floor(diff / 60000);
-  const hours = Math.floor(diff / 3600000);
-  const days = Math.floor(diff / 86400000);
-
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  return `${days}d ago`;
-};
+export const createDeveloperActions = (): DeveloperTools[] => [
+  {
+    id: 'dev-onboarding',
+    title: t('home.developer.onboarding.title'),
+    description: t('home.developer.onboarding.description'),
+    icon: 'build',
+    color: '#FF9500',
+  },
+  {
+    id: 'dev-device-info',
+    title: t('home.developer.deviceInfo.title'),
+    description: t('home.developer.deviceInfo.description'),
+    icon: 'phone-portrait',
+    color: '#007AFF',
+  },
+];
