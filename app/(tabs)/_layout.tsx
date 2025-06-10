@@ -1,46 +1,89 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import { HapticTab } from '@/src/shared/components/HapticTab';
 import { IconSymbol } from '@/src/shared/components/ui/IconSymbol';
 import TabBarBackground from '@/src/shared/components/ui/TabBarBackground';
-import { Colors } from '@/src/shared/constants/Colors';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { useLocale } from '@/src/shared/hooks/use-locale';
-import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { t } from '@/src/shared/i18n';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const { locale } = useLocale(); // This will trigger re-render on locale change
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
+  const { locale } = useLocale();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: colors.tabBarActiveTint,
+        tabBarInactiveTintColor: colors.tabBarInactiveTint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: colors.tabBarBackground,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: colors.tabBarBorder,
+          paddingBottom: Platform.OS === 'ios' ? 34 : 10,
+          paddingTop: 8,
+          height: Platform.OS === 'ios' ? 90 : 70,
+          shadowColor: colors.tabBarShadow,
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.15,
+          shadowRadius: 10,
+          elevation: 10,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          marginTop: 4,
+          marginBottom: Platform.OS === 'ios' ? 0 : 4,
+        },
+        tabBarIconStyle: {
+          marginBottom: Platform.OS === 'ios' ? 0 : 2,
+        },
+        tabBarItemStyle: {
+          paddingTop: 8,
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: t('home.title'),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol 
+              size={focused ? 28 : 24} 
+              name="house.fill" 
+              color={color}
+              style={{
+                opacity: focused ? 1 : 0.7,
+              }} 
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
           title: t('explore.title'),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol 
+              size={focused ? 28 : 24} 
+              name="paperplane.fill" 
+              color={color}
+              style={{
+                opacity: focused ? 1 : 0.7,
+              }} 
+            />
+          ),
         }}
       />
     </Tabs>
