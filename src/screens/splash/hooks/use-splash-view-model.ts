@@ -1,15 +1,23 @@
 import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useOnboardingStore } from '../../onboarding/store/onboarding-store';
 import { useSplashStore } from '../store/splash-store';
-import { createSplashSteps, getProgressPercentage } from '../utils';
+import { createSplashSteps, getProgressPercentage, shouldShowOnboarding } from '../utils';
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState('');
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-  const { isLoading, setLoading, setProgress: setSplashProgress, setLoadingMessage } = useSplashStore();
+  const { 
+    isLoading, 
+    setLoading, 
+    setProgress: setSplashProgress, 
+    setLoadingMessage,
+    setCurrentStep,
+    addCompletedStep 
+  } = useSplashStore();
   const { hasSeenOnboarding, isCompleted, loadOnboardingStatus } = useOnboardingStore();
 
   useEffect(() => {
@@ -37,11 +45,13 @@ export function useSplashViewModel() {
       const taskMessage = t(`splash.loading.${step.id}`);
       setCurrentTask(taskMessage);
       setLoadingMessage(taskMessage);
+      setCurrentStep(step.id);
       
       await new Promise(resolve => setTimeout(resolve, step.duration));
       
       completed.push(step.id);
       setCompletedSteps([...completed]);
+      addCompletedStep(step.id);
       
       const completedStepObjects = steps.filter(s => completed.includes(s.id));
       const currentProgress = getProgressPercentage(completedStepObjects, steps);
@@ -63,13 +73,13 @@ export function useSplashViewModel() {
     console.log('isCompleted:', isCompleted);
     
     try {
-      // If onboarding is completed or user has seen it, go to home
-      if (hasSeenOnboarding || isCompleted) {
+      // Use utility function to determine navigation
+      if (shouldShowOnboarding(hasSeenOnboarding, isCompleted)) {
+        console.log('First time user - navigating to onboarding');
+        router.push('/onboarding');
+      } else {
         console.log('User has completed onboarding - navigating to home tabs');
         navigationUtils.replace('(tabs)');
-      } else {
-        console.log('First time user - navigating to onboarding');
-        navigationUtils.replace('onboarding');
       }
     } catch (error) {
       console.error('Navigation error from splash screen:', error);

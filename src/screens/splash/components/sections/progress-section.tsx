@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,6 +7,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { progressSectionStyles } from '../../styles/progress-section.styles';
 
 interface ProgressSectionProps {
@@ -16,7 +18,9 @@ interface ProgressSectionProps {
 }
 
 export function ProgressSection({ progress, currentTask, isLoading }: ProgressSectionProps) {
-  const isDark = useColorScheme() === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
   const progressWidth = useSharedValue(0);
   
   useEffect(() => {
@@ -36,12 +40,12 @@ export function ProgressSection({ progress, currentTask, isLoading }: ProgressSe
       {/* Progress Bar Container */}
       <View style={[
         progressSectionStyles.progressBar,
-        { backgroundColor: isDark ? '#333333' : '#E5E5E5' }
+        { backgroundColor: colors.splashProgressBg }
       ]}>
         <Animated.View 
           style={[
             progressSectionStyles.progressFill,
-            { backgroundColor: isDark ? '#007AFF' : '#0066CC' },
+            { backgroundColor: colors.splashProgress },
             animatedProgressStyle
           ]}
         />
@@ -52,7 +56,7 @@ export function ProgressSection({ progress, currentTask, isLoading }: ProgressSe
         type="default" 
         style={[
           progressSectionStyles.progressText,
-          { color: isDark ? '#FFFFFF' : '#666666' }
+          { color: colors.splashText }
         ]}
       >
         {`${Math.round(progress)}%`}
@@ -64,7 +68,7 @@ export function ProgressSection({ progress, currentTask, isLoading }: ProgressSe
           type="default" 
           style={[
             progressSectionStyles.taskText,
-            { color: isDark ? '#FFFFFF' : '#666666' }
+            { color: colors.splashSubtext }
           ]}
         >
           {currentTask}

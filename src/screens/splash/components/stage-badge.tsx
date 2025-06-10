@@ -1,7 +1,9 @@
 import React from 'react';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { stageBadgeStyles } from '../styles/stage-badge.styles';
 
 // Import package.json to access stage data
@@ -12,8 +14,9 @@ interface StageBadgeProps {
 }
 
 export function StageBadge({ type = 'background' }: StageBadgeProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
   
   const stage = packageInfo.stage || 'development';
   
@@ -21,32 +24,32 @@ export function StageBadge({ type = 'background' }: StageBadgeProps) {
     switch (stage.toLowerCase()) {
       case 'production':
         return {
-          background: isDark ? '#1E3A28' : '#E8F5E8',
-          border: isDark ? '#2D5A3D' : '#4CAF50',
-          text: isDark ? '#4CAF50' : '#2E7D32'
+          background: colors.successColor + '20',
+          border: colors.successColor,
+          text: colors.successColor
         };
       case 'development':
         return {
-          background: isDark ? '#1A2B3D' : '#E3F2FD',
-          border: isDark ? '#2196F3' : '#1976D2',
-          text: isDark ? '#2196F3' : '#1565C0'
+          background: colors.activeButton + '20',
+          border: colors.activeButton,
+          text: colors.activeButton
         };
       case 'debug':
         return {
-          background: isDark ? '#3D1A1A' : '#FFEBEE',
-          border: isDark ? '#F44336' : '#D32F2F',
-          text: isDark ? '#F44336' : '#C62828'
+          background: colors.errorColor + '20',
+          border: colors.errorColor,
+          text: colors.errorColor
         };
       default:
         return {
-          background: isDark ? '#2D2D2D' : '#F5F5F5',
-          border: isDark ? '#666666' : '#BDBDBD',
-          text: isDark ? '#CCCCCC' : '#757575'
+          background: colors.buttonBackground,
+          border: colors.surfaceBorder,
+          text: colors.labelText
         };
     }
   };
   
-  const colors = getStageColors();
+  const stageColors = getStageColors();
   
   if (type === 'text') {
     return (
@@ -54,7 +57,7 @@ export function StageBadge({ type = 'background' }: StageBadgeProps) {
         type="default" 
         style={[
           stageBadgeStyles.badgeText,
-          { color: colors.text }
+          { color: stageColors.text }
         ]}
       >
         {stage.toUpperCase()}
@@ -67,8 +70,8 @@ export function StageBadge({ type = 'background' }: StageBadgeProps) {
       style={[
         stageBadgeStyles.badge,
         {
-          backgroundColor: colors.background,
-          borderColor: colors.border,
+          backgroundColor: stageColors.background,
+          borderColor: stageColors.border,
         }
       ]}
     >
@@ -76,7 +79,7 @@ export function StageBadge({ type = 'background' }: StageBadgeProps) {
         type="default" 
         style={[
           stageBadgeStyles.badgeText,
-          { color: colors.text }
+          { color: stageColors.text }
         ]}
       >
         {stage.toUpperCase()}
