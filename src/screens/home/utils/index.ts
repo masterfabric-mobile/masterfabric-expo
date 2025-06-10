@@ -47,11 +47,12 @@ export const formatGreeting = (user: User | null): string => {
 
 export const createDefaultQuickActions = (): QuickAction[] => [
   {
-    id: 'new-project',
-    title: t('home.actions.newProject.title'),
-    description: t('home.actions.newProject.description'),
+    id: 'projects',
+    title: t('home.actions.projects.title'),
+    description: t('home.actions.projects.description'),
     icon: 'rocket',
-    color: QUICK_ACTION_COLORS['new-project'],
+    color: QUICK_ACTION_COLORS['projects'],
+    route: '/projects',
   },
   {
     id: 'templates',
@@ -59,6 +60,7 @@ export const createDefaultQuickActions = (): QuickAction[] => [
     description: t('home.actions.templates.description'),
     icon: 'clipboard',
     color: QUICK_ACTION_COLORS['templates'],
+    route: 'https://github.com/masterfabric-mobile',
   },
   {
     id: 'documentation',
@@ -220,7 +222,7 @@ export const formatActivityDescription = (activity: ActivityItem, translateFn: (
       }
       return translateFn('home.activity.devToolUsed');
     case 'new_project':
-      return translateFn('home.activity.newProject');
+      return translateFn('home.activity.allProjects');
     case 'templates':
       return translateFn('home.activity.templatesViewed');
     case 'documentation':
@@ -311,7 +313,7 @@ export const getHeaderTint = (isDark: boolean): 'light' | 'dark' => {
 // Icon utilities
 export const getActionIconName = (actionId: string): string => {
   switch (actionId) {
-    case 'new-project':
+    case 'projects':
       return 'rocket';
     case 'templates':
       return 'clipboard';

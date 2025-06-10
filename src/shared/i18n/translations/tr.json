@@ -35,7 +35,8 @@
     "close": "Kapat",
     "unknown": "Bilinmiyor",
     "yes": "Evet",
-    "no": "Hayır"
+    "no": "Hayır",
+    "back": "Geri"
   },
   "greetings": {
     "goodMorning": "Günaydın",
@@ -63,12 +64,17 @@
       "devToolUsed": "Geliştirici aracı kullanıldı",
       "onboardingStarted": "Tanıtım önizlemesi başlatıldı",
       "appStarted": "Uygulama başlatıldı",
-      "newProject": "Yeni proje oluşturulmaya başlandı",
+      "newProject": "Tüm projeler görüntülendi",
+      "projectsViewed": "Tüm projeler görüntülendi",
       "templatesViewed": "Proje şablonlarına göz atıldı",
       "documentationOpened": "Belgeler açıldı"
     },
     "actions": {
-      "newProject": {
+      "projects": {
+        "title": "Projeler",
+        "description": "Tüm açık kaynak projelerini görüntüleyin"
+      },
+      "allProjects": {
         "title": "Yeni Proje",
         "description": "Yeni bir mobil uygulama projesi başlatın"
       },
@@ -304,5 +310,13 @@
     "hoursAgo": "{{count}} sa önce",
     "daysAgo": "{{count}} gün önce",
     "justNow": "Şimdi"
+  },
+  "projects": {
+    "title": "Projeler",
+    "subtitle": "Açık kaynak projelerimizi keşfedin",
+    "searchPlaceholder": "Projeleri ara...",
+    "noProjects": "Proje bulunamadı",
+    "loadError": "Projeler yüklenemedi",
+    "refreshHint": "Yenilemek için aşağı çekin veya bağlantınızı kontrol edin"
   }
 }

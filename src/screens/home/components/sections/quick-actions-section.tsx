@@ -40,25 +40,33 @@ export function QuickActionsSection({
           <TouchableOpacity
             key={action.id}
             onPress={() => onActionPress(action.id, action.title)}
-            activeOpacity={0.7}
+            activeOpacity={0.8}
           >
             <View 
               style={[
                 quickActionsStyles.actionCard,
                 { 
                   backgroundColor: colors.surfaceBackground,
-                  borderColor: colors.surfaceBorder,
-                  borderWidth: 1,
+                  borderColor: colors.surfaceBorder + '30',
+                  borderWidth: 1.5,
+                  shadowOffset: { width: 0, height: 3 },
+                  shadowOpacity: 0.08,
+                  shadowRadius: 8,
+                  elevation: 3,
                 }
               ]}
             >
               <View style={[
                 quickActionsStyles.actionIcon,
-                { backgroundColor: action.color + '20' } 
+                { 
+                  backgroundColor: action.color + '15',
+                  borderWidth: 1,
+                  borderColor: action.color + '25',
+                } 
               ]}>
                 <Ionicons 
                   name={getIconName(action.id)} 
-                  size={22} 
+                  size={24} 
                   color={action.color} 
                 />
               </View>
@@ -68,7 +76,11 @@ export function QuickActionsSection({
                   type="defaultSemiBold" 
                   style={[
                     quickActionsStyles.actionTitle,
-                    { color: colors.bodyText }
+                    { 
+                      color: colors.bodyText,
+                      fontSize: 17,
+                      fontWeight: '700'
+                    }
                   ]}
                 >
                   {action.title}
@@ -77,7 +89,11 @@ export function QuickActionsSection({
                 <ThemedText 
                   style={[
                     quickActionsStyles.actionDescription,
-                    { color: colors.actionDescription }
+                    { 
+                      color: colors.actionDescription,
+                      fontSize: 15,
+                      lineHeight: 20
+                    }
                   ]}
                 >
                   {action.description}
