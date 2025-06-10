@@ -46,11 +46,27 @@
   "home": {
     "title": "Ana Sayfa",
     "greeting": "Merhaba, {{name}}!",
-    "typewriter": "Sen Geliştiricisan 🎉🚀",
+    "typewriter": "Sen Geliştiricisen 🎉🚀",
     "quickActions": "Hızlı İşlemler",
     "recentActivity": "Son Aktiviteler",
     "developerTools": "Geliştirici Araçları",
     "noActivity": "Henüz son aktivite yok. Uygulamanızı geliştirmeye başlayın!",
+    "activity": {
+      "opened": "açıldı",
+      "themeChanged": "Tema: {{from}} → {{to}}",
+      "languageChanged": "Dil: {{from}} → {{to}}",
+      "deviceInfoRetrieved": "Cihaz bilgileri alındı",
+      "deviceInfoViewed": "Cihaz bilgi detayları görüntülendi",
+      "notificationsChanged": "Bildirim ayarları güncellendi",
+      "settingsChanged": "Ayarlar güncellendi",
+      "settingsOpened": "Ayarlar sayfası açıldı", 
+      "devToolUsed": "Geliştirici aracı kullanıldı",
+      "onboardingStarted": "Tanıtım önizlemesi başlatıldı",
+      "appStarted": "Uygulama başlatıldı",
+      "newProject": "Yeni proje oluşturulmaya başlandı",
+      "templatesViewed": "Proje şablonlarına göz atıldı",
+      "documentationOpened": "Belgeler açıldı"
+    },
     "actions": {
       "newProject": {
         "title": "Yeni Proje",
@@ -71,8 +87,8 @@
     },
     "developer": {
       "onboarding": {
-        "title": "Tanıtımı Görüntüle",
-        "description": "Geliştirme için tanıtım akışını önizleyin"
+        "title": "Ön Gorüntüleme",
+        "description": "Uygulamanın özelliklerini keşfedin"
       },
       "deviceInfo": {
         "title": "Cihaz Bilgileri",
@@ -151,19 +167,51 @@
     "profile": "Profili aç"
   },
   "settings": {
+    "title": "Ayarlar",
     "language": "Dil",
+    "languageDescription": "Uygulamanın dilini seçin",
     "switchTo": "Geçiş yap",
+    "subtitle": "Kişiselleştirme ve tercihler",
+    "languageCard": {
+      "title": "Dil",
+      "subtitle": "Uygulama dilini değiştirin"
+    },
+    "appearanceCard": {
+      "title": "Görünüm",
+      "subtitle": "Tema ve görsel tercihlerinizi seçin"
+    },
     "theme": {
       "title": "Görünüm",
       "description": "Uygulamanın nasıl görünmesini istediğinizi seçin",
       "light": "Açık",
-      "dark": "Koyu",
-      "system": "Sistem"
+      "dark": "Koyu", 
+      "system": "Sistem",
+      "lightDescription": "Açık ve temiz görünüm",
+      "darkDescription": "Göz dostu koyu görünüm",
+      "systemDescription": "Cihaz ayarlarını takip et"
     },
-    "preview": "Önizleme",
-    "previewTitle": "Örnek İçerik",
-    "previewText": "Seçilen tema ile içeriğiniz böyle görünecek.",
-    "previewButton": "Örnek Buton"
+    "languageNames": {
+      "en": "İngilizce",
+      "tr": "Türkçe"
+    },
+    "sections": {
+      "appearance": {
+        "title": "Görünüm",
+        "description": "Tema ve dil ayarları"
+      },
+      "general": {
+        "title": "Genel",
+        "description": "Genel uygulama ayarları"
+      },
+      "about": {
+        "title": "Hakkında",
+        "description": "Uygulama bilgileri"
+      }
+    },
+    "navigation": {
+      "back": "Geri",
+      "close": "Kapat"
+    }
   },
   "notifications": {
     "justNow": "Şimdi",
@@ -250,5 +298,11 @@
         ]
       }
     }
+  },
+  "time": {
+    "minutesAgo": "{{count}} dk önce",
+    "hoursAgo": "{{count}} sa önce",
+    "daysAgo": "{{count}} gün önce",
+    "justNow": "Şimdi"
   }
 }
