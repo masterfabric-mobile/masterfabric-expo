@@ -1,7 +1,9 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
 import React from 'react';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 import { deviceInfoStyles } from '../../styles/device-info.styles';
 
 interface DeviceInfo {
@@ -31,46 +33,91 @@ export function DeviceInfoSection({
   compatibility, 
   compatibilityLoading 
 }: DeviceInfoSectionProps) {
-  const isDark = useColorScheme() === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   return (
     <View style={deviceInfoStyles.section}>
-      <ThemedText type="subtitle" style={deviceInfoStyles.sectionTitle}>
+      <ThemedText 
+        type="subtitle" 
+        style={[
+          deviceInfoStyles.sectionTitle,
+          { color: colors.sectionTitle }
+        ]}
+      >
         {t('deviceInfo.title')}
       </ThemedText>
       
       <View style={[
         deviceInfoStyles.infoCard,
-        { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+        { 
+          backgroundColor: colors.surfaceBackground,
+          borderColor: colors.surfaceBorder,
+          borderWidth: 1,
+        }
       ]}>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.platform')}: ${deviceInfo.platform || t('common.unknown')}`}
         </ThemedText>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.device')}: ${deviceInfo.deviceName || t('common.unknown')}`}
         </ThemedText>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.os')}: ${deviceInfo.osName || t('common.unknown')} ${deviceInfo.osVersion || ''}`}
         </ThemedText>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.appVersion')}: ${deviceInfo.appVersion || t('common.unknown')}`}
         </ThemedText>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.screen')}: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}`}
         </ThemedText>
-        <ThemedText style={deviceInfoStyles.infoText}>
+        <ThemedText 
+          style={[
+            deviceInfoStyles.infoText,
+            { color: colors.labelText }
+          ]}
+        >
           {`${t('deviceInfo.isDevice')}: ${deviceInfo.isDevice ? t('common.yes') : t('common.no')}`}
         </ThemedText>
         {!compatibilityLoading && compatibility && (
           <>
             <ThemedText style={[
               deviceInfoStyles.infoText,
-              { color: compatibility.isCompatible ? '#34C759' : '#FF3B30' }
+              { color: compatibility.isCompatible ? colors.successColor : colors.errorColor }
             ]}>
               {`${t('deviceInfo.compatible')}: ${compatibility.isCompatible ? t('common.yes') : t('common.no')}`}
             </ThemedText>
             {compatibility.warnings.length > 0 && (
-              <ThemedText style={[deviceInfoStyles.infoText, { color: '#FF9500' }]}>
+              <ThemedText style={[
+                deviceInfoStyles.infoText,
+                { color: colors.warningColor }
+              ]}>
                 {`${t('deviceInfo.warnings')}: ${compatibility.warnings.length}`}
               </ThemedText>
             )}

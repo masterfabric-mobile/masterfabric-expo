@@ -1,8 +1,10 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { TouchableOpacity, useColorScheme, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { quickActionsStyles } from '../../styles/quick-actions.styles';
 import { QuickAction } from '../../utils';
 
@@ -17,11 +19,19 @@ export function QuickActionsSection({
   onActionPress, 
   getIconName 
 }: QuickActionsSectionProps) {
-  const isDark = useColorScheme() === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   return (
     <View style={quickActionsStyles.section}>
-      <ThemedText type="subtitle" style={quickActionsStyles.sectionTitle}>
+      <ThemedText 
+        type="subtitle" 
+        style={[
+          quickActionsStyles.sectionTitle,
+          { color: colors.sectionTitle }
+        ]}
+      >
         {t('home.quickActions')}
       </ThemedText>
       
@@ -35,26 +45,41 @@ export function QuickActionsSection({
             <View 
               style={[
                 quickActionsStyles.actionCard,
-                { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+                { 
+                  backgroundColor: colors.surfaceBackground,
+                  borderColor: colors.surfaceBorder,
+                  borderWidth: 1,
+                }
               ]}
             >
               <View style={[
                 quickActionsStyles.actionIcon,
-                { backgroundColor: action.color }
+                { backgroundColor: action.color + '20' } 
               ]}>
                 <Ionicons 
                   name={getIconName(action.id)} 
-                  size={20} 
-                  color="#FFFFFF" 
+                  size={22} 
+                  color={action.color} 
                 />
               </View>
               
               <View style={quickActionsStyles.actionContent}>
-                <ThemedText type="defaultSemiBold" style={quickActionsStyles.actionTitle}>
+                <ThemedText 
+                  type="defaultSemiBold" 
+                  style={[
+                    quickActionsStyles.actionTitle,
+                    { color: colors.bodyText }
+                  ]}
+                >
                   {action.title}
                 </ThemedText>
                 
-                <ThemedText style={quickActionsStyles.actionDescription}>
+                <ThemedText 
+                  style={[
+                    quickActionsStyles.actionDescription,
+                    { color: colors.actionDescription }
+                  ]}
+                >
                   {action.description}
                 </ThemedText>
               </View>

@@ -1,42 +1,66 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { QuickAction } from '../utils';
 
-interface HomeState {
-  quickActions: QuickAction[];
-  recentActivity: any[];
-  
-  // Actions
-  setQuickActions: (actions: QuickAction[]) => void;
-  addQuickAction: (action: QuickAction) => void;
-  removeQuickAction: (id: string) => void;
-  setRecentActivity: (activity: any[]) => void;
-  reset: () => void;
+export type ActivityActionType = 
+  'theme_change' | 
+  'language_change' | 
+  'notification_settings' | 
+  'general_settings' | 
+  'device_info' | 
+  'dev_tool' | 
+  'app_start' |
+  'new_project' |
+  'templates' |
+  'documentation' |
+  'settings';
+
+export type ActivityType = 
+  'project' | 
+  'template' | 
+  'documentation' | 
+  'settings' | 
+  'device_info' | 
+  'dev_tool';
+
+export interface ActivityItem {
+  id: string;
+  title: string;
+  description?: string;
+  timestamp: string;
+  type: ActivityType;
+  details?: {
+    action: ActivityActionType;
+    from?: string;
+    to?: string;
+    tool?: string;
+    actionId?: string;
+  };
 }
 
-const initialState = {
-  quickActions: [],
-  recentActivity: [],
-};
+interface HomeStore {
+  quickActions: QuickAction[];
+  recentActivity: ActivityItem[];
+  setQuickActions: (quickActions: QuickAction[]) => void;
+  addActivity: (activity: ActivityItem) => void;
+  clearActivity: () => void;
+}
 
-export const useHomeStore = create<HomeState>((set, get) => ({
-  ...initialState,
-  
-  setQuickActions: (actions: QuickAction[]) => 
-    set({ quickActions: actions }),
-    
-  addQuickAction: (action: QuickAction) => 
-    set((state) => ({ 
-      quickActions: [...state.quickActions, action] 
-    })),
-    
-  removeQuickAction: (id: string) => 
-    set((state) => ({ 
-      quickActions: state.quickActions.filter(action => action.id !== id) 
-    })),
-    
-  setRecentActivity: (activity: any[]) => 
-    set({ recentActivity: activity }),
-    
-  reset: () => 
-    set(initialState),
-}));
+export const useHomeStore = create<HomeStore>()(
+  persist(
+    (set) => ({
+      quickActions: [],
+      recentActivity: [],
+      setQuickActions: (quickActions) => set({ quickActions }),
+      addActivity: (activity) => set((state) => ({
+        recentActivity: [activity, ...state.recentActivity].slice(0, 50),
+      })),
+      clearActivity: () => set({ recentActivity: [] }),
+    }),
+    {
+      name: 'home-store',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

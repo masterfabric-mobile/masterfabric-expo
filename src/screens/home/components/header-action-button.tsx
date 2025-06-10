@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, useColorScheme } from 'react-native';
+import { Pressable } from 'react-native';
 
+import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors } from '@/src/shared/constants/Colors';
 import { headerActionButtonStyles } from '../styles/header-action-button.styles';
 
 interface HeaderActionButtonProps {
@@ -19,8 +21,9 @@ export function HeaderActionButton({
   size = 20,
   variant = 'default'
 }: HeaderActionButtonProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   const buttonStyle = variant === 'profile' 
     ? headerActionButtonStyles.profileButton 
@@ -31,7 +34,7 @@ export function HeaderActionButton({
       onPress={onPress}
       style={[
         buttonStyle,
-        { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+        { backgroundColor: colors.buttonBackground }
       ]}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -39,7 +42,7 @@ export function HeaderActionButton({
       <Ionicons 
         name={iconName}
         size={size} 
-        color={isDark ? '#FFFFFF' : '#000000'} 
+        color={colors.headerIcon} 
       />
     </Pressable>
   );

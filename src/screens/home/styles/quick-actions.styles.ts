@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const quickActionsStyles = StyleSheet.create({
   section: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   sectionTitle: {
     fontSize: 20,
@@ -10,18 +10,36 @@ export const quickActionsStyles = StyleSheet.create({
     marginBottom: 16,
   },
   actionsList: {
+    flexDirection: 'column',
+    gap: 12,
+  },
+  actionGrid: {
+    flexDirection: 'column',
     gap: 12,
   },
   actionCard: {
     flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
     borderRadius: 12,
-    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   actionIcon: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  actionIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -31,11 +49,14 @@ export const quickActionsStyles = StyleSheet.create({
   },
   actionTitle: {
     fontSize: 16,
-    marginBottom: 2,
+    fontWeight: '600',
+    marginBottom: 4,
   },
   actionDescription: {
     fontSize: 14,
     opacity: 0.7,
-    lineHeight: 18,
   },
 });
+
+// For backward compatibility
+export const actionsStyles = quickActionsStyles;

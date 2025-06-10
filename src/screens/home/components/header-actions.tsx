@@ -1,45 +1,34 @@
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
+import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, View, useColorScheme } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { headerActionsStyles as styles } from '../styles/header-actions.styles';
+import { getHeaderIconName } from '../utils';
 
-import { t } from '@/src/shared/i18n';
-import { headerActionsStyles } from '../styles/header-actions.styles';
-
-interface HeaderActionsProps {
+export interface HeaderActionsProps {
   onNotificationPress?: () => void;
-  onSettingsPress?: () => void;
-  onProfilePress?: () => void;
 }
 
 export function HeaderActions({ 
-  onNotificationPress, 
-  onSettingsPress, 
-  onProfilePress 
+  onNotificationPress = () => {} 
 }: HeaderActionsProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
-
-  const handleNotificationsPress = () => {
-    if (onNotificationPress) {
-      onNotificationPress();
-    }
-  };
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   return (
-    <View style={headerActionsStyles.container}>
+    <View style={styles.container}>
       <Pressable
-        onPress={handleNotificationsPress}
-        style={[
-          headerActionsStyles.iconButton,
-          { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
-        ]}
-        accessibilityRole="button"
+        style={[styles.iconButton, { backgroundColor: colors.headerBackground }]}
+        onPress={onNotificationPress}
         accessibilityLabel={t('accessibility.notifications')}
       >
-        <Ionicons 
-          name="notifications-outline" 
-          size={20} 
-          color={isDark ? '#FFFFFF' : '#000000'} 
+        <Ionicons
+          name={getHeaderIconName('notification') as any}
+          size={24}
+          color={colors.headerIcon}
         />
       </Pressable>
     </View>
