@@ -32,7 +32,10 @@
     "next": "İleri",
     "skip": "Atla",
     "getStarted": "Başla",
-    "close": "Kapat"
+    "close": "Kapat",
+    "unknown": "Bilinmiyor",
+    "yes": "Evet",
+    "no": "Hayır"
   },
   "greetings": {
     "goodMorning": "Günaydın",
@@ -43,10 +46,27 @@
   "home": {
     "title": "Ana Sayfa",
     "greeting": "Merhaba, {{name}}!",
-    "typewriter": "Sen Geliştiricisan 🎉🚀",
+    "typewriter": "Sen Geliştiricisen 🎉🚀",
     "quickActions": "Hızlı İşlemler",
     "recentActivity": "Son Aktiviteler",
+    "developerTools": "Geliştirici Araçları",
     "noActivity": "Henüz son aktivite yok. Uygulamanızı geliştirmeye başlayın!",
+    "activity": {
+      "opened": "açıldı",
+      "themeChanged": "Tema: {{from}} → {{to}}",
+      "languageChanged": "Dil: {{from}} → {{to}}",
+      "deviceInfoRetrieved": "Cihaz bilgileri alındı",
+      "deviceInfoViewed": "Cihaz bilgi detayları görüntülendi",
+      "notificationsChanged": "Bildirim ayarları güncellendi",
+      "settingsChanged": "Ayarlar güncellendi",
+      "settingsOpened": "Ayarlar sayfası açıldı", 
+      "devToolUsed": "Geliştirici aracı kullanıldı",
+      "onboardingStarted": "Tanıtım önizlemesi başlatıldı",
+      "appStarted": "Uygulama başlatıldı",
+      "newProject": "Yeni proje oluşturulmaya başlandı",
+      "templatesViewed": "Proje şablonlarına göz atıldı",
+      "documentationOpened": "Belgeler açıldı"
+    },
     "actions": {
       "newProject": {
         "title": "Yeni Proje",
@@ -63,6 +83,16 @@
       "settings": {
         "title": "Ayarlar",
         "description": "Çalışma alanınızı yapılandırın"
+      }
+    },
+    "developer": {
+      "onboarding": {
+        "title": "Ön Gorüntüleme",
+        "description": "Uygulamanın özelliklerini keşfedin"
+      },
+      "deviceInfo": {
+        "title": "Cihaz Bilgileri",
+        "description": "Detaylı cihaz ve sistem bilgilerini göster"
       }
     }
   },
@@ -137,19 +167,51 @@
     "profile": "Profili aç"
   },
   "settings": {
+    "title": "Ayarlar",
     "language": "Dil",
+    "languageDescription": "Uygulamanın dilini seçin",
     "switchTo": "Geçiş yap",
+    "subtitle": "Kişiselleştirme ve tercihler",
+    "languageCard": {
+      "title": "Dil",
+      "subtitle": "Uygulama dilini değiştirin"
+    },
+    "appearanceCard": {
+      "title": "Görünüm",
+      "subtitle": "Tema ve görsel tercihlerinizi seçin"
+    },
     "theme": {
       "title": "Görünüm",
       "description": "Uygulamanın nasıl görünmesini istediğinizi seçin",
       "light": "Açık",
-      "dark": "Koyu",
-      "system": "Sistem"
+      "dark": "Koyu", 
+      "system": "Sistem",
+      "lightDescription": "Açık ve temiz görünüm",
+      "darkDescription": "Göz dostu koyu görünüm",
+      "systemDescription": "Cihaz ayarlarını takip et"
     },
-    "preview": "Önizleme",
-    "previewTitle": "Örnek İçerik",
-    "previewText": "Seçilen tema ile içeriğiniz böyle görünecek.",
-    "previewButton": "Örnek Buton"
+    "languageNames": {
+      "en": "İngilizce",
+      "tr": "Türkçe"
+    },
+    "sections": {
+      "appearance": {
+        "title": "Görünüm",
+        "description": "Tema ve dil ayarları"
+      },
+      "general": {
+        "title": "Genel",
+        "description": "Genel uygulama ayarları"
+      },
+      "about": {
+        "title": "Hakkında",
+        "description": "Uygulama bilgileri"
+      }
+    },
+    "navigation": {
+      "back": "Geri",
+      "close": "Kapat"
+    }
   },
   "notifications": {
     "justNow": "Şimdi",
@@ -163,6 +225,34 @@
     "empty": {
       "title": "Bildirim yok",
       "message": "Harika! Yeni bildirimler burada görünecek."
+    }
+  },
+  "deviceInfo": {
+    "title": "Cihaz Bilgileri",
+    "platform": "Platform",
+    "device": "Cihaz",
+    "brand": "Marka",
+    "os": "İşletim Sistemi",
+    "app": "Uygulama",
+    "appVersion": "Uygulama Sürümü",
+    "screen": "Ekran",
+    "memory": "Bellek",
+    "isDevice": "Gerçek Cihaz",
+    "session": "Oturum",
+    "timestamp": "Zaman Damgası",
+    "compatible": "Uyumlu",
+    "warnings": "Uyarılar",
+    "copyToClipboard": "Panoya Kopyala",
+    "copiedMessage": "Cihaz bilgileri panoya kopyalandı!",
+    "copyError": "Panoya kopyalama başarısız",
+    "getInfoError": "Cihaz bilgileri alınamadı\n\nLütfen konsolu kontrol edin.",
+    "compatibility": {
+      "iosVersionTooLow": "iOS sürümü 12.0 veya daha yüksek olmalıdır",
+      "iosVersionLow": "iOS sürümü 14.0'ın altında olduğu için bazı özellikler sınırlı olabilir",
+      "androidApiTooLow": "Android API seviyesi 21 veya daha yüksek olmalıdır",
+      "androidApiLow": "Android API seviyesi 23'ün altında olduğu için bazı özellikler sınırlı olabilir",
+      "lowMemory": "Düşük cihaz belleği performansı etkileyebilir",
+      "simulatorWarning": "Simülatör/emülatörde çalışıyor - bazı özellikler çalışmayabilir"
     }
   },
   "onboarding": {
@@ -208,5 +298,11 @@
         ]
       }
     }
+  },
+  "time": {
+    "minutesAgo": "{{count}} dk önce",
+    "hoursAgo": "{{count}} sa önce",
+    "daysAgo": "{{count}} gün önce",
+    "justNow": "Şimdi"
   }
 }

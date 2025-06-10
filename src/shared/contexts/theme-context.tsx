@@ -45,6 +45,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   const setThemeMode = async (mode: ThemeMode) => {
     try {
+      console.log('🎨 Setting theme mode:', mode);
       await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
       setThemeModeState(mode);
     } catch (error) {

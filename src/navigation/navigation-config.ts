@@ -71,6 +71,8 @@ export const navigationConfig = {
     config: {
       screens: {
         splash: '/splash',
+        onboarding: '/onboarding',
+        settings: '/settings',
         '(tabs)': {
           screens: {
             index: '/home',

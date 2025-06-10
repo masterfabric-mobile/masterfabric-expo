@@ -25,6 +25,15 @@ const initialState = {
   hasSeenOnboarding: false,
 };
 
+export interface StepControlsProps {
+  currentIndex: number;
+  totalSteps: number;
+  onNext: () => void;
+  onBack: () => void;
+  isFirstStep: boolean;
+  isLastStep: boolean;
+}
+
 export const useOnboardingStore = create<OnboardingState>((set, get) => ({
   ...initialState,
   

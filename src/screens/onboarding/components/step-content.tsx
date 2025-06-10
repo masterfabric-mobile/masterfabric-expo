@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, useColorScheme, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { OnboardingStep } from '../models/onboarding-models';
 import { stepContentStyles } from '../styles/step-content.styles';
 import { getDescriptionAsParagraph } from '../utils';
@@ -12,8 +14,9 @@ interface StepContentProps {
 }
 
 export function StepContent({ step }: StepContentProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   return (
     <ScrollView 
@@ -24,12 +27,12 @@ export function StepContent({ step }: StepContentProps) {
         {/* Icon */}
         <View style={[
           stepContentStyles.iconContainer,
-          { backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7' }
+          { backgroundColor: colors.cardBackground }
         ]}>
           <Ionicons 
             name={step.icon as any} 
             size={48} 
-            color={isDark ? '#007AFF' : '#0066CC'} 
+            color={colors.onboardingIcon} 
           />
         </View>
 
@@ -49,14 +52,11 @@ export function StepContent({ step }: StepContentProps) {
               <View style={[
                 stepContentStyles.paragraphContainer,
                 { 
-                  backgroundColor: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
-                  borderLeftColor: isDark ? '#007AFF' : '#0066CC'
+                  backgroundColor: colors.onboardingDescriptionBg,
+                  borderLeftColor: colors.onboardingDescriptionBorder
                 }
               ]}>
-                <ThemedText style={[
-                  stepContentStyles.paragraphText,
-                  { color: isDark ? '#FFFFFF' : '#000000' }
-                ]}>
+                <ThemedText style={stepContentStyles.paragraphText}>
                   {getDescriptionAsParagraph(step)}
                 </ThemedText>
               </View>

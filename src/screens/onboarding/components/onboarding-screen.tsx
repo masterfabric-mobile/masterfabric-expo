@@ -1,8 +1,10 @@
 import React from 'react';
-import { Pressable, useColorScheme, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
 import { useOnboardingViewModel } from '../hooks/use-onboarding-view-model';
 import { onboardingScreenStyles } from '../styles/onboarding-screen.styles';
@@ -10,8 +12,9 @@ import { StepContent } from './step-content';
 import { StepControls } from './step-controls';
 
 export function OnboardingScreen() {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
   
   const {
     currentStep,
@@ -30,7 +33,7 @@ export function OnboardingScreen() {
     <SafeAreaView 
       style={[
         onboardingScreenStyles.container,
-        { backgroundColor: isDark ? '#0F0F0F' : '#FFFFFF' }
+        { backgroundColor: colors.onboardingBackground }
       ]}
     >
       <View style={onboardingScreenStyles.contentContainer}>
@@ -44,7 +47,7 @@ export function OnboardingScreen() {
               <ThemedText 
                 style={[
                   onboardingScreenStyles.skipButtonText,
-                  { color: isDark ? '#FFFFFF' : '#000000' }
+                  { color: colors.onboardingSkipText }
                 ]}
               >
                 {t('onboarding.skip')}

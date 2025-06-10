@@ -1,18 +1,12 @@
 import React from 'react';
-import { Pressable, useColorScheme, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { StepControlsProps } from '../store/onboarding-store';
 import { stepControlsStyles } from '../styles/step-controls.styles';
-
-interface StepControlsProps {
-  currentIndex: number;
-  totalSteps: number;
-  onNext: () => void;
-  onBack: () => void;
-  isFirstStep: boolean;
-  isLastStep: boolean;
-}
 
 export function StepControls({ 
   currentIndex, 
@@ -22,8 +16,9 @@ export function StepControls({
   isFirstStep,
   isLastStep 
 }: StepControlsProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   return (
     <View style={stepControlsStyles.container}>
@@ -36,8 +31,8 @@ export function StepControls({
               stepControlsStyles.progressDot,
               {
                 backgroundColor: index <= currentIndex 
-                  ? (isDark ? '#007AFF' : '#0066CC')
-                  : (isDark ? '#333333' : '#E5E5E5')
+                  ? colors.onboardingProgressActive
+                  : colors.onboardingProgressInactive
               }
             ]}
           />
@@ -56,7 +51,7 @@ export function StepControls({
               <ThemedText 
                 style={[
                   stepControlsStyles.backButtonText,
-                  { color: isDark ? '#FFFFFF' : '#000000' }
+                  { color: colors.text }
                 ]}
               >
                 {t('onboarding.back')}
@@ -71,10 +66,15 @@ export function StepControls({
             onPress={onNext}
             style={[
               stepControlsStyles.nextButton,
-              { backgroundColor: isDark ? '#007AFF' : '#0066CC' }
+              { backgroundColor: colors.activeButton }
             ]}
           >
-            <ThemedText style={stepControlsStyles.nextButtonText}>
+            <ThemedText 
+              style={[
+                stepControlsStyles.nextButtonText,
+                { color: colors.background } // Use background color (white/black) instead of hardcoded white
+              ]}
+            >
               {isLastStep ? t('onboarding.getStarted') : t('onboarding.next')}
             </ThemedText>
           </Pressable>

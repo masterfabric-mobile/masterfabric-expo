@@ -32,7 +32,10 @@
     "next": "Next",
     "skip": "Skip",
     "getStarted": "Get Started",
-    "close": "Close"
+    "close": "Close",
+    "unknown": "Unknown",
+    "yes": "Yes",
+    "no": "No"
   },
   "onboarding": {
     "back": "Back",
@@ -90,7 +93,24 @@
     "typewriter": "You're Developer 🎉🚀",
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity",
+    "developerTools": "Developer Tools",
     "noActivity": "No recent activity yet. Start building your app!",
+    "activity": {
+      "opened": "opened",
+      "themeChanged": "Theme: {{from}} → {{to}}",
+      "languageChanged": "Language: {{from}} → {{to}}",
+      "deviceInfoRetrieved": "Device information retrieved",
+      "deviceInfoViewed": "Viewed device information details",
+      "notificationsChanged": "Notification settings updated",
+      "settingsChanged": "Settings updated",
+      "settingsOpened": "Opened settings page",
+      "devToolUsed": "Used developer tool",
+      "onboardingStarted": "Started onboarding preview",
+      "appStarted": "Application started",
+      "newProject": "Started creating a new project",
+      "templatesViewed": "Browsed project templates",
+      "documentationOpened": "Opened documentation"
+    },
     "actions": {
       "newProject": {
         "title": "New Project",
@@ -107,6 +127,16 @@
       "settings": {
         "title": "Settings",
         "description": "Configure your workspace"
+      }
+    },
+    "developer": {
+      "onboarding": {
+        "title": "View Onboarding",
+        "description": "Preview onboarding flow for development"
+      },
+      "deviceInfo": {
+        "title": "Device Information",
+        "description": "Show detailed device and system information"
       }
     }
   },
@@ -181,19 +211,51 @@
     "profile": "Open profile"
   },
   "settings": {
+    "title": "Settings",
     "language": "Language",
+    "languageDescription": "Choose your app language",
     "switchTo": "Switch to",
+    "subtitle": "Personalization and preferences",
+    "languageCard": {
+      "title": "Language",
+      "subtitle": "Change application language"
+    },
+    "appearanceCard": {
+      "title": "Appearance",
+      "subtitle": "Choose your theme and visual preferences"
+    },
     "theme": {
       "title": "Appearance",
       "description": "Choose how you want the app to look",
       "light": "Light",
       "dark": "Dark",
-      "system": "System"
+      "system": "System",
+      "lightDescription": "Clean and bright appearance",
+      "darkDescription": "Eye-friendly dark appearance", 
+      "systemDescription": "Follow device settings"
     },
-    "preview": "Preview",
-    "previewTitle": "Sample Content",
-    "previewText": "This is how your content will look with the selected theme.",
-    "previewButton": "Sample Button"
+    "languageNames": {
+      "en": "English",
+      "tr": "Turkish"
+    },
+    "sections": {
+      "appearance": {
+        "title": "Appearance",
+        "description": "Theme and language settings"
+      },
+      "general": {
+        "title": "General",
+        "description": "General app settings"
+      },
+      "about": {
+        "title": "About",
+        "description": "App information"
+      }
+    },
+    "navigation": {
+      "back": "Back",
+      "close": "Close"
+    }
   },
   "notifications": {
     "justNow": "Just now",
@@ -208,5 +270,39 @@
       "title": "No notifications",
       "message": "You're all caught up! New notifications will appear here."
     }
+  },
+  "deviceInfo": {
+    "title": "Device Information",
+    "platform": "Platform",
+    "device": "Device", 
+    "brand": "Brand",
+    "os": "OS",
+    "app": "App",
+    "appVersion": "App Version",
+    "screen": "Screen",
+    "memory": "Memory",
+    "isDevice": "Is Device",
+    "session": "Session",
+    "timestamp": "Timestamp",
+    "compatible": "Compatible",
+    "warnings": "Warnings",
+    "copyToClipboard": "Copy to Clipboard",
+    "copiedMessage": "Device information copied to clipboard!",
+    "copyError": "Failed to copy to clipboard",
+    "getInfoError": "Failed to get device information\n\nPlease check console for details.",
+    "compatibility": {
+      "iosVersionTooLow": "iOS version must be 12.0 or higher",
+      "iosVersionLow": "iOS version below 14.0 may have limited functionality",
+      "androidApiTooLow": "Android API level must be 21 or higher",
+      "androidApiLow": "Android API level below 23 may have limited functionality",
+      "lowMemory": "Low device memory may affect performance",
+      "simulatorWarning": "Running on simulator/emulator - some features may not work"
+    }
+  },
+  "time": {
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "justNow": "Just now"
   }
 }

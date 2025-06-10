@@ -1,7 +1,9 @@
 import React from 'react';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { packageInfoStyles } from '../styles/package-info.styles';
 
 // Import package.json to access data
@@ -20,8 +22,9 @@ export function PackageInfo({
   separator = ' | ',
   textStyle 
 }: PackageInfoProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
 
   const getNestedValue = (obj: any, keyPath: string) => {
     return keyPath.split('.').reduce((current, key) => {
@@ -49,7 +52,7 @@ export function PackageInfo({
         type="default" 
         style={[
           packageInfoStyles.text,
-          { color: isDark ? '#888888' : '#666666' },
+          { color: colors.splashSubtext },
           textStyle
         ]}
       >

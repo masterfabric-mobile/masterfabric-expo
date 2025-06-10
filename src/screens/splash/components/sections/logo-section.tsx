@@ -9,10 +9,16 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
+import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
 import { logoSectionStyles } from '../../styles/logo-section.styles';
 
 export function LogoSection() {
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
+  
   const logoScale = useSharedValue(0);
   const logoOpacity = useSharedValue(0);
   const textOpacity = useSharedValue(0);
@@ -47,10 +53,22 @@ export function LogoSection() {
       </Animated.View>
       
       <Animated.View style={[logoSectionStyles.textContainer, textAnimatedStyle]}>
-        <ThemedText type="title" style={logoSectionStyles.appName}>
+        <ThemedText 
+          type="title" 
+          style={[
+            logoSectionStyles.appName,
+            { color: colors.splashText }
+          ]}
+        >
           {t('splash.appName')}
         </ThemedText>
-        <ThemedText type="subtitle" style={logoSectionStyles.tagline}>
+        <ThemedText 
+          type="subtitle" 
+          style={[
+            logoSectionStyles.tagline,
+            { color: colors.splashSubtext }
+          ]}
+        >
           {t('splash.tagline')}
         </ThemedText>
       </Animated.View>

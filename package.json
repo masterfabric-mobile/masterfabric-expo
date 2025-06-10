@@ -61,7 +61,6 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.8",
     "expo-web-browser": "~14.1.6",
-    "i18n-js": "^4.5.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.3",
@@ -78,7 +77,6 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@testing-library/react-native": "^13.2.0",
-    "@types/i18n-js": "^3.8.9",
     "@types/react": "~19.0.10",
     "@types/react-native": "^0.72.8",
     "@typescript-eslint/eslint-plugin": "^8.33.1",

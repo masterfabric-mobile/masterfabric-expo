@@ -6,7 +6,7 @@ export interface DeviceInfo {
   // Basic device information
   platform: 'ios' | 'android' | 'web';
   deviceName: string | null;
-  deviceType: string | null;
+  deviceType: Device.DeviceType | null;
   brand: string | null;
   manufacturer: string | null;
   modelName: string | null;
@@ -209,29 +209,29 @@ export async function checkDeviceCompatibility(): Promise<{
   if (deviceInfo.platform === 'ios') {
     const version = parseFloat(deviceInfo.osVersion || '0');
     if (version < 12.0) {
-      issues.push('iOS version must be 12.0 or higher');
+      issues.push('deviceInfo.compatibility.iosVersionTooLow');
     } else if (version < 14.0) {
-      warnings.push('iOS version below 14.0 may have limited functionality');
+      warnings.push('deviceInfo.compatibility.iosVersionLow');
     }
   }
 
   if (deviceInfo.platform === 'android') {
     const apiLevel = deviceInfo.platformApiLevel || 0;
     if (apiLevel < 21) {
-      issues.push('Android API level must be 21 or higher');
+      issues.push('deviceInfo.compatibility.androidApiTooLow');
     } else if (apiLevel < 23) {
-      warnings.push('Android API level below 23 may have limited functionality');
+      warnings.push('deviceInfo.compatibility.androidApiLow');
     }
   }
 
   // Check memory if available
   if (deviceInfo.totalMemory && deviceInfo.totalMemory < 2 * 1024 * 1024 * 1024) { // 2GB
-    warnings.push('Low device memory may affect performance');
+    warnings.push('deviceInfo.compatibility.lowMemory');
   }
 
   // Check if it's a real device vs simulator/emulator
   if (!deviceInfo.isDevice) {
-    warnings.push('Running on simulator/emulator - some features may not work');
+    warnings.push('deviceInfo.compatibility.simulatorWarning');
   }
 
   return {
@@ -243,24 +243,29 @@ export async function checkDeviceCompatibility(): Promise<{
 
 /**
  * Get device information formatted for logging/debugging
+ * Returns translation keys that need to be translated by the component
  */
-export async function getDeviceInfoForLogging(): Promise<string> {
+export async function getDeviceInfoForLogging(): Promise<{
+  titleKey: string;
+  fields: Array<{ labelKey: string; value: string; }>;
+}> {
   const deviceInfo = await getDeviceInfo();
   
-  return `
-Device Information:
-------------------
-Platform: ${deviceInfo.platform}
-Device: ${deviceInfo.deviceName || 'Unknown'} (${deviceInfo.modelName || 'Unknown'})
-Brand: ${deviceInfo.brand || 'Unknown'}
-OS: ${deviceInfo.osName} ${deviceInfo.osVersion || 'Unknown'}
-App: ${deviceInfo.appName} v${deviceInfo.appVersion} (${deviceInfo.appBuildVersion})
-Screen: ${deviceInfo.screenWidth}x${deviceInfo.screenHeight}@${deviceInfo.screenScale}x
-Memory: ${deviceInfo.totalMemory ? `${Math.round(deviceInfo.totalMemory / 1024 / 1024 / 1024 * 100) / 100}GB` : 'Unknown'}
-Is Device: ${deviceInfo.isDevice}
-Session: ${deviceInfo.sessionId}
-Timestamp: ${deviceInfo.timestamp}
-  `.trim();
+  return {
+    titleKey: 'deviceInfo.title',
+    fields: [
+      { labelKey: 'deviceInfo.platform', value: deviceInfo.platform },
+      { labelKey: 'deviceInfo.device', value: `${deviceInfo.deviceName || 'unknown'} (${deviceInfo.modelName || 'unknown'})` },
+      { labelKey: 'deviceInfo.brand', value: deviceInfo.brand || 'unknown' },
+      { labelKey: 'deviceInfo.os', value: `${deviceInfo.osName} ${deviceInfo.osVersion || 'unknown'}` },
+      { labelKey: 'deviceInfo.app', value: `${deviceInfo.appName} v${deviceInfo.appVersion} (${deviceInfo.appBuildVersion})` },
+      { labelKey: 'deviceInfo.screen', value: `${deviceInfo.screenWidth}x${deviceInfo.screenHeight}@${deviceInfo.screenScale}x` },
+      { labelKey: 'deviceInfo.memory', value: deviceInfo.totalMemory ? `${Math.round(deviceInfo.totalMemory / 1024 / 1024 / 1024 * 100) / 100}GB` : 'unknown' },
+      { labelKey: 'deviceInfo.isDevice', value: deviceInfo.isDevice ? 'yes' : 'no' },
+      { labelKey: 'deviceInfo.session', value: deviceInfo.sessionId },
+      { labelKey: 'deviceInfo.timestamp', value: deviceInfo.timestamp },
+    ]
+  };
 }
 
 /**
