@@ -187,11 +187,12 @@ export const getThemeColors = (isDark: boolean) => {
 };
 
 // Quick action color mapping
-export const QUICK_ACTION_COLORS = {
-  'new-project': '#007AFF',
-  'templates': '#34C759',
-  'documentation': '#FF9500',
+export const QUICK_ACTION_COLORS: Record<string, string> = {
+  'projects': '#007AFF',
+  'templates': '#FF9500',
+  'documentation': '#34C759',
   'settings': '#8E8E93',
-  'dev-onboarding': '#FF9500',
-  'dev-device-info': '#007AFF',
-} as const;
+  'dev-onboarding': '#FF3B30',
+  'dev-device-info': '#5856D6',
+  'new-project': '#007AFF', // Keep for backward compatibility
+};

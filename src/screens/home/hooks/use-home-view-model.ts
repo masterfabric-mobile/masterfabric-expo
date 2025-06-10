@@ -4,6 +4,7 @@ import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/u
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import { useAppStore } from '@/src/shared/store';
+import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Alert, Clipboard } from 'react-native';
@@ -60,7 +61,7 @@ export function useHomeViewModel() {
     // Determine the activity description and type based on the action
     switch (actionId) {
       case 'new-project':
-        description = t('home.activity.newProject');
+        description = t('home.activity.allProjects');
         actionType = 'project';
         action = 'new_project';
         break;
@@ -216,8 +217,8 @@ export function useHomeViewModel() {
       let actionType: ActivityActionType = 'app_start';
       
       switch (actionId) {
-        case 'new-project':
-          activityDescription = t('home.activity.newProject');
+        case 'projects':
+          activityDescription = t('home.activity.projectsViewed');
           activityType = 'project';
           actionType = 'new_project';
           break;
@@ -269,11 +270,34 @@ export function useHomeViewModel() {
       
       // Handle the action itself
       switch(actionId) {
-        case 'new-project':
-          console.log('Creating new project...');
+        case 'projects':
+          console.log('🚀 Navigating to projects...');
+          router.push('/projects');
           break;
         case 'templates':
-          console.log('Opening templates...');
+          console.log('🌐 Opening templates repository...');
+          const url = 'https://github.com/masterfabric-mobile';
+          Linking.canOpenURL(url).then(canOpen => {
+            if (canOpen) {
+              Linking.openURL(url);
+            } else {
+              console.error('Cannot open URL:', url);
+              Alert.alert(
+                'Unable to Open',
+                'Could not open the GitHub repository. Please check your internet connection.',
+                [{ text: 'OK' }],
+                { userInterfaceStyle: isDark ? 'dark' : 'light' }
+              );
+            }
+          }).catch(error => {
+            console.error('Error opening URL:', error);
+            Alert.alert(
+              'Error',
+              'An error occurred while trying to open the repository.',
+              [{ text: 'OK' }],
+              { userInterfaceStyle: isDark ? 'dark' : 'light' }
+            );
+          });
           break;
         case 'documentation':
           console.log('Opening documentation...');

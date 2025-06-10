@@ -35,7 +35,8 @@
     "close": "Close",
     "unknown": "Unknown",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "back": "Back"
   },
   "onboarding": {
     "back": "Back",
@@ -107,12 +108,17 @@
       "devToolUsed": "Used developer tool",
       "onboardingStarted": "Started onboarding preview",
       "appStarted": "Application started",
-      "newProject": "Started creating a new project",
+      "newProject": "Viewed all projects",
+      "projectsViewed": "Viewed all projects",
       "templatesViewed": "Browsed project templates",
       "documentationOpened": "Opened documentation"
     },
     "actions": {
-      "newProject": {
+      "projects": {
+        "title": "Projects",
+        "description": "View all open source projects"
+      },
+      "allProjects": {
         "title": "New Project",
         "description": "Start a new mobile app project"
       },
@@ -304,5 +310,13 @@
     "hoursAgo": "{{count}}h ago",
     "daysAgo": "{{count}}d ago",
     "justNow": "Just now"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Explore our open source projects",
+    "searchPlaceholder": "Search projects...",
+    "noProjects": "No projects found",
+    "loadError": "Failed to load projects",
+    "refreshHint": "Pull down to refresh or check your connection"
   }
 }

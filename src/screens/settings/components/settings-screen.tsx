@@ -1,11 +1,12 @@
 import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
+import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
+import { t } from '@/src/shared/i18n';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsViewModel } from '../hooks/use-settings-view-model';
 import { settingsStyles } from '../styles/settings-styles';
 import { SettingsContent } from './settings-content';
-import { SettingsHeader } from './settings-header';
 
 export function SettingsScreen() {
   const { currentTheme } = useTheme();
@@ -25,7 +26,11 @@ export function SettingsScreen() {
       style={[settingsStyles.container, { backgroundColor: colors.settingsBackground }]}
       edges={['top']}
     >
-      <SettingsHeader onBackPress={navigateBack} />
+      <ScreenHeader 
+        title={t('settings.title')}
+        subtitle={t('settings.subtitle')}
+        onBackPress={navigateBack}
+      />
 
       <SettingsContent
         currentLanguage={currentLanguage}

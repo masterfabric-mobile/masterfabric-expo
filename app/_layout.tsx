@@ -61,6 +61,7 @@ export default function RootLayout() {
                     >
                       <Stack.Screen name="splash" />
                       <Stack.Screen name="onboarding" />
+                      <Stack.Screen name="projects" />
                       <Stack.Screen name="settings" />
                       <Stack.Screen name="(tabs)" />
                       <Stack.Screen name="+not-found" />
