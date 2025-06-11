@@ -1,3 +1,4 @@
+import { StageBadge } from '@/src/shared/components/StageBadge';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
@@ -7,18 +8,23 @@ import { router } from 'expo-router';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
+// Import package.json to check stage
+const packageInfo = require('@/package.json');
+
 interface ScreenHeaderProps {
   title: string;
   subtitle?: string;
   onBackPress?: () => void;
   showBackButton?: boolean;
+  showStageBadge?: boolean;
 }
 
 export function ScreenHeader({ 
   title, 
   subtitle, 
   onBackPress,
-  showBackButton = true 
+  showBackButton = true,
+  showStageBadge = false
 }: ScreenHeaderProps) {
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
@@ -33,6 +39,9 @@ export function ScreenHeader({
       router.replace('/(tabs)');
     }
   };
+
+  const stage = packageInfo.stage || 'development';
+  const shouldShowBadge = showStageBadge && (stage === 'development' || stage === 'debug' || stage === 'dev');
 
   return (
     <View style={[styles.header, { 
@@ -52,9 +61,14 @@ export function ScreenHeader({
       )}
       
       <View style={[styles.headerContent, { marginLeft: showBackButton ? 8 : 0 }]}>
-        <ThemedText style={[styles.headerTitle, { color: colors.text }]}>
-          {title}
-        </ThemedText>
+        <View style={styles.titleContainer}>
+          <ThemedText style={[styles.headerTitle, { color: colors.text }]}>
+            {title}
+          </ThemedText>
+          {shouldShowBadge && (
+            <StageBadge type="text" />
+          )}
+        </View>
         {subtitle && (
           <ThemedText style={[styles.headerSubtitle, { color: colors.icon }]}>
             {subtitle}
@@ -96,5 +110,10 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 32,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 });

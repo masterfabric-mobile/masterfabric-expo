@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
-import { stageBadgeStyles } from '../styles/stage-badge.styles';
+import { stageBadgeStyles } from '../../screens/splash/styles/stage-badge.styles';
 
 // Import package.json to access stage data
 const packageInfo = require('@/package.json');

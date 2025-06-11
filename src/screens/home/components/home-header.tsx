@@ -1,5 +1,6 @@
-import React from 'react';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
+import React from 'react';
 
 import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
@@ -17,6 +18,11 @@ export function HomeHeader({ onNotificationPress }: HomeHeaderProps) {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
 
+  const handleNotificationPress = () => {
+    router.push('/notifications');
+    onNotificationPress?.();
+  };
+
   return (
     <BlurView
       intensity={getHeaderIntensity(isDark)}
@@ -32,7 +38,7 @@ export function HomeHeader({ onNotificationPress }: HomeHeaderProps) {
       <HeaderLogo />
       
       <HeaderActions
-        onNotificationPress={onNotificationPress}
+        onNotificationPress={handleNotificationPress}
       />
     </BlurView>
   );
