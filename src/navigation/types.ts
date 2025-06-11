@@ -2,6 +2,7 @@
 export type RootStackParamList = {
   splash: undefined;
   '(tabs)': undefined;
+  notifications: undefined;
   '+not-found': undefined;
 };
 

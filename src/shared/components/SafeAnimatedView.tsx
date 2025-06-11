@@ -1,23 +1,33 @@
 import React from 'react';
-import { View, ViewProps } from 'react-native';
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
 import Animated, { AnimatedProps } from 'react-native-reanimated';
 
 interface SafeAnimatedViewProps extends AnimatedProps<ViewProps> {
   children?: React.ReactNode;
 }
 
-export function SafeAnimatedView({ children, ...props }: SafeAnimatedViewProps) {
+export function SafeAnimatedView({ children, style, ...props }: SafeAnimatedViewProps) {
   try {
     return (
-      <Animated.View {...props}>
+      <Animated.View style={style} {...props}>
         {children}
       </Animated.View>
     );
   } catch (error) {
     console.error('SafeAnimatedView error:', error);
-    // Fallback to regular View
+    // Fallback to regular View - filter out animated-specific props
+    const { 
+      entering, 
+      exiting, 
+      layout, 
+      sharedTransitionTag, 
+      sharedTransitionStyle,
+      ...regularProps 
+    } = props as any;
+    
+    const fallbackStyle = style as StyleProp<ViewStyle>;
     return (
-      <View style={props.style}>
+      <View style={fallbackStyle} {...regularProps}>
         {children}
       </View>
     );

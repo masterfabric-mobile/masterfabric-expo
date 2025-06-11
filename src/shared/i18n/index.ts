@@ -418,3 +418,21 @@ export const useTranslation = () => {
   };
 };
 
+// Simple translation function - in a real app this would be more sophisticated
+let currentLanguage = 'en';
+
+export const setLanguage = (lang: 'en' | 'tr') => {
+  currentLanguage = lang;
+};
+
+export const translate = (key: string): string => {
+  const keys = key.split('.');
+  let value: any = directTranslations[currentLanguage as keyof typeof directTranslations];
+  
+  for (const k of keys) {
+    value = value?.[k];
+  }
+  
+  return value || key;
+};
+

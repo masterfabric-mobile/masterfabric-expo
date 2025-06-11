@@ -220,18 +220,44 @@
     }
   },
   "notifications": {
-    "justNow": "Şimdi",
-    "minutesAgo": "{{count}} dk önce",
-    "hoursAgo": "{{count}} sa önce", 
-    "daysAgo": "{{count}} gün önce",
-    "unreadCount": "{{count}} okunmamış",
-    "allRead": "Hepsi okundu!",
-    "markAllRead": "Tümünü okundu işaretle",
-    "clearAll": "Tümünü temizle",
+    "title": "Bildirimler",
+    "subtitle": "Son aktivitelerinizden haberdar olun",
+    "stageBadge": {
+      "development": "GELİŞTİRME",
+      "debug": "HATA AYIKLAMA",
+      "production": "CANLI",
+      "release": "CANLI"
+    },
     "empty": {
       "title": "Bildirim yok",
       "message": "Harika! Yeni bildirimler burada görünecek."
-    }
+    },
+    "tabs": {
+      "all": "Tümü",
+      "app": "Uygulama",
+      "system": "Sistem"
+    },
+    "markAsRead": "Okundu olarak işaretle",
+    "markAsUnread": "Okunmadı olarak işaretle",
+    "deleteNotification": "Bildirimi sil",
+    "clearAll": "Tümünü temizle",
+    "settings": "Bildirim ayarları",
+    "deleted": "Bildirim silindi",
+    "deletedMessage": "Bildirim kaldırıldı",
+    "swipeToDelete": "Silmek için sola kaydırın",
+    "types": {
+      "info": "Bilgi",
+      "warning": "Uyarı",
+      "error": "Hata",
+      "success": "Başarılı"
+    },
+    "justNow": "Şimdi",
+    "minutesAgo": "{{count}} dk önce",
+    "hoursAgo": "{{count}} sa önce",
+    "daysAgo": "{{count}} gün önce",
+    "unreadCount": "{{count}} okunmamış",
+    "allRead": "Hepsi okundu!",
+    "markAllRead": "Tümü okundu"
   },
   "deviceInfo": {
     "title": "Cihaz Bilgileri",
