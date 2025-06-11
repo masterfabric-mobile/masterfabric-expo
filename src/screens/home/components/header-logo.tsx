@@ -2,11 +2,11 @@ import { Image } from 'expo-image';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-import { StageBadge } from '@/src/screens/splash/components/stage-badge';
+import { StageBadge } from '@/src/shared/components/StageBadge';
 import { ThemedText } from '@/src/shared/components/ThemedText';
+import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors } from '@/src/shared/constants/Colors';
 import { headerLogoSectionStyles } from '../styles/header-logo-section.styles';
 
 export function HeaderLogo() {

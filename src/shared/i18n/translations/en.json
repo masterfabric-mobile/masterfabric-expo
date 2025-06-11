@@ -264,18 +264,44 @@
     }
   },
   "notifications": {
-    "justNow": "Just now",
-    "minutesAgo": "{{count}}m ago",
-    "hoursAgo": "{{count}}h ago", 
-    "daysAgo": "{{count}}d ago",
-    "unreadCount": "{{count}} unread",
-    "allRead": "All caught up!",
-    "markAllRead": "Mark all read",
-    "clearAll": "Clear all",
+    "title": "Notifications",
+    "subtitle": "Stay updated with your latest activities",
+    "stageBadge": {
+      "development": "DEV MODE",
+      "debug": "DEBUG MODE", 
+      "production": "LIVE MODE",
+      "release": "LIVE MODE"
+    },
     "empty": {
       "title": "No notifications",
       "message": "You're all caught up! New notifications will appear here."
-    }
+    },
+    "tabs": {
+      "all": "All",
+      "app": "App",
+      "system": "System"
+    },
+    "markAsRead": "Mark as read",
+    "markAsUnread": "Mark as unread",
+    "deleteNotification": "Delete notification",
+    "clearAll": "Clear all",
+    "settings": "Notification settings",
+    "deleted": "Notification deleted",
+    "deletedMessage": "The notification has been removed",
+    "swipeToDelete": "Swipe left to delete",
+    "types": {
+      "info": "Information",
+      "warning": "Warning",
+      "error": "Error",
+      "success": "Success"
+    },
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "unreadCount": "{{count}} unread",
+    "allRead": "All caught up!",
+    "markAllRead": "Mark all read"
   },
   "deviceInfo": {
     "title": "Device Information",
