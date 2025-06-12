@@ -1,150 +1,163 @@
-# MasterFabric Expo 🚀
+# MasterFabric Expo &nbsp;🚀
 
-Modern mobile application platform designed for fabric design and management. Built with React Native and Expo for seamless cross-platform development.
+[![Expo](https://img.shields.io/badge/Expo-53.0.0-1B1F23?logo=expo&logoColor=white)](https://expo.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.73-61DAFB?logo=react&logoColor=white)](https://reactnative.dev/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 
-## 📖 About MasterFabric
+> **Modern cross-platform mobile application design, management & development tool.**  
+> Cross-platform, type-safe, and lightning fast.
 
-MasterFabric is a comprehensive mobile solution for textile professionals, designers, and fabric enthusiasts. The platform provides tools for fabric catalog management, design visualization, and collaborative workflow management.
+A modern cross-platform mobile application development framework built with React Native and Expo. 
+Offering type-safe development with TypeScript, state management solutions, multi-language support, theming capabilities, and developer tools.
 
-## ✨ Features
+<!-- Optionally, add a screenshot or GIF here -->
+<!-- ![App Screenshot](assets/screenshots/app-demo.gif) -->
 
-- **Multi-platform**: iOS, Android, and Web support with native performance
-- **Fabric Catalog**: Advanced fabric management and categorization system
-- **Design Tools**: Integrated tools for fabric pattern design and visualization
-- **Internationalization**: Full English and Turkish language support
-- **Modern UI**: Adaptive dark/light theme with Material Design principles
-- **Type Safe**: Complete TypeScript implementation for robust development
-- **State Management**: Efficient Zustand store with React Query for data fetching
-- **Navigation**: Type-safe routing with Expo Router
-- **Offline Support**: Local storage capabilities for offline functionality
+## 🚀 Features
 
-## 🛠 Tech Stack
+| **Category** | **Feature**        | **Details**                             |
+|--------------|--------------------|------------------------------------------|
+| Platform     | Cross-Platform      | iOS · Android · Web (PWA)                |
+| Localization | Internationalization| English · Turkish · RTL support          |
+| UI/UX        | Modern UI           | Adaptive theming · Material Design 3     |
+| Design       | Design Tools        | Pattern design · Visual editor           |
+| Development  | Type-Safe           | Fully typed with TypeScript              |
+| State Mgmt   | State Management    | Zustand · React Query                    |
+| Routing      | Navigation          | Expo Router · Type-safe routing          |
+| Storage      | Offline Support     | Local & encrypted storage                |
+| Security     | Secure Storage      | Async + encrypted layer                  |
+| Testing      | Tested              | Jest · RN Testing Library                |
 
-- **Framework**: React Native with Expo SDK 53
-- **Language**: TypeScript for type safety and better DX
-- **Navigation**: Expo Router with file-based routing
-- **State Management**: Zustand + React Query for optimal data flow
-- **Styling**: React Native StyleSheet + Expo components
-- **Animations**: React Native Reanimated for smooth 60fps animations
-- **Storage**: Async Storage + Encrypted Storage for secure data
-- **Testing**: Jest + React Native Testing Library
-- **Internationalization**: Expo Localization with JSON translation files
-- **Development**: ESLint + Prettier for code quality
 
-## 🚀 Quick Start
+## 🛠️ Tech Stack
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Expo CLI (`npm install -g @expo/cli`)
-- iOS Simulator (macOS) or Android Emulator
+| Category         | Stack                                                                 |
+|------------------|----------------------------------------------------------------------|
+| **Framework**    | [Expo SDK 53](https://docs.expo.dev/) + [React Native](https://reactnative.dev/) |
+| **Language**     | [TypeScript](https://www.typescriptlang.org/)                        |
+| **Navigation**   | [Expo Router](https://expo.github.io/router/)                        |
+| **State**        | [Zustand](https://zustand-demo.pmnd.rs/) + [React Query](https://tanstack.com/query/latest) |
+| **Styling**      | React Native StyleSheet, Expo Components                             |
+| **Animations**   | [Reanimated](https://docs.swmansion.com/react-native-reanimated/)    |
+| **Storage**      | Async Storage, Encrypted Storage                                     |
+| **Testing**      | Jest, React Native Testing Library                                   |
+| **i18n**         | Expo Localization, JSON translations                                 |
+| **Dev Tools**    | ESLint, Prettier                                                     |
 
-### Installation
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/masterfabric-mobile/masterfabric-expo.git
-   cd masterfabric-expo
-   ```
+## 📦 Project Structure
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+```dart
+src
+├── screens            # Application views, grouped by feature
+│   ├── home           # Home screen with dashboard
+│   ├── splash         # Initial loading screen
+│   ├── onboarding     # User onboarding flow
+│   ├── projects       # Project listing and details
+│   ├── settings       # User and app settings
+│   ├── notifications  # In-app notifications
+├── navigation         # Navigation configuration and typed routes
+├── shared             # Shared code and modules
+│   ├── components     # Reusable UI components
+│   ├── hooks          # Custom React hooks
+│   ├── i18n           # Internationalization setup
+│   ├── services       # API services and utility logic
+│   ├── store          # Global state management (Zustand, etc.)
+│   ├── types          # Global TypeScript type definitions
+│   └── utils          # General utility functions
+└── assets             # Static assets (images, fonts, icons)
+```
 
-3. **Start development server**
-   ```bash
-   npx expo start
-   ```
+---
 
-4. **Run on device/simulator**
-   - Press `i` for iOS simulator
-   - Press `a` for Android emulator  
-   - Scan QR code with Expo Go app on physical device
+## ⚡ Quick Start
 
-## 📱 Available Platforms
+> **Requirements:** Node.js 18+, npm or yarn, Expo CLI
 
-- **iOS**: iPhone and iPad support with native iOS design patterns
-- **Android**: Phone and tablet support with Material Design 3
-- **Web**: Progressive Web App with responsive design for desktop browsers
+```diff
++ Clone the repo
+git clone https://github.com/masterfabric-mobile/masterfabric-expo.git
+cd masterfabric-expo
+
++ Install dependencies
+npm install
+
++ Start development server
+npx expo start
+```
+
+- Press `i` for iOS, `a` for Android, or scan QR with Expo Go.
+
+---
+
+## 📱 Platforms
+
+- **iOS:** iPhone/iPad (native patterns)
+- **Android:** Phone/Tablet (Material 3)
+- **Web:** PWA, responsive for desktop/mobile
+
+---
 
 ## 🌍 Internationalization
 
-The app supports multiple languages with RTL support:
 - 🇺🇸 English (default)
-- 🇹🇷 Turkish
+- 🇹🇷 Turkish  
+Switch languages in-app, with auto locale detection and RTL support.
 
-Language switching is available in the app settings with automatic locale detection.
+---
 
-## 📁 Project Structure
+## 🧑‍💻 Scripts
 
-```
-src/
-├── screens/           # Feature-based screen modules
-│   ├── home/         # Home screen with dashboard
-│   └── splash/       # Splash screen with loading
-├── navigation/        # Navigation configuration and types
-├── shared/
-│   ├── components/    # Reusable UI components
-│   ├── hooks/         # Custom React hooks
-│   ├── i18n/          # Internationalization setup
-│   ├── services/      # API services and utilities
-│   ├── store/         # Global state management
-│   ├── types/         # TypeScript type definitions
-│   └── utils/         # Utility functions
-└── assets/            # Static assets (images, fonts, icons)
-```
+| Script                | Description                       |
+|-----------------------|-----------------------------------|
+| `npm start`           | Start Expo dev server             |
+| `npm run android`     | Run on Android emulator           |
+| `npm run ios`         | Run on iOS simulator              |
+| `npm run web`         | Run web version                   |
+| `npm run type-check`  | TypeScript check                  |
+| `npm run lint`        | ESLint analysis                   |
+| `npm run format`      | Prettier formatting               |
+| `npm run test`        | Run Jest tests                    |
 
-## 🔧 Development Scripts
-
-```bash
-# Development
-npm start              # Start Expo development server
-npm run android        # Run on Android emulator
-npm run ios           # Run on iOS simulator
-npm run web           # Run web version
-
-# Code Quality
-npm run type-check     # TypeScript type checking
-npm run lint          # ESLint code analysis
-npm run format        # Prettier code formatting
-npm run format:check  # Check code formatting
-
-# Testing
-npm run test          # Run Jest tests
-npm run test:watch    # Run tests in watch mode
-npm run test:coverage # Generate test coverage report
-```
+---
 
 ## 🏗️ Build & Deploy
 
-```bash
-# Build for production
-npx expo build:android    # Android APK/AAB
-npx expo build:ios        # iOS IPA
-npx expo build:web        # Web bundle
-
-# Submit to stores
-npx expo submit:android    # Google Play Store
-npx expo submit:ios       # Apple App Store
+```diff
++ Android
+npx expo build:android
++ iOS
+npx expo build:ios
++ Web
+npx expo build:web
 ```
 
-## 📄 License
-
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Gürkan Fikret Günak**
-- GitHub: [@gurkanfikretgunak](https://github.com/gurkanfikretgunak)
-- Email: gurkanfikretgunak@masterfabric.co
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and feel free to submit issues and pull requests.
+Contributions welcome!  
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and open issues or PRs.
+
+---
+
+## 📄 License
+
+[GNU AGPL v3.0](LICENSE)
+
+---
+
+## 👤 Author
+
+[Gürkan Fikret Günak](https://github.com/gurkanfikretgunak)  
+✉️ gurkanfikretgunak@masterfabric.co
+
+---
 
 ## 📚 Documentation
 
-For more detailed documentation, please visit our [docs](docs/) directory:
-- [Internationalization Implementation](docs/i18n-implementation.md)
+See [`docs/`](docs/) for guides:
+- [Internationalization](docs/i18n-implementation.md)
 - [Development Rules](rules/expo-development-rules.md)
