@@ -12,7 +12,7 @@ const i18n = new I18n({
 });
 
 // Set the locale based on device settings but default to English if not available
-const deviceLocale = Localization.locale.split('-')[0];
+const deviceLocale = Localization.locale ? Localization.locale.split('-')[0] : 'en';
 i18n.locale = Object.keys(i18n.translations).includes(deviceLocale) ? deviceLocale : 'en';
 
 // Enable fallback if locale is not supported
