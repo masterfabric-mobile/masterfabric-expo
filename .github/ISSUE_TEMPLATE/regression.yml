@@ -1,0 +1,114 @@
+name: ♻️ Regression Report
+description: Report functionality that worked before but is broken now
+title: "[REGRESSION] "
+labels: ["bug", "regression", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for regressions — behavior that used to work but no longer does.
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      description: Please confirm before submitting
+      options:
+        - label: I verified this used to work in a previous version of MasterFabric Expo
+          required: true
+        - label: I searched existing issues for similar regressions
+          required: true
+
+  - type: input
+    id: prev_version
+    attributes:
+      label: Previously Working Version
+      description: Version where this behavior worked
+      placeholder: e.g., 1.0.0, commit abc123, PR #45
+    validations:
+      required: true
+
+  - type: input
+    id: broken_version
+    attributes:
+      label: First Broken Version
+      description: Version where this started breaking
+      placeholder: e.g., 1.0.1, commit def456, PR #52
+    validations:
+      required: true
+
+  - type: input
+    id: suspected_change
+    attributes:
+      label: Suspected Change (optional)
+      description: Link a commit/PR that might have caused it
+      placeholder: https://github.com/masterfabric-mobile/masterfabric-expo/pull/...
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected Area
+      options:
+        - Core App
+        - Navigation
+        - UI Components
+        - Theming
+        - Animations
+        - State Management
+        - Services/API
+        - Storage
+        - i18n/Localization
+        - Build/CI
+        - Other/Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Previously Expected Behavior
+      description: What used to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Behavior
+      description: What happens now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps To Reproduce
+      placeholder: |
+        1. Using version ...
+        2. Do ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - MasterFabric Expo Version: [e.g. 1.0.1]
+        - Expo SDK Version: [e.g. 53.0.0]
+        - React Native Version: [e.g. 0.79.3]
+        - Node.js Version: [e.g. 18.17.0]
+        - OS: [e.g. macOS 14, Windows 11]
+        - Platform: [iOS, Android, Web]
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Stack Trace (optional)
+      render: shell
+    validations:
+      required: false
+

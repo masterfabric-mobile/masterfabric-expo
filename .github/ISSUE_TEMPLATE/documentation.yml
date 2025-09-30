@@ -1,0 +1,130 @@
+name: 📚 Documentation Issue
+description: Report issues with documentation or suggest improvements
+title: "[DOCS] "
+labels: ["documentation", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve MasterFabric Expo's documentation! 
+        Clear documentation is essential for a great developer experience.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm the following before submitting
+      options:
+        - label: I have searched for existing documentation issues
+          required: true
+        - label: I have checked the latest version of the documentation
+          required: true
+
+  - type: dropdown
+    id: doc_type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - README.md
+        - API documentation
+        - Code comments
+        - Getting started guide
+        - Tutorial/Examples
+        - Package-specific docs
+        - Missing documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Related Component
+      description: Which component does this documentation relate to?
+      options:
+        - Core App
+        - Navigation
+        - UI Components
+        - Theming
+        - Animations
+        - State Management
+        - Services/API
+        - Storage
+        - i18n/Localization
+        - General/Root
+        - All components
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Type
+      description: What kind of documentation issue is this?
+      options:
+        - Typo/Grammar
+        - Incorrect information
+        - Outdated information
+        - Missing information
+        - Unclear explanation
+        - Missing examples
+        - Broken links
+        - Formatting issues
+        - Translation needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_documentation
+    attributes:
+      label: Current Documentation
+      description: Link to or quote the current documentation that needs improvement
+      placeholder: |
+        Link: https://...
+        Current text: "..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Issue Description
+      description: Describe what's wrong or missing
+      placeholder: The current documentation is unclear because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested_improvement
+    attributes:
+      label: Suggested Improvement
+      description: How should this be improved?
+      placeholder: |
+        The documentation should instead say...
+        OR
+        Missing documentation should include...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any additional context that would help improve the documentation
+      placeholder: |
+        - Target audience (beginners, advanced users, etc.)
+        - Related documentation that could be referenced
+        - Examples that would be helpful
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to help improve this documentation?
+      options:
+        - label: I would like to submit a pull request with the fix
+        - label: I can help review proposed changes
+        - label: I can provide additional examples or use cases

@@ -1,0 +1,157 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve MasterFabric Expo
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report for MasterFabric Expo! 
+        Please provide as much detail as possible to help us resolve the issue quickly.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm the following before submitting
+      options:
+        - label: I have searched for existing issues that might be related to this bug
+          required: true
+        - label: I have read the [documentation](https://github.com/masterfabric-mobile/masterfabric-expo/blob/dev/README.md)
+          required: true
+        - label: I am using the latest version of MasterFabric Expo
+          required: true
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected Package
+      description: Which MasterFabric Expo component is affected?
+      options:
+        - Core App
+        - Navigation
+        - UI Components
+        - Theming
+        - Animations
+        - State Management
+        - Services/API
+        - Storage
+        - i18n/Localization
+        - Build/CI
+        - All components
+        - Unknown/Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Which platform are you experiencing this issue on?
+      options:
+        - iOS
+        - Android
+        - Web
+        - All platforms
+        - CLI/Development environment
+    validations:
+      required: true
+
+  - type: dropdown
+    id: screen_feature
+    attributes:
+      label: Screen/Feature
+      description: Which screen or feature is affected?
+      options:
+        - Home Screen
+        - Splash Screen
+        - Onboarding
+        - Projects
+        - Settings
+        - Notifications
+        - Navigation
+        - Not applicable
+        - Other
+    validations:
+      required: false
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen
+      placeholder: Describe what should have happened...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: code_sample
+    attributes:
+      label: Code Sample
+      description: If applicable, add a minimal code sample that reproduces the issue
+      render: typescript
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Stack Trace
+      description: If applicable, add logs or stack trace
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide your environment details
+      placeholder: |
+        - MasterFabric Expo Version: [e.g. 1.0.0]
+        - Expo SDK Version: [e.g. 53.0.0]
+        - React Native Version: [e.g. 0.79.3]
+        - Node.js Version: [e.g. 18.17.0]
+        - OS: [e.g. macOS 14.0, Windows 11, Ubuntu 22.04]
+        - Device: [e.g. iPhone 15, Pixel 7, Web Browser]
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: Any additional information that might help...
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+    validations:
+      required: false

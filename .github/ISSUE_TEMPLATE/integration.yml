@@ -1,0 +1,180 @@
+name: 🔌 Third-party Integration
+description: Issues or requests related to third-party service integrations
+title: "[INTEGRATION] "
+labels: ["integration", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report issues or request improvements for third-party service integrations in MasterFabric Expo.
+        This includes APIs, cloud services, design tools, and other platform connections.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm the following before submitting
+      options:
+        - label: I have searched for existing integration issues
+          required: true
+        - label: I have checked the platform-specific documentation
+          required: true
+        - label: I have verified my API credentials and permissions
+          required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Integration Platform
+      description: Which platform or service is this related to?
+      options:
+        - Design Tools (Figma, Adobe)
+        - Cloud Storage (AWS, Google Cloud)
+        - Analytics (Firebase, Mixpanel)
+        - Authentication (Auth0, Firebase Auth)
+        - Payment (Stripe, PayPal)
+        - Other (specify in description)
+        - Multiple platforms
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue Type
+      description: What type of integration issue is this?
+      options:
+        - Bug in existing integration
+        - New platform support request
+        - API endpoint missing
+        - Authentication issues
+        - Data mapping problems
+        - Performance issues
+        - Feature enhancement
+        - Documentation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: api_area
+    attributes:
+      label: API Area
+      description: Which area of the platform API is affected?
+      options:
+        - Design Assets
+        - User Management
+        - Project Data
+        - File Storage
+        - Authentication
+        - Analytics
+        - Webhooks
+        - Notifications
+        - Other/Multiple
+    validations:
+      required: true
+
+  - type: textarea
+    id: platform_details
+    attributes:
+      label: Platform Details
+      description: Provide details about your platform setup
+      placeholder: |
+        - Service/Platform: [e.g., Firebase, Auth0, AWS S3]
+        - SDK/API version: [e.g., Firebase JS SDK 11, Auth0 2.x]
+        - Relevant packages/plugins: [list any relevant NPM packages]
+        - Integration type: [public, private, development]
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: Issue Description
+      description: Detailed description of the integration issue
+      placeholder: |
+        Describe the specific integration problem you're experiencing...
+        Include any error messages, unexpected behavior, or missing functionality.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api_request_response
+    attributes:
+      label: API Request/Response
+      description: If applicable, include relevant API calls and responses (remove sensitive data)
+      render: json
+      placeholder: |
+        Request:
+        {
+          "method": "GET",
+          "url": "...",
+          "headers": {...}
+        }
+
+        Response:
+        {
+          "status": 200,
+          "data": {...}
+        }
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen with the integration?
+      placeholder: The integration should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: Current Behavior
+      description: What actually happens?
+      placeholder: Instead, the integration...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps to Reproduce
+      description: How to reproduce this integration issue
+      placeholder: |
+        1. Set up platform connection with...
+        2. Configure API credentials...
+        3. Call method/endpoint...
+        4. Observe behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Current Workaround
+      description: If you have found a temporary solution or workaround
+      placeholder: Currently working around this by...
+    validations:
+      required: false
+
+  - type: textarea
+    id: platform_documentation
+    attributes:
+      label: Platform Documentation References
+      description: Links to relevant platform API documentation
+      placeholder: |
+        - https://firebase.google.com/docs/...
+        - https://auth0.com/docs/api/...
+        - https://docs.expo.dev/versions/latest/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other context about the integration issue
+    validations:
+      required: false

@@ -1,0 +1,169 @@
+name: ❓ Question/Help
+description: Ask questions about using MasterFabric Expo or get help with implementation
+title: "[QUESTION] "
+labels: ["question", "help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with MasterFabric Expo? Ask your questions here! 
+        We're here to help you succeed with your fabric design app development.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: Prerequisites
+      description: Please confirm you've tried the following
+      options:
+        - label: I have read the [documentation](https://github.com/masterfabric-mobile/masterfabric-expo/blob/dev/README.md)
+          required: true
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have checked the example projects
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      description: What area does your question relate to?
+      options:
+        - Getting started
+        - Project setup
+        - Core architecture
+        - API integration
+        - UI components
+        - Theming
+        - Animations
+        - i18n/Localization
+        - CLI usage
+        - Deployment
+        - Best practices
+        - Performance
+        - Testing
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: screen_feature
+    attributes:
+      label: Screen/Feature (optional)
+      description: Which screen or feature is this about?
+      options:
+        - Home Screen
+        - Splash Screen
+        - Onboarding
+        - Projects
+        - Settings
+        - Notifications
+        - Navigation
+        - Not applicable
+        - Other
+    validations:
+      required: false
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Related Component
+      description: Which MasterFabric Expo component is your question about?
+      options:
+        - Core App
+        - Navigation
+        - UI Components
+        - State Management
+        - Services/API
+        - Storage
+        - i18n/Localization
+        - General/All
+        - Not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: |
+        Please be as specific as possible. Include:
+        - What you're trying to achieve
+        - What you've tried so far
+        - Where you're stuck
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide context about your project and use case
+      placeholder: |
+        - Project type: [e.g., new fabric design app, existing app integration]
+        - Target platforms: [iOS, Android, Web]
+        - Design focus: [pattern design, fabric management, etc.]
+        - Experience level: [beginner, intermediate, advanced]
+    validations:
+      required: true
+
+  - type: textarea
+    id: code_example
+    attributes:
+      label: Relevant Code
+      description: If applicable, share relevant code snippets
+      render: typescript
+      placeholder: |
+        // Include relevant code here
+        // Remove any sensitive information
+    validations:
+      required: false
+
+  - type: textarea
+    id: what_tried
+    attributes:
+      label: What You've Tried
+      description: What have you already attempted?
+      placeholder: |
+        1. I tried...
+        2. I looked at...
+        3. I followed the guide for...
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected_outcome
+    attributes:
+      label: Expected Outcome
+      description: What are you hoping to achieve?
+      placeholder: I want to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your development environment details
+      placeholder: |
+        - MasterFabric Expo Version: [e.g. 1.0.0]
+        - Expo SDK Version: [e.g. 53.0.0]
+        - React Native Version: [e.g. 0.79.3]
+        - Node.js Version: [e.g. 18.17.0]
+        - OS: [e.g. macOS 14.0, Windows 11]
+        - IDE: [e.g. VS Code, Android Studio]
+    validations:
+      required: false
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      description: How urgent is this question for you?
+      options:
+        - Low - Just curious
+        - Medium - Would like to know soon
+        - High - Blocking my development
+        - Critical - Production issue
+    validations:
+      required: false

@@ -1,0 +1,65 @@
+name: 🧹 Maintenance / Chore
+description: Track non-feature work like refactors, upgrades, or tooling
+title: "[CHORE] "
+labels: ["chore", "maintenance", "needs-triage"]
+body:
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: Dependency upgrade
+        - label: Refactor / cleanup
+        - label: Performance improvement
+        - label: Build/CI/CD
+        - label: Testing / coverage
+        - label: Documentation maintenance
+        - label: Developer tooling / DX
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Core App
+        - Navigation
+        - UI Components
+        - Theming
+        - Animations
+        - State Management
+        - Services/API
+        - Storage
+        - i18n/Localization
+        - Build/CI
+        - Repo hygiene
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to be done and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Tasks
+      description: Actionable checklist
+      placeholder: |
+        - [ ] Upgrade package X to Y
+        - [ ] Remove deprecated API usage in Z
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks/Impact
+      description: Any potential risks or areas to watch
+    validations:
+      required: false
+

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/masterfabric-mobile/masterfabric-expo/blob/dev/README.md
+    about: Read the official MasterFabric Expo documentation
+  - name: 🎨 Expo Documentation
+    url: https://docs.expo.dev/
+    about: Official Expo documentation for React Native development
+  - name: 📱 React Native Documentation
+    url: https://reactnative.dev/docs/getting-started
+    about: Official React Native documentation
