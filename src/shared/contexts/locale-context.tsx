@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { getLocales } from 'expo-localization';
+import { Platform } from 'react-native';
 import { changeLocale as changeI18nLocale, i18n } from '../i18n';
 
 interface LocaleContextType {
@@ -33,8 +34,22 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children }) => {
         changeLocale(savedLocale);
       } else {
         // If no saved locale, use device locale
-        const deviceLocales = getLocales();
-        const deviceLocale = deviceLocales[0]?.languageCode || 'en';
+        let deviceLocale = 'en';
+        
+        try {
+          if (Platform.OS === 'web') {
+            // Web'de browser language'ı kullan
+            deviceLocale = navigator.language?.split('-')[0] || 'en';
+          } else {
+            // Mobile'da expo-localization kullan
+            const deviceLocales = getLocales();
+            deviceLocale = deviceLocales[0]?.languageCode || 'en';
+          }
+        } catch (error) {
+          console.warn('Failed to get device locale:', error);
+          deviceLocale = 'en';
+        }
+        
         const supportedLocale = ['en', 'tr'].includes(deviceLocale) ? deviceLocale : 'en';
         
         console.log('📱 Using device locale:', supportedLocale);

@@ -1,5 +1,6 @@
 import * as Localization from 'expo-localization';
 import { I18n } from 'i18n-js';
+import { Platform } from 'react-native';
 
 // Import translation files
 import en from './translations/en.json';
@@ -12,7 +13,21 @@ const i18n = new I18n({
 });
 
 // Set the locale based on device settings but default to English if not available
-const deviceLocale = Localization.locale.split('-')[0];
+// Web'de expo-localization bazen undefined döndürebilir
+let deviceLocale = 'en';
+try {
+  if (Platform.OS === 'web') {
+    // Web'de browser language'ı kullan
+    deviceLocale = navigator.language?.split('-')[0] || 'en';
+  } else {
+    // Mobile'da expo-localization kullan
+    deviceLocale = Localization.locale?.split('-')[0] || 'en';
+  }
+} catch (error) {
+  console.warn('Failed to get device locale:', error);
+  deviceLocale = 'en';
+}
+
 i18n.locale = Object.keys(i18n.translations).includes(deviceLocale) ? deviceLocale : 'en';
 
 // Enable fallback if locale is not supported
