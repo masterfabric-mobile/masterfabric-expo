@@ -2,8 +2,9 @@ import { getThemeColors } from '@/src/shared/constants/Colors';
 import { useTheme } from '@/src/shared/contexts/theme-context';
 import { getCurrentLocale, t } from '@/src/shared/i18n';
 import { useEffect, useMemo } from 'react';
-import { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { GestureContext, NotificationItem, NotificationTab, TabItem } from '../models/notification-models';
+import { Gesture } from 'react-native-gesture-handler';
+import { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { NotificationItem, NotificationTab, TabItem } from '../models/notification-models';
 import { useNotificationStore } from '../store/notification-store';
 
 export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
@@ -273,20 +274,23 @@ export function useNotificationItemGesture(
     }
   };
 
-  const gestureHandler = useAnimatedGestureHandler<any, GestureContext>({
-    onStart: (_, context) => {
-      context.startX = translateX.value;
-    },
-    onActive: (event, context) => {
+  const gestureHandler = Gesture.Pan()
+    .activeOffsetX([-10, 10])
+    .failOffsetY([-20, 20])
+    .shouldCancelWhenOutside(true)
+    .onStart(() => {
+      // Store initial position
+    })
+    .onUpdate((event) => {
       // Only allow horizontal swipe, don't interfere with vertical scrolling
       if (Math.abs(event.velocityX) > Math.abs(event.velocityY)) {
-        const newTranslateX = context.startX + event.translationX;
+        const newTranslateX = event.translationX;
         if (newTranslateX < 0) {
           translateX.value = newTranslateX;
         }
       }
-    },
-    onEnd: (event) => {
+    })
+    .onEnd((event) => {
       // Only trigger delete if it's a clear horizontal swipe
       const isHorizontalSwipe = Math.abs(event.translationX) > Math.abs(event.translationY);
       const shouldDelete = isHorizontalSwipe && event.translationX < -100;
@@ -298,9 +302,9 @@ export function useNotificationItemGesture(
         });
       } else {
         translateX.value = withSpring(0);
+        opacity.value = withSpring(1);
       }
-    },
-  });
+    });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],

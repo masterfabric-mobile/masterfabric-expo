@@ -2,7 +2,7 @@ import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useNotificationItemGesture, useNotificationItemTheme, useNotificationItemTime } from '../hooks/use-notification-view-model';
 import { NotificationItemProps } from '../models/notification-models';
@@ -14,12 +14,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
   const { gestureHandler, animatedStyle } = useNotificationItemGesture(notification, onDelete);
 
   return (
-    <PanGestureHandler 
-      onGestureEvent={gestureHandler}
-      activeOffsetX={[-10, 10]}
-      failOffsetY={[-20, 20]}
-      shouldCancelWhenOutside={true}
-    >
+    <GestureDetector gesture={gestureHandler}>
       <Animated.View style={animatedStyle}>
         <Pressable
           style={({ pressed }) => [
@@ -129,7 +124,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
           { backgroundColor: colors.surfaceBorder }
         ]} />
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 }
 
