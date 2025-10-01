@@ -1,8 +1,8 @@
 # MasterFabric Expo &nbsp;🚀
 
-[![Expo](https://img.shields.io/badge/Expo-53.0.0-1B1F23?logo=expo&logoColor=white)](https://expo.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React Native](https://img.shields.io/badge/React%20Native-0.73-61DAFB?logo=react&logoColor=white)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-54.0.0-1B1F23?logo=expo&logoColor=white)](https://expo.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.81-61DAFB?logo=react&logoColor=white)](https://reactnative.dev/)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 
 > **Modern cross-platform mobile application design, management & development tool.**  
@@ -34,7 +34,7 @@ Offering type-safe development with TypeScript, state management solutions, mult
 
 | Category         | Stack                                                                 |
 |------------------|----------------------------------------------------------------------|
-| **Framework**    | [Expo SDK 53](https://docs.expo.dev/) + [React Native](https://reactnative.dev/) |
+| **Framework**    | [Expo SDK 54](https://docs.expo.dev/) + [React Native](https://reactnative.dev/) |
 | **Language**     | [TypeScript](https://www.typescriptlang.org/)                        |
 | **Navigation**   | [Expo Router](https://expo.github.io/router/)                        |
 | **State**        | [Zustand](https://zustand-demo.pmnd.rs/) + [React Query](https://tanstack.com/query/latest) |
