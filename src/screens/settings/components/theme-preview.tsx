@@ -3,9 +3,8 @@ import { TouchableOpacity } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { themePreviewStyles } from '../styles/theme-preview.styles';
 
 export function ThemePreview() {

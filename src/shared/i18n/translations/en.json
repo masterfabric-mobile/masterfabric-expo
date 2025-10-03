@@ -344,5 +344,12 @@
     "noProjects": "No projects found",
     "loadError": "Failed to load projects",
     "refreshHint": "Pull down to refresh or check your connection"
+  },
+  "connectivity": {
+    "dialog": {
+      "title": "No Internet Connection",
+      "message": "You are currently offline. Please check your connection.",
+      "checkAgain": "Check again"
+    }
   }
 }

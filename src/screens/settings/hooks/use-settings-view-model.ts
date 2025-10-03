@@ -1,10 +1,9 @@
 import { useHomeStore } from '@/src/screens/home/store/home-store';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { StorageService } from '@/src/shared/services/storage';
 import { router } from 'expo-router';
+import { useTheme } from 'masterfabric-expo-core';
 import { useCallback, useEffect, useMemo } from 'react';
-import { useColorScheme } from 'react-native';
 import { Theme } from '../models/settings-models';
 import { useSettingsStore } from '../store/settings-store';
 import {
@@ -21,8 +20,9 @@ const STORAGE_KEYS = {
 export function useSettingsViewModel() {
   const { isLoading, setLoading } = useSettingsStore();
   const { locale, changeLocale } = useLocale();
-  const { themeMode, setThemeMode } = useTheme();
-  const systemColorScheme = useColorScheme();
+  const { currentTheme, setTheme } = useTheme();
+  // System color scheme is available but not used in this hook
+  // const systemColorScheme = useColorScheme();
   const { addActivity } = useHomeStore();
   
   // Track settings changes function
@@ -56,22 +56,22 @@ export function useSettingsViewModel() {
   }, [/* translations dependencies if any */]);
   
   // Memoize language options
-  const languageOptions = useMemo(() => {
-    return getLanguageOptions();
-  }, []);
-
-  useEffect(() => {
-    initializeSettings();
-  }, []);
-
-  const initializeSettings = async () => {
+  const initializeSettings = useCallback(async () => {
     setLoading(true);
     
     // Simulate any async initialization if needed
     await new Promise(resolve => setTimeout(resolve, 100));
     
     setLoading(false);
-  };
+  }, [setLoading]);
+
+  const languageOptions = useMemo(() => {
+    return getLanguageOptions();
+  }, []);
+
+  useEffect(() => {
+    initializeSettings();
+  }, [initializeSettings]);
 
   // When language changes
   const handleLanguageChange = useCallback(
@@ -95,8 +95,8 @@ export function useSettingsViewModel() {
   // When theme changes
   const handleThemeChange = useCallback(
     (value: Theme) => {
-      const previousTheme = themeMode;
-      setThemeMode(value);
+      const previousTheme = currentTheme;
+      setTheme(value);
 
       // Track the theme change values, not the translated names
       trackSettingChange(
@@ -108,12 +108,12 @@ export function useSettingsViewModel() {
       // Save the new theme selection using the static method
       StorageService.setItem(STORAGE_KEYS.THEME, value);
     },
-    [themeMode, setThemeMode, trackSettingChange]
+    [currentTheme, setTheme, trackSettingChange]
   );
 
   const isThemeSelected = useCallback((targetTheme: Theme): boolean => {
-    return themeMode === targetTheme;
-  }, [themeMode]);
+    return currentTheme === targetTheme;
+  }, [currentTheme]);
 
   // Navigation functions
   const navigateBack = useCallback(() => {
@@ -135,7 +135,7 @@ export function useSettingsViewModel() {
     languageOptions,
     handleLanguageChange,
     // Theme settings
-    selectedTheme: themeMode,
+    selectedTheme: currentTheme,
     themeOptions,
     handleThemeChange,
     isThemeSelected,

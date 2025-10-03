@@ -2,8 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { packageInfoStyles } from '../styles/package-info.styles';
 
 // Import package.json to access data
@@ -22,8 +21,7 @@ export function PackageInfo({
   separator = ' | ',
   textStyle 
 }: PackageInfoProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
 
   const getNestedValue = (obj: any, keyPath: string) => {

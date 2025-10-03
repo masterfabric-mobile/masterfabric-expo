@@ -1,7 +1,6 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { useLocale } from '@/src/shared/hooks/use-locale';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { User } from '../../models/home-models';
@@ -13,9 +12,8 @@ interface WelcomeSectionProps {
 }
 
 export function WelcomeSection({ greeting, user }: WelcomeSectionProps) {
-  const { currentTheme } = useTheme();
+  const { isDark } = useTheme();
   const { locale } = useLocale(); // Add locale to trigger re-renders
-  const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
 
   // Optional: Force re-render on language change for greeting

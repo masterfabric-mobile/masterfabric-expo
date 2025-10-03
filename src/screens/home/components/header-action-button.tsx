@@ -2,8 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable } from 'react-native';
 
-import { useTheme } from '@/src/shared/contexts/theme-context';
-import { getThemeColors } from '@/src/shared/constants/Colors';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { headerActionButtonStyles } from '../styles/header-action-button.styles';
 
 interface HeaderActionButtonProps {

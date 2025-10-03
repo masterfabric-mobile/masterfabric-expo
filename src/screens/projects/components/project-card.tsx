@@ -2,8 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { GitHubProject } from '../models/project-models';
 import { projectCardStyles } from '../styles/project-card.styles';
 import { formatProjectDate, getLanguageColor } from '../utils';

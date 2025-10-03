@@ -344,5 +344,12 @@
     "noProjects": "Proje bulunamadı",
     "loadError": "Projeler yüklenemedi",
     "refreshHint": "Yenilemek için aşağı çekin veya bağlantınızı kontrol edin"
+  },
+  "connectivity": {
+    "dialog": {
+      "title": "İnternet Bağlantısı Yok",
+      "message": "Şu anda çevrimdışısınız. Lütfen bağlantınızı kontrol edin.",
+      "checkAgain": "Tekrar kontrol et"
+    }
   }
 }

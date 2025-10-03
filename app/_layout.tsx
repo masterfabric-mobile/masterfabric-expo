@@ -10,8 +10,10 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
-import { LocaleProvider, ThemeProvider } from '@/src/shared/contexts';
+import { LocaleProvider } from '@/src/shared/contexts';
 import { useAppStore } from '@/src/shared/store';
+import { ThemeProvider as MasterViewThemeProvider, initMasterView } from 'masterfabric-expo-core';
+import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
 import { useColorScheme } from 'react-native';
 
 // Keep the splash screen visible while we fetch resources
@@ -37,9 +39,51 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      // Fonts loaded, app is ready for splash screen
-      setAppReady(true);
-      SplashScreen.hideAsync();
+      // Start connectivity monitoring while app is active
+      connectivityHelper.start(5000);
+      // Initialize MasterView
+      initMasterView({
+        appName: 'MasterFabric Expo',
+        appVersion: '1.0.0',
+        environment: __DEV__ ? 'development' : 'production',
+        config: {
+          enableActivityTracking: true,
+          enableErrorBoundary: true,
+          enableThemeSupport: false,
+          enableLocalization: true,
+          enableLoadingStates: true,
+          enableNavigationTracking: true,
+          maxActivityItems: 100,
+          enableDebugMode: __DEV__,
+          enableLogging: __DEV__,
+          logLevel: __DEV__ ? 'debug' : 'error',
+          enablePlatformFeatures: true,
+          enableAccessibility: true,
+          enablePermissions: true,
+          enableSentry: false, // Disable Sentry for now
+        },
+        onError: (error) => {
+          console.error('MasterView Error:', error);
+        },
+        onActivityTracked: (activity) => {
+          console.log('Activity Tracked:', activity);
+        },
+        onThemeChanged: (theme) => {
+          console.log('Theme Changed:', theme);
+        },
+        onLocaleChanged: (locale) => {
+          console.log('Locale Changed:', locale);
+        },
+      }).then(() => {
+        // MasterView initialized, app is ready for splash screen
+        setAppReady(true);
+        SplashScreen.hideAsync();
+      }).catch((error) => {
+        console.error('Failed to initialize MasterView:', error);
+        // Still proceed with app loading
+        setAppReady(true);
+        SplashScreen.hideAsync();
+      });
     }
   }, [loaded, setAppReady]);
 
@@ -51,7 +95,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ErrorBoundary>
         <LocaleProvider>
-          <ThemeProvider>
+          <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
               <SafeAreaProvider>
                 <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -71,7 +115,7 @@ export default function RootLayout() {
                 </NavigationThemeProvider>
               </SafeAreaProvider>
             </QueryClientProvider>
-          </ThemeProvider>
+          </MasterViewThemeProvider>
         </LocaleProvider>
       </ErrorBoundary>
     </GestureHandlerRootView>

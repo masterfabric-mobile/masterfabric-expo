@@ -3,9 +3,8 @@ import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useOnboardingViewModel } from '../hooks/use-onboarding-view-model';
 import { onboardingScreenStyles } from '../styles/onboarding-screen.styles';
 import { StepContent } from './step-content';

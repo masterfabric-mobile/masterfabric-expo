@@ -2,12 +2,10 @@ import { BlurView } from 'expo-blur';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { useMasterView } from 'masterfabric-expo-core';
 
 export default function TabBarBackground() {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useMasterView();
 
   return (
     <BlurView

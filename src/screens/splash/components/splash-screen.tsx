@@ -2,20 +2,31 @@ import React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import {
+  ThemeProvider,
+  useMasterView,
+  useThemeColors
+} from 'masterfabric-expo-core';
 import { useSplashViewModel } from '../hooks/use-splash-view-model';
 import { splashScreenStyles } from '../styles/splash-screen.styles';
 import { InfoSection } from './sections/info-section';
 import { LogoSection } from './sections/logo-section';
 import { ProgressSection } from './sections/progress-section';
 
-export function SplashScreen() {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
-  const colors = getThemeColors(isDark);
-
+// Hook-based MasterView implementation for Splash Screen
+function SplashScreenContent() {
   const { isLoading, progress, currentTask } = useSplashViewModel();
+  const { trackActivity, isDark } = useMasterView();
+  const colors = useThemeColors(isDark);
+  
+  // Track activity when component mounts
+  React.useEffect(() => {
+    trackActivity('splash_initialized');
+    
+    return () => {
+      trackActivity('splash_destroyed');
+    };
+  }, [trackActivity]);
   
   return (
     <SafeAreaView 
@@ -42,5 +53,13 @@ export function SplashScreen() {
         <InfoSection />
       </View>
     </SafeAreaView>
+  );
+}
+
+export function SplashScreen() {
+  return (
+    <ThemeProvider>
+      <SplashScreenContent />
+    </ThemeProvider>
   );
 }

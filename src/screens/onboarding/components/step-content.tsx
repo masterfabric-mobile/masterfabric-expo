@@ -3,8 +3,7 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { OnboardingStep } from '../models/onboarding-models';
 import { stepContentStyles } from '../styles/step-content.styles';
 import { getDescriptionAsParagraph } from '../utils';

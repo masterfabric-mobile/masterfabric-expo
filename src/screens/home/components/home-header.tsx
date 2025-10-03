@@ -2,8 +2,7 @@ import { BlurView } from 'expo-blur';
 import { router } from 'expo-router';
 import React from 'react';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { homeHeaderStyles } from '../styles/home-header.styles';
 import { getHeaderIntensity, getHeaderTint } from '../utils';
 import { HeaderActions } from './header-actions';
@@ -14,8 +13,7 @@ interface HomeHeaderProps {
 }
 
 export function HomeHeader({ onNotificationPress }: HomeHeaderProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
 
   const handleNotificationPress = () => {

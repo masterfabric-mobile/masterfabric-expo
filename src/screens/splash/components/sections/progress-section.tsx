@@ -7,8 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { progressSectionStyles } from '../../styles/progress-section.styles';
 
 interface ProgressSectionProps {
@@ -18,8 +17,8 @@ interface ProgressSectionProps {
 }
 
 export function ProgressSection({ progress, currentTask, isLoading }: ProgressSectionProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  // Use MasterView theme system
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
   const progressWidth = useSharedValue(0);
   
@@ -27,7 +26,7 @@ export function ProgressSection({ progress, currentTask, isLoading }: ProgressSe
     progressWidth.value = withTiming(progress, {
       duration: 500,
     });
-  }, [progress]);
+  }, [progress, progressWidth]);
   
   const animatedProgressStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,

@@ -2,8 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { stageBadgeStyles } from '../../screens/splash/styles/stage-badge.styles';
 
 // Import package.json to access stage data
@@ -14,8 +13,7 @@ interface StageBadgeProps {
 }
 
 export function StageBadge({ type = 'background' }: StageBadgeProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
   
   const stage = packageInfo.stage || 'development';

@@ -2,16 +2,15 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { versionInfoStyles } from '../styles/version-info.styles';
 
 // Import package.json to access version data
 const packageInfo = require('@/package.json');
 
 export function VersionInfo() {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  // Use MasterView theme system
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
 
   return (

@@ -1,10 +1,9 @@
 import { StageBadge } from '@/src/shared/components/StageBadge';
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -26,8 +25,7 @@ export function ScreenHeader({
   showBackButton = true,
   showStageBadge = false
 }: ScreenHeaderProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
 
   const handleBackPress = () => {
