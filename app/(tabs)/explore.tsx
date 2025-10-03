@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
 
 import { Collapsible } from '@/src/shared/components/Collapsible';
@@ -50,7 +49,7 @@ export default function TabTwoScreen() {
           {t('explore.sections.images.description1')} <ThemedText type="defaultSemiBold">@2x</ThemedText> {t('explore.sections.images.description2')}{' '}
           <ThemedText type="defaultSemiBold">@3x</ThemedText> {t('explore.sections.images.description3')}
         </ThemedText>
-        <Image source={require('@/src/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
+        {/* Removed missing react-logo.png preview image */}
         <ExternalLink href="https://reactnative.dev/docs/images">
           <ThemedText type="link">{t('explore.sections.fileBasedRouting.learnMore')}</ThemedText>
         </ExternalLink>
