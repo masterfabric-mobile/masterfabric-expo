@@ -26,7 +26,7 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [currentTheme, setCurrentTheme] = useState<ThemeMode>(defaultTheme);
   const [systemColorScheme, setSystemColorScheme] = useState<ColorSchemeName>(
-    Appearance.getColorScheme()
+    Appearance.getColorScheme() || 'light'
   );
 
   // Listen to system theme changes
