@@ -1,7 +1,6 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
 import { deviceInfoStyles } from '../../styles/device-info.styles';

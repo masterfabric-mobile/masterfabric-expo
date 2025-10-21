@@ -1,8 +1,12 @@
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getThemeColors } from '@/src/shared/constants/Colors';
+
+import {
+  ThemeProvider,
+  useMasterView,
+  useThemeColors
+} from 'masterfabric-expo-core';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { homeScreenStyles } from '../styles/home-screen.styles';
 import { getActionIconName } from '../utils';
@@ -13,10 +17,10 @@ import { DeviceInfoSection } from './sections/device-info-section';
 import { QuickActionsSection } from './sections/quick-actions-section';
 import { WelcomeSection } from './sections/welcome-section';
 
-export function HomeScreen() {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
-  const colors = getThemeColors(isDark);
+// Hook-based MasterView implementation for Home Screen
+function HomeScreenContent() {
+  const colors = useThemeColors();
+  const { trackActivity } = useMasterView();
   
   const {
     user,
@@ -28,6 +32,15 @@ export function HomeScreen() {
     handleQuickActionPress,
     handleNotificationPress,
   } = useHomeViewModel();
+
+  // Track activity when component mounts
+  React.useEffect(() => {
+    trackActivity('home_initialized');
+    
+    return () => {
+      trackActivity('home_destroyed');
+    };
+  }, [trackActivity]);
 
   return (
     <SafeAreaView 
@@ -50,7 +63,7 @@ export function HomeScreen() {
         
         <QuickActionsSection 
           quickActions={quickActions}
-          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, isDark)}
+          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
           getIconName={getActionIconName}
         />
 
@@ -63,9 +76,17 @@ export function HomeScreen() {
         />
 
         <DeveloperSection 
-          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, isDark)} 
+          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')} 
         />
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+export function HomeScreen() {
+  return (
+    <ThemeProvider>
+      <HomeScreenContent />
+    </ThemeProvider>
   );
 }

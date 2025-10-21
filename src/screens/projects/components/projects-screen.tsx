@@ -3,10 +3,9 @@ import React from 'react';
 import { FlatList, RefreshControl, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useProjectsViewModel } from '../hooks/use-projects-view-model';
 import { GitHubProject } from '../models/project-models';
 import { projectsScreenStyles } from '../styles/projects-screen.styles';

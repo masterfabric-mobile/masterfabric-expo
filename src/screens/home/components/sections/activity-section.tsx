@@ -1,7 +1,6 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+// import { useLocale } from '@/src/shared/hooks/use-locale';
 import { getCurrentLocale, getTranslatedTitle, t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo } from 'react';
@@ -15,7 +14,8 @@ export function ActivitySection() {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   const { recentActivity } = useHomeStore();
-  const { locale } = useLocale();
+  // Locale is available but not used in this component
+  // const { locale } = useLocale();
   const currentLocale = getCurrentLocale();
   
   // Filter duplicates and get only the last 3 unique activities

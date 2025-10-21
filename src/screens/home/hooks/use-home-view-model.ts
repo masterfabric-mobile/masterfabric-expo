@@ -1,11 +1,10 @@
-import { useTheme } from '@/src/shared/contexts/theme-context';
-import { getDeviceInfoForLogging } from '@/src/shared/helpers/device-info';
 import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+// import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
+import { getDeviceInfoForLogging } from 'masterfabric-expo-core';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Alert, Clipboard } from 'react-native';
 import { ActivityActionType, ActivityItem, ActivityType, useHomeStore } from '../store/home-store';
@@ -14,23 +13,25 @@ import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '
 export function useHomeViewModel() {
   const { user } = useAppStore();
   const { quickActions, recentActivity, addActivity } = useHomeStore();
-  const { locale } = useLocale();
+  // Locale is available but not used in this hook
+  // const { locale } = useLocale();
   const deviceInfo = useBasicDeviceInfo();
   const { compatibility, isLoading: compatibilityLoading } = useDeviceCompatibility();
-  const { currentTheme } = useTheme();
+  // Theme is available but not used in this hook
+  // const { isDark } = useMasterView();
   const initialDeviceInfoAdded = useRef(false);
 
   const greeting = useMemo(() => {
     return formatGreeting(user);
-  }, [user, locale]);
+  }, [user]);
 
   const defaultQuickActions = useMemo(() => {
     return createDefaultQuickActions();
-  }, [locale]);
+  }, []);
 
   const developerActions = useMemo(() => {
     return getDeveloperActions();
-  }, [locale]);
+  }, []);
 
   // Add device info activity when component mounts only once
   useEffect(() => {
@@ -320,7 +321,7 @@ export function useHomeViewModel() {
     } catch (error) {
       console.error('Error handling quick action press:', error);
     }
-  }, [handleDeviceInfoPress, addActivity, t]);
+  }, [handleDeviceInfoPress, addActivity]);
 
   const handleNotificationPress = useCallback(() => {
     try {

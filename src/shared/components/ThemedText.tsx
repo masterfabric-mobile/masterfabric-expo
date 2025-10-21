@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { Colors } from '../constants/Colors';
-import { useTheme } from '../contexts/theme-context';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -17,8 +16,9 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const { currentTheme } = useTheme();
-  const color = lightColor || darkColor || Colors[currentTheme].text;
+  const { isDark } = useTheme();
+  const colors = getThemeColors(isDark);
+  const color = lightColor || darkColor || colors.text;
 
   return (
     <Text

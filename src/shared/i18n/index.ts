@@ -13,14 +13,14 @@ const i18n = new I18n({
 });
 
 // Set the locale based on device settings but default to English if not available
-// Web'de expo-localization bazen undefined döndürebilir
+// On web, expo-localization may sometimes be undefined
 let deviceLocale = 'en';
 try {
   if (Platform.OS === 'web') {
-    // Web'de browser language'ı kullan
+    // On web, use the browser language
     deviceLocale = navigator.language?.split('-')[0] || 'en';
   } else {
-    // Mobile'da expo-localization kullan
+    // On mobile, use expo-localization
     deviceLocale = Localization.locale?.split('-')[0] || 'en';
   }
 } catch (error) {

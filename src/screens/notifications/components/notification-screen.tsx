@@ -6,9 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScaffoldMessage } from '@/src/shared/components';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useNotificationViewModel } from '../hooks/use-notification-view-model';
 
 import { NotificationTab } from '../models/notification-models';

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useTheme } from '../contexts/theme-context';
 import { ThemedText } from './ThemedText';
 
 export interface DropdownOption {

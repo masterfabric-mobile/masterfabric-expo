@@ -3,12 +3,10 @@ import * as Haptics from 'expo-haptics';
 import React from 'react';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
+import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 
 export function HapticTab(props: BottomTabBarButtonProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
 
   return (

@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { getLocales } from 'expo-localization';
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import { changeLocale as changeI18nLocale, i18n } from '../i18n';
+import { i18n } from '../i18n';
 
 interface LocaleContextType {
   locale: string;
@@ -20,50 +20,9 @@ interface LocaleProviderProps {
 export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children }) => {
   const [locale, setLocaleState] = useState<string>('en');
 
-  useEffect(() => {
-    loadLocale();
-  }, []);
-
-  const loadLocale = async () => {
-    try {
-      // First try to load from storage
-      const savedLocale = await AsyncStorage.getItem(LOCALE_STORAGE_KEY);
-      
-      if (savedLocale) {
-        console.log('📱 Loaded saved locale:', savedLocale);
-        changeLocale(savedLocale);
-      } else {
-        // If no saved locale, use device locale
-        let deviceLocale = 'en';
-        
-        try {
-          if (Platform.OS === 'web') {
-            // Web'de browser language'ı kullan
-            deviceLocale = navigator.language?.split('-')[0] || 'en';
-          } else {
-            // Mobile'da expo-localization kullan
-            const deviceLocales = getLocales();
-            deviceLocale = deviceLocales[0]?.languageCode || 'en';
-          }
-        } catch (error) {
-          console.warn('Failed to get device locale:', error);
-          deviceLocale = 'en';
-        }
-        
-        const supportedLocale = ['en', 'tr'].includes(deviceLocale) ? deviceLocale : 'en';
-        
-        console.log('📱 Using device locale:', supportedLocale);
-        changeLocale(supportedLocale);
-      }
-    } catch (error) {
-      console.warn('Failed to load locale:', error);
-      changeLocale('en'); // Fallback to English
-    }
-  };
-
   const changeLocale = useCallback((newLocale: string) => {
     try {
-      console.log('🌐 Changing locale from', locale, 'to', newLocale);
+      console.log('🌐 Changing locale to', newLocale);
       
       // Validate locale
       if (!['en', 'tr'].includes(newLocale)) {
@@ -88,7 +47,50 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children }) => {
       console.error('Error changing locale:', error);
       return false;
     }
-  }, []);
+  }, [setLocaleState]);
+
+  const loadLocale = useCallback(async () => {
+    try {
+      // First try to load from storage
+      const savedLocale = await AsyncStorage.getItem(LOCALE_STORAGE_KEY);
+      
+      if (savedLocale) {
+        console.log('📱 Loaded saved locale:', savedLocale);
+        changeLocale(savedLocale);
+      } else {
+        // If no saved locale, use device locale
+        let deviceLocale = 'en';
+        
+        try {
+          if (Platform.OS === 'web') {
+            // On web, use the browser language
+            deviceLocale = navigator.language?.split('-')[0] || 'en';
+          } else {
+            // On mobile, use expo-localization
+            const deviceLocales = getLocales();
+            deviceLocale = deviceLocales[0]?.languageCode || 'en';
+          }
+        } catch (error) {
+          console.warn('Failed to get device locale:', error);
+          deviceLocale = 'en';
+        }
+        
+        const supportedLocale = ['en', 'tr'].includes(deviceLocale) ? deviceLocale : 'en';
+        
+        console.log('📱 Using device locale:', supportedLocale);
+        changeLocale(supportedLocale);
+      }
+    } catch (error) {
+      console.warn('Failed to load locale:', error);
+      changeLocale('en'); // Fallback to English
+    }
+  }, [changeLocale]);
+
+  useEffect(() => {
+    loadLocale();
+  }, [loadLocale]);
+
+  
 
   const value = {
     locale,

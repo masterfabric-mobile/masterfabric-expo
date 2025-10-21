@@ -4,9 +4,8 @@ import { View } from 'react-native';
 
 import { StageBadge } from '@/src/shared/components/StageBadge';
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { headerLogoSectionStyles } from '../styles/header-logo-section.styles';
 
 export function HeaderLogo() {

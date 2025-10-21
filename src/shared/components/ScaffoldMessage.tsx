@@ -1,9 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
-import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getThemeColors } from '../constants/Colors';
-import { useTheme } from '../contexts/theme-context';
 
 interface ScaffoldMessageProps {
   message: string;
@@ -131,7 +130,7 @@ export function ScaffoldMessage({
   );
 }
 
-const { width } = Dimensions.get('window');
+// const { width } = Dimensions.get('window'); // Not used in current implementation
 
 const styles = StyleSheet.create({
   container: {

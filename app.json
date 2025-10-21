@@ -5,7 +5,7 @@
     "description": "Modern mobile platform for fabric design and management applications",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
+    "icon": "./src/assets/images/app-icon.png",
     "scheme": "masterfabricexpo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,10 +13,11 @@
     "splash": {
       "image": "./src/assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true,
+      "icon": "./src/assets/images/app-icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
       "buildNumber": "1"
     },

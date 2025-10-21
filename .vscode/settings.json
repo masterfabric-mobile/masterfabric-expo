@@ -3,5 +3,6 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "cmake.sourceDirectory": "/Users/gurkanfikretgunak/Documents/GitHub/masterfabric-expo/node_modules/expo-modules-core/android"
 }

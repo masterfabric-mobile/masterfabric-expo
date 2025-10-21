@@ -9,14 +9,13 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors } from '@/src/shared/constants/Colors';
-import { useTheme } from '@/src/shared/contexts/theme-context';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 import { logoSectionStyles } from '../../styles/logo-section.styles';
 
 export function LogoSection() {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  // Use MasterView theme system
+  const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
   
   const logoScale = useSharedValue(0);
