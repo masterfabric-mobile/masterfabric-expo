@@ -1,5 +1,5 @@
 import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
-// import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';
@@ -13,8 +13,7 @@ import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '
 export function useHomeViewModel() {
   const { user } = useAppStore();
   const { quickActions, recentActivity, addActivity } = useHomeStore();
-  // Locale is available but not used in this hook
-  // const { locale } = useLocale();
+  const { locale } = useLocale();
   const deviceInfo = useBasicDeviceInfo();
   const { compatibility, isLoading: compatibilityLoading } = useDeviceCompatibility();
   // Theme is available but not used in this hook
@@ -23,11 +22,11 @@ export function useHomeViewModel() {
 
   const greeting = useMemo(() => {
     return formatGreeting(user);
-  }, [user]);
+  }, [user, locale]);
 
   const defaultQuickActions = useMemo(() => {
     return createDefaultQuickActions();
-  }, []);
+  }, [locale]); // Add locale dependency so it updates when locale changes
 
   const developerActions = useMemo(() => {
     return getDeveloperActions();
@@ -56,33 +55,46 @@ export function useHomeViewModel() {
   // Track activity for quick actions with proper localization
   const trackQuickAction = useCallback((actionId: string, actionTitle: string) => {
     let description = '';
+    let title = '';
     let actionType: ActivityType = 'project';
     let action: ActivityActionType = 'app_start';
     
     // Determine the activity description and type based on the action
     switch (actionId) {
       case 'new-project':
+        title = t('home.actions.projects.title');
         description = t('home.activity.allProjects');
         actionType = 'project';
         action = 'new_project';
         break;
       case 'templates':
+        title = t('home.actions.templates.title');
         description = t('home.activity.templatesViewed');
         actionType = 'template';
         action = 'templates';
         break;
       case 'documentation':
+        title = t('home.actions.documentation.title');
         description = t('home.activity.documentationOpened');
         actionType = 'documentation';
         action = 'documentation';
         break;
       case 'settings':
+        title = t('home.actions.settings.title');
         description = t('home.activity.settingsOpened');
         actionType = 'settings';
         action = 'settings';
         break;
+      case 'helpers':
+        title = t('home.actions.helpers.title');
+        description = t('home.activity.helpersOpened');
+        actionType = 'project';
+        action = 'app_start';
+        break;
       default:
         // For developer tools or other unspecified actions
+        title = actionId.includes('dev-') ? 
+          t('home.developer.title') : actionTitle;
         description = actionId.includes('dev-') ? 
           t('home.activity.devToolUsed') : `${actionTitle} ${t('home.activity.opened')}`;
         actionType = actionId.includes('dev-') ? 'dev_tool' : 'project';
@@ -91,7 +103,7 @@ export function useHomeViewModel() {
     
     const activity: ActivityItem = {
       id: Date.now().toString(),
-      title: actionTitle,
+      title, // Use the translated title directly
       description,
       timestamp: new Date().toISOString(),
       type: actionType,
@@ -238,6 +250,11 @@ export function useHomeViewModel() {
           activityType = 'settings';
           actionType = 'settings';
           break;
+        case 'contact':
+          activityDescription = t('home.actions.contact.description');
+          activityType = 'project';
+          actionType = 'app_start';
+          break;
         case 'dev-onboarding':
           activityDescription = t('home.activity.onboardingStarted');
           activityType = 'dev_tool';
@@ -300,8 +317,38 @@ export function useHomeViewModel() {
             );
           });
           break;
+        case 'helpers':
+          console.log('🔧 Navigating to helpers...');
+          router.push('/helpers');
+          break;
         case 'documentation':
-          console.log('Opening documentation...');
+          console.log('📚 Navigating to documentation...');
+          router.push('/documentation');
+          break;
+        case 'contact':
+          console.log('🌐 Opening MasterFabric website...');
+          const contactUrl = 'https://masterfabric.co';
+          Linking.canOpenURL(contactUrl).then(canOpen => {
+            if (canOpen) {
+              Linking.openURL(contactUrl);
+            } else {
+              console.error('Cannot open URL:', contactUrl);
+              Alert.alert(
+                'Unable to Open',
+                'Could not open the MasterFabric website. Please check your internet connection.',
+                [{ text: 'OK' }],
+                { userInterfaceStyle: isDark ? 'dark' : 'light' }
+              );
+            }
+          }).catch(error => {
+            console.error('Error opening URL:', error);
+            Alert.alert(
+              'Error',
+              'An error occurred while trying to open the website.',
+              [{ text: 'OK' }],
+              { userInterfaceStyle: isDark ? 'dark' : 'light' }
+            );
+          });
           break;
         case 'settings':
           console.log('🔧 Navigating to settings...');
@@ -342,8 +389,8 @@ export function useHomeViewModel() {
 
   return {
     // Data
-    user: user || { id: 'default', name: 'Developer', email: 'dev@masterfabric.com' },
-    greeting: greeting || 'Hello, Developer!',
+    user: user || null,
+    greeting: greeting,
     quickActions: quickActions.length > 0 ? quickActions : defaultQuickActions,
     developerActions,
     recentActivity,
