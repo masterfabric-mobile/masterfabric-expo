@@ -22,9 +22,9 @@ export const headerLogoSectionStyles = StyleSheet.create({
     fontWeight: '600',
   },
   divider: {
-    width: 1,
-    height: 16,
-    opacity: 0.6,
+    width: 0,
+    height: 0,
+    opacity: 0,
   },
   typewriterText: {
     fontFamily: 'Courier New',
