@@ -7,8 +7,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { Theme } from '../models/settings-models';
 import { useSettingsStore } from '../store/settings-store';
 import {
-  getLanguageOptions,
-  getThemeOptions
+    getLanguageOptions,
+    getThemeOptions
 } from '../utils';
 
 // Storage constants
@@ -20,7 +20,7 @@ const STORAGE_KEYS = {
 export function useSettingsViewModel() {
   const { isLoading, setLoading } = useSettingsStore();
   const { locale, changeLocale } = useLocale();
-  const { currentTheme, setTheme } = useTheme();
+  const { currentTheme, setTheme: setCoreTheme } = useTheme();
   // System color scheme is available but not used in this hook
   // const systemColorScheme = useColorScheme();
   const { addActivity } = useHomeStore();
@@ -94,9 +94,9 @@ export function useSettingsViewModel() {
 
   // When theme changes
   const handleThemeChange = useCallback(
-    (value: Theme) => {
+    async (value: Theme) => {
       const previousTheme = currentTheme;
-      setTheme(value);
+      await setCoreTheme(value);
 
       // Track the theme change values, not the translated names
       trackSettingChange(
@@ -108,7 +108,7 @@ export function useSettingsViewModel() {
       // Save the new theme selection using the static method
       StorageService.setItem(STORAGE_KEYS.THEME, value);
     },
-    [currentTheme, setTheme, trackSettingChange]
+    [currentTheme, setCoreTheme, trackSettingChange]
   );
 
   const isThemeSelected = useCallback((targetTheme: Theme): boolean => {
