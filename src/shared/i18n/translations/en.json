@@ -91,7 +91,7 @@
   "home": {
     "title": "Home",
     "greeting": "Hello, {{name}}!",
-    "typewriter": "You're Developer 🎉🚀",
+    "typewriter": "Developer 🎉🚀",
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity",
     "developerTools": "Developer Tools",
@@ -111,7 +111,9 @@
       "newProject": "Viewed all projects",
       "projectsViewed": "Viewed all projects",
       "templatesViewed": "Browsed project templates",
-      "documentationOpened": "Opened documentation"
+      "documentationOpened": "Opened documentation",
+      "allProjects": "View all open source projects",
+      "helpersOpened": "Utility tools and helpers opened"
     },
     "actions": {
       "projects": {
@@ -126,6 +128,10 @@
         "title": "Templates",
         "description": "Browse project templates"
       },
+      "helpers": {
+        "title": "Helpers",
+        "description": "Utility tools and helpers"
+      },
       "documentation": {
         "title": "Docs",
         "description": "Read development guides"
@@ -133,9 +139,14 @@
       "settings": {
         "title": "Settings",
         "description": "Configure your workspace"
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "Visit our website"
       }
     },
     "developer": {
+      "title": "Developer Tools",
       "onboarding": {
         "title": "View Onboarding",
         "description": "Preview onboarding flow for development"
@@ -343,13 +354,144 @@
     "searchPlaceholder": "Search projects...",
     "noProjects": "No projects found",
     "loadError": "Failed to load projects",
-    "refreshHint": "Pull down to refresh or check your connection"
+    "refreshHint": "Pull down to refresh or check your connection",
+    "tabs": {
+      "masterfabric": "MasterFabric",
+      "masterfabricMobile": "MasterFabric Mobile"
+    }
   },
   "connectivity": {
     "dialog": {
       "title": "No Internet Connection",
       "message": "You are currently offline. Please check your connection.",
       "checkAgain": "Check again"
+    }
+  },
+  "helpers": {
+    "title": "Helpers",
+    "subtitle": "Utility tools and development helpers",
+    "stringHelper": {
+      "title": "String Helper",
+      "description": "Text manipulation and validation utilities",
+      "testSuite": "String Helper Test Suite",
+      "testInput": "Test Input",
+      "textInput": "Text Input:",
+      "textPlaceholder": "Enter text to test...",
+      "length": "Length:",
+      "suffix": "Suffix:",
+      "currency": "Currency:",
+      "decimals": "Decimals:",
+      "count": "Count (for pluralize):",
+      "runTests": "Run All Tests",
+      "runningTests": "Running Tests...",
+      "testResults": "Test Results",
+      "functions": "functions",
+      "capitalize": "Capitalizes the first letter of the string",
+      "truncate": "Truncates string to specified length with suffix",
+      "isEmail": "Checks if string is a valid email address",
+      "isUrl": "Checks if string is a valid URL",
+      "formatCurrency": "Formats number as currency",
+      "formatNumber": "Formats number with specified decimal places",
+      "kebabCase": "Converts string to kebab-case",
+      "snakeCase": "Converts string to snake_case",
+      "camelCase": "Converts string to camelCase",
+      "pascalCase": "Converts string to PascalCase",
+      "pluralize": "Pluralizes string based on count",
+      "stripHtml": "Removes HTML tags from string",
+      "escapeHtml": "Escapes HTML special characters",
+      "unescapeHtml": "Unescapes HTML special characters",
+      "input": "Input:",
+      "output": "Output:"
+    },
+    "dateHelper": {
+      "title": "Date Helper",
+      "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
+    },
+    "numberHelper": {
+      "title": "Number Helper", 
+      "description": "Number formatting, validation, and mathematical operations utilities"
+    },
+    "validationHelper": {
+      "title": "Validation Helper",
+      "description": "Input validation utilities for forms and data processing"
+    },
+    "formattingHelper": {
+      "title": "Formatting Helper",
+      "description": "Data formatting utilities for various data types and display formats"
+    }
+  },
+  "documentation": {
+    "title": "Documentation",
+    "subtitle": "MasterFabric Expo Core documentation and guides",
+    "sections": {
+      "helpers": {
+        "title": "Helper Functions",
+        "description": "Utility functions for common development tasks",
+        "stringHelper": {
+          "title": "String Helper",
+          "description": "String manipulation utilities including formatting, validation, and case conversion. Functions like capitalize, truncate, email validation, URL validation, currency formatting, case conversion (camelCase, snake_case, kebab-case), HTML escaping, and more."
+        },
+        "deviceInfo": {
+          "title": "Device Info Helper",
+          "description": "Get comprehensive device information including platform details, OS version, screen dimensions, device capabilities, and compatibility checks. Essential for responsive design and feature detection."
+        },
+        "validation": {
+          "title": "Validation Helper",
+          "description": "Input validation utilities for forms and data processing. Includes email validation, URL validation, phone number validation, and custom validation rules for secure data handling."
+        },
+        "formatting": {
+          "title": "Formatting Helper",
+          "description": "Data formatting utilities for dates, numbers, currency, and text. Includes date formatting, number formatting with decimals, currency formatting, and text transformation functions."
+        }
+      },
+      "core": {
+        "title": "Core System",
+        "description": "Core functionality and system architecture",
+        "themeSystem": {
+          "title": "Theme System",
+          "description": "Light/dark theme management and color system"
+        },
+        "navigation": {
+          "title": "Navigation",
+          "description": "App navigation and routing system"
+        },
+        "stateManagement": {
+          "title": "State Management",
+          "description": "Global state management with Zustand"
+        }
+      },
+      "components": {
+        "title": "Components",
+        "description": "Reusable UI components and layouts",
+        "themedComponents": {
+          "title": "Themed Components",
+          "description": "Components that automatically adapt to theme changes"
+        },
+        "formComponents": {
+          "title": "Form Components",
+          "description": "Input fields, buttons, and form validation components"
+        },
+        "layoutComponents": {
+          "title": "Layout Components",
+          "description": "Screen headers, containers, and layout utilities"
+        }
+      },
+      "guides": {
+        "title": "Guides",
+        "description": "Development guides and best practices",
+        "gettingStarted": {
+          "title": "Getting Started",
+          "description": "Quick start guide for new developers"
+        },
+        "bestPractices": {
+          "title": "Best Practices",
+          "description": "Recommended patterns and coding standards"
+        },
+        "troubleshooting": {
+          "title": "Troubleshooting",
+          "description": "Common issues and their solutions"
+        }
+      }
     }
   }
 }

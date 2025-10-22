@@ -4,7 +4,6 @@ export type Theme = 'light' | 'dark' | 'system';
 
 export interface SettingsState {
   isLoading: boolean;
-  selectedTheme: Theme;
   currentLanguage: string;
 }
 
@@ -17,9 +16,8 @@ export interface SettingsConfig {
 
 export interface SettingsActions {
   setLoading: (loading: boolean) => void;
-  setTheme: (theme: Theme) => void;
   setLanguage: (language: string) => void;
-  updateSettings: (settings: Partial<Pick<SettingsState, 'selectedTheme' | 'currentLanguage'>>) => void;
+  updateSettings: (settings: Partial<Pick<SettingsState, 'currentLanguage'>>) => void;
   reset: () => void;
 }
 

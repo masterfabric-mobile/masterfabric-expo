@@ -2,20 +2,20 @@ import { StyleSheet } from 'react-native';
 
 export const quickActionsStyles = StyleSheet.create({
   section: {
-    marginBottom: 24,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   actionsList: {
     flexDirection: 'column',
-    gap: 12,
+    gap: 8,
   },
   actionGrid: {
     flexDirection: 'column',
-    gap: 12,
+    gap: 8,
   },
   actionCard: {
     flexDirection: 'row',

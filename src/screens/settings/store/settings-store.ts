@@ -1,9 +1,8 @@
 import { create } from 'zustand';
-import { SettingsActions, SettingsState, Theme } from '../models/settings-models';
+import { SettingsActions, SettingsState } from '../models/settings-models';
 
-const initialState: Pick<SettingsState, 'isLoading' | 'selectedTheme' | 'currentLanguage'> = {
+const initialState: Pick<SettingsState, 'isLoading' | 'currentLanguage'> = {
   isLoading: false,
-  selectedTheme: 'system' as Theme,
   currentLanguage: 'en',
 };
 
@@ -13,13 +12,10 @@ export const useSettingsStore = create<SettingsState & SettingsActions>((set) =>
   setLoading: (loading: boolean) =>
     set({ isLoading: loading }),
 
-  setTheme: (theme: Theme) =>
-    set({ selectedTheme: theme }),
-
   setLanguage: (language: string) =>
     set({ currentLanguage: language }),
 
-  updateSettings: (settings: Partial<Pick<SettingsState, 'selectedTheme' | 'currentLanguage'>>) =>
+  updateSettings: (settings: Partial<Pick<SettingsState, 'currentLanguage'>>) =>
     set((state) => ({ ...state, ...settings })),
 
   reset: () =>

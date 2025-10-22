@@ -3,9 +3,8 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-  ThemeProvider,
-  useMasterView,
-  useThemeColors
+    useMasterView,
+    useThemeColors
 } from 'masterfabric-expo-core';
 import { useSplashViewModel } from '../hooks/use-splash-view-model';
 import { splashScreenStyles } from '../styles/splash-screen.styles';
@@ -57,9 +56,5 @@ function SplashScreenContent() {
 }
 
 export function SplashScreen() {
-  return (
-    <ThemeProvider>
-      <SplashScreenContent />
-    </ThemeProvider>
-  );
+  return <SplashScreenContent />;
 }

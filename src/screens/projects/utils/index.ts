@@ -1,11 +1,10 @@
 import { GitHubProject } from '../models/project-models';
 
 const GITHUB_API_URL = 'https://api.github.com';
-const GITHUB_USERNAME = 'masterfabric-mobile';
 
-export const fetchGitHubProjects = async (): Promise<GitHubProject[]> => {
+export const fetchGitHubProjects = async (organization: string): Promise<GitHubProject[]> => {
   try {
-    const response = await fetch(`${GITHUB_API_URL}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=50`);
+    const response = await fetch(`${GITHUB_API_URL}/orgs/${organization}/repos?sort=updated&per_page=50`);
     
     if (!response.ok) {
       throw new Error(`GitHub API error: ${response.status}`);
@@ -14,7 +13,27 @@ export const fetchGitHubProjects = async (): Promise<GitHubProject[]> => {
     const data = await response.json();
     return data.filter((repo: GitHubProject) => !repo.private);
   } catch (error) {
-    console.error('Error fetching GitHub projects:', error);
+    console.error(`Error fetching GitHub projects for ${organization}:`, error);
+    throw error;
+  }
+};
+
+export const fetchAllProjects = async (): Promise<{
+  masterfabric: GitHubProject[];
+  masterfabricMobile: GitHubProject[];
+}> => {
+  try {
+    const [masterfabricProjects, masterfabricMobileProjects] = await Promise.all([
+      fetchGitHubProjects('masterfabric'),
+      fetchGitHubProjects('masterfabric-mobile')
+    ]);
+
+    return {
+      masterfabric: masterfabricProjects,
+      masterfabricMobile: masterfabricMobileProjects
+    };
+  } catch (error) {
+    console.error('Error fetching all projects:', error);
     throw error;
   }
 };

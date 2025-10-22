@@ -1,8 +1,8 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-// import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/hooks/use-locale';
 import { getCurrentLocale, getTranslatedTitle, t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { ActivityItem, useHomeStore } from '../../store/home-store';
@@ -14,8 +14,7 @@ export function ActivitySection() {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   const { recentActivity } = useHomeStore();
-  // Locale is available but not used in this component
-  // const { locale } = useLocale();
+  const { locale } = useLocale();
   const currentLocale = getCurrentLocale();
   
   // Filter duplicates and get only the last 3 unique activities
@@ -31,7 +30,7 @@ export function ActivitySection() {
     );
     
     return uniqueActivities.slice(0, 3);
-  }, [recentActivity]);
+  }, [recentActivity, locale]); // Add locale dependency so it updates when locale changes
   
   // Create a render function for activity items that will update with locale changes
   const renderActivityItem = (activity: ActivityItem, index: number) => {

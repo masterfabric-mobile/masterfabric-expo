@@ -192,6 +192,9 @@ export const QUICK_ACTION_COLORS: Record<string, string> = {
   'templates': '#FF9500',
   'documentation': '#34C759',
   'settings': '#8E8E93',
+  'helpers': '#5856D6',
+  'contact': '#FF3B30',
+  'string-helper': '#34C759',
   'dev-onboarding': '#FF3B30',
   'dev-device-info': '#5856D6',
   'new-project': '#007AFF', // Keep for backward compatibility

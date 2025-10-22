@@ -1,11 +1,11 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
+import { t } from '@/src/shared/i18n';
 import {
-    ScreenHeader,
-    ThemeProvider,
-    useMasterView,
-    useThemeColors
+  useMasterView,
+  useThemeColors
 } from 'masterfabric-expo-core';
 import { useSettingsViewModel } from '../hooks/use-settings-view-model';
 import { settingsStyles } from '../styles/settings-styles';
@@ -39,9 +39,10 @@ function SettingsScreenContent() {
       edges={['top']}
     >
       <ScreenHeader 
-        title="Settings"
-        subtitle="Customize your app experience"
+        title={t('settings.title')}
+        subtitle={t('settings.subtitle') || t('settings.description')}
         onBackPress={navigateBack}
+        variant="minimal"
       />
 
       <SettingsContent
@@ -55,9 +56,5 @@ function SettingsScreenContent() {
 }
 
 export function SettingsScreen() {
-  return (
-    <ThemeProvider>
-      <SettingsScreenContent />
-    </ThemeProvider>
-  );
+  return <SettingsScreenContent />;
 }

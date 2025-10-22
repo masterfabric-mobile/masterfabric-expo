@@ -11,6 +11,9 @@ export * from './permissions';
 // Accessibility Helpers
 export * from './accessibility';
 
+// String Helpers
+export * from './string_helper';
+
 // Re-export types with different names to avoid conflicts
 export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device-info';
 

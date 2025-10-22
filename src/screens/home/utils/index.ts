@@ -63,11 +63,28 @@ export const createDefaultQuickActions = (): QuickAction[] => [
     route: 'https://github.com/masterfabric-mobile',
   },
   {
+    id: 'helpers',
+    title: t('home.actions.helpers.title'),
+    description: t('home.actions.helpers.description'),
+    icon: 'build',
+    color: QUICK_ACTION_COLORS['helpers'],
+    route: '/helpers',
+  },
+  {
     id: 'documentation',
     title: t('home.actions.documentation.title'),
     description: t('home.actions.documentation.description'),
     icon: 'book',
     color: QUICK_ACTION_COLORS['documentation'],
+    route: '/documentation',
+  },
+  {
+    id: 'contact',
+    title: t('home.actions.contact.title'),
+    description: t('home.actions.contact.description'),
+    icon: 'mail',
+    color: QUICK_ACTION_COLORS['contact'],
+    route: 'https://masterfabric.co',
   },
   {
     id: 'settings',
@@ -317,8 +334,12 @@ export const getActionIconName = (actionId: string): string => {
       return 'rocket';
     case 'templates':
       return 'clipboard';
+    case 'helpers':
+      return 'build';
     case 'documentation':
       return 'book';
+    case 'contact':
+      return 'mail';
     case 'settings':
       return 'settings';
     default:
