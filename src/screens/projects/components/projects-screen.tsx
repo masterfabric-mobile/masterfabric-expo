@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { FlatList, RefreshControl, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
@@ -10,6 +10,7 @@ import { useProjectsViewModel } from '../hooks/use-projects-view-model';
 import { GitHubProject } from '../models/project-models';
 import { projectsScreenStyles } from '../styles/projects-screen.styles';
 import { ProjectCard } from './project-card';
+import { ProjectsTabBar } from './projects-tab-bar';
 
 export function ProjectsScreen() {
   const { currentTheme } = useTheme();
@@ -20,10 +21,10 @@ export function ProjectsScreen() {
     projects, 
     isLoading, 
     error, 
-    searchQuery,
+    activeTab,
     handleProjectPress, 
     handleRefresh, 
-    handleSearch 
+    handleTabChange
   } = useProjectsViewModel();
 
   const renderProject = ({ item }: { item: GitHubProject }) => (
@@ -70,64 +71,22 @@ export function ProjectsScreen() {
         projectsScreenStyles.container, 
         { backgroundColor: colors.background }
       ]}
-      edges={['top', 'left', 'right']}
+      edges={['top']}
     >
       <ScreenHeader 
         title={t('projects.title')}
         subtitle={t('projects.subtitle')}
+        variant="minimal"
       />
       
-      {/* Search Section */}
-      <View style={[projectsScreenStyles.topSection, { paddingTop: 12, paddingBottom: 16 }]}>
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          backgroundColor: isDark ? colors.surfaceBackground + '40' : colors.surfaceBackground + '60',
-          borderRadius: 28,
-          paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderWidth: 0,
-        }}>
-        <Ionicons 
-          name="search" 
-          size={16} 
-          color={colors.labelText}
-          style={{ marginRight: 10, opacity: 0.6 }}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            fontSize: 15,
-            color: colors.text,
-            fontWeight: '400',
-          }}
-          placeholder={t('projects.searchPlaceholder')}
-          placeholderTextColor={colors.labelText + '80'}
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity 
-            onPress={() => handleSearch('')}
-            style={{ 
-              marginLeft: 8, 
-              padding: 6,
-              borderRadius: 12,
-              backgroundColor: colors.labelText + '10'
-            }}
-          >
-            <Ionicons 
-              name="close" 
-              size={12} 
-              color={colors.labelText} 
-            />
-          </TouchableOpacity>
-        )}
-        </View>
-      </View>
+      {/* Tab Bar */}
+      <ProjectsTabBar 
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+      />
       
       {/* Body Section - Projects List */}
-      <View style={projectsScreenStyles.bodySection}>
+      <View style={[projectsScreenStyles.bodySection, { backgroundColor: colors.background }]}>
         <FlatList
           data={projects}
           renderItem={renderProject}
@@ -144,8 +103,10 @@ export function ProjectsScreen() {
           ListEmptyComponent={!isLoading ? renderEmpty : null}
           contentContainerStyle={{ 
             paddingBottom: 40,
-            flexGrow: 1
+            flexGrow: 1,
+            backgroundColor: 'transparent'
           }}
+          style={{ backgroundColor: 'transparent' }}
         />
       </View>
     </SafeAreaView>
