@@ -74,6 +74,7 @@ export function NotificationScreen() {
           title={t('notifications.title')}
           subtitle={`${filteredNotifications.length} ${t('notifications.title').toLowerCase()}`}
           showStageBadge={true}
+          variant="minimal"
         />
 
         <NotificationTabs
