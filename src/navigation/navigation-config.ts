@@ -73,6 +73,9 @@ export const navigationConfig = {
         splash: '/splash',
         onboarding: '/onboarding',
         settings: '/settings',
+        helpers: '/helpers',
+        'string-helper': '/string-helper',
+        documentation: '/documentation',
         '(tabs)': {
           screens: {
             index: '/home',
