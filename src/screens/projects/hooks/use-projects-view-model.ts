@@ -1,18 +1,22 @@
 import { useEffect, useMemo } from 'react';
 import { GitHubProject } from '../models/project-models';
-import { useProjectsStore } from '../store/projects-store';
-import { fetchGitHubProjects, openProjectUrl, searchProjects } from '../utils';
+import { useProjectsStore, ProjectTab } from '../store/projects-store';
+import { fetchAllProjects, openProjectUrl, searchProjects } from '../utils';
 
 export function useProjectsViewModel() {
   const { 
-    projects,
+    masterfabricProjects,
+    masterfabricMobileProjects,
     isLoading,
     error,
     searchQuery,
-    setProjects,
+    activeTab,
+    setMasterfabricProjects,
+    setMasterfabricMobileProjects,
     setLoading,
     setError,
-    setSearchQuery
+    setSearchQuery,
+    setActiveTab
   } = useProjectsStore();
 
   useEffect(() => {
@@ -24,8 +28,9 @@ export function useProjectsViewModel() {
     setError(null);
     
     try {
-      const fetchedProjects = await fetchGitHubProjects();
-      setProjects(fetchedProjects);
+      const { masterfabric, masterfabricMobile } = await fetchAllProjects();
+      setMasterfabricProjects(masterfabric);
+      setMasterfabricMobileProjects(masterfabricMobile);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to load projects';
       setError(errorMessage);
@@ -35,9 +40,13 @@ export function useProjectsViewModel() {
     }
   };
 
+  const currentProjects = useMemo(() => {
+    return activeTab === 'masterfabric' ? masterfabricProjects : masterfabricMobileProjects;
+  }, [activeTab, masterfabricProjects, masterfabricMobileProjects]);
+
   const filteredProjects = useMemo(() => {
-    return searchProjects(projects, searchQuery);
-  }, [projects, searchQuery]);
+    return searchProjects(currentProjects, searchQuery);
+  }, [currentProjects, searchQuery]);
 
   const handleProjectPress = async (project: GitHubProject) => {
     try {
@@ -55,13 +64,21 @@ export function useProjectsViewModel() {
     setSearchQuery(query);
   };
 
+  const handleTabChange = (tab: ProjectTab) => {
+    setActiveTab(tab);
+  };
+
   return {
     projects: filteredProjects,
+    masterfabricProjects,
+    masterfabricMobileProjects,
     isLoading,
     error,
     searchQuery,
+    activeTab,
     handleProjectPress,
     handleRefresh,
     handleSearch,
+    handleTabChange,
   };
 }
