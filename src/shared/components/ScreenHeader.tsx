@@ -16,6 +16,7 @@ interface ScreenHeaderProps {
   onBackPress?: () => void;
   showBackButton?: boolean;
   showStageBadge?: boolean;
+  variant?: 'default' | 'minimal' | 'centered';
 }
 
 export function ScreenHeader({ 
@@ -23,7 +24,8 @@ export function ScreenHeader({
   subtitle, 
   onBackPress,
   showBackButton = true,
-  showStageBadge = false
+  showStageBadge = false,
+  variant = 'default'
 }: ScreenHeaderProps) {
   const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
@@ -41,12 +43,26 @@ export function ScreenHeader({
   const stage = packageInfo.stage || 'development';
   const shouldShowBadge = showStageBadge && (stage === 'development' || stage === 'debug' || stage === 'dev');
 
-  return (
-    <View style={[styles.header, { 
+  const getHeaderStyle = () => {
+    const baseStyle = [styles.header, { 
       backgroundColor: colors.headerBackground,
-      borderBottomColor: colors.headerBorder,
-      borderBottomWidth: StyleSheet.hairlineWidth,
-    }]}>
+    }];
+
+    switch (variant) {
+      case 'minimal':
+        return [...baseStyle, styles.minimalHeader];
+      case 'centered':
+        return [...baseStyle, styles.centeredHeader];
+      default:
+        return [...baseStyle, { 
+          borderBottomColor: colors.headerBorder,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }];
+    }
+  };
+
+  return (
+    <View style={getHeaderStyle()}>
       {showBackButton && (
         <TouchableOpacity
           onPress={handleBackPress}
@@ -84,8 +100,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingVertical: 12, // Normal header padding
+  },
+  minimalHeader: {
+    paddingVertical: 8, // Minimal padding
+  },
+  centeredHeader: {
+    justifyContent: 'center',
+    paddingVertical: 12, // Centered padding
   },
   backButton: {
     width: 32,
