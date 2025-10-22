@@ -1,0 +1,75 @@
+import { HelperItem } from '../models/helpers-models';
+
+// Helpers utilities
+export const getHelperIcon = (helperId: string): string => {
+  switch (helperId) {
+    case 'capitalize':
+      return 'text-outline';
+    case 'truncate':
+      return 'cut-outline';
+    case 'email-validation':
+      return 'mail-outline';
+    case 'url-validation':
+      return 'link-outline';
+    case 'case-conversion':
+      return 'swap-horizontal-outline';
+    case 'html-escaping':
+      return 'code-outline';
+    case 'date-formatting':
+      return 'calendar-outline';
+    case 'time-calculations':
+      return 'time-outline';
+    case 'timezone-handling':
+      return 'globe-outline';
+    case 'date-parsing':
+      return 'reader-outline';
+    case 'currency-formatting':
+      return 'card-outline';
+    case 'number-validation':
+      return 'checkmark-circle-outline';
+    case 'mathematical-operations':
+      return 'calculator-outline';
+    case 'percentage-calculations':
+      return 'percent-outline';
+    default:
+      return 'help-outline';
+  }
+};
+
+export const getHelperColor = (helperId: string): string => {
+  switch (helperId) {
+    case 'capitalize':
+    case 'truncate':
+    case 'email-validation':
+    case 'url-validation':
+    case 'case-conversion':
+    case 'html-escaping':
+      return '#34C759'; // Green for string helpers
+    case 'date-formatting':
+    case 'time-calculations':
+    case 'timezone-handling':
+    case 'date-parsing':
+      return '#FF9500'; // Orange for date helpers
+    case 'currency-formatting':
+    case 'number-validation':
+    case 'mathematical-operations':
+    case 'percentage-calculations':
+      return '#5856D6'; // Purple for number helpers
+    default:
+      return '#8E8E93';
+  }
+};
+
+export const createDefaultHelperItems = (): HelperItem[] => [
+  {
+    id: 'string-helper',
+    name: 'String Helper',
+    description: 'Text manipulation and validation utilities',
+    icon: 'text-outline',
+    color: '#34C759',
+    route: '/string-helper',
+    available: true,
+    category: 'string-helpers'
+  }
+];
+
