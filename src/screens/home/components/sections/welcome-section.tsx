@@ -1,5 +1,6 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { useLocale } from '@/src/shared/hooks/use-locale';
+import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
@@ -32,6 +33,15 @@ export function WelcomeSection({ greeting, user }: WelcomeSectionProps) {
         ]}
       >
         {greeting}
+      </ThemedText>
+
+      <ThemedText
+        style={[
+          welcomeSectionStyles.developerText,
+          { color: colors.actionDescription }
+        ]}
+      >
+        {t('home.typewriter')}
       </ThemedText>
 
       {user && (

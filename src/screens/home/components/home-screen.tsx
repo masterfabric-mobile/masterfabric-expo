@@ -3,9 +3,8 @@ import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-  ThemeProvider,
-  useMasterView,
-  useThemeColors
+    useMasterView,
+    useThemeColors
 } from 'masterfabric-expo-core';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { homeScreenStyles } from '../styles/home-screen.styles';
@@ -48,7 +47,7 @@ function HomeScreenContent() {
         homeScreenStyles.container,
         { backgroundColor: colors.background }
       ]}
-      edges={['top', 'left', 'right']}
+      edges={['top']}
     >
       <HomeHeader 
         onNotificationPress={handleNotificationPress}
@@ -84,9 +83,5 @@ function HomeScreenContent() {
 }
 
 export function HomeScreen() {
-  return (
-    <ThemeProvider>
-      <HomeScreenContent />
-    </ThemeProvider>
-  );
+  return <HomeScreenContent />;
 }
