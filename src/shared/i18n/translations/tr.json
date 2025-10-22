@@ -47,7 +47,7 @@
   "home": {
     "title": "Ana Sayfa",
     "greeting": "Merhaba, {{name}}!",
-    "typewriter": "Sen Geliştiricisen 🎉🚀",
+    "typewriter": "Geliştirici 🎉🚀",
     "quickActions": "Hızlı İşlemler",
     "recentActivity": "Son Aktiviteler",
     "developerTools": "Geliştirici Araçları",
@@ -67,7 +67,9 @@
       "newProject": "Tüm projeler görüntülendi",
       "projectsViewed": "Tüm projeler görüntülendi",
       "templatesViewed": "Proje şablonlarına göz atıldı",
-      "documentationOpened": "Belgeler açıldı"
+      "documentationOpened": "Belgeler açıldı",
+      "allProjects": "Tüm açık kaynak projeleri görüntüle",
+      "helpersOpened": "Yardımcı araçlar ve yardımcılar açıldı"
     },
     "actions": {
       "projects": {
@@ -82,6 +84,10 @@
         "title": "Şablonlar",
         "description": "Proje şablonlarına göz atın"
       },
+      "helpers": {
+        "title": "Yardımcılar",
+        "description": "Yardımcı araçlar ve araçlar"
+      },
       "documentation": {
         "title": "Belgeler",
         "description": "Geliştirme kılavuzlarını okuyun"
@@ -89,9 +95,14 @@
       "settings": {
         "title": "Ayarlar",
         "description": "Çalışma alanınızı yapılandırın"
+      },
+      "contact": {
+        "title": "İletişim",
+        "description": "Web sitemizi ziyaret edin"
       }
     },
     "developer": {
+      "title": "Geliştirici Araçları",
       "onboarding": {
         "title": "Ön Gorüntüleme",
         "description": "Uygulamanın özelliklerini keşfedin"
@@ -343,13 +354,144 @@
     "searchPlaceholder": "Projeleri ara...",
     "noProjects": "Proje bulunamadı",
     "loadError": "Projeler yüklenemedi",
-    "refreshHint": "Yenilemek için aşağı çekin veya bağlantınızı kontrol edin"
+    "refreshHint": "Yenilemek için aşağı çekin veya bağlantınızı kontrol edin",
+    "tabs": {
+      "masterfabric": "MasterFabric",
+      "masterfabricMobile": "MasterFabric Mobile"
+    }
   },
   "connectivity": {
     "dialog": {
       "title": "İnternet Bağlantısı Yok",
       "message": "Şu anda çevrimdışısınız. Lütfen bağlantınızı kontrol edin.",
       "checkAgain": "Tekrar kontrol et"
+    }
+  },
+  "helpers": {
+    "title": "Yardımcılar",
+    "subtitle": "Yardımcı araçlar ve geliştirme araçları",
+    "stringHelper": {
+      "title": "String Yardımcısı",
+      "description": "Metin manipülasyonu ve doğrulama araçları",
+      "testSuite": "String Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "textInput": "Metin Girişi:",
+      "textPlaceholder": "Test edilecek metni girin...",
+      "length": "Uzunluk:",
+      "suffix": "Sonek:",
+      "currency": "Para Birimi:",
+      "decimals": "Ondalık:",
+      "count": "Sayı (çoğul için):",
+      "runTests": "Tüm Testleri Çalıştır",
+      "runningTests": "Testler Çalışıyor...",
+      "testResults": "Test Sonuçları",
+      "functions": "fonksiyon",
+      "capitalize": "String'in ilk harfini büyük harfe çevirir",
+      "truncate": "String'i belirtilen uzunluğa kısaltır ve sonek ekler",
+      "isEmail": "String'in geçerli bir e-posta adresi olup olmadığını kontrol eder",
+      "isUrl": "String'in geçerli bir URL olup olmadığını kontrol eder",
+      "formatCurrency": "Sayıyı para birimi olarak formatlar",
+      "formatNumber": "Sayıyı belirtilen ondalık basamak sayısıyla formatlar",
+      "kebabCase": "String'i kebab-case'e çevirir",
+      "snakeCase": "String'i snake_case'e çevirir",
+      "camelCase": "String'i camelCase'e çevirir",
+      "pascalCase": "String'i PascalCase'e çevirir",
+      "pluralize": "String'i sayıya göre çoğullaştırır",
+      "stripHtml": "String'den HTML etiketlerini kaldırır",
+      "escapeHtml": "String'deki HTML özel karakterlerini kaçırır",
+      "unescapeHtml": "String'deki HTML özel karakterlerini geri çevirir",
+      "input": "Giriş:",
+      "output": "Çıkış:"
+    },
+    "dateHelper": {
+      "title": "Tarih Yardımcısı",
+      "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
+    },
+    "numberHelper": {
+      "title": "Sayı Yardımcısı",
+      "description": "Sayı formatlama, doğrulama ve matematiksel işlem yardımcıları"
+    },
+    "validationHelper": {
+      "title": "Doğrulama Yardımcısı",
+      "description": "Formlar ve veri işleme için giriş doğrulama yardımcıları"
+    },
+    "formattingHelper": {
+      "title": "Formatlama Yardımcısı",
+      "description": "Çeşitli veri türleri ve görüntüleme formatları için veri formatlama yardımcıları"
+    }
+  },
+  "documentation": {
+    "title": "Belgeler",
+    "subtitle": "MasterFabric Expo Core belgeleri ve kılavuzları",
+    "sections": {
+      "helpers": {
+        "title": "Yardımcı Fonksiyonlar",
+        "description": "Yaygın geliştirme görevleri için yardımcı fonksiyonlar",
+        "stringHelper": {
+          "title": "String Yardımcısı",
+          "description": "Formatlama, doğrulama ve durum dönüştürme dahil string manipülasyon yardımcıları. capitalize, truncate, email doğrulama, URL doğrulama, para birimi formatlama, durum dönüştürme (camelCase, snake_case, kebab-case), HTML kaçırma ve daha fazlası gibi fonksiyonlar."
+        },
+        "deviceInfo": {
+          "title": "Cihaz Bilgisi Yardımcısı",
+          "description": "Platform detayları, OS sürümü, ekran boyutları, cihaz yetenekleri ve uyumluluk kontrolleri dahil kapsamlı cihaz bilgilerini alın. Responsive tasarım ve özellik tespiti için gerekli."
+        },
+        "validation": {
+          "title": "Doğrulama Yardımcısı",
+          "description": "Formlar ve veri işleme için giriş doğrulama yardımcıları. Email doğrulama, URL doğrulama, telefon numarası doğrulama ve güvenli veri işleme için özel doğrulama kuralları içerir."
+        },
+        "formatting": {
+          "title": "Formatlama Yardımcısı",
+          "description": "Tarihler, sayılar, para birimi ve metin için veri formatlama yardımcıları. Tarih formatlama, ondalık basamaklı sayı formatlama, para birimi formatlama ve metin dönüştürme fonksiyonları içerir."
+        }
+      },
+      "core": {
+        "title": "Çekirdek Sistem",
+        "description": "Çekirdek işlevsellik ve sistem mimarisi",
+        "themeSystem": {
+          "title": "Tema Sistemi",
+          "description": "Açık/koyu tema yönetimi ve renk sistemi"
+        },
+        "navigation": {
+          "title": "Navigasyon",
+          "description": "Uygulama navigasyonu ve yönlendirme sistemi"
+        },
+        "stateManagement": {
+          "title": "Durum Yönetimi",
+          "description": "Zustand ile global durum yönetimi"
+        }
+      },
+      "components": {
+        "title": "Bileşenler",
+        "description": "Yeniden kullanılabilir UI bileşenleri ve düzenleri",
+        "themedComponents": {
+          "title": "Temalı Bileşenler",
+          "description": "Tema değişikliklerine otomatik olarak uyum sağlayan bileşenler"
+        },
+        "formComponents": {
+          "title": "Form Bileşenleri",
+          "description": "Giriş alanları, butonlar ve form doğrulama bileşenleri"
+        },
+        "layoutComponents": {
+          "title": "Düzen Bileşenleri",
+          "description": "Ekran başlıkları, konteynerler ve düzen yardımcıları"
+        }
+      },
+      "guides": {
+        "title": "Kılavuzlar",
+        "description": "Geliştirme kılavuzları ve en iyi uygulamalar",
+        "gettingStarted": {
+          "title": "Başlangıç",
+          "description": "Yeni geliştiriciler için hızlı başlangıç kılavuzu"
+        },
+        "bestPractices": {
+          "title": "En İyi Uygulamalar",
+          "description": "Önerilen desenler ve kodlama standartları"
+        },
+        "troubleshooting": {
+          "title": "Sorun Giderme",
+          "description": "Yaygın sorunlar ve çözümleri"
+        }
+      }
     }
   }
 }
