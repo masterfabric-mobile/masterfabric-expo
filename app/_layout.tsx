@@ -12,9 +12,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
 import { LocaleProvider } from '@/src/shared/contexts';
 import { useAppStore } from '@/src/shared/store';
-import { ThemeProvider as MasterViewThemeProvider, initMasterView } from 'masterfabric-expo-core';
+import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
-import { useColorScheme } from 'react-native';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -29,8 +28,18 @@ const queryClient = new QueryClient({
   },
 });
 
+// Navigation wrapper that uses core theme
+function NavigationWrapper({ children }: { children: React.ReactNode }) {
+  const { isDark } = useTheme();
+  
+  return (
+    <NavigationThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+      {children}
+    </NavigationThemeProvider>
+  );
+}
+
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const { isAppReady, setAppReady } = useAppStore();
   
   const [loaded] = useFonts({
@@ -49,7 +58,7 @@ export default function RootLayout() {
         config: {
           enableActivityTracking: true,
           enableErrorBoundary: true,
-          enableThemeSupport: false,
+          enableThemeSupport: true,
           enableLocalization: true,
           enableLoadingStates: true,
           enableNavigationTracking: true,
@@ -98,21 +107,19 @@ export default function RootLayout() {
           <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
               <SafeAreaProvider>
-                <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-               
-                    <Stack 
-                      screenOptions={{ headerShown: false }}
-                    >
-                      <Stack.Screen name="splash" />
-                      <Stack.Screen name="onboarding" />
-                      <Stack.Screen name="projects" />
-                      <Stack.Screen name="settings" />
-                      <Stack.Screen name="(tabs)" />
-                      <Stack.Screen name="+not-found" />
-                    </Stack>
-                    <StatusBar style="auto" />
-        
-                </NavigationThemeProvider>
+                <NavigationWrapper>
+                  <Stack 
+                    screenOptions={{ headerShown: false }}
+                  >
+                    <Stack.Screen name="splash" />
+                    <Stack.Screen name="onboarding" />
+                    <Stack.Screen name="projects" />
+                    <Stack.Screen name="settings" />
+                    <Stack.Screen name="(tabs)" />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                  <StatusBar style="auto" />
+                </NavigationWrapper>
               </SafeAreaProvider>
             </QueryClientProvider>
           </MasterViewThemeProvider>
