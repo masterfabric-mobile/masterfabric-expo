@@ -418,6 +418,36 @@
     "formattingHelper": {
       "title": "Formatlama Yardımcısı",
       "description": "Çeşitli veri türleri ve görüntüleme formatları için veri formatlama yardımcıları"
+    },
+    "snackbarHelper": {
+      "title": "Snackbar Yardımcısı",
+      "description": "Aksiyon butonları ve konum kontrolü ile snackbar bildirimleri",
+      "testSuite": "Snackbar Yardımcısı Test Paketi",
+      "demoTitle": "Snackbar Demo",
+      "demoDescription": "Farklı snackbar türlerini ve yapılandırmalarını deneyin",
+      "basicExamples": "Temel Örnekler",
+      "advancedExamples": "Gelişmiş Örnekler",
+      "customization": "Özelleştirme",
+      "showSuccess": "Başarılı Göster",
+      "showError": "Hata Göster",
+      "showWarning": "Uyarı Göster",
+      "showInfo": "Bilgi Göster",
+      "showWithAction": "Aksiyon Butonu İle",
+      "showTopPosition": "Üstte Göster",
+      "showLongDuration": "Uzun Süre (10s)",
+      "showShortDuration": "Kısa Süre (2s)",
+      "showCustom": "Özel Mesaj",
+      "successMessage": "İşlem başarıyla tamamlandı!",
+      "errorMessage": "Bir hata oluştu. Lütfen tekrar deneyin.",
+      "warningMessage": "Uyarı: Bu işlemin sonuçları olabilir.",
+      "infoMessage": "İşte sizin için faydalı bilgi.",
+      "actionMessage": "İşlem gerekiyor. Lütfen inceleyin.",
+      "topMessage": "Bu mesaj üstte görünür",
+      "longMessage": "Bu mesaj 10 saniye boyunca kalacak",
+      "shortMessage": "Hızlı mesaj (2s)",
+      "customMessage": "Her ayrıntıyı özelleştirebilirsiniz!",
+      "actionButton": "GERİ AL",
+      "actionPerformed": "Aksiyon butonuna tıklandı!"
     }
   },
   "documentation": {

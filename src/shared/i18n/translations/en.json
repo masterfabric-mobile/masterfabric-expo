@@ -418,6 +418,36 @@
     "formattingHelper": {
       "title": "Formatting Helper",
       "description": "Data formatting utilities for various data types and display formats"
+    },
+    "snackbarHelper": {
+      "title": "Snackbar Helper",
+      "description": "Snackbar notification utilities with action buttons and positioning",
+      "testSuite": "Snackbar Helper Test Suite",
+      "demoTitle": "Snackbar Demo",
+      "demoDescription": "Try different snackbar types and configurations",
+      "basicExamples": "Basic Examples",
+      "advancedExamples": "Advanced Examples",
+      "customization": "Customization",
+      "showSuccess": "Show Success",
+      "showError": "Show Error",
+      "showWarning": "Show Warning",
+      "showInfo": "Show Info",
+      "showWithAction": "With Action Button",
+      "showTopPosition": "Show at Top",
+      "showLongDuration": "Long Duration (10s)",
+      "showShortDuration": "Short Duration (2s)",
+      "showCustom": "Custom Message",
+      "successMessage": "Operation completed successfully!",
+      "errorMessage": "An error occurred. Please try again.",
+      "warningMessage": "Warning: This action may have consequences.",
+      "infoMessage": "Here's some helpful information for you.",
+      "actionMessage": "Action required. Please review.",
+      "topMessage": "This message appears at the top",
+      "longMessage": "This message will stay for 10 seconds",
+      "shortMessage": "Quick message (2s)",
+      "customMessage": "You can customize every aspect!",
+      "actionButton": "UNDO",
+      "actionPerformed": "Action button clicked!"
     }
   },
   "documentation": {
