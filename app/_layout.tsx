@@ -10,7 +10,7 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
-import { LocaleProvider } from '@/src/shared/contexts';
+import { LocaleProvider, ToastProvider } from '@/src/shared/contexts';
 import { useAppStore } from '@/src/shared/store';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
@@ -106,21 +106,23 @@ export default function RootLayout() {
         <LocaleProvider>
           <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
-              <SafeAreaProvider>
+              <ToastProvider>
+                <SafeAreaProvider>
                 <NavigationWrapper>
                   <Stack 
                     screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="splash" />
-                    <Stack.Screen name="onboarding" />
-                    <Stack.Screen name="projects" />
-                    <Stack.Screen name="settings" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
-                  <StatusBar style="auto" />
-                </NavigationWrapper>
-              </SafeAreaProvider>
+                    >
+                      <Stack.Screen name="splash" />
+                      <Stack.Screen name="onboarding" />
+                      <Stack.Screen name="projects" />
+                      <Stack.Screen name="settings" />
+                      <Stack.Screen name="(tabs)" />
+                      <Stack.Screen name="+not-found" />
+                    </Stack>
+                    <StatusBar style="auto" />
+                  </NavigationWrapper>
+                </SafeAreaProvider>
+              </ToastProvider>
             </QueryClientProvider>
           </MasterViewThemeProvider>
         </LocaleProvider>
