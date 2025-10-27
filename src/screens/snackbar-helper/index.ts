@@ -2,7 +2,7 @@
 export { SnackbarColorPicker } from './components/snackbar-color-picker';
 export { SnackbarHelperScreen } from './components/snackbar-helper-screen';
 export { SnackbarInputField } from './components/snackbar-input-field';
-export { SnackbarTestCard } from './components/snackbar-test-card';
+export { SnackbarResultCard } from './components/snackbar-result-card';
 
 // Hooks
 export { useSnackbarHelperViewModel } from './hooks/use-snackbar-helper-view-model';
