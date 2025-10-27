@@ -1,3 +1,5 @@
+import { getThemeColors } from 'masterfabric-expo-core';
+import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import { SnackbarType } from '../models/snackbar-helper-models';
 
 /**
@@ -24,16 +26,18 @@ export const getSnackbarColor = (
   type: SnackbarType,
   isDark: boolean
 ): string => {
+  const colors = getThemeColors(isDark);
+  
   switch (type) {
     case 'success':
-      return isDark ? '#1B5E20' : '#4CAF50';
+      return colors.successColor;
     case 'error':
-      return isDark ? '#B71C1C' : '#F44336';
+      return colors.errorColor;
     case 'warning':
-      return isDark ? '#E65100' : '#FF9800';
+      return colors.warningColor;
     case 'info':
     default:
-      return isDark ? '#0D47A1' : '#2196F3';
+      return isDark ? SNACKBAR_HELPER_COLORS.infoDark : SNACKBAR_HELPER_COLORS.info;
   }
 };
 
