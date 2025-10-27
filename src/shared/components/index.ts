@@ -2,6 +2,7 @@ export { AccessibleModal } from './AccessibleModal';
 export { Button } from './button';
 export { Card } from './card';
 export { Collapsible } from './Collapsible';
+export { ColorPickerModal } from './ColorPickerModal';
 export { Dropdown } from './Dropdown';
 export { ErrorBoundary } from './ErrorBoundary';
 export { ExternalLink } from './ExternalLink';
