@@ -447,7 +447,85 @@
       "shortMessage": "Quick message (2s)",
       "customMessage": "You can customize every aspect!",
       "actionButton": "UNDO",
-      "actionPerformed": "Action button clicked!"
+      "actionPerformed": "Action button clicked!",
+      "message": "Message:",
+      "messagePlaceholder": "Enter your message",
+      "duration": "Duration:",
+      "action": "Action:",
+      "type": "Type:",
+      "position": "Position:",
+      "customColor": "Custom Color:",
+      "persistent": "Persistent:",
+      "testSnackbar": "🧪 Test Snackbar",
+      "runAllTests": "🔄 Run All Tests",
+      "loading": "⏳ Loading...",
+      "testResultsTitle": "Test Results",
+      "functions": "functions",
+      "tapToChangeColor": "Tap to change color",
+      "inputLabel": "Input:",
+      "outputLabel": "Output:",
+      "descriptionLabel": "Description:",
+      "usageTip": "💡 Usage Tip",
+      "usageText": "You can use the snackbar helper from anywhere in your app:",
+      "typeSuccess": "Success",
+      "typeError": "Error",
+      "typeWarning": "Warning",
+      "typeInfo": "Info",
+      "typeCustom": "Custom",
+      "positionBottom": "Bottom",
+      "positionTop": "Top",
+      "positionCenter": "Center",
+      "actionNone": "None",
+      "actionUndo": "UNDO",
+      "actionRetry": "RETRY",
+      "actionSave": "SAVE",
+      "actionLearnMore": "LEARN MORE",
+      "actionIcon": "Icon",
+      "customIcon": "Custom Icon:",
+      "iconSuccess": "Success",
+      "iconError": "Error",
+      "iconWarning": "Warning",
+      "iconInfo": "Info",
+      "iconCheck": "Check",
+      "iconArrow": "Arrow",
+      "testResults": {
+        "successSnackbar": {
+          "functionName": "showSuccessSnackbar",
+          "input": "\"Item deleted\"",
+          "output": "Green snackbar with Undo",
+          "description": "Success notification snackbar"
+        },
+        "errorSnackbar": {
+          "functionName": "showErrorSnackbar",
+          "input": "\"Failed to save\"",
+          "output": "Red snackbar with Retry",
+          "description": "Error notification snackbar"
+        },
+        "warningSnackbar": {
+          "functionName": "showWarningSnackbar",
+          "input": "\"Unsaved changes\"",
+          "output": "Orange snackbar with Save",
+          "description": "Warning notification snackbar"
+        },
+        "infoSnackbar": {
+          "functionName": "showInfoSnackbar",
+          "input": "\"New feature available\"",
+          "output": "Blue snackbar with Learn More",
+          "description": "Info notification snackbar"
+        },
+        "customSnackbar": {
+          "functionName": "showCustomSnackbar",
+          "input": "\"Custom action\"",
+          "output": "Custom snackbar with action",
+          "description": "Custom color notification snackbar"
+        },
+        "persistentSnackbar": {
+          "functionName": "showPersistentSnackbar",
+          "input": "\"Persistent message\"",
+          "output": "Non-dismissing snackbar",
+          "description": "Persistent notification snackbar"
+        }
+      }
     }
   },
   "documentation": {
