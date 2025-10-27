@@ -22,8 +22,8 @@ export interface SnackbarState {
 
 export type ShowSnackbar = (message: string, options?: SnackbarOptions) => void;
 
-// Test Input Model (from Issue #11)
-export interface SnackbarTestInput {
+// Scenario Input Model (from Issue #11)
+export interface SnackbarScenarioInput {
   message: string;
   duration: number;
   actionLabel: string;
@@ -34,8 +34,8 @@ export interface SnackbarTestInput {
   customIcon?: string;
 }
 
-// Test Result Model (from Issue #11)
-export interface SnackbarTestResult {
+// Scenario Result Model (from Issue #11)
+export interface SnackbarScenarioResult {
   id: string;
   functionName: string;
   input: string;
@@ -44,7 +44,7 @@ export interface SnackbarTestResult {
 }
 
 export interface SnackbarHelperState {
-  testInput: SnackbarTestInput;
-  testResults: SnackbarTestResult[];
+  scenarioInput: SnackbarScenarioInput;
+  scenarioResults: SnackbarScenarioResult[];
   isLoading: boolean;
 }
