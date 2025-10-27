@@ -89,6 +89,14 @@ export const Colors = {
     splashSubtext: '#6C757D',
     splashProgress: '#007AFF',
     splashProgressBg: '#E9ECEF',
+    
+    // Additional colors for string-helper
+    titleText: '#000000',
+    inputBackground: '#F8F9FA',
+    successBackground: '#E8F5E8',
+    successBorder: '#34C759',
+    successText: '#2E7D32',
+    placeholderText: '#8E8E93',
   },
   dark: {
     text: '#FFFFFF',
@@ -175,6 +183,14 @@ export const Colors = {
     splashSubtext: '#8E8E93',
     splashProgress: '#007AFF',
     splashProgressBg: '#333333',
+    
+    // Additional colors for string-helper
+    titleText: '#FFFFFF',
+    inputBackground: '#2C2C2E',
+    successBackground: '#1B5E20',
+    successBorder: '#34C759',
+    successText: '#4CAF50',
+    placeholderText: '#8E8E93',
   },
   system: {
     // System theme will be resolved to light or dark at runtime
