@@ -8,8 +8,10 @@ export interface SnackbarOptions {
     label: string;
     onPress: () => void;
   };
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'center';
   persistent?: boolean;
+  customColor?: string;
+  customIcon?: string;
 }
 
 export interface SnackbarState {
@@ -25,8 +27,11 @@ export interface SnackbarTestInput {
   message: string;
   duration: number;
   actionLabel: string;
-  actionType: ActionType;
+  type: SnackbarType | 'custom';
+  position: 'top' | 'bottom' | 'center';
   persistent: boolean;
+  customColor?: string;
+  customIcon?: string;
 }
 
 // Test Result Model (from Issue #11)
