@@ -4,12 +4,12 @@ import { useCallback, useState } from 'react';
 import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import {
     SnackbarOptions,
-    SnackbarTestInput,
-    SnackbarTestResult,
+    SnackbarScenarioInput,
+    SnackbarScenarioResult,
 } from '../models/snackbar-helper-models';
 
-// Default test input values (from Issue #11)
-const DEFAULT_TEST_INPUT: SnackbarTestInput = {
+// Default scenario input values (from Issue #11)
+const DEFAULT_SCENARIO_INPUT: SnackbarScenarioInput = {
   message: '',
   duration: 5000,
   actionLabel: '',
@@ -22,8 +22,8 @@ const DEFAULT_TEST_INPUT: SnackbarTestInput = {
 
 export const useSnackbarHelperViewModel = () => {
   const { showSnackbar: show } = useSnackbar();
-  const [testInput, setTestInput] = useState<SnackbarTestInput>(DEFAULT_TEST_INPUT);
-  const [testResults, setTestResults] = useState<SnackbarTestResult[]>([]);
+  const [scenarioInput, setScenarioInput] = useState<SnackbarScenarioInput>(DEFAULT_SCENARIO_INPUT);
+  const [scenarioResults, setScenarioResults] = useState<SnackbarScenarioResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const showSnackbar = useCallback(
@@ -36,9 +36,9 @@ export const useSnackbarHelperViewModel = () => {
     [show]
   );
 
-  // Test Single Snackbar (from Issue #11)
-  const testSnackbar = useCallback(() => {
-    const { message, duration, actionLabel, type, position, persistent, customColor, customIcon } = testInput;
+  // Show Snackbar Preview (from Issue #11)
+  const showSnackbarPreview = useCallback(() => {
+    const { message, duration, actionLabel, type, position, persistent, customColor, customIcon } = scenarioInput;
 
     // Use placeholder if message is empty
     const finalMessage = message.trim() || t('helpers.snackbarHelper.messagePlaceholder');
@@ -71,16 +71,16 @@ export const useSnackbarHelperViewModel = () => {
     }
 
     showSnackbar(finalMessage, options);
-  }, [testInput, showSnackbar]);
+  }, [scenarioInput, showSnackbar]);
 
-  // Run All Tests (from Issue #11)
-  const runAllTests = useCallback(() => {
+  // Run All Scenarios (from Issue #11)
+  const runAllScenarios = useCallback(() => {
     setIsLoading(true);
-    setTestResults([]);
+    setScenarioResults([]);
 
     try {
-      const results: SnackbarTestResult[] = [];
-      const { position } = testInput;
+      const results: SnackbarScenarioResult[] = [];
+      const { position } = scenarioInput;
 
       // Test 1: Success Snackbar
       results.push({
@@ -197,28 +197,28 @@ export const useSnackbarHelperViewModel = () => {
         });
       }, 1500);
 
-      setTestResults(results);
+      setScenarioResults(results);
     } catch (error) {
-      console.error('Error running snackbar tests:', error);
+      console.error('Error running snackbar scenarios:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [showSnackbar, testInput]);
+  }, [showSnackbar, scenarioInput]);
 
-  const updateTestInput = useCallback(
-    (input: Partial<SnackbarTestInput>) => {
-      setTestInput({ ...testInput, ...input });
+  const updateScenarioInput = useCallback(
+    (input: Partial<SnackbarScenarioInput>) => {
+      setScenarioInput({ ...scenarioInput, ...input });
     },
-    [testInput]
+    [scenarioInput]
   );
 
   return {
-    testInput,
-    testResults,
+    scenarioInput,
+    scenarioResults,
     isLoading,
     showSnackbar,
-    testSnackbar,
-    runAllTests,
-    updateTestInput,
+    showSnackbarPreview,
+    runAllScenarios,
+    updateScenarioInput,
   };
 };
