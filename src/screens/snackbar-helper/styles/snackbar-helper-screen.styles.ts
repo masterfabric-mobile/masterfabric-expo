@@ -43,7 +43,7 @@ export const snackbarHelperScreenStyles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-  testButton: {
+  previewButton: {
     flex: 1,
   },
   resultsSection: {

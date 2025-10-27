@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const snackbarTestCardStyles = StyleSheet.create({
+export const snackbarResultCardStyles = StyleSheet.create({
   container: {
     borderRadius: 12,
     padding: 20,
