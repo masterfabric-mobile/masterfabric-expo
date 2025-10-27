@@ -15,6 +15,12 @@ export const createDocumentationSections = (): DocumentationSection[] => [
         route: '/string-helper',
       },
       {
+        id: 'toast-helper',
+        titleKey: 'documentation.sections.helpers.toastHelper.title',
+        descriptionKey: 'documentation.sections.helpers.toastHelper.description',
+        route: '/toast-helper',
+      },
+      {
         id: 'device-info-helper',
         titleKey: 'documentation.sections.helpers.deviceInfo.title',
         descriptionKey: 'documentation.sections.helpers.deviceInfo.description',

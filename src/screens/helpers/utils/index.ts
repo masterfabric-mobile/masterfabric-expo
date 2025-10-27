@@ -70,6 +70,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/string-helper',
     available: true,
     category: 'string-helpers'
+  },
+  {
+    id: 'toast-helper',
+    name: 'Toast Helper',
+    description: 'UI feedback and notification utilities',
+    icon: 'notifications-outline',
+    color: '#FF3B30',
+    route: '/toast-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 
