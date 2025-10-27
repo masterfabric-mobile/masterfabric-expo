@@ -1,19 +1,23 @@
 import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
 import { t } from '@/src/shared/i18n';
 import { useCallback, useState } from 'react';
+import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import {
-  SnackbarOptions,
-  SnackbarTestInput,
-  SnackbarTestResult,
+    SnackbarOptions,
+    SnackbarTestInput,
+    SnackbarTestResult,
 } from '../models/snackbar-helper-models';
 
 // Default test input values (from Issue #11)
 const DEFAULT_TEST_INPUT: SnackbarTestInput = {
-  message: 'Item deleted',
+  message: '',
   duration: 5000,
-  actionLabel: 'UNDO',
-  actionType: 'primary',
+  actionLabel: '',
+  type: 'success',
+  position: 'bottom',
   persistent: false,
+  customColor: SNACKBAR_HELPER_COLORS.customDefault,
+  customIcon: '✅',
 };
 
 export const useSnackbarHelperViewModel = () => {
@@ -34,28 +38,25 @@ export const useSnackbarHelperViewModel = () => {
 
   // Test Single Snackbar (from Issue #11)
   const testSnackbar = useCallback(() => {
-    const { message, duration, actionLabel, persistent } = testInput;
+    const { message, duration, actionLabel, type, position, persistent, customColor, customIcon } = testInput;
 
-    // Auto-detect type based on message (Issue #11)
-    let type: 'success' | 'error' | 'warning' | 'info' = 'success';
-    const lowerMessage = message.toLowerCase();
-    
-    if (lowerMessage.includes('failed') || lowerMessage.includes('error')) {
-      type = 'error';
-    } else if (lowerMessage.includes('unsaved') || lowerMessage.includes('warning')) {
-      type = 'warning';
-    } else if (lowerMessage.includes('feature') || lowerMessage.includes('info') || lowerMessage.includes('new')) {
-      type = 'info';
-    } else if (lowerMessage.includes('deleted') || lowerMessage.includes('success')) {
-      type = 'success';
-    }
+    // Use placeholder if message is empty
+    const finalMessage = message.trim() || t('helpers.snackbarHelper.messagePlaceholder');
 
-    const options: SnackbarOptions = {
-      type,
+    const options: any = {
+      type: type === 'custom' ? 'info' : type,
       duration: persistent ? 0 : duration,
-      position: 'bottom',
+      position,
       persistent,
     };
+
+    // Add custom color and icon if custom type selected
+    if (type === 'custom' && customColor) {
+      options.customColor = customColor;
+    }
+    if (type === 'custom' && customIcon) {
+      options.customIcon = customIcon;
+    }
 
     if (actionLabel.trim()) {
       options.action = {
@@ -69,7 +70,7 @@ export const useSnackbarHelperViewModel = () => {
       };
     }
 
-    showSnackbar(message, options);
+    showSnackbar(finalMessage, options);
   }, [testInput, showSnackbar]);
 
   // Run All Tests (from Issue #11)
@@ -79,20 +80,22 @@ export const useSnackbarHelperViewModel = () => {
 
     try {
       const results: SnackbarTestResult[] = [];
+      const { position } = testInput;
 
       // Test 1: Success Snackbar
       results.push({
         id: 'success-snackbar',
-        functionName: 'showSuccessSnackbar',
-        input: '"Item deleted"',
-        output: 'Green snackbar with Undo',
-        description: 'Success notification snackbar',
+        functionName: `✅ ${t('helpers.snackbarHelper.testResults.successSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.successSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.successSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.successSnackbar.description'),
       });
-      showSnackbar('Item deleted', {
+      showSnackbar(t('helpers.snackbarHelper.testResults.successSnackbar.input').replace(/"/g, ''), {
         type: 'success',
         duration: 5000,
+        position,
         action: {
-          label: 'UNDO',
+          label: t('helpers.snackbarHelper.actionUndo'),
           onPress: () => {},
         },
       });
@@ -100,17 +103,18 @@ export const useSnackbarHelperViewModel = () => {
       // Test 2: Error Snackbar
       results.push({
         id: 'error-snackbar',
-        functionName: 'showErrorSnackbar',
-        input: '"Failed to save"',
-        output: 'Red snackbar with Retry',
-        description: 'Error notification snackbar',
+        functionName: `❌ ${t('helpers.snackbarHelper.testResults.errorSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.errorSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.errorSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.errorSnackbar.description'),
       });
       setTimeout(() => {
-        showSnackbar('Failed to save', {
+        showSnackbar(t('helpers.snackbarHelper.testResults.errorSnackbar.input').replace(/"/g, ''), {
           type: 'error',
           duration: 5000,
+          position,
           action: {
-            label: 'RETRY',
+            label: t('helpers.snackbarHelper.actionRetry'),
             onPress: () => {},
           },
         });
@@ -119,17 +123,18 @@ export const useSnackbarHelperViewModel = () => {
       // Test 3: Warning Snackbar
       results.push({
         id: 'warning-snackbar',
-        functionName: 'showWarningSnackbar',
-        input: '"Unsaved changes"',
-        output: 'Orange snackbar with Save',
-        description: 'Warning notification snackbar',
+        functionName: `⚠️ ${t('helpers.snackbarHelper.testResults.warningSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.warningSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.warningSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.warningSnackbar.description'),
       });
       setTimeout(() => {
-        showSnackbar('Unsaved changes', {
+        showSnackbar(t('helpers.snackbarHelper.testResults.warningSnackbar.input').replace(/"/g, ''), {
           type: 'warning',
           duration: 5000,
+          position,
           action: {
-            label: 'SAVE',
+            label: t('helpers.snackbarHelper.actionSave'),
             onPress: () => {},
           },
         });
@@ -138,34 +143,36 @@ export const useSnackbarHelperViewModel = () => {
       // Test 4: Info Snackbar
       results.push({
         id: 'info-snackbar',
-        functionName: 'showInfoSnackbar',
-        input: '"New feature available"',
-        output: 'Blue snackbar with Learn More',
-        description: 'Info notification snackbar',
+        functionName: `ℹ️ ${t('helpers.snackbarHelper.testResults.infoSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.infoSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.infoSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.infoSnackbar.description'),
       });
       setTimeout(() => {
-        showSnackbar('New feature available', {
+        showSnackbar(t('helpers.snackbarHelper.testResults.infoSnackbar.input').replace(/"/g, ''), {
           type: 'info',
           duration: 5000,
+          position,
           action: {
-            label: 'LEARN MORE',
+            label: t('helpers.snackbarHelper.actionLearnMore'),
             onPress: () => {},
           },
         });
       }, 900);
 
-      // Test 5: Action Snackbar
+      // Test 5: Custom Snackbar
       results.push({
-        id: 'action-snackbar',
-        functionName: 'showActionSnackbar',
-        input: '"Custom action"',
-        output: 'Custom snackbar with action',
-        description: 'Custom action notification snackbar',
+        id: 'custom-snackbar',
+        functionName: `🎨 ${t('helpers.snackbarHelper.testResults.customSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.customSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.customSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.customSnackbar.description'),
       });
       setTimeout(() => {
-        showSnackbar('Custom action', {
+        showSnackbar(t('helpers.snackbarHelper.testResults.customSnackbar.input').replace(/"/g, ''), {
           type: 'info',
           duration: 5000,
+          position,
           action: {
             label: 'ACTION',
             onPress: () => {},
@@ -176,20 +183,17 @@ export const useSnackbarHelperViewModel = () => {
       // Test 6: Persistent Snackbar
       results.push({
         id: 'persistent-snackbar',
-        functionName: 'showPersistentSnackbar',
-        input: '"Persistent message"',
-        output: 'Non-dismissing snackbar',
-        description: 'Persistent notification snackbar',
+        functionName: `📌 ${t('helpers.snackbarHelper.testResults.persistentSnackbar.functionName')}`,
+        input: t('helpers.snackbarHelper.testResults.persistentSnackbar.input'),
+        output: t('helpers.snackbarHelper.testResults.persistentSnackbar.output'),
+        description: t('helpers.snackbarHelper.testResults.persistentSnackbar.description'),
       });
       setTimeout(() => {
-        showSnackbar('Persistent message', {
+        showSnackbar(t('helpers.snackbarHelper.testResults.persistentSnackbar.input').replace(/"/g, ''), {
           type: 'warning',
           duration: 0,
+          position,
           persistent: true,
-          action: {
-            label: 'DISMISS',
-            onPress: () => {},
-          },
         });
       }, 1500);
 
@@ -199,7 +203,7 @@ export const useSnackbarHelperViewModel = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [showSnackbar]);
+  }, [showSnackbar, testInput]);
 
   const updateTestInput = useCallback(
     (input: Partial<SnackbarTestInput>) => {
