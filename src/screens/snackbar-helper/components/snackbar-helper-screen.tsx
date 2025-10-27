@@ -13,7 +13,7 @@ import { useSnackbarHelperViewModel } from '../hooks/use-snackbar-helper-view-mo
 import { snackbarHelperScreenStyles } from '../styles/snackbar-helper-screen.styles';
 import { SnackbarColorPicker } from './snackbar-color-picker';
 import { SnackbarInputField } from './snackbar-input-field';
-import { SnackbarTestCard } from './snackbar-test-card';
+import { SnackbarResultCard } from './snackbar-result-card';
 
 export function SnackbarHelperScreen() {
   const { currentTheme } = useTheme();
@@ -23,12 +23,12 @@ export function SnackbarHelperScreen() {
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const {
-    testInput,
-    testResults,
+    scenarioInput,
+    scenarioResults,
     isLoading,
-    testSnackbar,
-    runAllTests,
-    updateTestInput,
+    showSnackbarPreview,
+    runAllScenarios,
+    updateScenarioInput,
   } = useSnackbarHelperViewModel();
 
   return (
@@ -67,8 +67,8 @@ export function SnackbarHelperScreen() {
           {/* Message Input */}
           <SnackbarInputField
             label={t('helpers.snackbarHelper.message')}
-            value={testInput.message}
-            onChangeText={(text) => updateTestInput({ message: text })}
+            value={scenarioInput.message}
+            onChangeText={(text) => updateScenarioInput({ message: text })}
             placeholder={t('helpers.snackbarHelper.messagePlaceholder')}
             multiline={true}
           />
@@ -90,11 +90,11 @@ export function SnackbarHelperScreen() {
                 { label: '8sn', value: '8000' },
                 { label: '10sn', value: '10000' },
               ]}
-              selectedValue={testInput.duration.toString()}
-              onSelect={(value) => updateTestInput({ duration: parseInt(value) })}
+              selectedValue={scenarioInput.duration.toString()}
+              onSelect={(value) => updateScenarioInput({ duration: parseInt(value) })}
             />
             <ThemedText style={[{ color: colors.text, fontSize: 11, opacity: 0.6, marginTop: 4 }]}>
-              {testInput.duration / 1000}sn = {testInput.duration}ms
+              {scenarioInput.duration / 1000}sn = {scenarioInput.duration}ms
             </ThemedText>
           </View>
 
@@ -118,8 +118,8 @@ export function SnackbarHelperScreen() {
                 { label: `${t('helpers.snackbarHelper.actionSave')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '✓', icon: 'save' },
                 { label: `${t('helpers.snackbarHelper.actionLearnMore')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '→', icon: 'book' },
               ]}
-              selectedValue={testInput.actionLabel}
-              onSelect={(value) => updateTestInput({ actionLabel: value })}
+              selectedValue={scenarioInput.actionLabel}
+              onSelect={(value) => updateScenarioInput({ actionLabel: value })}
             />
           </View>
 
@@ -139,13 +139,13 @@ export function SnackbarHelperScreen() {
                 { label: `ℹ️ ${t('helpers.snackbarHelper.typeInfo')}`, value: 'info' },
                 { label: `🎨 ${t('helpers.snackbarHelper.typeCustom')}`, value: 'custom' },
               ]}
-              selectedValue={testInput.type}
-              onSelect={(value) => updateTestInput({ type: value as any })}
+              selectedValue={scenarioInput.type}
+              onSelect={(value) => updateScenarioInput({ type: value as any })}
             />
           </View>
 
           {/* Custom Options (only if Custom type selected) */}
-          {testInput.type === 'custom' && (
+          {scenarioInput.type === 'custom' && (
             <>
               {/* Custom Icon Dropdown */}
               <View style={snackbarHelperScreenStyles.dropdownContainer}>
@@ -164,8 +164,8 @@ export function SnackbarHelperScreen() {
                     { label: `✔️ ${t('helpers.snackbarHelper.iconCheck')}`, value: '✔️' },
                     { label: `➡️ ${t('helpers.snackbarHelper.iconArrow')}`, value: '➡️' },
                   ]}
-                  selectedValue={testInput.customIcon || '✅'}
-                  onSelect={(value) => updateTestInput({ customIcon: value })}
+                  selectedValue={scenarioInput.customIcon || '✅'}
+                  onSelect={(value) => updateScenarioInput({ customIcon: value })}
                 />
               </View>
 
@@ -187,14 +187,14 @@ export function SnackbarHelperScreen() {
                   style={[
                     snackbarHelperScreenStyles.colorPreview,
                     { 
-                      backgroundColor: testInput.customColor || SNACKBAR_HELPER_COLORS.customDefault,
+                      backgroundColor: scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault,
                       borderColor: colors.surfaceBorder,
                     }
                   ]}
                 />
                   <View style={{ flex: 1 }}>
                     <ThemedText style={[snackbarHelperScreenStyles.colorHexText, { color: colors.text }]}>
-                      {testInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
+                      {scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
                     </ThemedText>
                     <ThemedText style={[{ color: colors.text, fontSize: 12, opacity: 0.6 }]}>
                       {t('helpers.snackbarHelper.tapToChangeColor')}
@@ -209,8 +209,8 @@ export function SnackbarHelperScreen() {
           <SnackbarColorPicker
             visible={showColorPicker}
             onClose={() => setShowColorPicker(false)}
-            initialColor={testInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
-            onColorSelect={(color) => updateTestInput({ customColor: color })}
+            initialColor={scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
+            onColorSelect={(color) => updateScenarioInput({ customColor: color })}
           />
 
           {/* Position Dropdown */}
@@ -227,8 +227,8 @@ export function SnackbarHelperScreen() {
                 { label: t('helpers.snackbarHelper.positionCenter'), value: 'center' },
                 { label: t('helpers.snackbarHelper.positionBottom'), value: 'bottom' },
               ]}
-              selectedValue={testInput.position}
-              onSelect={(value) => updateTestInput({ position: value as any })}
+              selectedValue={scenarioInput.position}
+              onSelect={(value) => updateScenarioInput({ position: value as any })}
             />
           </View>
 
@@ -241,10 +241,10 @@ export function SnackbarHelperScreen() {
               {t('helpers.snackbarHelper.persistent')}
             </ThemedText>
             <Switch
-              value={testInput.persistent}
-              onValueChange={(value) => updateTestInput({ persistent: value })}
+              value={scenarioInput.persistent}
+              onValueChange={(value) => updateScenarioInput({ persistent: value })}
               trackColor={{ false: colors.surfaceBorder, true: colors.successColor }}
-              thumbColor={testInput.persistent ? SNACKBAR_HELPER_COLORS.switchActiveLight : (isDark ? SNACKBAR_HELPER_COLORS.switchInactiveDark : SNACKBAR_HELPER_COLORS.switchInactiveLight)}
+              thumbColor={scenarioInput.persistent ? SNACKBAR_HELPER_COLORS.switchActiveLight : (isDark ? SNACKBAR_HELPER_COLORS.switchInactiveDark : SNACKBAR_HELPER_COLORS.switchInactiveLight)}
             />
           </View>
 
@@ -252,32 +252,32 @@ export function SnackbarHelperScreen() {
           <View style={snackbarHelperScreenStyles.buttonRow}>
             <Button
               title={t('helpers.snackbarHelper.testSnackbar')}
-              onPress={testSnackbar}
+              onPress={showSnackbarPreview}
               variant="primary"
-              style={snackbarHelperScreenStyles.testButton}
+              style={snackbarHelperScreenStyles.previewButton}
             />
             <Button
               title={isLoading ? t('helpers.snackbarHelper.loading') : t('helpers.snackbarHelper.runAllTests')}
-              onPress={runAllTests}
+              onPress={runAllScenarios}
               variant="secondary"
-              style={snackbarHelperScreenStyles.testButton}
+              style={snackbarHelperScreenStyles.previewButton}
               disabled={isLoading}
             />
           </View>
         </ThemedView>
 
         {/* Test Results Section */}
-        {testResults.length > 0 && (
+        {scenarioResults.length > 0 && (
           <ThemedView style={snackbarHelperScreenStyles.resultsSection}>
             <ThemedText
               type="subtitle"
               style={[snackbarHelperScreenStyles.sectionTitle, { color: colors.text }]}
             >
-              {t('helpers.snackbarHelper.testResultsTitle')} ({testResults.length} {t('helpers.snackbarHelper.functions')}):
+              {t('helpers.snackbarHelper.testResultsTitle')} ({scenarioResults.length} {t('helpers.snackbarHelper.functions')}):
             </ThemedText>
 
-            {testResults.map((result) => (
-              <SnackbarTestCard key={result.id} result={result} />
+            {scenarioResults.map((result) => (
+              <SnackbarResultCard key={result.id} result={result} />
             ))}
           </ThemedView>
         )}

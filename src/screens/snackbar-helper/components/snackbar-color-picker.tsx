@@ -1,7 +1,7 @@
 /**
  * SnackbarColorPicker Component
  * 
- * Modal color picker with gradient square
+ * Modal color picker with gradient square and hue slider
  */
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
@@ -11,7 +11,13 @@ import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { GestureResponderEvent, Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
+import {
+    COLOR_PICKER_COLORS,
+    COLOR_PICKER_DEFAULTS,
+    COLOR_PICKER_DIMENSIONS,
+    HUE_GRADIENT_COLORS,
+} from '../constants/color-picker-constants';
+import { calculateColorFromPosition, clamp } from '../utils/color-picker-utils';
 
 interface SnackbarColorPickerProps {
   visible: boolean;
@@ -26,60 +32,23 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
   const colors = getThemeColors(isDark);
   
   const [selectedColor, setSelectedColor] = useState(initialColor);
-  const [hueValue, setHueValue] = useState(280); // Default purple hue
+  const [hueValue, setHueValue] = useState<number>(COLOR_PICKER_DEFAULTS.defaultHue);
   
   // Saturation/Lightness picker position
-  const satX = useSharedValue(150);
-  const satY = useSharedValue(100);
-  
-  // Convert HSL to RGB to Hex
-  const hslToHex = (h: number, s: number, l: number): string => {
-    h = h / 360;
-    s = s / 100;
-    l = l / 100;
-    
-    let r, g, b;
-    
-    if (s === 0) {
-      r = g = b = l;
-    } else {
-      const hue2rgb = (p: number, q: number, t: number) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-        return p;
-      };
-      
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
-    }
-    
-    const toHex = (x: number) => {
-      const hex = Math.round(x * 255).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    };
-    
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-  };
+  const satX = useSharedValue(COLOR_PICKER_DIMENSIONS.gradientSquareWidth / 2);
+  const satY = useSharedValue(COLOR_PICKER_DIMENSIONS.gradientSquareHeight / 2);
   
   // Update color based on position
   const updateColor = (sat: number, light: number, h: number) => {
-    const saturation = (sat / 300) * 100;
-    const lightness = 100 - (light / 200) * 100;
-    const newColor = hslToHex(h, saturation, lightness);
+    const newColor = calculateColorFromPosition(sat, light, h);
     setSelectedColor(newColor);
   };
   
   // Handle touch for saturation/lightness picker
   const handleSaturationTouch = (event: GestureResponderEvent) => {
     const { locationX, locationY } = event.nativeEvent;
-    const newX = Math.max(0, Math.min(300, locationX));
-    const newY = Math.max(0, Math.min(200, locationY));
+    const newX = clamp(locationX, 0, COLOR_PICKER_DIMENSIONS.gradientSquareWidth);
+    const newY = clamp(locationY, 0, COLOR_PICKER_DIMENSIONS.gradientSquareHeight);
     satX.value = withSpring(newX, { damping: 50, stiffness: 500 });
     satY.value = withSpring(newY, { damping: 50, stiffness: 500 });
     updateColor(newX, newY, hueValue);
@@ -88,15 +57,19 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
   // Handle touch for hue slider
   const handleHueTouch = (event: GestureResponderEvent) => {
     const { locationX } = event.nativeEvent;
-    const newHue = Math.max(0, Math.min(360, (locationX / 300) * 360));
+    const newHue = clamp(
+      (locationX / COLOR_PICKER_DIMENSIONS.hueSliderWidth) * COLOR_PICKER_DEFAULTS.maxHue,
+      0,
+      COLOR_PICKER_DEFAULTS.maxHue
+    );
     setHueValue(newHue);
     updateColor(satX.value, satY.value, newHue);
   };
   
   const pointerStyle = useAnimatedStyle(() => ({
     transform: [
-      { translateX: satX.value - 10 },
-      { translateY: satY.value - 10 },
+      { translateX: satX.value - COLOR_PICKER_DIMENSIONS.pointerSize / 2 },
+      { translateY: satY.value - COLOR_PICKER_DIMENSIONS.pointerSize / 2 },
     ],
   }));
   
@@ -135,7 +108,7 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
                 
                 {/* Horizontal white to transparent gradient (saturation) */}
                 <LinearGradient
-                  colors={[WHITE, 'transparent']}
+                  colors={[COLOR_PICKER_COLORS.white, 'transparent']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.gradientOverlay}
@@ -143,7 +116,7 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
                 
                 {/* Vertical transparent to black gradient (lightness) */}
                 <LinearGradient
-                  colors={['transparent', BLACK]}
+                  colors={['transparent', COLOR_PICKER_COLORS.black]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                   style={styles.gradientOverlay}
@@ -163,13 +136,17 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
                 onResponderMove={handleHueTouch}
               >
                 <LinearGradient
-                  colors={['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000']}
+                  colors={[...HUE_GRADIENT_COLORS]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.hueGradient}
                 />
                 <View style={[styles.huePointer, { 
-                  transform: [{ translateX: (hueValue / 360) * 300 - 10 }] 
+                  transform: [{ 
+                    translateX: (hueValue / COLOR_PICKER_DEFAULTS.maxHue) * 
+                      COLOR_PICKER_DIMENSIONS.hueSliderWidth - 
+                      COLOR_PICKER_DIMENSIONS.huePointerWidth / 2 
+                  }] 
                 }]} />
               </View>
             </View>
@@ -189,7 +166,7 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
                   onClose();
                 }}
               >
-                <ThemedText style={{ color: WHITE }}>Select</ThemedText>
+                <ThemedText style={{ color: COLOR_PICKER_COLORS.white }}>Select</ThemedText>
               </Pressable>
             </View>
           </ThemedView>
@@ -198,12 +175,6 @@ export function SnackbarColorPicker({ visible, onClose, initialColor, onColorSel
     </Modal>
   );
 }
-
-// Local color constants for styles
-const WHITE = SNACKBAR_HELPER_COLORS.white;
-const BLACK = SNACKBAR_HELPER_COLORS.black;
-const BORDER_LIGHT = SNACKBAR_HELPER_COLORS.borderLight;
-const BORDER_WHITE = SNACKBAR_HELPER_COLORS.borderWhite;
 
 const styles = StyleSheet.create({
   overlay: {
@@ -237,7 +208,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
     borderWidth: 2,
-    borderColor: BORDER_LIGHT,
+    borderColor: COLOR_PICKER_COLORS.borderLight,
   },
   hexText: {
     fontSize: 18,
@@ -249,8 +220,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   gradientSquare: {
-    width: 300,
-    height: 200,
+    width: COLOR_PICKER_DIMENSIONS.gradientSquareWidth,
+    height: COLOR_PICKER_DIMENSIONS.gradientSquareHeight,
     borderRadius: 12,
     overflow: 'hidden',
     position: 'relative',
@@ -264,12 +235,12 @@ const styles = StyleSheet.create({
   },
   pointer: {
     position: 'absolute',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: COLOR_PICKER_DIMENSIONS.pointerSize,
+    height: COLOR_PICKER_DIMENSIONS.pointerSize,
+    borderRadius: COLOR_PICKER_DIMENSIONS.pointerSize / 2,
     borderWidth: 3,
-    borderColor: BORDER_WHITE,
-    shadowColor: BLACK,
+    borderColor: COLOR_PICKER_COLORS.borderWhite,
+    shadowColor: COLOR_PICKER_COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 4,
@@ -279,9 +250,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   hueSlider: {
-    width: 300,
-    height: 40,
-    borderRadius: 20,
+    width: COLOR_PICKER_DIMENSIONS.hueSliderWidth,
+    height: COLOR_PICKER_DIMENSIONS.hueSliderHeight,
+    borderRadius: COLOR_PICKER_DIMENSIONS.hueSliderHeight / 2,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -292,11 +263,11 @@ const styles = StyleSheet.create({
   huePointer: {
     position: 'absolute',
     top: 0,
-    width: 20,
-    height: 40,
+    width: COLOR_PICKER_DIMENSIONS.huePointerWidth,
+    height: COLOR_PICKER_DIMENSIONS.huePointerHeight,
     borderWidth: 3,
-    borderColor: BORDER_WHITE,
-    shadowColor: BLACK,
+    borderColor: COLOR_PICKER_COLORS.borderWhite,
+    shadowColor: COLOR_PICKER_COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 4,
@@ -320,4 +291,3 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
 });
-
