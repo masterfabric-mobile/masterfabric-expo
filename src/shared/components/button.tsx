@@ -70,7 +70,9 @@ export function Button({
         return [
           ...baseStyle,
           {
-            backgroundColor: isDark ? '#1C1C1E' : '#F2F2F7',
+            backgroundColor: disabled 
+              ? (isDark ? '#333' : '#E5E5E5')
+              : (isDark ? '#34C759' : '#4CAF50'),
           }
         ];
       case 'outline':
@@ -99,6 +101,12 @@ export function Button({
           }
         ];
       case 'secondary':
+        return [
+          ...baseTextStyle,
+          {
+            color: disabled ? (isDark ? '#666' : '#999') : (isDark ? '#FFFFFF' : '#000000'),
+          }
+        ];
       case 'outline':
         return baseTextStyle;
       default:

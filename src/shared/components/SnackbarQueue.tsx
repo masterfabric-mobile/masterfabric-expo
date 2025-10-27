@@ -6,14 +6,13 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors } from 'masterfabric-expo-core';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSnackbar } from '../hooks/use-snackbar';
 import type { SnackbarProps } from '../services/snackbar-service';
-import { ThemedText } from './ThemedText';
-import { ThemedView } from './ThemedView';
 
 interface SingleSnackbarProps {
   snackbar: SnackbarProps;
@@ -22,12 +21,15 @@ interface SingleSnackbarProps {
 }
 
 function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
-  const { currentTheme } = useTheme();
-  const isDark = currentTheme === 'dark';
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const colors = getThemeColors(isDark);
   const insets = useSafeAreaInsets();
   
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  
   const translateY = useRef(new Animated.Value(100)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -47,82 +49,193 @@ function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
     ]).start();
   }, []);
 
+  // Swipe to dismiss gesture - sağa kaydırınca kapanır
+  const panGesture = Gesture.Pan()
+    .activeOffsetX(10) // Minimum 10px horizontal hareket
+    .failOffsetY([-10, 10]) // Dikey hareket varsa iptal et
+    .onUpdate((event) => {
+      // Sadece sağa kaydırmaya izin ver
+      if (event.translationX > 0) {
+        translateX.setValue(event.translationX);
+        // Opacity'yi mesafeye göre azalt
+        const newOpacity = Math.max(0, 1 - event.translationX / 250);
+        opacity.setValue(newOpacity);
+      }
+    })
+    .onEnd((event) => {
+      const shouldDismiss = event.translationX > 80 || event.velocityX > 500;
+      
+      if (shouldDismiss) {
+        // Sağa kaydırarak kaybol
+        Animated.parallel([
+          Animated.timing(translateX, {
+            toValue: 500, // Ekran dışına çık
+            duration: 250,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 250,
+            useNativeDriver: true,
+          }),
+        ]).start(() => onDismiss(snackbar.id));
+      } else {
+        // Geri gel (bounce efekti)
+        Animated.parallel([
+          Animated.spring(translateX, {
+            toValue: 0,
+            useNativeDriver: true,
+            tension: 120,
+            friction: 10,
+          }),
+          Animated.timing(opacity, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      }
+    });
+
   const getSnackbarColors = () => {
+    // Check for custom color and icon
+    const customBg = (snackbar as any).customColor;
+    const customIcon = (snackbar as any).customIcon;
+    
+    // Default type icons - these should use Ionicons
+    const defaultIcons = ['✅', '❌', '⚠️', 'ℹ️'];
+    const shouldUseCustomIcon = customIcon && !defaultIcons.includes(customIcon);
+    
+    // Map custom icons to their type equivalents for color
+    const getTypeFromIcon = (icon: string) => {
+      if (icon === '✅') return 'success';
+      if (icon === '❌') return 'error';
+      if (icon === '⚠️') return 'warning';
+      if (icon === 'ℹ️') return 'info';
+      return null;
+    };
+    
+    if (customBg) {
+      const iconType = getTypeFromIcon(customIcon);
+      
+      return {
+        background: customBg,
+        icon: '#FFFFFF',
+        iconName: iconType === 'success' ? 'checkmark-circle' as const :
+                  iconType === 'error' ? 'close-circle' as const :
+                  iconType === 'warning' ? 'warning' as const :
+                  iconType === 'info' ? 'information-circle' as const :
+                  'brush' as const,
+        customIcon: shouldUseCustomIcon ? customIcon : undefined,
+      };
+    }
+
     switch (snackbar.type) {
       case 'success':
         return {
-          background: isDark ? '#1B5E20' : '#4CAF50',
+          background: colors.successColor,
           icon: '#FFFFFF',
           iconName: 'checkmark-circle' as const,
+          customIcon: shouldUseCustomIcon ? customIcon : undefined,
         };
       case 'error':
         return {
-          background: isDark ? '#B71C1C' : '#F44336',
+          background: colors.errorColor,
           icon: '#FFFFFF',
           iconName: 'close-circle' as const,
+          customIcon: shouldUseCustomIcon ? customIcon : undefined,
         };
       case 'warning':
         return {
-          background: isDark ? '#E65100' : '#FF9800',
+          background: colors.warningColor,
           icon: '#FFFFFF',
           iconName: 'warning' as const,
+          customIcon: shouldUseCustomIcon ? customIcon : undefined,
         };
       case 'info':
       default:
         return {
-          background: isDark ? '#0D47A1' : '#2196F3',
+          background: colors.tint,
           icon: '#FFFFFF',
           iconName: 'information-circle' as const,
+          customIcon: shouldUseCustomIcon ? customIcon : undefined,
         };
     }
   };
 
   const snackbarColors = getSnackbarColors();
   const isTop = snackbar.position === 'top';
+  const isCenter = snackbar.position === 'center';
   
   // Calculate vertical offset for stacking
-  const stackOffset = index * 72;
-  const bottomPosition = isTop ? undefined : insets.bottom + 20 + stackOffset;
-  const topPosition = isTop ? insets.top + 20 + stackOffset : undefined;
+  const stackOffset = index * 68;
+  const bottomPosition = isTop || isCenter ? undefined : insets.bottom + 16 + stackOffset;
+  const topPosition = isTop ? insets.top + 16 + stackOffset : (isCenter ? '50%' : undefined);
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          [isTop ? 'top' : 'bottom']: isTop ? topPosition : bottomPosition,
-          transform: [
-            { translateY: isTop ? Animated.multiply(translateY, -1) : translateY },
-          ],
-          opacity,
-          zIndex: 9999 - index,
-        },
-      ]}
-      pointerEvents="auto"
-    >
-      <ThemedView
+    <GestureDetector gesture={panGesture}>
+      <Animated.View
         style={[
-          styles.snackbar,
+          styles.container,
+          isCenter ? {
+            top: '50%',
+            transform: [
+              { translateY: -30 }, // Half of snackbar height (60px / 2)
+              { translateX },
+            ],
+          } : {
+            [isTop ? 'top' : 'bottom']: isTop ? topPosition : bottomPosition,
+            transform: [
+              { translateY: isTop ? Animated.multiply(translateY, -1) : translateY },
+              { translateX },
+            ],
+          },
           {
-            backgroundColor: snackbarColors.background,
+            opacity,
+            zIndex: 9999 - index,
           },
         ]}
+        pointerEvents="auto"
       >
-        <View style={styles.contentContainer}>
-          <View style={styles.iconContainer}>
-            <Ionicons
-              name={snackbarColors.iconName}
-              size={24}
-              color={snackbarColors.icon}
-            />
-          </View>
-          
-          <ThemedText
-            style={[styles.message, { color: '#FFFFFF' }]}
-            numberOfLines={3}
-          >
-            {snackbar.message}
-          </ThemedText>
+        <View
+          style={[
+            styles.snackbar,
+            {
+              backgroundColor: snackbarColors.background,
+            },
+          ]}
+        >
+          <View style={styles.contentContainer}>
+            <View style={styles.iconContainer}>
+              {snackbarColors.customIcon ? (
+                <Text style={{ fontSize: 32, lineHeight: 32, color: '#FFFFFF' }}>
+                  {snackbarColors.customIcon}
+                </Text>
+              ) : (
+                <Ionicons
+                  name={snackbarColors.iconName}
+                  size={32}
+                  color={snackbarColors.icon}
+                />
+              )}
+            </View>
+            
+            <Pressable onPress={() => setIsExpanded(!isExpanded)} style={{ flex: 1 }}>
+              <Text
+                style={[
+                  styles.message, 
+                  { 
+                    color: '#FFFFFF',
+                    flex: undefined,
+                    flexShrink: 1,
+                  }
+                ]}
+                numberOfLines={isExpanded ? undefined : 3}
+                ellipsizeMode="tail"
+              >
+                {snackbar.message}
+              </Text>
+            </Pressable>
 
           {snackbar.action && (
             <Pressable
@@ -132,14 +245,18 @@ function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
               }}
               style={styles.actionButton}
             >
-              <ThemedText
+              <Text
                 style={[
                   styles.actionText,
-                  { color: '#FFFFFF' },
+                  { 
+                    color: '#FFFFFF',
+                    // Bigger font for single icon/emoji
+                    fontSize: snackbar.action.label.length <= 2 ? 28 : 14,
+                  },
                 ]}
               >
                 {snackbar.action.label}
-              </ThemedText>
+              </Text>
             </Pressable>
           )}
         </View>
@@ -151,8 +268,9 @@ function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
         >
           <Ionicons name="close" size={20} color="#FFFFFF" />
         </Pressable>
-      </ThemedView>
+      </View>
     </Animated.View>
+    </GestureDetector>
   );
 }
 
@@ -161,13 +279,23 @@ export function SnackbarQueue() {
 
   if (snackbars.length === 0) return null;
 
+  // Separate snackbars by position
+  const centerSnackbars = snackbars.filter(s => s.position === 'center');
+  const otherSnackbars = snackbars.filter(s => s.position !== 'center');
+
+  // For center position, show only the latest one
+  const displaySnackbars = [
+    ...otherSnackbars,
+    ...(centerSnackbars.length > 0 ? [centerSnackbars[centerSnackbars.length - 1]] : [])
+  ];
+
   return (
     <>
-      {snackbars.map((snackbar, index) => (
+      {displaySnackbars.map((snackbar, index) => (
         <SingleSnackbar
           key={snackbar.id}
           snackbar={snackbar}
-          index={index}
+          index={snackbar.position === 'center' ? 0 : index}
           onDismiss={dismissSnackbar}
         />
       ))}
@@ -197,7 +325,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
-    minHeight: 56,
+    minHeight: 60,
   },
   contentContainer: {
     flex: 1,
@@ -206,8 +334,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   iconContainer: {
-    width: 24,
-    height: 24,
+    width: 36,
+    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },
