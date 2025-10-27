@@ -3,21 +3,18 @@ import { StyleSheet } from 'react-native';
 export const snackbarTestCardStyles = StyleSheet.create({
   container: {
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
+    padding: 20,
+    marginBottom: 16,
     borderWidth: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   functionName: {
-    fontSize: 16,
+    fontSize: 17,
   },
   section: {
-    marginBottom: 8,
+    marginBottom: 12,
   },
   sectionLabel: {
     fontSize: 13,
@@ -25,7 +22,7 @@ export const snackbarTestCardStyles = StyleSheet.create({
   },
   sectionValue: {
     fontSize: 14,
-    lineHeight: 20,
+    lineHeight: 22,
   },
 });
 
