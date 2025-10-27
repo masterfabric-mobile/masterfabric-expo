@@ -9,8 +9,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ToastContainer } from '@/src/screens/toast-helper/components/toast-container';
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
-import { LocaleProvider, ToastProvider } from '@/src/shared/contexts';
+import { LocaleProvider } from '@/src/shared/contexts';
 import { useAppStore } from '@/src/shared/store';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
@@ -106,9 +107,8 @@ export default function RootLayout() {
         <LocaleProvider>
           <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
-              <ToastProvider>
-                <SafeAreaProvider>
-                <NavigationWrapper>
+              <SafeAreaProvider>
+              <NavigationWrapper>
                   <Stack 
                     screenOptions={{ headerShown: false }}
                     >
@@ -116,13 +116,16 @@ export default function RootLayout() {
                       <Stack.Screen name="onboarding" />
                       <Stack.Screen name="projects" />
                       <Stack.Screen name="settings" />
+                      <Stack.Screen name="string-helper" />
+                      <Stack.Screen name="toast-helper" />
+                      <Stack.Screen name="documentation" />
                       <Stack.Screen name="(tabs)" />
                       <Stack.Screen name="+not-found" />
                     </Stack>
                     <StatusBar style="auto" />
+                    <ToastContainer />
                   </NavigationWrapper>
                 </SafeAreaProvider>
-              </ToastProvider>
             </QueryClientProvider>
           </MasterViewThemeProvider>
         </LocaleProvider>
