@@ -79,6 +79,16 @@ export const Colors = {
     labelText: '#6C757D',
     bodyText: '#343A40',
     
+    // Additional text colors
+    titleText: '#000000',
+    
+    // Input and success colors
+    inputBackground: '#F8F9FA',
+    successBackground: '#E8F5E8',
+    successBorder: '#34C759',
+    successText: '#2E7D32',
+    placeholderText: '#8E8E93',
+    
     // Tab bar colors - Better visibility
     tabBarBackground: 'rgba(255, 255, 255, 0.95)',
     tabBarBorder: '#C7C7CC',
@@ -165,6 +175,16 @@ export const Colors = {
     labelText: '#98989D',
     bodyText: '#E5E5E7',
     
+    // Additional text colors
+    titleText: '#FFFFFF',
+    
+    // Input and success colors
+    inputBackground: '#2C2C2E',
+    successBackground: '#1B5E20',
+    successBorder: '#34C759',
+    successText: '#4CAF50',
+    placeholderText: '#8E8E93',
+    
     // Tab bar colors
     tabBarBackground: 'rgba(28, 28, 30, 0.95)',
     tabBarBorder: '#38383A',
@@ -195,6 +215,7 @@ export const QUICK_ACTION_COLORS: Record<string, string> = {
   'helpers': '#5856D6',
   'contact': '#FF3B30',
   'string-helper': '#34C759',
+  'toast-helper': '#FF3B30',
   'dev-onboarding': '#FF3B30',
   'dev-device-info': '#5856D6',
   'new-project': '#007AFF', // Keep for backward compatibility
