@@ -44,9 +44,11 @@ export interface SnackbarProps {
   message: string;
   type?: 'success' | 'error' | 'warning' | 'info';
   duration?: number; // milliseconds, 0 for persistent
-  position?: 'top' | 'bottom';
+  position?: 'top' | 'bottom' | 'center';
   action?: SnackbarAction;
   persistent?: boolean; // if true, won't auto-dismiss
+  customColor?: string;
+  customIcon?: string;
 }
 
 type SnackbarListener = (snackbars: SnackbarProps[]) => void;
