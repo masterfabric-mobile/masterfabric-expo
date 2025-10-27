@@ -2,6 +2,10 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["ES2020", "DOM"],
+    "paths": {
+      "masterfabric-expo-core": ["./packages/masterfabric-expo-core/src/index.ts"],
+      "masterfabric-expo-core/*": ["./packages/masterfabric-expo-core/src/*"]
+    },
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "react-jsx",
