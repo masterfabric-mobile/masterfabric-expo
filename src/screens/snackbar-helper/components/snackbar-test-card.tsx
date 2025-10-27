@@ -1,9 +1,9 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { SnackbarTestResult } from '../models/snackbar-helper-models';
 import { snackbarTestCardStyles } from '../styles/snackbar-test-card.styles';
 
@@ -27,7 +27,6 @@ export function SnackbarTestCard({ result }: SnackbarTestCardProps) {
       ]}
     >
       <View style={snackbarTestCardStyles.header}>
-        <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
         <ThemedText
           type="defaultSemiBold"
           style={[snackbarTestCardStyles.functionName, { color: colors.text }]}
@@ -41,7 +40,7 @@ export function SnackbarTestCard({ result }: SnackbarTestCardProps) {
           type="defaultSemiBold"
           style={[snackbarTestCardStyles.sectionLabel, { color: colors.sectionTitle }]}
         >
-          Input:
+          {t('helpers.snackbarHelper.inputLabel')}
         </ThemedText>
         <ThemedText
           style={[snackbarTestCardStyles.sectionValue, { color: colors.text }]}
@@ -55,7 +54,7 @@ export function SnackbarTestCard({ result }: SnackbarTestCardProps) {
           type="defaultSemiBold"
           style={[snackbarTestCardStyles.sectionLabel, { color: colors.sectionTitle }]}
         >
-          Output:
+          {t('helpers.snackbarHelper.outputLabel')}
         </ThemedText>
         <ThemedText
           style={[snackbarTestCardStyles.sectionValue, { color: colors.text }]}
@@ -69,7 +68,7 @@ export function SnackbarTestCard({ result }: SnackbarTestCardProps) {
           type="defaultSemiBold"
           style={[snackbarTestCardStyles.sectionLabel, { color: colors.sectionTitle }]}
         >
-          Description:
+          {t('helpers.snackbarHelper.descriptionLabel')}
         </ThemedText>
         <ThemedText
           style={[snackbarTestCardStyles.sectionValue, { color: colors.text }]}
