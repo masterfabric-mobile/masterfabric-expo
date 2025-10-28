@@ -31,6 +31,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'calculator-outline';
     case 'percentage-calculations':
       return 'percent-outline';
+    case 'snackbar-helper':
+      return 'notifications-outline';
     default:
       return 'help-outline';
   }
@@ -55,6 +57,8 @@ export const getHelperColor = (helperId: string): string => {
     case 'mathematical-operations':
     case 'percentage-calculations':
       return '#5856D6'; // Purple for number helpers
+    case 'snackbar-helper':
+      return '#007AFF'; // Blue for UI feedback helpers
     default:
       return '#8E8E93';
   }
@@ -70,6 +74,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/string-helper',
     available: true,
     category: 'string-helpers'
+  },
+  {
+    id: 'snackbar-helper',
+    name: 'Snackbar Helper',
+    description: 'Snackbar notification utilities with action buttons and positioning',
+    icon: 'notifications-outline',
+    color: '#007AFF',
+    route: '/snackbar-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 

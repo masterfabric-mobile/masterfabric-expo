@@ -4,17 +4,24 @@ import { HelperItem } from '../models/helpers-models';
 import { useHelpersStore } from '../store/helpers-store';
 import { createDefaultHelperItems } from '../utils';
 
+const toCamelCase = (str: string) => {
+  return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+};
+
 export function useHelpersViewModel() {
   const { helpers, isLoading, setHelpers, setIsLoading } = useHelpersStore();
 
   const defaultHelpers = useMemo((): HelperItem[] => {
     const helpers = createDefaultHelperItems();
     // Update with localized titles
-    return helpers.map(helper => ({
-      ...helper,
-      name: t(`helpers.stringHelper.title`) || helper.name,
-      description: t(`helpers.stringHelper.description`) || helper.description,
-    }));
+    return helpers.map(helper => {
+      const camelCaseId = toCamelCase(helper.id);
+      return {
+        ...helper,
+        name: t(`helpers.${camelCaseId}.title`) || helper.name,
+        description: t(`helpers.${camelCaseId}.description`) || helper.description,
+      };
+    });
   }, []);
 
   const loadHelpers = useCallback(() => {

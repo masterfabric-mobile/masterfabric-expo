@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
+import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
 import { LocaleProvider } from '@/src/shared/contexts';
 import { useAppStore } from '@/src/shared/store';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
@@ -119,6 +120,7 @@ export default function RootLayout() {
                     <Stack.Screen name="+not-found" />
                   </Stack>
                   <StatusBar style="auto" />
+                  <SnackbarQueue />
                 </NavigationWrapper>
               </SafeAreaProvider>
             </QueryClientProvider>
