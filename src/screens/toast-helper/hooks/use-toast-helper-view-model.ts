@@ -4,7 +4,25 @@ import { useToast } from '../../../shared/hooks/use-toast';
 import { ToastInput, ToastResult, ToastType } from '../models/toast-helper.models';
 import { useToastHelperStore } from '../store/toast-helper-store';
 
+/**
+ * useToastHelperViewModel Hook
+ * 
+ * A view model hook that manages the state and business logic for the Toast Helper screen.
+ * This hook coordinates between the UI components and the toast service, providing:
+ * - Input state management
+ * - Example execution logic
+ * - Result tracking
+ * - Custom toast creation
+ * 
+ * Features:
+ * - Predefined toast examples for different types
+ * - Real-time toast demonstration
+ * - Input validation and error handling
+ * - Loading state management
+ * - Result collection and display
+ */
 export function useToastHelperViewModel() {
+  // Get state and setters from the store
   const { 
     input, 
     results, 
@@ -14,8 +32,16 @@ export function useToastHelperViewModel() {
     setIsLoading 
   } = useToastHelperStore();
 
+  // Get toast service methods
   const { show } = useToast();
 
+  /**
+   * Run all predefined toast examples
+   * 
+   * Executes a series of toast demonstrations showing different types and configurations.
+   * Each example is displayed with a delay to allow users to see the differences.
+   * Results are collected and stored for display in the UI.
+   */
   const runAllExamples = useCallback(() => {
     setIsLoading(true);
     
@@ -23,7 +49,7 @@ export function useToastHelperViewModel() {
     const { message, duration, position, type, animation } = input;
 
     try {
-      // Different toast type examples
+      // Define different toast type examples with their configurations
       const examples = [
         {
           id: 'success-example',
@@ -67,6 +93,7 @@ export function useToastHelperViewModel() {
         },
       ];
 
+      // Process each example and add to results
       examples.forEach((example, index) => {
         results.push({
           id: example.id,
@@ -76,7 +103,7 @@ export function useToastHelperViewModel() {
           description: example.description,
         });
 
-        // Show actual toast with delay
+        // Show actual toast with staggered timing for better UX
         setTimeout(() => {
           show({
             message: `${example.type}: ${message}`,
@@ -92,15 +119,31 @@ export function useToastHelperViewModel() {
       console.error('Error running toast helper examples:', error);
     }
 
+    // Update results and loading state
     setResults(results);
     setIsLoading(false);
   }, [input, setResults, setIsLoading, show]);
 
+  /**
+   * Update toast input configuration
+   * 
+   * Merges the provided updates with the current input state.
+   * This allows partial updates to specific input fields.
+   * 
+   * @param updates - Partial input updates to apply
+   */
   const updateInput = useCallback((updates: Partial<ToastInput>) => {
     setInput({ ...input, ...updates });
   }, [input, setInput]);
 
+  /**
+   * Show a custom toast with current input configuration
+   * 
+   * Validates the input message and displays a toast with the current
+   * configuration settings. Shows a warning if no message is provided.
+   */
   const showCustomToast = useCallback(() => {
+    // Validate that message is not empty
     if (!input.message.trim()) {
       show({
         message: t('helpers.toastHelper.controls.messageRequired'),
@@ -111,6 +154,7 @@ export function useToastHelperViewModel() {
       return;
     }
 
+    // Show toast with current input configuration
     show({
       message: input.message,
       type: input.type,

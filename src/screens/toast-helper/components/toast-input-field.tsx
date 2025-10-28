@@ -23,6 +23,12 @@ interface OptionButtonProps {
   isSelected: boolean;
 }
 
+/**
+ * OptionButton Component
+ * 
+ * A reusable button component for selecting options in the toast configuration.
+ * Provides visual feedback for selected state and theme-aware styling.
+ */
 function OptionButton({ title, onPress, isSelected }: OptionButtonProps) {
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
@@ -54,6 +60,27 @@ function OptionButton({ title, onPress, isSelected }: OptionButtonProps) {
   );
 }
 
+/**
+ * ToastInputField Component
+ * 
+ * A comprehensive input form for configuring toast notifications.
+ * Provides interactive controls for all toast parameters including:
+ * - Message input with validation
+ * - Position selection (top, center, bottom)
+ * - Duration configuration with real-time feedback
+ * - Animation strength selection
+ * - Toast type selection (success, error, warning, info, custom)
+ * - Custom configuration options (icon, colors)
+ * - Action buttons for testing and examples
+ * 
+ * Features:
+ * - Real-time input validation
+ * - Color picker integration
+ * - Icon selection dropdown
+ * - Theme-aware styling
+ * - Loading state management
+ * - Accessibility support
+ */
 export function ToastInputField({ 
   input, 
   onInputChange, 
@@ -61,25 +88,27 @@ export function ToastInputField({
   onShowCustomToast, 
   isLoading 
 }: ToastInputFieldProps) {
+  // Get theme colors for consistent styling
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   
-  // Duration için local state
+  // Local state for duration input (converted to seconds for display)
   const [durationText, setDurationText] = useState((input.duration / 1000).toFixed(1).replace(/\.0$/, ''));
   
-  // Dropdown visibility state
+  // Dropdown visibility state for icon selection
   const [dropdownVisible, setDropdownVisible] = useState(false);
   
-  // Color picker states
+  // Color picker states for custom toast configuration
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [colorPickerType, setColorPickerType] = useState<'backgroundColor' | 'textColor' | 'iconColor'>('backgroundColor');
   
-  // Input prop'u değiştiğinde local state'i güncelle
+  // Sync local duration state with input prop changes
   useEffect(() => {
     setDurationText((input.duration / 1000).toFixed(1).replace(/\.0$/, ''));
   }, [input.duration]);
 
+  // Configuration arrays for dropdown options
   const positions: { key: ToastPosition; label: string }[] = [
     { key: 'top', label: t('helpers.toastHelper.controls.top') },
     { key: 'center', label: t('helpers.toastHelper.controls.center') },
@@ -101,17 +130,27 @@ export function ToastInputField({
     { key: 'strong', label: t('helpers.toastHelper.controls.strong') }
   ];
 
+  /**
+   * Handle duration input changes
+   * 
+   * Converts user input to milliseconds and validates the range.
+   * Provides real-time feedback and maintains input formatting.
+   * 
+   * @param value - Duration input string from user
+   */
   const handleDurationChange = (value: string) => {
     setDurationText(value);
     
+    // Clean input to only allow numbers and decimal point
     const cleanValue = value.replace(/[^0-9.]/g, '');
     
-    // Eğer input tamamen boşsa, varsayılan değeri kullan
+    // Use default value if input is empty
     if (cleanValue === '' || value === '') {
       onInputChange({ duration: 3000 });
       return;
     }
     
+    // Convert to milliseconds and validate range (1-10 seconds)
     const seconds = parseFloat(cleanValue);
     if (!isNaN(seconds) && seconds > 0) {
       const ms = Math.min(Math.max(Math.round(seconds * 1000), 1000), 10000);
@@ -119,6 +158,14 @@ export function ToastInputField({
     }
   };
 
+  /**
+   * Format duration display text
+   * 
+   * Creates a user-friendly display string showing both seconds and milliseconds.
+   * 
+   * @param seconds - Duration in seconds
+   * @returns Formatted display string
+   */
   const formatDurationDisplay = (seconds: number) => {
     return t('helpers.toastHelper.controls.durationInfo', { 
       seconds: seconds, 
@@ -126,11 +173,25 @@ export function ToastInputField({
     });
   };
 
+  /**
+   * Open color picker modal
+   * 
+   * Sets the color picker type and shows the modal for color selection.
+   * 
+   * @param type - Type of color to pick (backgroundColor, textColor, iconColor)
+   */
   const openColorPicker = (type: 'backgroundColor' | 'textColor' | 'iconColor') => {
     setColorPickerType(type);
     setColorPickerVisible(true);
   };
 
+  /**
+   * Handle color selection from picker
+   * 
+   * Updates the custom configuration with the selected color.
+   * 
+   * @param color - Selected color value
+   */
   const handleColorSelect = (color: string) => {
     onInputChange({ 
       customConfig: { 
@@ -142,7 +203,7 @@ export function ToastInputField({
 
   return (
     <ThemedView style={[toastInputFieldStyles.container, { borderColor: colors.surfaceBorder }]}>
-      {/* Message Input */}
+      {/* Message Input Section */}
       <ThemedText 
         type="subtitle" 
         style={[toastInputFieldStyles.sectionTitle, { color: colors.sectionTitle }]}
@@ -170,7 +231,7 @@ export function ToastInputField({
         textAlignVertical="top"
       />
 
-      {/* Position Selection */}
+      {/* Position Selection Section */}
       <ThemedText 
         type="subtitle" 
         style={[toastInputFieldStyles.sectionTitle, { color: colors.sectionTitle }]}
@@ -188,7 +249,7 @@ export function ToastInputField({
         ))}
       </View>
 
-      {/* Duration Input */}
+      {/* Duration Input Section */}
       <ThemedText 
         type="subtitle" 
         style={[toastInputFieldStyles.sectionTitle, { color: colors.sectionTitle }]}
@@ -253,7 +314,7 @@ export function ToastInputField({
         ))}
       </View>
 
-      {/* Custom Toast Configuration */}
+      {/* Custom Toast Configuration Section - Only shown when custom type is selected */}
       {input.type === 'custom' && (
         <>
           <ThemedText 
@@ -441,8 +502,9 @@ export function ToastInputField({
         </>
       )}
 
-      {/* Action Buttons */}
+      {/* Action Buttons Section */}
       <View style={toastInputFieldStyles.buttonContainer}>
+        {/* Send Custom Toast Button */}
         <TouchableOpacity 
           style={[toastInputFieldStyles.sendButton, { backgroundColor: '#34C759' }]} 
           onPress={onShowCustomToast}
@@ -453,6 +515,7 @@ export function ToastInputField({
           </Text>
         </TouchableOpacity>
 
+        {/* Run All Examples Button */}
         <TouchableOpacity 
           style={[toastInputFieldStyles.exampleButton, { backgroundColor: '#007AFF' }]} 
           onPress={onRunExamples}
