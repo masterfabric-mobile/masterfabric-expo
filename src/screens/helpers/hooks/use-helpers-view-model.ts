@@ -4,8 +4,6 @@ import { HelperItem } from '../models/helpers-models';
 import { useHelpersStore } from '../store/helpers-store';
 import { createDefaultHelperItems } from '../utils';
 
-
-
 const toCamelCase = (str: string) => {
   return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 };

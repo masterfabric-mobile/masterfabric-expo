@@ -14,6 +14,7 @@ export { SafeAnimatedView } from './SafeAnimatedView';
 export { SafeAreaScrollView } from './SafeAreaScrollView';
 export { ScaffoldMessage } from './ScaffoldMessage';
 export { SettingsSection } from './SettingsSection';
+export { SnackbarQueue } from './SnackbarQueue';
 export { ThemedText } from './ThemedText';
 export { ThemedView } from './ThemedView';
 
