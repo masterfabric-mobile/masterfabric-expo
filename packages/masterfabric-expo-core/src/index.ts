@@ -9,12 +9,12 @@ export {
 
 // MasterView Core
 export { MasterView as MasterViewComponent } from './components/MasterView';
-export { MasterView, initMasterView } from './core/MasterViewCore';
+export { initMasterView, MasterView } from './core/MasterViewCore';
 export { useMasterView } from './hooks/useMasterView';
-export { MasterViewStoreFactory, createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore } from './stores/MasterViewStore';
+export { createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore, MasterViewStoreFactory } from './stores/MasterViewStore';
 
 // Theme System
-export { Colors, QUICK_ACTION_COLORS, colorUtils, getColorsByTheme, getThemeColors } from './constants/Colors';
+export { Colors, colorUtils, getColorsByTheme, getThemeColors, QUICK_ACTION_COLORS } from './constants/Colors';
 export { ThemeProvider, useIsDarkMode, useTheme, useThemeAwareColors, useThemeColors } from './contexts/ThemeContext';
 
 // Components
@@ -34,14 +34,6 @@ export * from './utils';
 export * from './helpers';
 
 // Note: Do not re-export DeviceInfo from './types' to avoid name conflicts
-
-// Toast System
-export { useToast } from './hooks/use-toast';
-export { ToastService, toastService } from './services/toast-service';
-export { CUSTOM_TOAST_ICONS, TOAST_ICONS } from './types';
-export type {
-    AnimationStrength, CustomToastConfig, ToastAction, ToastMessage, ToastOptions, ToastPosition, ToastType
-} from './types';
 
 // Integrations
 export { SentryIntegration, sentryIntegration } from './integrations/SentryIntegration';

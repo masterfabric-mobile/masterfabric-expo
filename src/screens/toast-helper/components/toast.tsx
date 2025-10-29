@@ -1,4 +1,5 @@
-import { TOAST_ICONS, ToastMessage, ToastType, useTheme } from 'masterfabric-expo-core';
+import { TOAST_ICONS, ToastMessage, ToastType } from '@/src/shared/services/toast-service';
+import { useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
 import { I18nManager, Pressable, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';

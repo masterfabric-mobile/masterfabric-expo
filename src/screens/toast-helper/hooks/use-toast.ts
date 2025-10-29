@@ -1,5 +1,4 @@
-import { toastService } from '../services/toast-service';
-import { ToastOptions } from '../types';
+import { ToastOptions, toastService } from '@/src/shared/services/toast-service';
 
 /**
  * useToast Hook

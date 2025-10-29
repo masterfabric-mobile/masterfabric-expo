@@ -1,6 +1,6 @@
 import { t } from '@/src/shared/i18n';
+import { toastHelper } from '@/src/shared/services/toast-service';
 import { useCallback } from 'react';
-import { useToast } from '../../../shared/hooks/use-toast';
 import { ToastInput, ToastResult, ToastType } from '../models/toast-helper.models';
 import { useToastHelperStore } from '../store/toast-helper-store';
 
@@ -33,7 +33,7 @@ export function useToastHelperViewModel() {
   } = useToastHelperStore();
 
   // Get toast service methods
-  const { show } = useToast();
+  // Note: Using core package's toastHelper instead of local useToast hook
 
   /**
    * Run all predefined toast examples
@@ -105,7 +105,7 @@ export function useToastHelperViewModel() {
 
         // Show actual toast with staggered timing for better UX
         setTimeout(() => {
-          show({
+          toastHelper.show({
             message: `${example.type}: ${message}`,
             type: example.type,
             position: position,
@@ -122,7 +122,7 @@ export function useToastHelperViewModel() {
     // Update results and loading state
     setResults(results);
     setIsLoading(false);
-  }, [input, setResults, setIsLoading, show]);
+  }, [input, setResults, setIsLoading]);
 
   /**
    * Update toast input configuration
@@ -145,9 +145,7 @@ export function useToastHelperViewModel() {
   const showCustomToast = useCallback(() => {
     // Validate that message is not empty
     if (!input.message.trim()) {
-      show({
-        message: t('helpers.toastHelper.controls.messageRequired'),
-        type: 'warning',
+      toastHelper.showWarning(t('helpers.toastHelper.controls.messageRequired'), {
         position: 'top',
         duration: 3000,
       });
@@ -155,7 +153,7 @@ export function useToastHelperViewModel() {
     }
 
     // Show toast with current input configuration
-    show({
+    toastHelper.show({
       message: input.message,
       type: input.type,
       position: input.position,
@@ -163,7 +161,7 @@ export function useToastHelperViewModel() {
       animation: input.animation,
       customConfig: input.customConfig,
     });
-  }, [input, show]);
+  }, [input]);
 
   return {
     input,

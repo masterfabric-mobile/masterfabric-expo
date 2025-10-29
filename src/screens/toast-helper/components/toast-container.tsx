@@ -1,7 +1,6 @@
+import { ToastMessage, toastService } from '@/src/shared/services/toast-service';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Platform, View } from 'react-native';
-import { toastService } from '../../../shared/services/toast-service';
-import { ToastMessage } from '../models/toast-helper.models';
 import { toastContainerStyles } from '../styles/toast-container.styles';
 import { Toast } from './toast';
 
