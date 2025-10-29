@@ -17,7 +17,7 @@ const DEFAULT_SCENARIO_INPUT: SnackbarScenarioInput = {
   position: 'bottom',
   persistent: false,
   customColor: SNACKBAR_HELPER_COLORS.customDefault,
-  customIcon: '✅',
+  customIcon: 'checkmark-circle',
 };
 
 export const useSnackbarHelperViewModel = () => {

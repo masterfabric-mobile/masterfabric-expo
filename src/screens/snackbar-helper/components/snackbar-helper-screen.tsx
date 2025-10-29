@@ -59,9 +59,9 @@ export function SnackbarHelperScreen() {
         >
           <ThemedText
             type="subtitle"
-            style={[snackbarHelperScreenStyles.sectionTitle, { color: colors.text }]}
+            style={[snackbarHelperScreenStyles.sectionTitle, { color: colors.sectionTitle }]}
           >
-            🍪 {t('helpers.snackbarHelper.testSuite')}
+            {t('helpers.snackbarHelper.testSuite')}
           </ThemedText>
 
           {/* Message Input */}
@@ -83,18 +83,18 @@ export function SnackbarHelperScreen() {
             </ThemedText>
             <Dropdown
               options={[
-                { label: '2sn', value: '2000' },
-                { label: '3sn', value: '3000' },
-                { label: '4sn', value: '4000' },
-                { label: '5sn', value: '5000' },
-                { label: '8sn', value: '8000' },
-                { label: '10sn', value: '10000' },
+              { label: '2s', value: '2000' },
+              { label: '3s', value: '3000' },
+              { label: '4s', value: '4000' },
+              { label: '5s', value: '5000' },
+              { label: '8s', value: '8000' },
+              { label: '10s', value: '10000' },
               ]}
               selectedValue={scenarioInput.duration.toString()}
               onSelect={(value) => updateScenarioInput({ duration: parseInt(value) })}
             />
             <ThemedText style={[{ color: colors.text, fontSize: 11, opacity: 0.6, marginTop: 4 }]}>
-              {scenarioInput.duration / 1000}sn = {scenarioInput.duration}ms
+            {scenarioInput.duration / 1000}s = {scenarioInput.duration}ms
             </ThemedText>
           </View>
 
@@ -133,11 +133,11 @@ export function SnackbarHelperScreen() {
             </ThemedText>
             <Dropdown
               options={[
-                { label: `✅ ${t('helpers.snackbarHelper.typeSuccess')}`, value: 'success' },
-                { label: `❌ ${t('helpers.snackbarHelper.typeError')}`, value: 'error' },
-                { label: `⚠️ ${t('helpers.snackbarHelper.typeWarning')}`, value: 'warning' },
-                { label: `ℹ️ ${t('helpers.snackbarHelper.typeInfo')}`, value: 'info' },
-                { label: `🎨 ${t('helpers.snackbarHelper.typeCustom')}`, value: 'custom' },
+              { label: t('helpers.snackbarHelper.typeSuccess'), value: 'success', icon: 'checkmark-circle' },
+              { label: t('helpers.snackbarHelper.typeError'), value: 'error', icon: 'close-circle' },
+              { label: t('helpers.snackbarHelper.typeWarning'), value: 'warning', icon: 'warning' },
+              { label: t('helpers.snackbarHelper.typeInfo'), value: 'info', icon: 'information-circle' },
+              { label: t('helpers.snackbarHelper.typeCustom'), value: 'custom', icon: 'color-palette' },
               ]}
               selectedValue={scenarioInput.type}
               onSelect={(value) => updateScenarioInput({ type: value as any })}
@@ -147,7 +147,8 @@ export function SnackbarHelperScreen() {
           {/* Custom Options (only if Custom type selected) */}
           {scenarioInput.type === 'custom' && (
             <>
-              {/* Custom Icon Dropdown */}
+              {/* Custom Icon Dropdown */
+              }
               <View style={snackbarHelperScreenStyles.dropdownContainer}>
                 <ThemedText
                   type="defaultSemiBold"
@@ -157,14 +158,14 @@ export function SnackbarHelperScreen() {
                 </ThemedText>
                 <Dropdown
                   options={[
-                    { label: `✅ ${t('helpers.snackbarHelper.iconSuccess')}`, value: '✅' },
-                    { label: `❌ ${t('helpers.snackbarHelper.iconError')}`, value: '❌' },
-                    { label: `⚠️ ${t('helpers.snackbarHelper.iconWarning')}`, value: '⚠️' },
-                    { label: `ℹ️ ${t('helpers.snackbarHelper.iconInfo')}`, value: 'ℹ️' },
-                    { label: `✔️ ${t('helpers.snackbarHelper.iconCheck')}`, value: '✔️' },
-                    { label: `➡️ ${t('helpers.snackbarHelper.iconArrow')}`, value: '➡️' },
+                    { label: t('helpers.snackbarHelper.iconSuccess'), value: 'checkmark-circle', icon: 'checkmark-circle' },
+                    { label: t('helpers.snackbarHelper.iconError'), value: 'close-circle', icon: 'close-circle' },
+                    { label: t('helpers.snackbarHelper.iconWarning'), value: 'warning', icon: 'warning' },
+                    { label: t('helpers.snackbarHelper.iconInfo'), value: 'information-circle', icon: 'information-circle' },
+                    { label: t('helpers.snackbarHelper.iconCheck'), value: 'checkmark', icon: 'checkmark' },
+                    { label: t('helpers.snackbarHelper.iconArrow'), value: 'arrow-forward', icon: 'arrow-forward' },
                   ]}
-                  selectedValue={scenarioInput.customIcon || '✅'}
+                  selectedValue={scenarioInput.customIcon || 'checkmark-circle'}
                   onSelect={(value) => updateScenarioInput({ customIcon: value })}
                 />
               </View>
@@ -268,10 +269,10 @@ export function SnackbarHelperScreen() {
 
         {/* Test Results Section */}
         {scenarioResults.length > 0 && (
-          <ThemedView style={snackbarHelperScreenStyles.resultsSection}>
+          <View style={snackbarHelperScreenStyles.resultsSection}>
             <ThemedText
               type="subtitle"
-              style={[snackbarHelperScreenStyles.sectionTitle, { color: colors.text }]}
+              style={[snackbarHelperScreenStyles.sectionTitle, { color: colors.sectionTitle }]}
             >
               {t('helpers.snackbarHelper.testResultsTitle')} ({scenarioResults.length} {t('helpers.snackbarHelper.functions')}):
             </ThemedText>
@@ -279,7 +280,7 @@ export function SnackbarHelperScreen() {
             {scenarioResults.map((result) => (
               <SnackbarResultCard key={result.id} result={result} />
             ))}
-          </ThemedView>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>
