@@ -207,6 +207,9 @@
       "darkDescription": "Göz dostu koyu görünüm",
       "systemDescription": "Cihaz ayarlarını takip et"
     },
+    "notifications": {
+      "title": "Bildirimler"
+    },
     "languageNames": {
       "en": "İngilizce",
       "tr": "Türkçe"

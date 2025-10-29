@@ -72,6 +72,10 @@ export default function RootLayout() {
           enableAccessibility: true,
           enablePermissions: true,
           enableSentry: false, // Disable Sentry for now
+          // Firebase integration
+          enableFirebase: true,
+          enableFirebaseAuth: true,
+          enableFirebaseAnalytics: false,
         },
         onError: (error) => {
           console.error('MasterView Error:', error);

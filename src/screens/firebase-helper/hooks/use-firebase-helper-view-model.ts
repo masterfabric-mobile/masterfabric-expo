@@ -8,6 +8,9 @@ export function useFirebaseHelperViewModel() {
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [items, setItems] = useState<Array<{ id: string; [k: string]: any }>>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [googleIdToken, setGoogleIdToken] = useState('');
+  const [googleAccessToken, setGoogleAccessToken] = useState('');
+  const [appleIdToken, setAppleIdToken] = useState('');
 
   const canUseAnalytics = useMemo(() => Platform.OS === 'web', []);
 
@@ -35,6 +38,57 @@ export function useFirebaseHelperViewModel() {
     }
   }, []);
 
+  const signUpWithEmail = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const auth = firebaseIntegration.getAuth();
+      if (!auth) return;
+      const { createUserWithEmailAndPassword } = require('firebase/auth');
+      await createUserWithEmailAndPassword(auth, email.trim(), password);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [email, password]);
+
+  const signInAnonymously = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const auth = firebaseIntegration.getAuth();
+      if (!auth) return;
+      const { signInAnonymously } = require('firebase/auth');
+      await signInAnonymously(auth);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const signInWithGoogleWeb = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await firebaseIntegration.signInWithGoogleWebPopup();
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const signInWithGoogleTokens = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await firebaseIntegration.signInWithGoogleIdToken(googleIdToken.trim(), googleAccessToken.trim() || undefined);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [googleIdToken, googleAccessToken]);
+
+  const signInWithAppleToken = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await firebaseIntegration.signInWithAppleIdToken(appleIdToken.trim());
+    } finally {
+      setIsLoading(false);
+    }
+  }, [appleIdToken]);
+
   const logDemoEvent = useCallback(() => {
     firebaseIntegration.logEvent('demo_event', { env: Platform.OS });
   }, []);
@@ -52,9 +106,21 @@ export function useFirebaseHelperViewModel() {
     }
   }, []);
 
+  const createSampleItem = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const db = firebaseIntegration.getFirestore();
+      if (!db) return;
+      const { collection, addDoc, serverTimestamp } = require('firebase/firestore');
+      await addDoc(collection(db, 'items'), { createdAt: serverTimestamp(), source: 'helper', value: Math.random() });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
-    state: { email, password, authUserId, items, isLoading, canUseAnalytics },
-    actions: { setEmail, setPassword, signIn, signOut, logDemoEvent, loadItems, subscribeAuth },
+    state: { email, password, authUserId, items, isLoading, canUseAnalytics, googleIdToken, googleAccessToken, appleIdToken },
+    actions: { setEmail, setPassword, signIn, signOut, signUpWithEmail, signInAnonymously, logDemoEvent, loadItems, createSampleItem, subscribeAuth, signInWithGoogleWeb, signInWithGoogleTokens, signInWithAppleToken, setGoogleIdToken, setGoogleAccessToken, setAppleIdToken },
   } as const;
 }
 

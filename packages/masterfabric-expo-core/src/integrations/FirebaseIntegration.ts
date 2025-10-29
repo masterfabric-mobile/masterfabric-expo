@@ -192,6 +192,41 @@ export class FirebaseIntegration {
   }
 
   /**
+   * Social auth helpers
+   */
+  public async signInWithGoogleWebPopup(): Promise<any> {
+    if (Platform.OS !== 'web') {
+      console.warn('[Firebase] signInWithGoogleWebPopup is only available on web.');
+      return null;
+    }
+    const auth = this.getAuth();
+    if (!auth) throw new Error('Firebase Auth is not available');
+    const { GoogleAuthProvider, signInWithPopup } = require('firebase/auth');
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
+  }
+
+  public async signInWithCredential(provider: 'google' | 'apple', tokens: { idToken: string; accessToken?: string }): Promise<any> {
+    const auth = this.getAuth();
+    if (!auth) throw new Error('Firebase Auth is not available');
+    const { OAuthProvider, signInWithCredential } = require('firebase/auth');
+    const providerId = provider === 'google' ? 'google.com' : 'apple.com';
+    const oauthProvider = new OAuthProvider(providerId);
+    const credential = tokens.accessToken
+      ? oauthProvider.credential({ idToken: tokens.idToken, accessToken: tokens.accessToken })
+      : oauthProvider.credential({ idToken: tokens.idToken });
+    return await signInWithCredential(auth, credential);
+  }
+
+  public async signInWithGoogleIdToken(idToken: string, accessToken?: string): Promise<any> {
+    return this.signInWithCredential('google', { idToken, accessToken });
+  }
+
+  public async signInWithAppleIdToken(idToken: string): Promise<any> {
+    return this.signInWithCredential('apple', { idToken });
+  }
+
+  /**
    * Analytics helpers (web-only via Firebase Web SDK). On RN native, no-op.
    */
   private getAnalyticsInstance(): any | null {

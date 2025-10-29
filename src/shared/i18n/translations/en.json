@@ -251,6 +251,9 @@
       "darkDescription": "Eye-friendly dark appearance", 
       "systemDescription": "Follow device settings"
     },
+    "notifications": {
+      "title": "Notifications"
+    },
     "languageNames": {
       "en": "English",
       "tr": "Turkish"
