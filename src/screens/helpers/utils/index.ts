@@ -33,6 +33,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'percent-outline';
     case 'snackbar-helper':
       return 'notifications-outline';
+    case 'firebase-helper':
+      return 'flame-outline';
     default:
       return 'help-outline';
   }
@@ -59,6 +61,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for number helpers
     case 'snackbar-helper':
       return '#007AFF'; // Blue for UI feedback helpers
+    case 'firebase-helper':
+      return '#F5820D'; // Firebase brand-like orange
     default:
       return '#8E8E93';
   }
@@ -84,6 +88,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/snackbar-helper',
     available: true,
     category: 'ui-helpers'
+  },
+  {
+    id: 'firebase-helper',
+    name: 'Firebase Helper',
+    description: 'Auth, Analytics (web), and Firestore utilities',
+    icon: 'flame-outline',
+    color: '#F5820D',
+    route: '/firebase-helper',
+    available: true,
+    category: 'integrations'
   },
   {
     id: 'toast-helper',

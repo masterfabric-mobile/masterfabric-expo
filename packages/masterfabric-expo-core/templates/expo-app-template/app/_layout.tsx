@@ -47,6 +47,8 @@ export default function RootLayout() {
         // Firebase Integration (optional)
         // Uses .env values if not explicitly provided here
         enableFirebase: true,
+        enableFirebaseAuth: true,
+        enableFirebaseAnalytics: false, // Analytics via web SDK works on web only
         // .env example (Expo public env vars):
         // EXPO_PUBLIC_FIREBASE_API_KEY=your-api-key
         // EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com

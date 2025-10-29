@@ -58,6 +58,12 @@ export interface MasterViewConfig {
   sentryConfig?: SentryConfig;
   enableFirebase?: boolean;
   firebaseConfig?: Partial<FirebaseConfig>;
+  // Firebase feature toggles
+  enableFirebaseAuth?: boolean;
+  enableFirebaseAnalytics?: boolean;
+  firebaseAnalyticsConfig?: {
+    measurementId?: string;
+  };
 }
 
 // MasterView State Interface

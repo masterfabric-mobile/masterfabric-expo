@@ -1,4 +1,5 @@
-import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
+import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
+import { Platform } from 'react-native';
 
 /**
  * Firebase Configuration Interface
@@ -21,6 +22,10 @@ export class FirebaseIntegration {
   private firebaseInitialized: boolean = false;
   private app: FirebaseApp | null = null;
   private config: FirebaseConfig | null = null;
+  // Cached modules (lazy)
+  private _auth: any = null;
+  private _firestore: any = null;
+  private _storage: any = null;
 
   private constructor() {}
 
@@ -100,6 +105,139 @@ export class FirebaseIntegration {
       return null;
     }
     return this.app;
+  }
+
+  /**
+   * Auth access (lazy load)
+   */
+  public getAuth(): any | null {
+    const app = this.getApp();
+    if (!app) return null;
+    if (!this._auth) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { getAuth } = require('firebase/auth');
+        this._auth = getAuth(app);
+      } catch (e) {
+        console.warn('[Firebase] Auth module not available. Ensure firebase/auth is installed.');
+        return null;
+      }
+    }
+    return this._auth;
+  }
+
+  /**
+   * Firestore access (lazy load)
+   */
+  public getFirestore(): any | null {
+    const app = this.getApp();
+    if (!app) return null;
+    if (!this._firestore) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { getFirestore } = require('firebase/firestore');
+        this._firestore = getFirestore(app);
+      } catch (e) {
+        console.warn('[Firebase] Firestore module not available. Ensure firebase/firestore is installed.');
+        return null;
+      }
+    }
+    return this._firestore;
+  }
+
+  /**
+   * Storage access (lazy load)
+   */
+  public getStorage(): any | null {
+    const app = this.getApp();
+    if (!app) return null;
+    if (!this._storage) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { getStorage } = require('firebase/storage');
+        this._storage = getStorage(app);
+      } catch (e) {
+        console.warn('[Firebase] Storage module not available. Ensure firebase/storage is installed.');
+        return null;
+      }
+    }
+    return this._storage;
+  }
+
+  /**
+   * Auth helpers (email/password)
+   */
+  public async signInWithEmail(email: string, password: string): Promise<any> {
+    const auth = this.getAuth();
+    if (!auth) throw new Error('Firebase Auth is not available');
+    const { signInWithEmailAndPassword } = require('firebase/auth');
+    return await signInWithEmailAndPassword(auth, email, password);
+  }
+
+  public async signOut(): Promise<void> {
+    const auth = this.getAuth();
+    if (!auth) throw new Error('Firebase Auth is not available');
+    const { signOut } = require('firebase/auth');
+    await signOut(auth);
+  }
+
+  public onAuthStateChanged(callback: (user: any | null) => void): () => void {
+    const auth = this.getAuth();
+    if (!auth) {
+      console.warn('[Firebase] Auth is not available. onAuthStateChanged will be no-op.');
+      return () => {};
+    }
+    const { onAuthStateChanged } = require('firebase/auth');
+    return onAuthStateChanged(auth, callback);
+  }
+
+  /**
+   * Analytics helpers (web-only via Firebase Web SDK). On RN native, no-op.
+   */
+  private getAnalyticsInstance(): any | null {
+    if (Platform.OS !== 'web') {
+      return null;
+    }
+    try {
+      const app = this.getApp();
+      if (!app) return null;
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { getAnalytics } = require('firebase/analytics');
+      return getAnalytics(app);
+    } catch (e) {
+      console.warn('[Firebase] Analytics module not available or unsupported in this environment.');
+      return null;
+    }
+  }
+
+  public logEvent(eventName: string, params?: Record<string, any>): void {
+    const analytics = this.getAnalyticsInstance();
+    if (!analytics) {
+      console.warn('[Firebase] Analytics not available. logEvent skipped:', eventName);
+      return;
+    }
+    const { logEvent } = require('firebase/analytics');
+    logEvent(analytics, eventName, params);
+  }
+
+  public setUserId(userId: string): void {
+    const analytics = this.getAnalyticsInstance();
+    if (!analytics) {
+      console.warn('[Firebase] Analytics not available. setUserId skipped');
+      return;
+    }
+    const { setUserId } = require('firebase/analytics');
+    setUserId(analytics, userId);
+  }
+
+  public setUserProperties(properties: Record<string, any>): void {
+    const analytics = this.getAnalyticsInstance();
+    if (!analytics) {
+      console.warn('[Firebase] Analytics not available. setUserProperties skipped');
+      return;
+    }
+    const { setUserProperties } = require('firebase/analytics');
+    setUserProperties(analytics, properties);
   }
 
   /**

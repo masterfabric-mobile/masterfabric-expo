@@ -368,6 +368,10 @@
     }
   },
   "helpers": {
+    "firebaseHelper": {
+      "title": "Firebase Helper",
+      "description": "Auth, analytics (web only), and Firestore utilities"
+    },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {

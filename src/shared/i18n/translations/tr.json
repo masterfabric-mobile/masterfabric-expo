@@ -368,6 +368,10 @@
     }
   },
   "helpers": {
+    "firebaseHelper": {
+      "title": "Firebase Yardımcısı",
+      "description": "Kimlik doğrulama, analitik (yalnızca web) ve Firestore araçları"
+    },
     "title": "Yardımcılar",
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",
     "stringHelper": {

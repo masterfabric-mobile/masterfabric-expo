@@ -43,6 +43,11 @@ export interface MasterViewConfig {
   sentryConfig?: SentryConfig;
   enableFirebase?: boolean;
   firebaseConfig?: Partial<FirebaseConfig>;
+  enableFirebaseAuth?: boolean;
+  enableFirebaseAnalytics?: boolean;
+  firebaseAnalyticsConfig?: {
+    measurementId?: string;
+  };
 }
 
 /**
@@ -96,6 +101,9 @@ class MasterViewCore {
     sentryConfig: undefined,
     enableFirebase: false,
     firebaseConfig: undefined,
+    enableFirebaseAuth: false,
+    enableFirebaseAnalytics: false,
+    firebaseAnalyticsConfig: undefined,
   };
 
   private constructor() {
@@ -173,6 +181,12 @@ class MasterViewCore {
       // Initialize Firebase
       if (this.config.enableFirebase) {
         await this.initializeFirebase();
+        if (this.config.enableFirebaseAuth) {
+          this.log('info', 'Firebase Auth enabled');
+        }
+        if (this.config.enableFirebaseAnalytics) {
+          this.log('info', 'Firebase Analytics enabled');
+        }
       }
 
       this.isInitialized = true;

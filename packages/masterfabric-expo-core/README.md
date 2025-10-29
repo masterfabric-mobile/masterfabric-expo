@@ -44,8 +44,19 @@ await initMasterView({
     enablePlatformFeatures: true,
     enableAccessibility: true,
     enablePermissions: true,
-        // Sentry Integration (optional)
+    // Sentry Integration (optional)
         enableSentry: true,
+    // Firebase Integration (optional)
+    enableFirebase: true,
+    enableFirebaseAuth: true,
+    enableFirebaseAnalytics: false, // web-only via Firebase Web SDK
+    // firebaseConfig can be omitted if using .env (Expo public) variables:
+    // EXPO_PUBLIC_FIREBASE_API_KEY, EXPO_PUBLIC_FIREBASE_PROJECT_ID, EXPO_PUBLIC_FIREBASE_APP_ID, ...
+    // firebaseConfig: {
+    //   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY as string,
+    //   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID as string,
+    //   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID as string,
+    // },
         sentryConfig: {
           dsn: 'YOUR_SENTRY_DSN_HERE', // Replace with your Sentry DSN
           environment: __DEV__ ? 'development' : 'production',
@@ -89,6 +100,35 @@ await initMasterView({
   },
 });
 ```
+### Firebase: Auth example
+
+```ts
+import { firebaseIntegration } from 'masterfabric-expo-core';
+
+// Sign in with email/password
+await firebaseIntegration.signInWithEmail('user@example.com', 'password');
+
+// Subscribe to auth state
+const unsubscribe = firebaseIntegration.onAuthStateChanged((user) => {
+  console.log('Auth user:', user?.uid);
+});
+
+// Later
+unsubscribe();
+await firebaseIntegration.signOut();
+```
+
+### Firebase: Analytics (web only)
+
+```ts
+import { firebaseIntegration } from 'masterfabric-expo-core';
+
+firebaseIntegration.logEvent('purchase', { value: 9.99, currency: 'USD' });
+firebaseIntegration.setUserId('user-123');
+firebaseIntegration.setUserProperties({ plan: 'pro' });
+```
+
+Note: Firebase Web Analytics is not supported on React Native (iOS/Android) without a native bridge. Consider `@react-native-firebase/analytics` if you need native analytics.
 
 ### Using MasterView Components
 
