@@ -380,6 +380,3 @@ When contributing to Toast Helper:
 5. Test with both light and dark themes
 6. Verify internationalization support
 
-## License
-
-Part of MasterFabric Expo - MIT License

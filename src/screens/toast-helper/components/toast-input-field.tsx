@@ -5,7 +5,7 @@ import { IconSymbol } from '@/src/shared/components/ui/IconSymbol';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { AnimationStrength, CUSTOM_TOAST_ICONS, ToastInput, ToastPosition, ToastType } from '../models/toast-helper.models';
 import { toastInputFieldStyles } from '../styles/toast-input-field.styles';
 
@@ -374,39 +374,49 @@ export function ToastInputField({
                 borderColor: colors.surfaceBorder,
               }
             ]}>
-              <View style={toastInputFieldStyles.iconGrid}>
-                {CUSTOM_TOAST_ICONS.map((iconOption) => (
-                  <TouchableOpacity
-                    key={iconOption.id}
-                    style={[
-                      toastInputFieldStyles.iconCard,
-                      {
-                        backgroundColor: isDark ? '#2C2C2E' : '#FFFFFF',
-                        borderColor: colors.surfaceBorder,
-                      },
-                      input.customConfig?.icon === iconOption.icon && toastInputFieldStyles.iconCardSelected
-                    ]}
-                    onPress={() => {
-                      onInputChange({ 
-                        customConfig: {
-                          ...input.customConfig,
-                          icon: iconOption.icon,
-                        }
-                      });
-                      setDropdownVisible(false);
-                    }}
-                  >
-                    <IconSymbol 
-                      name={iconOption.icon} 
-                      size={24} 
-                      color={colors.text}
-                    />
-                    <Text style={[toastInputFieldStyles.iconName, { color: colors.text }]}>
-                      {iconOption.name}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+              <ScrollView 
+                style={toastInputFieldStyles.scrollContainer}
+                nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={true}
+              >
+                <View style={toastInputFieldStyles.iconGrid}>
+                  {CUSTOM_TOAST_ICONS.map((iconOption) => (
+                    <TouchableOpacity
+                      key={iconOption.id}
+                      style={[
+                        toastInputFieldStyles.iconCard,
+                        {
+                          backgroundColor: isDark ? '#2C2C2E' : '#FFFFFF',
+                          borderColor: colors.surfaceBorder,
+                        },
+                        input.customConfig?.icon === iconOption.icon && toastInputFieldStyles.iconCardSelected
+                      ]}
+                      onPress={() => {
+                        onInputChange({ 
+                          customConfig: {
+                            ...input.customConfig,
+                            icon: iconOption.icon,
+                          }
+                        });
+                        setDropdownVisible(false);
+                      }}
+                    >
+                      <IconSymbol 
+                        name={iconOption.icon} 
+                        size={24} 
+                        color={colors.text}
+                      />
+                      <Text 
+                        style={[toastInputFieldStyles.iconName, { color: colors.text }]}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                      >
+                        {iconOption.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
             </View>
           )}
 

@@ -30,7 +30,6 @@
     "navigation"
   ],
   "author": "MasterFabric",
-  "license": "MIT",
   "peerDependencies": {
     "react": "19.1.0",
     "react-native": ">=0.70.0",

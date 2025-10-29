@@ -22,14 +22,12 @@ export const toastInputFieldStyles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   optionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     gap: 8,
     marginBottom: 8,
   },
   typeOptionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     gap: 8,
     marginBottom: 16,
   },
@@ -38,7 +36,7 @@ export const toastInputFieldStyles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    minWidth: 80,
+    width: '100%',
     alignItems: 'center',
   },
   optionButtonText: {
@@ -91,14 +89,18 @@ export const toastInputFieldStyles = StyleSheet.create({
     marginBottom: 8,
     maxHeight: 200,
   },
+  scrollContainer: {
+    maxHeight: 176,
+  },
   iconGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
   iconCard: {
-    width: '30%',
+    flex: 1,
     minWidth: 80,
+    maxWidth: '31%',
     borderRadius: 8,
     borderWidth: 1,
     padding: 8,
@@ -114,6 +116,7 @@ export const toastInputFieldStyles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '500',
     textAlign: 'center',
+    width: '100%',
   },
   buttonContainer: {
     flexDirection: 'row',
