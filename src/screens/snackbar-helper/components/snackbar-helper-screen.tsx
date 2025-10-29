@@ -113,10 +113,6 @@ export function SnackbarHelperScreen() {
                 { label: t('helpers.snackbarHelper.actionRetry'), value: 'RETRY', icon: 'refresh' },
                 { label: t('helpers.snackbarHelper.actionSave'), value: 'SAVE', icon: 'save' },
                 { label: t('helpers.snackbarHelper.actionLearnMore'), value: 'LEARN MORE', icon: 'book' },
-                { label: `${t('helpers.snackbarHelper.actionUndo')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '⎌', icon: 'arrow-undo' },
-                { label: `${t('helpers.snackbarHelper.actionRetry')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '⟳', icon: 'refresh' },
-                { label: `${t('helpers.snackbarHelper.actionSave')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '✓', icon: 'save' },
-                { label: `${t('helpers.snackbarHelper.actionLearnMore')} ${t('helpers.snackbarHelper.actionIcon')}`, value: '→', icon: 'book' },
               ]}
               selectedValue={scenarioInput.actionLabel}
               onSelect={(value) => updateScenarioInput({ actionLabel: value })}
@@ -256,12 +252,14 @@ export function SnackbarHelperScreen() {
               onPress={showSnackbarPreview}
               variant="primary"
               style={snackbarHelperScreenStyles.previewButton}
+              textStyle={{ color: '#FFFFFF' }}
             />
             <Button
               title={isLoading ? t('helpers.snackbarHelper.loading') : t('helpers.snackbarHelper.runAllTests')}
               onPress={runAllScenarios}
               variant="secondary"
               style={snackbarHelperScreenStyles.previewButton}
+              textStyle={{ color: '#FFFFFF' }}
               disabled={isLoading}
             />
           </View>

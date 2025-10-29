@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { FirebaseConfig, FirebaseIntegration } from '../integrations/FirebaseIntegration';
 import { SentryConfig, SentryIntegration } from '../integrations/SentryIntegration';
 
 /**
@@ -40,6 +41,8 @@ export interface MasterViewConfig {
   // Integrations
   enableSentry?: boolean;
   sentryConfig?: SentryConfig;
+  enableFirebase?: boolean;
+  firebaseConfig?: Partial<FirebaseConfig>;
 }
 
 /**
@@ -67,6 +70,7 @@ class MasterViewCore {
   private options: MasterViewInitOptions;
   private storagePrefix: string = 'masterview_';
   private sentryIntegration: SentryIntegration;
+  private firebaseIntegration: FirebaseIntegration;
 
   // Default configuration
   private defaultConfig: MasterViewConfig = {
@@ -90,12 +94,15 @@ class MasterViewCore {
     customSettings: {},
     enableSentry: false,
     sentryConfig: undefined,
+    enableFirebase: false,
+    firebaseConfig: undefined,
   };
 
   private constructor() {
     this.config = { ...this.defaultConfig };
     this.options = {};
     this.sentryIntegration = SentryIntegration.getInstance();
+    this.firebaseIntegration = FirebaseIntegration.getInstance();
   }
 
   /**
@@ -163,6 +170,11 @@ class MasterViewCore {
         await this.initializeSentry();
       }
 
+      // Initialize Firebase
+      if (this.config.enableFirebase) {
+        await this.initializeFirebase();
+      }
+
       this.isInitialized = true;
       
       this.log('info', 'MasterView initialized successfully', {
@@ -205,6 +217,19 @@ class MasterViewCore {
       }
     } catch (error) {
       this.log('warn', 'Failed to load persisted settings', { error });
+    }
+  }
+
+  /**
+   * Initialize Firebase
+   */
+  private async initializeFirebase(): Promise<void> {
+    try {
+      await this.firebaseIntegration.initialize(this.config.firebaseConfig);
+      this.log('info', 'Firebase initialized');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.log('warn', 'Failed to initialize Firebase', { error: errorMessage });
     }
   }
 

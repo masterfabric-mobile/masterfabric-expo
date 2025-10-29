@@ -39,3 +39,6 @@ export * from './helpers';
 export { SentryIntegration, sentryIntegration } from './integrations/SentryIntegration';
 export type { SentryConfig } from './integrations/SentryIntegration';
 
+export { FirebaseIntegration, firebaseIntegration } from './integrations/FirebaseIntegration';
+export type { FirebaseConfig } from './integrations/FirebaseIntegration';
+
