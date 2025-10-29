@@ -6,13 +6,13 @@ import {
     GestureResponderEvent,
     Modal,
     Pressable,
-    StyleSheet,
     TouchableOpacity,
     View
 } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { ThemedText } from './ThemedText';
 import { ThemedView } from './ThemedView';
+import { colorPickerModalStyles } from './styles/color-picker-modal.styles';
 
 interface ColorPickerModalProps {
   visible: boolean;
@@ -165,29 +165,29 @@ export function ColorPickerModal({
       animationType="fade"
       onRequestClose={handleCancel}
     >
-      <Pressable style={styles.overlay} onPress={handleCancel}>
-        <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
-          <ThemedView style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-            <ThemedText style={[styles.title, { color: colors.text }]}>
+      <Pressable style={colorPickerModalStyles.overlay} onPress={handleCancel}>
+        <Pressable style={colorPickerModalStyles.modalContent} onPress={(e) => e.stopPropagation()}>
+          <ThemedView style={[colorPickerModalStyles.modalContainer, { backgroundColor: colors.background }]}>
+            <ThemedText style={[colorPickerModalStyles.title, { color: colors.text }]}>
               {title || t('helpers.toastHelper.customConfig.colorPicker.title')}
             </ThemedText>
             
             {/* Color Preview */}
-            <View style={[styles.colorPreview, { backgroundColor: selectedColor, borderColor: colors.surfaceBorder }]} />
-            <ThemedText style={[styles.hexText, { color: colors.text }]}>
+            <View style={[colorPickerModalStyles.colorPreview, { backgroundColor: selectedColor, borderColor: colors.surfaceBorder }]} />
+            <ThemedText style={[colorPickerModalStyles.hexText, { color: colors.text }]}>
               {selectedColor}
             </ThemedText>
             
             {/* Saturation/Lightness Gradient Square */}
-            <View style={styles.pickerContainer}>
+            <View style={colorPickerModalStyles.pickerContainer}>
               <View 
-                style={styles.gradientSquare}
+                style={colorPickerModalStyles.gradientSquare}
                 onStartShouldSetResponder={() => true}
                 onResponderGrant={handleSaturationTouch}
                 onResponderMove={handleSaturationTouch}
               >
                 {/* Base color layer */}
-                <View style={[styles.gradientOverlay, { 
+                <View style={[colorPickerModalStyles.gradientOverlay, { 
                   backgroundColor: `hsl(${hueValue}, 100%, 50%)`,
                 }]} />
                 
@@ -196,7 +196,7 @@ export function ColorPickerModal({
                   colors={['#FFFFFF', 'transparent']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  style={styles.gradientOverlay}
+                  style={colorPickerModalStyles.gradientOverlay}
                 />
                 
                 {/* Vertical transparent to black gradient (lightness) */}
@@ -204,18 +204,18 @@ export function ColorPickerModal({
                   colors={['transparent', '#000000']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
-                  style={styles.gradientOverlay}
+                  style={colorPickerModalStyles.gradientOverlay}
                 />
                 
                 {/* Pointer */}
-                <Animated.View style={[styles.pointer, pointerStyle]} />
+                <Animated.View style={[colorPickerModalStyles.pointer, pointerStyle]} />
               </View>
             </View>
             
             {/* Hue Slider */}
-            <View style={styles.hueSliderContainer}>
+            <View style={colorPickerModalStyles.hueSliderContainer}>
               <View 
-                style={styles.hueSlider}
+                style={colorPickerModalStyles.hueSlider}
                 onStartShouldSetResponder={() => true}
                 onResponderGrant={handleHueTouch}
                 onResponderMove={handleHueTouch}
@@ -224,20 +224,20 @@ export function ColorPickerModal({
                   colors={['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
-                  style={styles.hueGradient}
+                  style={colorPickerModalStyles.hueGradient}
                 />
-                <View style={[styles.huePointer, { 
+                <View style={[colorPickerModalStyles.huePointer, { 
                   transform: [{ translateX: (hueValue / 360) * 300 - 10 }] 
                 }]} />
               </View>
             </View>
             
             {/* Preset Colors */}
-            <View style={styles.presetContainer}>
-              <ThemedText style={[styles.presetTitle, { color: colors.labelText }]}>
+            <View style={colorPickerModalStyles.presetContainer}>
+              <ThemedText style={[colorPickerModalStyles.presetTitle, { color: colors.labelText }]}>
                 {t('helpers.toastHelper.customConfig.colorPicker.quickSelection')}
               </ThemedText>
-              <View style={styles.presetGrid}>
+              <View style={colorPickerModalStyles.presetGrid}>
                 {[
                   '#FF5722', '#E91E63', '#9C27B0', '#673AB7',
                   '#3F51B5', '#2196F3', '#03A9F4', '#00BCD4',
@@ -248,9 +248,9 @@ export function ColorPickerModal({
                   <TouchableOpacity
                     key={`${color}-${index}`}
                     style={[
-                      styles.presetColor,
+                      colorPickerModalStyles.presetColor,
                       { backgroundColor: color, borderColor: colors.surfaceBorder },
-                      selectedColor === color && styles.presetColorSelected
+                      selectedColor === color && colorPickerModalStyles.presetColorSelected
                     ]}
                     onPress={() => {
                       setSelectedColor(color);
@@ -265,9 +265,9 @@ export function ColorPickerModal({
             </View>
             
             {/* Buttons */}
-            <View style={styles.buttonRow}>
+            <View style={colorPickerModalStyles.buttonRow}>
               <Pressable
-                style={[styles.button, styles.cancelButton, { borderColor: colors.surfaceBorder }]}
+                style={[colorPickerModalStyles.button, colorPickerModalStyles.cancelButton, { borderColor: colors.surfaceBorder }]}
                 onPress={handleCancel}
               >
                 <ThemedText style={{ color: colors.text }}>
@@ -275,7 +275,7 @@ export function ColorPickerModal({
                 </ThemedText>
               </Pressable>
               <Pressable
-                style={[styles.button, styles.selectButton, { backgroundColor: colors.tint }]}
+                style={[colorPickerModalStyles.button, colorPickerModalStyles.selectButton, { backgroundColor: colors.tint }]}
                 onPress={handleSelect}
               >
                 <ThemedText style={{ color: '#FFFFFF' }}>
@@ -289,146 +289,3 @@ export function ColorPickerModal({
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '90%',
-    maxWidth: 400,
-  },
-  modalContainer: {
-    borderRadius: 20,
-    padding: 24,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  colorPreview: {
-    width: '100%',
-    height: 60,
-    borderRadius: 12,
-    marginBottom: 12,
-    borderWidth: 2,
-  },
-  hexText: {
-    fontSize: 18,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 20,
-    fontFamily: 'monospace',
-  },
-  pickerContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  gradientSquare: {
-    width: 300,
-    height: 200,
-    borderRadius: 12,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  gradientOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  pointer: {
-    position: 'absolute',
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  hueSliderContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  hueSlider: {
-    width: 300,
-    height: 40,
-    borderRadius: 20,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  hueGradient: {
-    width: '100%',
-    height: '100%',
-  },
-  huePointer: {
-    position: 'absolute',
-    top: 0,
-    width: 20,
-    height: 40,
-    borderWidth: 3,
-    borderColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  presetContainer: {
-    marginBottom: 24,
-  },
-  presetTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 12,
-  },
-  presetGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  presetColor: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginBottom: 8,
-    borderWidth: 2,
-  },
-  presetColorSelected: {
-    borderWidth: 3,
-    borderColor: '#007AFF',
-    transform: [{ scale: 1.1 }],
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cancelButton: {
-    borderWidth: 2,
-  },
-  selectButton: {
-    elevation: 2,
-  },
-});

@@ -2,8 +2,9 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { ToastResult } from '../models/toast-helper.models';
+import { toastResultCardStyles } from '../styles/toast-result-card.styles';
 
 interface ToastResultCardProps {
   result: ToastResult;
@@ -97,64 +98,3 @@ export function ToastResultCard({ result }: ToastResultCardProps) {
     </ThemedView>
   );
 }
-
-/**
- * Styles for ToastResultCard component
- * 
- * Provides consistent styling for the result card including:
- * - Card container with rounded corners and border
- * - Header section with operation name
- * - Content sections with proper spacing
- * - Code-like styling for input/output values
- * - Responsive typography
- */
-const toastResultCardStyles = StyleSheet.create({
-  // Main card container
-  card: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 16,
-    overflow: 'hidden',
-  },
-  // Header section containing operation name
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  // Operation name styling
-  operationName: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  // Main content area
-  content: {
-    padding: 16,
-  },
-  // Individual section container
-  section: {
-    marginBottom: 12,
-  },
-  // Label text styling
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  // Code-like value styling for input/output
-  value: {
-    fontSize: 14,
-    fontFamily: 'monospace',
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    padding: 8,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  // Description text styling
-  description: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-});
