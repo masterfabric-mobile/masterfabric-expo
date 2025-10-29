@@ -84,17 +84,17 @@ let globalToastService: ToastServiceInterface | null = null;
  * This should be called by the consuming application during initialization
  * @param service - Toast service instance
  */
-export function setToastService(service: ToastServiceInterface): void {
+const setToastService = (service: ToastServiceInterface): void => {
   globalToastService = service;
-}
+};
 
 /**
  * Get the global toast service instance
  * @returns Toast service instance or null if not set
  */
-export function getToastService(): ToastServiceInterface | null {
+const getToastService = (): ToastServiceInterface | null => {
   return globalToastService;
-}
+};
 
 /**
  * Toast Helper Class
@@ -255,8 +255,13 @@ class ToastHelper {
 }
 
 // Export singleton instance for convenience
-export const toastHelper = ToastHelper;
+const toastHelper = ToastHelper;
 
-// Export class for advanced usage
-export { ToastHelper };
+// Export helper functions and class
+export {
+  ToastHelper,
+  toastHelper,
+  setToastService,
+  getToastService,
+};
 

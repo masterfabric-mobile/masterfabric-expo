@@ -261,8 +261,14 @@ class ToastService {
 // Create singleton instance
 const toastServiceInstance = ToastService.getInstance();
 
-// Initialize core package's toast helper with our service
-setToastService(toastServiceInstance as ToastServiceInterface);
+/**
+ * Initialize core package's toast helper with our service
+ * 
+ * This function should be called once during app initialization.
+ */
+export function initializeToastService(): void {
+  setToastService(toastServiceInstance as ToastServiceInterface);
+}
 
 // Export both for backward compatibility and new usage
 export const toastService = toastServiceInstance;

@@ -13,6 +13,7 @@ import { ToastContainer } from '@/src/screens/toast-helper/components/toast-cont
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
 import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
 import { LocaleProvider } from '@/src/shared/contexts';
+import { initializeToastService } from '@/src/shared/services/toast-service';
 import { useAppStore } from '@/src/shared/store';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
@@ -30,15 +31,25 @@ const queryClient = new QueryClient({
   },
 });
 
-// Navigation wrapper that uses core theme
-function NavigationWrapper({ children }: { children: React.ReactNode }) {
+function AppContent() {
   const { isDark } = useTheme();
-  
   return (
     <NavigationThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-      {children}
+      <Stack
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name="splash" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="projects" />
+        <Stack.Screen name="settings" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="auto" />
+      <SnackbarQueue />
+      <ToastContainer />
     </NavigationThemeProvider>
-  );
+  )
 }
 
 export default function RootLayout() {
@@ -86,6 +97,8 @@ export default function RootLayout() {
           console.log('Locale Changed:', locale);
         },
       }).then(() => {
+        // Initialize toast service
+        initializeToastService();
         // MasterView initialized, app is ready for splash screen
         setAppReady(true);
         SplashScreen.hideAsync();
@@ -109,22 +122,7 @@ export default function RootLayout() {
           <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
               <SafeAreaProvider>
-              <NavigationWrapper>
-                  <Stack 
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="splash" />
-                    <Stack.Screen name="onboarding" />
-                    <Stack.Screen name="projects" />
-                    <Stack.Screen name="settings" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
-                  <StatusBar style="auto" />
-                  <SnackbarQueue />
-                  <ToastContainer />
-
-                </NavigationWrapper>
+                <AppContent />
               </SafeAreaProvider>
             </QueryClientProvider>
           </MasterViewThemeProvider>
