@@ -75,6 +75,7 @@ export const navigationConfig = {
         settings: '/settings',
         helpers: '/helpers',
         'string-helper': '/string-helper',
+        'toast-helper': '/toast-helper',
         documentation: '/documentation',
         '(tabs)': {
           screens: {

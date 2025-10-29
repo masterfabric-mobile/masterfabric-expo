@@ -78,6 +78,13 @@ export interface ThemeColors {
   splashSubtext: string;
   splashProgress: string;
   splashProgressBg: string;
+  // Additional colors for string-helper
+  titleText: string;
+  inputBackground: string;
+  successBackground: string;
+  successBorder: string;
+  successText: string;
+  placeholderText: string;
 }
 
 // Navigation Types

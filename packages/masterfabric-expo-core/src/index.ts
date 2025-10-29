@@ -9,12 +9,12 @@ export {
 
 // MasterView Core
 export { MasterView as MasterViewComponent } from './components/MasterView';
-export { MasterView, initMasterView } from './core/MasterViewCore';
+export { initMasterView, MasterView } from './core/MasterViewCore';
 export { useMasterView } from './hooks/useMasterView';
-export { MasterViewStoreFactory, createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore } from './stores/MasterViewStore';
+export { createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore, MasterViewStoreFactory } from './stores/MasterViewStore';
 
 // Theme System
-export { Colors, QUICK_ACTION_COLORS, colorUtils, getColorsByTheme, getThemeColors } from './constants/Colors';
+export { Colors, colorUtils, getColorsByTheme, getThemeColors, QUICK_ACTION_COLORS } from './constants/Colors';
 export { ThemeProvider, useIsDarkMode, useTheme, useThemeAwareColors, useThemeColors } from './contexts/ThemeContext';
 
 // Components

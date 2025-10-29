@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ToastContainer } from '@/src/screens/toast-helper/components/toast-container';
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
 import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
 import { LocaleProvider } from '@/src/shared/contexts';
@@ -108,7 +109,7 @@ export default function RootLayout() {
           <MasterViewThemeProvider>
             <QueryClientProvider client={queryClient}>
               <SafeAreaProvider>
-                <NavigationWrapper>
+              <NavigationWrapper>
                   <Stack 
                     screenOptions={{ headerShown: false }}
                   >
@@ -121,6 +122,8 @@ export default function RootLayout() {
                   </Stack>
                   <StatusBar style="auto" />
                   <SnackbarQueue />
+                  <ToastContainer />
+
                 </NavigationWrapper>
               </SafeAreaProvider>
             </QueryClientProvider>

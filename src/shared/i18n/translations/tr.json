@@ -403,6 +403,90 @@
       "input": "Giriş:",
       "output": "Çıkış:"
     },
+    "toastHelper": {
+      "title": "Toast Yardımcısı",
+      "description": "UI geri bildirimi ve bildirim yardımcıları",
+      "input": "Giriş Parametreleri",
+      "messageInput": "Mesaj Girişi:",
+      "messagePlaceholder": "Test edilecek mesajı girin...",
+      "duration": "Süre:",
+      "position": "Pozisyon:",
+      "animation": "Animasyon:",
+      "runAllExamples": "Tüm Örnekleri Çalıştır",
+      "runningExamples": "Örnekler Çalışıyor...",
+      "results": "Sonuçlar",
+      "operations": "işlem",
+      "examples": {
+        "success": "Başarılı toast mesajı örneği",
+        "error": "Hata toast mesajı örneği",
+        "warning": "Uyarı toast mesajı örneği",
+        "info": "Bilgi toast mesajı örneği"
+      },
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "controls": {
+        "position": "Pozisyon",
+        "top": "Üst",
+        "center": "Orta",
+        "bottom": "Alt",
+        "duration": "Görüntülenme Süresi (saniye)",
+        "durationPlaceholder": "Süre girin (1-10 saniye)",
+        "durationInfo": "{{seconds}} saniye = {{milliseconds}} milisaniye",
+        "autoClose": "Otomatik Kapanma",
+        "animation": "Animasyon",
+        "none": "Yok",
+        "light": "Hafif",
+        "medium": "Orta",
+        "strong": "Güçlü",
+        "toastType": "Toast Türü",
+        "success": "Başarılı",
+        "error": "Hata",
+        "warning": "Uyarı",
+        "info": "Bilgi",
+        "sendToast": "Toast Gönder",
+        "seconds": "saniye",
+        "emptyMessage": "Boş mesaj",
+        "selectedSettings": "Seçilen Ayarlara Göre",
+        "messageRequired": "Lütfen bir mesaj girin"
+      },
+      "messages": {
+        "success": "İşlem başarıyla tamamlandı",
+        "error": "Bir hata oluştu",
+        "warning": "Dikkat edilmesi gereken bir durum var",
+        "info": "Bilgilendirme mesajı"
+      },
+      "type": "Toast Türü",
+      "types": {
+        "success": "Başarılı",
+        "error": "Hata",
+        "warning": "Uyarı",
+        "info": "Bilgi",
+        "custom": "Özel"
+      },
+      "customConfig": {
+        "title": "Özel Toast Ayarları",
+        "selectIcon": "İkon Seçin",
+        "selectPreset": "Hazır Tema Seçin",
+        "icon": "İkon Adı",
+        "iconPlaceholder": "örn: star.fill, heart.fill",
+        "backgroundColor": "Arka Plan Rengi",
+        "backgroundColorPlaceholder": "örn: #FF6B6B, #4ECDC4",
+        "textColor": "Metin Rengi",
+        "textColorPlaceholder": "örn: #FFFFFF, #000000",
+        "iconColor": "İkon Rengi",
+        "iconColorPlaceholder": "örn: #FFFFFF, #FFD93D",
+        "selectColor": "Renk Seç",
+        "colorPicker": {
+          "title": "Renk Seçin",
+          "selectedColor": "Seçilen Renk:",
+          "quickSelection": "Hızlı Seçimler:",
+          "cancel": "İptal",
+          "select": "Seç"
+        }
+      },
+      "sendToast": "Toast Gönder",
+      "messageRequired": "Lütfen bir mesaj girin"
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"

@@ -358,10 +358,6 @@ npx create-masterfabric-app MyApp
 npm run create-app MyApp
 ```
 
-## 📄 License
-
-MIT
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.

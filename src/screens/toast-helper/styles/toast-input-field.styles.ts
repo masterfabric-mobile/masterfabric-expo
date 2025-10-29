@@ -1,0 +1,170 @@
+import { StyleSheet } from 'react-native';
+
+export const toastInputFieldStyles = StyleSheet.create({
+  container: {
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 24,
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  messageInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  optionsContainer: {
+    flexDirection: 'column',
+    gap: 8,
+    marginBottom: 8,
+  },
+  typeOptionsContainer: {
+    flexDirection: 'column',
+    gap: 8,
+    marginBottom: 16,
+  },
+  optionButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
+  optionButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  durationInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  durationDescription: {
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 6,
+    marginTop: 8,
+  },
+  customInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  dropdownButton: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+  },
+  dropdownContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dropdownText: {
+    fontSize: 16,
+    flex: 1,
+  },
+  dropdownContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    maxHeight: 200,
+  },
+  scrollContainer: {
+    maxHeight: 176,
+  },
+  iconGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  iconCard: {
+    flex: 1,
+    minWidth: 80,
+    maxWidth: '31%',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 8,
+    alignItems: 'center',
+    gap: 4,
+  },
+  iconCardSelected: {
+    borderColor: '#007AFF',
+    borderWidth: 2,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+  },
+  iconName: {
+    fontSize: 10,
+    fontWeight: '500',
+    textAlign: 'center',
+    width: '100%',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  sendButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  sendButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  exampleButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  exampleButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  colorPickerButton: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+  },
+  colorPickerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  colorPreview: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  colorPickerText: {
+    fontSize: 16,
+    flex: 1,
+  },
+});

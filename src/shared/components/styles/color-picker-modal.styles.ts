@@ -1,0 +1,145 @@
+import { StyleSheet } from 'react-native';
+
+export const colorPickerModalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+  },
+  modalContainer: {
+    borderRadius: 20,
+    padding: 24,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  colorPreview: {
+    width: '100%',
+    height: 60,
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 2,
+  },
+  hexText: {
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'monospace',
+  },
+  pickerContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  gradientSquare: {
+    width: 300,
+    height: 200,
+    borderRadius: 12,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  gradientOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  pointer: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  hueSliderContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  hueSlider: {
+    width: 300,
+    height: 40,
+    borderRadius: 20,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  hueGradient: {
+    width: '100%',
+    height: '100%',
+  },
+  huePointer: {
+    position: 'absolute',
+    top: 0,
+    width: 20,
+    height: 40,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  presetContainer: {
+    marginBottom: 24,
+  },
+  presetTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 12,
+  },
+  presetGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  presetColor: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginBottom: 8,
+    borderWidth: 2,
+  },
+  presetColorSelected: {
+    borderWidth: 3,
+    borderColor: '#007AFF',
+    transform: [{ scale: 1.1 }],
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelButton: {
+    borderWidth: 2,
+  },
+  selectButton: {
+    elevation: 2,
+  },
+});
+

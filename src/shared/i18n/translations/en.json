@@ -403,6 +403,90 @@
       "input": "Input:",
       "output": "Output:"
     },
+    "toastHelper": {
+      "title": "Toast Helper",
+      "description": "UI feedback and notification utilities",
+      "input": "Input Parameters",
+      "messageInput": "Message Input:",
+      "messagePlaceholder": "Enter message to test...",
+      "duration": "Duration:",
+      "position": "Position:",
+      "animation": "Animation:",
+      "runAllExamples": "Run All Examples",
+      "runningExamples": "Running Examples...",
+      "results": "Results",
+      "operations": "operations",
+      "examples": {
+        "success": "Success toast message example",
+        "error": "Error toast message example",
+        "warning": "Warning toast message example",
+        "info": "Info toast message example"
+      },
+      "input": "Input:",
+      "output": "Output:",
+      "controls": {
+        "position": "Position",
+        "top": "Top",
+        "center": "Center",
+        "bottom": "Bottom",
+        "duration": "Display Duration (seconds)",
+        "durationPlaceholder": "Enter duration (1-10 seconds)",
+        "durationInfo": "{{seconds}} seconds = {{milliseconds}} milliseconds",
+        "autoClose": "Auto Close",
+        "animation": "Animation",
+        "none": "None",
+        "light": "Light",
+        "medium": "Medium",
+        "strong": "Strong",
+        "toastType": "Toast Type",
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "sendToast": "Send Toast",
+        "seconds": "seconds",
+        "emptyMessage": "Empty message",
+        "selectedSettings": "According to Selected Settings",
+        "messageRequired": "Please enter a message"
+      },
+      "messages": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "warning": "There is a situation that requires attention",
+        "info": "Information message"
+      },
+      "type": "Toast Type",
+      "types": {
+        "success": "Success",
+        "error": "Error",
+        "warning": "Warning",
+        "info": "Info",
+        "custom": "Custom"
+      },
+      "customConfig": {
+        "title": "Custom Toast Settings",
+        "selectIcon": "Select Icon",
+        "selectPreset": "Select Preset Theme",
+        "icon": "Icon Name",
+        "iconPlaceholder": "e.g: star.fill, heart.fill",
+        "backgroundColor": "Background Color",
+        "backgroundColorPlaceholder": "e.g: #FF6B6B, #4ECDC4",
+        "textColor": "Text Color",
+        "textColorPlaceholder": "e.g: #FFFFFF, #000000",
+        "iconColor": "Icon Color",
+        "iconColorPlaceholder": "e.g: #FFFFFF, #FFD93D",
+        "selectColor": "Select Color",
+        "colorPicker": {
+          "title": "Select Color",
+          "selectedColor": "Selected Color:",
+          "quickSelection": "Quick Selections:",
+          "cancel": "Cancel",
+          "select": "Select"
+        }
+      },
+      "sendToast": "Send Toast",
+      "messageRequired": "Please enter a message"
+    },
     "dateHelper": {
       "title": "Date Helper",
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
