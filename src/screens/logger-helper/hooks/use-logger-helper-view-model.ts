@@ -49,6 +49,3 @@ export function useLoggerHelperViewModel() {
 
   return { input, isLoading, runAllTests, runSingleTest, updateInput };
 }
-
-
-
