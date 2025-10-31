@@ -20,5 +20,3 @@ export interface LoggerTestResult {
   output: string;
   description: string;
 }
-
-
