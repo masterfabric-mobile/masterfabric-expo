@@ -22,5 +22,3 @@ export function LoggerTestCard({ result }: LoggerTestCardProps) {
     </View>
   );
 }
-
-
