@@ -4,10 +4,8 @@
  * Modal color picker with gradient square and hue slider
  */
 
-import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
 import { LinearGradient } from 'expo-linear-gradient';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { GestureResponderEvent, Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
