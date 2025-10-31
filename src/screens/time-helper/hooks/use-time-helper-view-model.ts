@@ -9,7 +9,6 @@ export function useTimeHelperViewModel() {
     testInput, 
     testResults, 
     isLoading, 
-    setTestInput, 
     updateTestInput,
     setTestResults, 
     setIsLoading,
