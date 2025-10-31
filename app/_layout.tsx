@@ -13,6 +13,7 @@ import { ToastContainer } from '@/src/screens/toast-helper/components/toast-cont
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
 import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
 import { LocaleProvider } from '@/src/shared/contexts';
+import '@/src/shared/services/logger-service';
 import { useAppStore } from '@/src/shared/store';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';

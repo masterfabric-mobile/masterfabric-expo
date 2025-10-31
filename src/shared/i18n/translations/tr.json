@@ -617,6 +617,25 @@
           "description": "Kalıcı bildirim snackbar'ı"
         }
       }
+    },
+    "loggerHelper": {
+      "title": "Logger Yardımcısı",
+      "description": "Geliştirme ve üretim loglama araçları",
+      "message": "Mesaj:",
+      "component": "Bileşen:",
+      "level": "Seviye:",
+      "includeStack": "Stack Trace dahil et",
+      "showTimestamp": "Tarih Göster",
+      "runTests": "Tüm Testleri Çalıştır",
+      "run": "Çalıştır",
+      "running": "Çalışıyor...",
+      "levels": {
+        "info": "info",
+        "debug": "debug",
+        "warning": "warning",
+        "error": "error",
+        "verbose": "verbose"
+      }
     }
   },
   "documentation": {

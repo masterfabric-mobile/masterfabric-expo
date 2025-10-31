@@ -80,6 +80,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     category: 'string-helpers'
   },
   {
+    id: 'logger-helper',
+    name: 'Logger Helper',
+    description: 'Development and production logging utilities',
+    icon: 'document-text-outline',
+    color: '#5856D6',
+    route: '/logger-helper',
+    available: true,
+    category: 'dev-helpers'
+  },
+  {
     id: 'snackbar-helper',
     name: 'Snackbar Helper',
     description: 'Snackbar notification utilities with action buttons and positioning',
