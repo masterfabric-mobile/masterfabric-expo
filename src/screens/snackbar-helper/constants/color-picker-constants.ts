@@ -4,14 +4,14 @@
  * Configuration constants for the color picker component
  */
 
-import { SNACKBAR_HELPER_COLORS } from './snackbar-colors';
+import { Colors } from 'masterfabric-expo-core';
 
-// Color constants for UI
+// Color constants for UI (using light theme colors as base)
 export const COLOR_PICKER_COLORS = {
-  white: SNACKBAR_HELPER_COLORS.white,
-  black: SNACKBAR_HELPER_COLORS.black,
-  borderLight: SNACKBAR_HELPER_COLORS.borderLight,
-  borderWhite: SNACKBAR_HELPER_COLORS.borderWhite,
+  white: Colors.light.snackbarWhite,
+  black: Colors.light.snackbarBlack,
+  borderLight: Colors.light.snackbarBorderLight,
+  borderWhite: Colors.light.snackbarBorderWhite,
 } as const;
 
 // Picker dimensions

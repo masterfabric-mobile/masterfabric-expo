@@ -1,5 +1,4 @@
 import { getThemeColors } from 'masterfabric-expo-core';
-import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import { SnackbarType } from '../models/snackbar-helper-models';
 
 /**
@@ -37,7 +36,7 @@ export const getSnackbarColor = (
       return colors.warningColor;
     case 'info':
     default:
-      return isDark ? SNACKBAR_HELPER_COLORS.infoDark : SNACKBAR_HELPER_COLORS.info;
+      return isDark ? colors.snackbarInfoDark : colors.snackbarInfo;
   }
 };
 

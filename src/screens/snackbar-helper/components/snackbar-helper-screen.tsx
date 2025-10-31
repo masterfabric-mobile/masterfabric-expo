@@ -1,14 +1,10 @@
 import { Button } from '@/src/shared/components/button';
 import { Dropdown } from '@/src/shared/components/Dropdown';
-import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
-import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { ScreenHeader, ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import { useSnackbarHelperViewModel } from '../hooks/use-snackbar-helper-view-model';
 import { snackbarHelperScreenStyles } from '../styles/snackbar-helper-screen.styles';
 import { SnackbarColorPicker } from './snackbar-color-picker';
@@ -184,14 +180,14 @@ export function SnackbarHelperScreen() {
                   style={[
                     snackbarHelperScreenStyles.colorPreview,
                     { 
-                      backgroundColor: scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault,
+                      backgroundColor: scenarioInput.customColor || colors.snackbarCustomDefault,
                       borderColor: colors.surfaceBorder,
                     }
                   ]}
                 />
                   <View style={{ flex: 1 }}>
                     <ThemedText style={[snackbarHelperScreenStyles.colorHexText, { color: colors.text }]}>
-                      {scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
+                      {scenarioInput.customColor || colors.snackbarCustomDefault}
                     </ThemedText>
                     <ThemedText style={[{ color: colors.text, fontSize: 12, opacity: 0.6 }]}>
                       {t('helpers.snackbarHelper.tapToChangeColor')}
@@ -206,7 +202,7 @@ export function SnackbarHelperScreen() {
           <SnackbarColorPicker
             visible={showColorPicker}
             onClose={() => setShowColorPicker(false)}
-            initialColor={scenarioInput.customColor || SNACKBAR_HELPER_COLORS.customDefault}
+            initialColor={scenarioInput.customColor || colors.snackbarCustomDefault}
             onColorSelect={(color) => updateScenarioInput({ customColor: color })}
           />
 
@@ -241,7 +237,7 @@ export function SnackbarHelperScreen() {
               value={scenarioInput.persistent}
               onValueChange={(value) => updateScenarioInput({ persistent: value })}
               trackColor={{ false: colors.surfaceBorder, true: colors.successColor }}
-              thumbColor={scenarioInput.persistent ? SNACKBAR_HELPER_COLORS.switchActiveLight : (isDark ? SNACKBAR_HELPER_COLORS.switchInactiveDark : SNACKBAR_HELPER_COLORS.switchInactiveLight)}
+              thumbColor={scenarioInput.persistent ? colors.snackbarSwitchActiveLight : (isDark ? colors.snackbarSwitchInactiveDark : colors.snackbarSwitchInactiveLight)}
             />
           </View>
 
