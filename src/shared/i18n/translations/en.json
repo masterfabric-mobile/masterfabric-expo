@@ -617,6 +617,25 @@
           "description": "Persistent notification snackbar"
         }
       }
+    },
+    "loggerHelper": {
+      "title": "Logger Helper",
+      "description": "Development and production logging utilities",
+      "message": "Message:",
+      "component": "Component:",
+      "level": "Level:",
+      "includeStack": "Include Stack Trace",
+      "showTimestamp": "Show Timestamp",
+      "runTests": "Run All Tests",
+      "run": "Run",
+      "running": "Running...",
+      "levels": {
+        "info": "info",
+        "debug": "debug",
+        "warning": "warning",
+        "error": "error",
+        "verbose": "verbose"
+      }
     }
   },
   "documentation": {
