@@ -111,6 +111,3 @@ export function LoggerHelperScreen() {
     </SafeAreaView>
   );
 }
-
-
-
