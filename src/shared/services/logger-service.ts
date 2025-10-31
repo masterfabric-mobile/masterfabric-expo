@@ -193,5 +193,3 @@ setLoggerService(loggerServiceInstance);
 export const loggerService = loggerServiceInstance;
 export { loggerHelper };
 export type { LogLevel };
-
-
