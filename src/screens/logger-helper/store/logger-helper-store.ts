@@ -26,4 +26,3 @@ export const useLoggerHelperStore = create<LoggerHelperStore>((set) => ({
   setIsLoading: (loading) => set({ isLoading: loading }),
   clearResults: () => set({ results: [] }),
 }));
-
