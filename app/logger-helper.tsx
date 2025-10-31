@@ -4,8 +4,3 @@ import { LoggerHelperScreen } from '@/src/screens/logger-helper';
 export default function LoggerHelperPage() {
   return <LoggerHelperScreen />;
 }
-
-
-
-
-
