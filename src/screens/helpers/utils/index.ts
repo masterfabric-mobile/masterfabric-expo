@@ -35,6 +35,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'notifications-outline';
     case 'firebase-helper':
       return 'flame-outline';
+    case 'time-helper':
+      return 'time-outline';
     default:
       return 'help-outline';
   }
@@ -63,6 +65,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for UI feedback helpers
     case 'firebase-helper':
       return '#F5820D'; // Firebase brand-like orange
+    case 'time-helper':
+      return '#FF9500'; // Orange for time helpers
     default:
       return '#8E8E93';
   }
@@ -108,6 +112,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/toast-helper',
     available: true,
     category: 'ui-helpers'
+  },
+  {
+    id: 'time-helper',
+    name: 'Time Helper',
+    description: 'Date and time manipulation utilities',
+    icon: 'time-outline',
+    color: '#FF9500',
+    route: '/time-helper',
+    available: true,
+    category: 'time-helpers'
   }
 ];
 
