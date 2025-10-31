@@ -65,3 +65,8 @@ export interface TimeHelperState {
   testResults: TimeTestResult[];
   isLoading: boolean;
 }
+
+export interface TimeHelperPickerItem {
+  label: string;
+  value: string;
+}
