@@ -82,5 +82,3 @@ class LoggerHelper {
 }
 
 export const loggerHelper = LoggerHelper;
-
-
