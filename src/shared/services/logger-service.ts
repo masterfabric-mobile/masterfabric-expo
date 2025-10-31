@@ -1,4 +1,5 @@
-import { loggerHelper, LogLevel, setLoggerService } from 'masterfabric-expo-core';
+import type { LogLevel } from 'masterfabric-expo-core';
+import { loggerHelper, setLoggerService } from 'masterfabric-expo-core';
 
 // Metadata for log entries including component name, stack trace option, and custom data
 export interface LogMetadata {
