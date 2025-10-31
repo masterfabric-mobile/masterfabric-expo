@@ -48,5 +48,3 @@ export function LoggerInputField({ message, level, component, includeStackTrace,
     </View>
   );
 }
-
-
