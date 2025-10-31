@@ -4,6 +4,7 @@ import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
+import { COLOR_OPACITY } from '../constants';
 import { TimeTestResult } from '../models/time-helper-models';
 import { timeResultCardStyles } from '../styles/time-result-card.styles';
 
@@ -27,7 +28,7 @@ export function TimeResultCard({ result }: TimeResultCardProps) {
         { 
           backgroundColor: colors.surfaceBackground,
           borderWidth: 1,
-          borderColor: colors.surfaceBorder + '30',
+          borderColor: colors.surfaceBorder + COLOR_OPACITY.medium,
         }
       ]}
     >
@@ -43,7 +44,7 @@ export function TimeResultCard({ result }: TimeResultCardProps) {
           <View 
             style={[
               timeResultCardStyles.badge,
-              { backgroundColor: colors.successColor + '20' }
+              { backgroundColor: colors.successColor + COLOR_OPACITY.light }
             ]}
           >
             <ThemedText 
@@ -75,13 +76,10 @@ export function TimeResultCard({ result }: TimeResultCardProps) {
         </ThemedText>
         <ThemedView 
           style={[
+            timeResultCardStyles.inputOutputContainer,
             {
               backgroundColor: colors.inputBackground,
-              borderWidth: 1,
               borderColor: colors.surfaceBorder,
-              borderRadius: 8,
-              padding: 12,
-              marginTop: 4,
             }
           ]}
         >
@@ -104,13 +102,10 @@ export function TimeResultCard({ result }: TimeResultCardProps) {
         </ThemedText>
         <ThemedView 
           style={[
+            timeResultCardStyles.inputOutputContainer,
             {
               backgroundColor: colors.inputBackground,
-              borderWidth: 1,
               borderColor: colors.surfaceBorder,
-              borderRadius: 8,
-              padding: 12,
-              marginTop: 4,
             }
           ]}
         >

@@ -2,14 +2,12 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
+import { useModal } from '../hooks/use-modal';
+import type { TimeHelperPickerItem } from '../models/time-helper-models';
+import { COLOR_OPACITY, MODAL_OVERLAY_OPACITY } from '../constants';
 import { timeHelperCustomPickerStyles } from '../styles/time-helper-custom-picker.styles';
-
-interface TimeHelperPickerItem {
-  label: string;
-  value: string;
-}
 
 interface TimeHelperCustomPickerProps {
   items: TimeHelperPickerItem[] | readonly TimeHelperPickerItem[];
@@ -26,7 +24,7 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
-  const [modalVisible, setModalVisible] = useState(false);
+  const { modalVisible, openModal, closeModal } = useModal();
 
   const selectedItem = items.find(item => item.value === selectedValue);
 
@@ -35,7 +33,7 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
    */
   const handleItemSelect = (value: string) => {
     onValueChange(value);
-    setModalVisible(false);
+    closeModal();
   };
 
   return (
@@ -48,7 +46,7 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
             borderColor: colors.surfaceBorder,
           }
         ]}
-        onPress={() => setModalVisible(true)}
+        onPress={openModal}
       >
         <ThemedText 
           style={{ color: colors.bodyText, flex: 1 }}
@@ -63,19 +61,17 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
         visible={modalVisible}
         transparent
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <TouchableOpacity
           style={[
             timeHelperCustomPickerStyles.modalOverlay,
             { 
-              backgroundColor: isDark 
-                ? 'rgba(0, 0, 0, 0.7)' 
-                : 'rgba(0, 0, 0, 0.5)' 
+              backgroundColor: `rgba(0, 0, 0, ${isDark ? MODAL_OVERLAY_OPACITY.dark : MODAL_OVERLAY_OPACITY.light})`
             }
           ]}
           activeOpacity={1}
-          onPress={() => setModalVisible(false)}
+          onPress={closeModal}
         >
           <ThemedView
             style={[
@@ -91,12 +87,12 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
                 {placeholder || t('common.selectOption')}
               </ThemedText>
               <View style={timeHelperCustomPickerStyles.headerButtons}>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <TouchableOpacity onPress={closeModal}>
                   <ThemedText style={[timeHelperCustomPickerStyles.cancelButton, { color: colors.bodyText }]}>
                     {t('common.cancel')}
                   </ThemedText>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <TouchableOpacity onPress={closeModal}>
                   <ThemedText style={[timeHelperCustomPickerStyles.confirmButton, { color: colors.primary }]}>
                     {t('common.confirm')}
                   </ThemedText>
@@ -112,7 +108,7 @@ export function TimeHelperCustomPicker({ items, selectedValue, onValueChange, pl
                   style={[
                     timeHelperCustomPickerStyles.item,
                     { borderBottomColor: colors.surfaceBorder },
-                    selectedValue === item.value && { backgroundColor: colors.primary + '20' }
+                    selectedValue === item.value && { backgroundColor: colors.primary + COLOR_OPACITY.light }
                   ]}
                   onPress={() => handleItemSelect(item.value)}
                 >

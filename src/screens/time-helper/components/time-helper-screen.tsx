@@ -2,7 +2,7 @@ import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTimeHelperViewModel } from '../hooks/use-time-helper-view-model';
@@ -19,8 +19,8 @@ export function TimeHelperScreen() {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   
-  const { testInput, testResults, isLoading, runAllTests, updateTestInput, resetInput } = useTimeHelperViewModel();
-  const [dropdownVisible, setDropdownVisible] = React.useState(false);
+  const { testInput, testResults, isLoading, runAllTests, updateTestInput } = useTimeHelperViewModel();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   return (
     <SafeAreaView 
@@ -47,7 +47,6 @@ export function TimeHelperScreen() {
           testInput={testInput}
           onInputChange={updateTestInput}
           onRunTests={runAllTests}
-          onReset={resetInput}
           isLoading={isLoading}
           onDropdownVisibleChange={setDropdownVisible}
         />

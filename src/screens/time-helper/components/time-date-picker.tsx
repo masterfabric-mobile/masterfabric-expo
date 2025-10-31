@@ -2,9 +2,15 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
+import { COLOR_OPACITY, generateMonthOptions, generateYearOptions, MODAL_OVERLAY_OPACITY, WEEK_DAYS } from '../constants';
+import { useDatePicker } from '../hooks/use-date-picker';
+import { useModal } from '../hooks/use-modal';
 import { timeDateTimePickerStyles } from '../styles/time-date-time-picker.styles';
+import { generateCalendarGrid } from '../utils/time-calculations';
+import { formatDisplayDate, getMonthName } from '../utils/time-formatters';
+import { parseDate } from '../utils/time-helper-utils';
 
 interface TimeDatePickerProps {
   value: string; // ISO string
@@ -24,195 +30,22 @@ export function TimeDatePicker({
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
-  const [modalVisible, setModalVisible] = useState(false);
+  const { modalVisible, openModal, closeModal } = useModal();
 
-  /**
-   * Safe parse ISO string to Date object
-   */
-  const parseDate = (isoString: string): Date => {
-    if (!isoString) return new Date();
-    try {
-      const date = new Date(isoString);
-      if (isNaN(date.getTime())) {
-        return new Date();
-      }
-      const year = date.getFullYear();
-      if (year < 1000 || year > 9999) {
-        return new Date();
-      }
-      return date;
-    } catch {
-      return new Date();
-    }
-  };
-
-  /**
-   * Format date for display (DD.MM.YYYY)
-   */
-  const formatDisplayDate = (date: Date): string => {
-    try {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}.${month}.${year}`;
-    } catch {
-      return date.toLocaleDateString();
-    }
-  };
-
-  /**
-   * Get month name based on locale
-   */
-  const getMonthName = (monthIndex: number, locale: string = 'tr-TR'): string => {
-    const date = new Date(2025, monthIndex, 1);
-    return new Intl.DateTimeFormat(locale, { month: 'long' }).format(date);
-  };
-
-  // Get initial date from value or use current date
-  const initialDate = parseDate(value);
-  
-  // State for calendar selection
-  const [selectedYear, setSelectedYear] = useState(initialDate.getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(initialDate.getMonth());
-  const [selectedDay, setSelectedDay] = useState(initialDate.getDate());
-
-  // State for year picker visibility
-  const [showYearPicker, setShowYearPicker] = useState(false);
-  // State for month picker visibility
-  const [showMonthPicker, setShowMonthPicker] = useState(false);
-
-  // Initialize state when modal opens
-  useEffect(() => {
-    if (modalVisible) {
-      const currentDate = parseDate(value);
-      setSelectedYear(currentDate.getFullYear());
-      setSelectedMonth(currentDate.getMonth());
-      setSelectedDay(currentDate.getDate());
-      setShowYearPicker(false);
-      setShowMonthPicker(false);
-    }
-  }, [modalVisible, value]);
-
-  /**
-   * Generate years for dropdown (current year ± 50 years)
-   */
-  const generateYearOptions = () => {
-    const years: { label: string; value: string }[] = [];
-    const currentYear = new Date().getFullYear();
-    for (let i = currentYear - 50; i <= currentYear + 50; i++) {
-      years.push({ label: i.toString(), value: i.toString() });
-    }
-    return years;
-  };
-
-  /**
-   * Generate months for dropdown
-   */
-  const generateMonthOptions = () => {
-    const months: { label: string; value: number }[] = [];
-    for (let i = 0; i < 12; i++) {
-      const monthName = getMonthName(i, 'tr-TR');
-      months.push({ label: monthName, value: i });
-    }
-    return months;
-  };
-
-  /**
-   * Get days in month (handles leap years)
-   */
-  const getDaysInMonth = (year: number, month: number): number => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  /**
-   * Navigate to previous month
-   */
-  const goToPreviousMonth = () => {
-    if (selectedMonth === 0) {
-      setSelectedMonth(11);
-      setSelectedYear(selectedYear - 1);
-    } else {
-      setSelectedMonth(selectedMonth - 1);
-    }
-  };
-
-  /**
-   * Navigate to next month
-   */
-  const goToNextMonth = () => {
-    if (selectedMonth === 11) {
-      setSelectedMonth(0);
-      setSelectedYear(selectedYear + 1);
-    } else {
-      setSelectedMonth(selectedMonth + 1);
-    }
-  };
-
-  /**
-   * Generate calendar grid with previous/next month days
-   * Includes trailing days from previous month and leading days from next month
-   */
-  const generateCalendarGrid = () => {
-    const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
-    const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1).getDay();
-    const weeks: { day: number; isCurrentMonth: boolean }[][] = [];
-    
-    // Get previous month's last days
-    const previousMonthDays = getDaysInMonth(
-      selectedMonth === 0 ? selectedYear - 1 : selectedYear,
-      selectedMonth === 0 ? 11 : selectedMonth - 1
-    );
-    
-    // Start with previous month's trailing days
-    let currentWeek: { day: number; isCurrentMonth: boolean }[] = [];
-    for (let i = firstDayOfMonth - 1; i >= 0; i--) {
-      currentWeek.push({ 
-        day: previousMonthDays - i, 
-        isCurrentMonth: false 
-      });
-    }
-    
-    // Add days of current month
-    for (let day = 1; day <= daysInMonth; day++) {
-      currentWeek.push({ day, isCurrentMonth: true });
-      
-      // When week is complete (7 days), start new week
-      if (currentWeek.length === 7) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-    }
-    
-    // Fill remaining week with next month's days
-    let nextMonthDay = 1;
-    while (currentWeek.length > 0 && currentWeek.length < 7) {
-      currentWeek.push({ day: nextMonthDay, isCurrentMonth: false });
-      nextMonthDay++;
-    }
-    if (currentWeek.length > 0) {
-      weeks.push(currentWeek);
-    }
-    
-    return weeks;
-  };
-
-  /**
-   * Weekday labels (Turkish short format)
-   * Pa: Pazartesi, Pt: Salı, Sa: Çarşamba, Ça: Perşembe, Pe: Cuma, Cu: Cumartesi, Ct: Pazar
-   */
-  const weekDays = ['Pa', 'Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct'];
-
-  /**
-   * Validate and adjust day if month/year changes
-   * Prevents invalid dates (e.g., Feb 30)
-   */
-  useEffect(() => {
-    const maxDays = getDaysInMonth(selectedYear, selectedMonth);
-    if (selectedDay > maxDays) {
-      setSelectedDay(maxDays);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedYear, selectedMonth]);
+  const {
+    selectedYear,
+    selectedMonth,
+    selectedDay,
+    showYearPicker,
+    showMonthPicker,
+    setSelectedYear,
+    setSelectedMonth,
+    setSelectedDay,
+    setShowYearPicker,
+    setShowMonthPicker,
+    goToPreviousMonth,
+    goToNextMonth,
+  } = useDatePicker({ value, modalVisible });
 
 
   /**
@@ -245,14 +78,13 @@ export function TimeDatePicker({
 
       const isoString = finalDate.toISOString();
       onValueChange(isoString);
-      setModalVisible(false);
     } catch (error) {
       console.error('Error creating date:', error);
     }
   };
 
   const displayValue = value ? formatDisplayDate(parseDate(value)) : placeholder || t('helpers.timeHelper.selectDateTime');
-  const calendarGrid = generateCalendarGrid();
+  const calendarGrid = generateCalendarGrid(selectedYear, selectedMonth);
   const monthName = getMonthName(selectedMonth, 'tr-TR');
 
   return (
@@ -265,7 +97,7 @@ export function TimeDatePicker({
             borderColor: colors.surfaceBorder,
           }
         ]}
-        onPress={() => setModalVisible(true)}
+        onPress={openModal}
       >
         <ThemedText 
           style={{ color: colors.bodyText, flex: 1 }}
@@ -280,21 +112,19 @@ export function TimeDatePicker({
         visible={modalVisible}
         transparent
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={closeModal}
       >
         <TouchableOpacity
           style={[
             timeDateTimePickerStyles.modalOverlay,
             { 
-              backgroundColor: isDark 
-                ? 'rgba(0, 0, 0, 0.7)' 
-                : 'rgba(0, 0, 0, 0.5)' 
+              backgroundColor: `rgba(0, 0, 0, ${isDark ? MODAL_OVERLAY_OPACITY.dark : MODAL_OVERLAY_OPACITY.light})`
             }
           ]}
           activeOpacity={1}
           onPress={() => {
             setShowYearPicker(false);
-            setModalVisible(false);
+            closeModal();
           }}
         >
           <ThemedView
@@ -312,12 +142,15 @@ export function TimeDatePicker({
                 {t('helpers.timeHelper.date')}
               </ThemedText>
               <View style={timeDateTimePickerStyles.headerButtons}>
-                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <TouchableOpacity onPress={closeModal}>
                   <ThemedText style={[timeDateTimePickerStyles.cancelButton, { color: colors.bodyText }]}>
                     {t('common.cancel')}
                   </ThemedText>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleConfirm}>
+                <TouchableOpacity onPress={() => {
+                  handleConfirm();
+                  closeModal();
+                }}>
                   <ThemedText style={[timeDateTimePickerStyles.confirmButton, { color: colors.primary }]}>
                     {t('common.confirm')}
                   </ThemedText>
@@ -393,11 +226,11 @@ export function TimeDatePicker({
                                 timeDateTimePickerStyles.yearItem,
                                 {
                                   backgroundColor: isSelected 
-                                    ? colors.primary + '20' 
+                                    ? colors.primary + COLOR_OPACITY.light
                                     : 'transparent',
                                   borderLeftWidth: isSelected ? 3 : 0,
                                   borderLeftColor: isSelected ? colors.primary : 'transparent',
-                                  borderBottomColor: colors.surfaceBorder + '30',
+                                  borderBottomColor: colors.surfaceBorder + COLOR_OPACITY.medium,
                                 }
                               ]}
                               onPress={() => {
@@ -434,7 +267,7 @@ export function TimeDatePicker({
                         style={timeDateTimePickerStyles.yearList}
                         showsVerticalScrollIndicator={true}
                       >
-                        {generateMonthOptions().map((monthOption) => {
+                        {generateMonthOptions('tr-TR').map((monthOption) => {
                           const isSelected = selectedMonth === monthOption.value;
                           return (
                             <TouchableOpacity
@@ -443,11 +276,11 @@ export function TimeDatePicker({
                                 timeDateTimePickerStyles.yearItem,
                                 {
                                   backgroundColor: isSelected 
-                                    ? colors.primary + '20' 
+                                    ? colors.primary + COLOR_OPACITY.light
                                     : 'transparent',
                                   borderLeftWidth: isSelected ? 3 : 0,
                                   borderLeftColor: isSelected ? colors.primary : 'transparent',
-                                  borderBottomColor: colors.surfaceBorder + '30',
+                                  borderBottomColor: colors.surfaceBorder + COLOR_OPACITY.medium,
                                 }
                               ]}
                               onPress={() => {
@@ -475,7 +308,7 @@ export function TimeDatePicker({
                   
                   {/* Weekday Headers Row */}
                   <View style={timeDateTimePickerStyles.weekdayRow}>
-                    {weekDays.map((day) => (
+                    {WEEK_DAYS.map((day) => (
                       <View key={day} style={timeDateTimePickerStyles.weekdayHeader}>
                         <ThemedText
                           style={[
@@ -510,9 +343,9 @@ export function TimeDatePicker({
                                 timeDateTimePickerStyles.calendarDay,
                                 {
                                   backgroundColor: isSelected 
-                                    ? colors.primary + '20' 
+                                    ? colors.primary + COLOR_OPACITY.light
                                     : isToday
-                                    ? colors.successColor + '40'
+                                    ? colors.successColor + COLOR_OPACITY.heavy
                                     : 'transparent',
                                   borderColor: isSelected 
                                     ? colors.primary 
