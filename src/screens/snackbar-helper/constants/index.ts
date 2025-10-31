@@ -1,4 +1,4 @@
 export * from './color-picker-constants';
-export * from './snackbar-colors';
+// Snackbar colors are now in masterfabric-expo-core Colors.ts
 
 
