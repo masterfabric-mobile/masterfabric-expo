@@ -49,4 +49,14 @@ export const timeResultCardStyles = StyleSheet.create({
   sectionContent: {
     fontSize: 14,
   },
+  
+  // Input/Output container
+  inputOutputContainer: {
+    backgroundColor: 'transparent', // Will be overridden with theme color
+    borderWidth: 1,
+    borderColor: 'transparent', // Will be overridden with theme color
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 4,
+  },
 });
