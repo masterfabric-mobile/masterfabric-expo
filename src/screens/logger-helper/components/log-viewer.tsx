@@ -59,5 +59,3 @@ export function LogViewer() {
     </View>
   );
 }
-
-
