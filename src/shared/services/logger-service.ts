@@ -1,4 +1,4 @@
-import type { LogLevel } from 'masterfabric-expo-core';
+import type { LogEntryLike, LogLevel, LoggerServiceInterface } from 'masterfabric-expo-core';
 import { loggerHelper, setLoggerService } from 'masterfabric-expo-core';
 
 // Metadata for log entries including component name, stack trace option, and custom data
@@ -21,7 +21,7 @@ export interface LogEntry {
 }
 
 // Singleton logger service for managing and storing log entries
-class LoggerService {
+class LoggerService implements LoggerServiceInterface {
   private static instance: LoggerService;
   private logs: LogEntry[] = [];
   private listeners: Set<(logs: LogEntry[]) => void> = new Set();
@@ -37,17 +37,24 @@ class LoggerService {
   }
 
   // Main log method - creates entry, stores it (max 1000), outputs to console, and notifies listeners
-  log(level: LogLevel, message: string, metadata?: LogMetadata): void {
+  log(level: LogLevel, message: string, metadata?: Record<string, unknown>): void {
     if (!this.shouldInclude(level, this.minLevel)) return;
+
+    // Handle metadata - support both direct Record and LogMetadata format
+    const logMetadata = metadata as Record<string, unknown> | undefined;
+    const component = logMetadata?.component as string | undefined;
+    const includeStackTrace = logMetadata?.includeStackTrace as boolean | undefined;
+    const data = (logMetadata?.data as Record<string, unknown> | undefined) || 
+                 (logMetadata && typeof logMetadata === 'object' && !('component' in logMetadata) && !('includeStackTrace' in logMetadata) ? logMetadata : undefined);
 
     const entry: LogEntry = {
       id: this.generateId(),
       timestamp: new Date(),
       level,
       message,
-      component: metadata?.component,
-      stackTrace: metadata?.includeStackTrace ? this.getStackTrace() : undefined,
-      metadata: metadata?.data,
+      component,
+      stackTrace: includeStackTrace ? this.getStackTrace() : undefined,
+      metadata: data,
       showTimestamp: this.showTimestamp,
     };
 
@@ -58,15 +65,28 @@ class LoggerService {
   }
 
   // Convenience methods for each log level
-  info(message: string, metadata?: LogMetadata): void { this.log('info', message, metadata); }
-  debug(message: string, metadata?: LogMetadata): void { this.log('debug', message, metadata); }
-  warning(message: string, metadata?: LogMetadata): void { this.log('warning', message, metadata); }
-  error(message: string, metadata?: LogMetadata): void { this.log('error', message, metadata); }
-  verbose(message: string, metadata?: LogMetadata): void { this.log('verbose', message, metadata); }
+  info(message: string, metadata?: Record<string, unknown>): void { this.log('info', message, metadata); }
+  debug(message: string, metadata?: Record<string, unknown>): void { this.log('debug', message, metadata); }
+  warning(message: string, metadata?: Record<string, unknown>): void { this.log('warning', message, metadata); }
+  error(message: string, metadata?: Record<string, unknown>): void { this.log('error', message, metadata); }
+  verbose(message: string, metadata?: Record<string, unknown>): void { this.log('verbose', message, metadata); }
 
-  // Get all stored logs as a new array
-  getLogs(): LogEntry[] {
-    return [...this.logs];
+  // Get all stored logs as a new array - interface compatible version returns LogEntryLike[]
+  getLogs(): LogEntryLike[];
+  // Internal version returns full LogEntry[] with all properties
+  getLogs(includeFullDetails: true): LogEntry[];
+  // Implementation
+  getLogs(includeFullDetails?: boolean): LogEntry[] | LogEntryLike[] {
+    if (includeFullDetails) {
+      return [...this.logs];
+    }
+    return this.logs.map(entry => ({
+      id: entry.id,
+      timestamp: entry.timestamp,
+      level: entry.level,
+      message: entry.message,
+      component: entry.component,
+    }));
   }
 
   // Clear all logs and notify listeners
@@ -76,7 +96,26 @@ class LoggerService {
   }
 
   // Subscribe to log updates - returns unsubscribe function
-  subscribe(listener: (logs: LogEntry[]) => void): () => void {
+  // Internal listeners receive LogEntry[], but interface requires LogEntryLike[]
+  subscribe(listener: (logs: LogEntryLike[]) => void): () => void {
+    // Wrap listener to convert LogEntry[] to LogEntryLike[]
+    const wrappedListener = (logs: LogEntry[]): void => {
+      const convertedLogs: LogEntryLike[] = logs.map(entry => ({
+        id: entry.id,
+        timestamp: entry.timestamp,
+        level: entry.level,
+        message: entry.message,
+        component: entry.component,
+      }));
+      listener(convertedLogs);
+    };
+    this.listeners.add(wrappedListener);
+    return () => this.listeners.delete(wrappedListener);
+  }
+  
+  // Internal subscribe method that provides full LogEntry details
+  // This is used internally but not exposed through the interface
+  subscribeFull(listener: (logs: LogEntry[]) => void): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
@@ -92,7 +131,12 @@ class LoggerService {
 
   // Notify all subscribers about log changes
   private notifyListeners(): void {
-    this.listeners.forEach(l => l([...this.logs]));
+    const logsCopy = [...this.logs];
+    this.listeners.forEach(l => {
+      // All internal listeners expect LogEntry[], but interface listeners need conversion
+      // Since we wrapped interface listeners, we can pass LogEntry[] directly
+      l(logsCopy);
+    });
   }
 
   // Output log entry to console with ANSI colors and symbols

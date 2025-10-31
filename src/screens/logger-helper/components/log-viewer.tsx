@@ -9,17 +9,16 @@ import { Text, View } from 'react-native';
 export function LogViewer() {
   const { currentTheme } = useTheme();
   const colors = getThemeColors(currentTheme === 'dark');
-  const [logs, setLogs] = useState(() => loggerService.getLogs());
+  const [logs, setLogs] = useState(() => loggerService.getLogs(true));
 
   // Subscribe to log updates and unsubscribe on unmount
   useEffect(() => {
-    const unsubscribe = loggerService.subscribe((list) => setLogs(list));
+    const unsubscribe = loggerService.subscribeFull((list) => setLogs(list));
     return unsubscribe;
   }, []);
 
   // Reverse logs to show newest entries first
   const filtered = useMemo(() => {
-    const logs = loggerService.getLogs();
     return [...logs].reverse();
   }, [logs]);
 
