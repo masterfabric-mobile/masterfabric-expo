@@ -18,5 +18,3 @@ export function useLogger(component?: string) {
     verbose: (message: string, extra?: Record<string, unknown>) => loggerHelper.verbose(message, meta(extra)),
   };
 }
-
-
