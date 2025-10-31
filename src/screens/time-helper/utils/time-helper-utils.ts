@@ -1,23 +1,22 @@
 // Time Helper Utility Functions
 
-export const formatTimeUnit = (unit: string): string => {
-  const unitMap: Record<string, string> = {
-    years: 'Years',
-    months: 'Months',
-    weeks: 'Weeks',
-    days: 'Days',
-    hours: 'Hours',
-    minutes: 'Minutes',
-    seconds: 'Seconds',
-  };
-  return unitMap[unit] || unit;
-};
-
-export const getCurrentTimestamp = (): string => {
-  return new Date().toISOString();
-};
-
-export const isValidISOString = (dateString: string): boolean => {
-  const date = new Date(dateString);
-  return !isNaN(date.getTime());
+/**
+ * Safe parse ISO string to Date object
+ * Validates year range (1000-9999) and handles invalid dates
+ */
+export const parseDate = (isoString: string): Date => {
+  if (!isoString) return new Date();
+  try {
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) {
+      return new Date();
+    }
+    const year = date.getFullYear();
+    if (year < 1000 || year > 9999) {
+      return new Date();
+    }
+    return date;
+  } catch {
+    return new Date();
+  }
 };

@@ -1,25 +1,54 @@
 // Time Validation Utility Functions
 
-export const validateDateString = (dateString: string): boolean => {
-  if (!dateString) return false;
-  const date = new Date(dateString);
-  return !isNaN(date.getTime());
-};
-
-export const validateTimezone = (timezone: string): boolean => {
-  try {
-    Intl.DateTimeFormat(undefined, { timeZone: timezone });
-    return true;
-  } catch {
-    return false;
+/**
+ * Parse text input (HH:MM format) with validation
+ * Returns hour, minute, and error message if invalid
+ */
+export const parseTimeText = (
+  text: string,
+  errorMessages: {
+    invalidFormat?: string;
+    hourRangeError?: string;
+    minuteRangeError?: string;
+  } = {}
+): { hour: number; minute: number; error: string | null } => {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return { hour: 0, minute: 0, error: null };
   }
-};
-
-export const validateLocale = (locale: string): boolean => {
-  try {
-    new Intl.DateTimeFormat(locale);
-    return true;
-  } catch {
-    return false;
+  
+  const match = trimmed.match(/^(\d{1,2}):?(\d{2})?$/);
+  if (!match) {
+    return { 
+      hour: 0, 
+      minute: 0, 
+      error: errorMessages.invalidFormat || 'Invalid time format' 
+    };
   }
+  
+  const hourStr = match[1];
+  const minuteStr = match[2] || '00';
+  
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+  
+  // Validate hour (0-23)
+  if (hour < 0 || hour > 23) {
+    return { 
+      hour: 0, 
+      minute: 0, 
+      error: errorMessages.hourRangeError || 'Hour must be between 0-23' 
+    };
+  }
+  
+  // Validate minute (0-59)
+  if (minute < 0 || minute > 59) {
+    return { 
+      hour: 0, 
+      minute: 0, 
+      error: errorMessages.minuteRangeError || 'Minute must be between 0-59' 
+    };
+  }
+  
+  return { hour, minute, error: null };
 };
