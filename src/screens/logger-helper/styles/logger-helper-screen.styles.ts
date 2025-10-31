@@ -34,5 +34,3 @@ export const loggerHelperScreenStyles = StyleSheet.create({
     gap: 10,
   },
 });
-
-
