@@ -33,6 +33,10 @@ export const getHelperIcon = (helperId: string): string => {
       return 'percent-outline';
     case 'snackbar-helper':
       return 'notifications-outline';
+    case 'firebase-helper':
+      return 'flame-outline';
+    case 'time-helper':
+      return 'time-outline';
     default:
       return 'help-outline';
   }
@@ -59,6 +63,10 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for number helpers
     case 'snackbar-helper':
       return '#007AFF'; // Blue for UI feedback helpers
+    case 'firebase-helper':
+      return '#F5820D'; // Firebase brand-like orange
+    case 'time-helper':
+      return '#FF9500'; // Orange for time helpers
     default:
       return '#8E8E93';
   }
@@ -76,6 +84,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     category: 'string-helpers'
   },
   {
+    id: 'logger-helper',
+    name: 'Logger Helper',
+    description: 'Development and production logging utilities',
+    icon: 'document-text-outline',
+    color: '#5856D6',
+    route: '/logger-helper',
+    available: true,
+    category: 'dev-helpers'
+  },
+  {
     id: 'snackbar-helper',
     name: 'Snackbar Helper',
     description: 'Snackbar notification utilities with action buttons and positioning',
@@ -86,6 +104,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     category: 'ui-helpers'
   },
   {
+    id: 'firebase-helper',
+    name: 'Firebase Helper',
+    description: 'Auth, Analytics (web), and Firestore utilities',
+    icon: 'flame-outline',
+    color: '#F5820D',
+    route: '/firebase-helper',
+    available: true,
+    category: 'integrations'
+  },
+  {
     id: 'toast-helper',
     name: 'Toast Helper',
     description: 'UI feedback and notification utilities',
@@ -94,6 +122,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/toast-helper',
     available: true,
     category: 'ui-helpers'
+  },
+  {
+    id: 'time-helper',
+    name: 'Time Helper',
+    description: 'Date and time manipulation utilities',
+    icon: 'time-outline',
+    color: '#FF9500',
+    route: '/time-helper',
+    available: true,
+    category: 'time-helpers'
   }
 ];
 

@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { initMasterView } from 'masterfabric-expo-core';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 export default function RootLayout() {
   useEffect(() => {
@@ -9,7 +9,7 @@ export default function RootLayout() {
       appName: 'My MasterFabric App',
       appVersion: '1.0.0',
       environment: __DEV__ ? 'development' : 'production',
-      config: {
+      config: ({
         // Enable/disable features as needed
         enableActivityTracking: true,
         enableErrorBoundary: true,
@@ -44,6 +44,29 @@ export default function RootLayout() {
           },
         },
         
+        // Firebase Integration (optional)
+        // Uses .env values if not explicitly provided here
+        enableFirebase: true,
+        enableFirebaseAuth: true,
+        enableFirebaseAnalytics: false, // Analytics via web SDK works on web only
+        // .env example (Expo public env vars):
+        // EXPO_PUBLIC_FIREBASE_API_KEY=your-api-key
+        // EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+        // EXPO_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+        // EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+        // EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=1234567890
+        // EXPO_PUBLIC_FIREBASE_APP_ID=1:1234567890:web:abcdef123456
+        // EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+        // firebaseConfig: {
+        //   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY as string,
+        //   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN as string,
+        //   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID as string,
+        //   storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET as string,
+        //   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
+        //   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID as string,
+        //   measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID as string,
+        // },
+        
         customSettings: {
           apiUrl: 'https://api.myapp.com',
           features: {
@@ -52,7 +75,7 @@ export default function RootLayout() {
             analytics: true,
           },
         },
-      },
+      } as any),
       onError: (error) => {
         console.error('MasterView Error:', error);
       },

@@ -1,28 +1,32 @@
 import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
 import { t } from '@/src/shared/i18n';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useCallback, useState } from 'react';
-import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 import {
-    SnackbarOptions,
-    SnackbarScenarioInput,
-    SnackbarScenarioResult,
+  SnackbarOptions,
+  SnackbarScenarioInput,
+  SnackbarScenarioResult,
 } from '../models/snackbar-helper-models';
 
 // Default scenario input values (from Issue #11)
-const DEFAULT_SCENARIO_INPUT: SnackbarScenarioInput = {
+// Note: customColor will be set dynamically based on theme
+const getDefaultScenarioInput = (colors: any): SnackbarScenarioInput => ({
   message: '',
   duration: 5000,
   actionLabel: '',
   type: 'success',
   position: 'bottom',
   persistent: false,
-  customColor: SNACKBAR_HELPER_COLORS.customDefault,
-  customIcon: '✅',
-};
+  customColor: colors.snackbarCustomDefault,
+  customIcon: 'checkmark-circle',
+});
 
 export const useSnackbarHelperViewModel = () => {
   const { showSnackbar: show } = useSnackbar();
-  const [scenarioInput, setScenarioInput] = useState<SnackbarScenarioInput>(DEFAULT_SCENARIO_INPUT);
+  const { currentTheme } = useTheme();
+  const isDark = currentTheme === 'dark';
+  const colors = getThemeColors(isDark);
+  const [scenarioInput, setScenarioInput] = useState<SnackbarScenarioInput>(getDefaultScenarioInput(colors));
   const [scenarioResults, setScenarioResults] = useState<SnackbarScenarioResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 

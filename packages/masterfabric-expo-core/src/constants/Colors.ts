@@ -90,13 +90,36 @@ export const Colors = {
     splashProgress: '#007AFF',
     splashProgressBg: '#E9ECEF',
     
-    // Additional colors for string-helper
-    titleText: '#000000',
+    // Input & Form colors (shared by helpers)
     inputBackground: '#F8F9FA',
+    placeholderText: '#8E8E93',
+    primary: '#007AFF',
+    titleText: '#000000',
+    
+    // Additional colors for string-helper
     successBackground: '#E8F5E8',
     successBorder: '#34C759',
     successText: '#2E7D32',
-    placeholderText: '#8E8E93',
+    
+    // Time helper colors
+    timeHelperSuccessBackground: '#E8F5E8',
+    timeHelperSuccessBorder: '#34C759',
+    timeHelperSuccessText: '#2E7D32',
+    timeHelperErrorBackground: '#F8D7DA',
+    timeHelperErrorBorder: '#DC3545',
+    
+    // Snackbar helper colors
+    snackbarCustomDefault: '#9C27B0',
+    snackbarInfo: '#2196F3',
+    snackbarInfoDark: '#0D47A1',
+    snackbarBorderLight: '#E0E0E0',
+    snackbarBorderWhite: '#FFFFFF',
+    snackbarWhite: '#FFFFFF',
+    snackbarBlack: '#000000',
+    snackbarTransparent: 'transparent',
+    snackbarSwitchActiveLight: '#FFFFFF',
+    snackbarSwitchInactiveDark: '#48484A',
+    snackbarSwitchInactiveLight: '#F4F3F4',
   },
   dark: {
     text: '#FFFFFF',
@@ -184,13 +207,36 @@ export const Colors = {
     splashProgress: '#007AFF',
     splashProgressBg: '#333333',
     
-    // Additional colors for string-helper
-    titleText: '#FFFFFF',
+    // Input & Form colors (shared by helpers)
     inputBackground: '#2C2C2E',
+    placeholderText: '#8E8E93',
+    primary: '#007AFF',
+    titleText: '#FFFFFF',
+    
+    // Additional colors for string-helper
     successBackground: '#1B5E20',
     successBorder: '#34C759',
     successText: '#4CAF50',
-    placeholderText: '#8E8E93',
+    
+    // Time helper colors
+    timeHelperSuccessBackground: '#1B5E20',
+    timeHelperSuccessBorder: '#34C759',
+    timeHelperSuccessText: '#4CAF50',
+    timeHelperErrorBackground: '#3A1C1C',
+    timeHelperErrorBorder: '#FF3B30',
+    
+    // Snackbar helper colors
+    snackbarCustomDefault: '#9C27B0',
+    snackbarInfo: '#2196F3',
+    snackbarInfoDark: '#0D47A1',
+    snackbarBorderLight: '#E0E0E0',
+    snackbarBorderWhite: '#FFFFFF',
+    snackbarWhite: '#FFFFFF',
+    snackbarBlack: '#000000',
+    snackbarTransparent: 'transparent',
+    snackbarSwitchActiveLight: '#FFFFFF',
+    snackbarSwitchInactiveDark: '#48484A',
+    snackbarSwitchInactiveLight: '#F4F3F4',
   },
   system: {
     // System theme will be resolved to light or dark at runtime
@@ -255,6 +301,17 @@ export const Colors = {
     splashSubtext: '#6C757D',
     splashProgress: '#007AFF',
     splashProgressBg: '#E9ECEF',
+    
+    // Input & Form colors (shared by helpers)
+    inputBackground: '#F8F9FA',
+    placeholderText: '#8E8E93',
+    primary: '#007AFF',
+    titleText: '#000000',
+    
+    // Additional colors for string-helper
+    successBackground: '#E8F5E8',
+    successBorder: '#34C759',
+    successText: '#2E7D32',
   },
 };
 

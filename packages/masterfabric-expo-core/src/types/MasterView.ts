@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { ViewStyle } from 'react-native';
 import { BaseStoreState, LoadingState, ThemeColors } from './index';
+import type { SentryConfig } from '../integrations/SentryIntegration';
+import type { FirebaseConfig } from '../integrations/FirebaseIntegration';
 
 // MasterView Abstract Base Interface
 export interface IMasterView {
@@ -51,6 +53,17 @@ export interface MasterViewConfig {
   maxActivityItems: number;
   errorRetryAttempts: number;
   loadingTimeout: number;
+  // Integrations (optional)
+  enableSentry?: boolean;
+  sentryConfig?: SentryConfig;
+  enableFirebase?: boolean;
+  firebaseConfig?: Partial<FirebaseConfig>;
+  // Firebase feature toggles
+  enableFirebaseAuth?: boolean;
+  enableFirebaseAnalytics?: boolean;
+  firebaseAnalyticsConfig?: {
+    measurementId?: string;
+  };
 }
 
 // MasterView State Interface
