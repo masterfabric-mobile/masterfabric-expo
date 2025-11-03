@@ -1,5 +1,5 @@
 import { firebaseIntegration } from 'masterfabric-expo-core';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 import { Platform } from 'react-native';
 import { useFirebaseHelperStore } from '../store/firebase-helper-store';
 
@@ -49,12 +49,36 @@ export function useFirebaseHelperViewModel() {
     }
   }, []);
 
+  // Use ref to track if subscription is already active
+  const authSubscriptionRef = useRef<(() => void) | null>(null);
+  
   const subscribeAuth = useCallback(() => {
+    // Prevent duplicate subscriptions
+    if (authSubscriptionRef.current) {
+      console.log('[FirebaseHelper] Auth listener already active, skipping');
+      return authSubscriptionRef.current;
+    }
+    
     const auth = firebaseIntegration.getAuth();
-    if (!auth) return () => {};
-    return firebaseIntegration.onAuthStateChanged((user) => {
+    if (!auth) {
+      console.warn('[FirebaseHelper] Auth not available for subscription');
+      return () => {};
+    }
+    
+    console.log('[FirebaseHelper] Setting up auth state listener');
+    const unsubscribe = firebaseIntegration.onAuthStateChanged((user) => {
       setAuthUserId(user?.uid ?? null);
     });
+    
+    authSubscriptionRef.current = unsubscribe;
+    
+    // Return a wrapped unsubscribe that also clears the ref
+    return () => {
+      if (authSubscriptionRef.current) {
+        authSubscriptionRef.current();
+        authSubscriptionRef.current = null;
+      }
+    };
   }, []);
 
   const signIn = useCallback(async () => {
@@ -214,22 +238,63 @@ export function useFirebaseHelperViewModel() {
   const createSampleItem = useCallback(async () => {
     beginOperation();
     try {
+      // Check auth
       const auth = firebaseIntegration.getAuth();
-      if (auth && !auth.currentUser) {
-        const { signInAnonymously } = require('firebase/auth');
-        try { await signInAnonymously(auth); } catch {}
+      if (!auth) {
+        throw new Error('Firebase Auth is not initialized');
       }
+      
+      // Ensure user is authenticated
+      if (!auth.currentUser) {
+        console.log('[FirebaseHelper] No user signed in, attempting anonymous sign-in');
+        const { signInAnonymously } = require('firebase/auth');
+        try {
+          await signInAnonymously(auth);
+          console.log('[FirebaseHelper] Anonymous sign-in successful');
+        } catch (authError: any) {
+          console.error('[FirebaseHelper] Anonymous sign-in failed:', authError?.message);
+          throw new Error('Authentication required. Please sign in first.');
+        }
+      }
+      
+      // Check Firestore
       const db = firebaseIntegration.getFirestore();
-      if (!db) return;
+      if (!db) {
+        throw new Error('Firestore is not initialized');
+      }
+      
+      console.log('[FirebaseHelper] Creating sample item...');
       const { collection, addDoc, serverTimestamp } = require('firebase/firestore');
+      
+      const itemData = {
+        createdAt: serverTimestamp(),
+        source: 'helper',
+        value: Math.random(),
+        userId: auth.currentUser?.uid || 'anonymous',
+      };
+      
       await Promise.race([
-        addDoc(collection(db, 'items'), { createdAt: serverTimestamp(), source: 'helper', value: Math.random() }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout writing item')), 10000)),
+        addDoc(collection(db, 'items'), itemData),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Request timeout - please check your connection')), 10000)),
       ]);
+      
+      console.log('[FirebaseHelper] Item created successfully');
       if (!cancelRequested) incrementWriteCount();
     } catch (e: any) {
-      setLastError(e?.message ?? String(e));
-      throw e;
+      let errorMsg = e?.message || e?.toString() || 'Failed to create item';
+      
+      // Check for Firestore permission error
+      if (errorMsg.includes('Missing or insufficient permissions') || 
+          errorMsg.includes('permission-denied') ||
+          e?.code === 'permission-denied') {
+        errorMsg = 'Firestore permission denied. Please update Firebase Security Rules:\n\n' +
+                   'Go to Firebase Console → Firestore → Rules\n' +
+                   'Add: allow read, write: if request.auth != null;';
+      }
+      
+      console.error('[FirebaseHelper] Create item error:', errorMsg);
+      setLastError(errorMsg);
+      throw new Error(errorMsg);
     } finally {
       if (!cancelRequested) setIsLoading(false);
     }

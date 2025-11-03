@@ -25,10 +25,19 @@ export function FirebaseHelperScreen() {
   const [signInLoading, setSignInLoading] = useState(false);
 
   useEffect(() => {
+    // Initialize once on mount
+    console.log('[FirebaseHelper] Screen mounted, initializing...');
     actions.refreshStatus();
     const unsub = actions.subscribeAuth();
-    return () => unsub?.();
-  }, [actions]);
+    
+    return () => {
+      if (unsub) {
+        console.log('[FirebaseHelper] Screen unmounting, cleaning up auth listener');
+        unsub();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   const envRows = [
     { key: 'EXPO_PUBLIC_FIREBASE_API_KEY', label: 'API Key', icon: 'lock' },

@@ -377,12 +377,15 @@ export class FirebaseIntegration {
       return () => {};
     }
     const { onAuthStateChanged } = require('firebase/auth');
-    console.log('[Firebase] Subscribing to auth state changes');
+    
+    // Track if this is the first call to reduce log spam
+    let isFirstCall = true;
+    
     return onAuthStateChanged(auth, (user: any) => {
-      if (user?.uid) {
-        console.log('[Firebase] Auth state: signed in', { uid: user.uid });
-      } else {
-        console.log('[Firebase] Auth state: signed out');
+      // Only log on first call or when auth state actually changes
+      if (isFirstCall) {
+        console.log('[Firebase] Auth listener initialized', user?.uid ? `(user: ${user.uid})` : '(no user)');
+        isFirstCall = false;
       }
       callback(user);
     });
