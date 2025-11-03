@@ -11,6 +11,9 @@
       ],
       "@/assets/*": [
         "./src/assets/*"
+      ],
+      "@firebase-helper/*": [
+        "src/screens/firebase-helper/*"
       ]
     }
   },

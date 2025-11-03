@@ -1,21 +1,22 @@
+import { ToastContainer } from '@/src/screens/toast-helper/components/toast-container';
+import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
+import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
+import { LocaleProvider } from '@/src/shared/contexts';
+import { useAppStore } from '@/src/shared/store';
 import { DarkTheme, DefaultTheme, ThemeProvider as NavigationThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import 'react-native-reanimated';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-import { ToastContainer } from '@/src/screens/toast-helper/components/toast-container';
-import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
-import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
-import { LocaleProvider } from '@/src/shared/contexts';
-import { useAppStore } from '@/src/shared/store';
+import 'firebase/auth';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
+import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-get-random-values';
+import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -75,7 +76,7 @@ export default function RootLayout() {
           // Firebase integration
           enableFirebase: true,
           enableFirebaseAuth: true,
-          enableFirebaseAnalytics: false,
+          enableFirebaseAnalytics: true,
         },
         onError: (error) => {
           console.error('MasterView Error:', error);
