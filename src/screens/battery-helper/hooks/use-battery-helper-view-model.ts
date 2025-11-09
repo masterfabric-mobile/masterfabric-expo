@@ -19,7 +19,7 @@ export function useBatteryHelperViewModel() {
       ]);
 
       setBatteryInfo({
-        batteryLevel: Math.round(batteryLevel * 100),
+        batteryLevel: batteryLevel === -1 ? null : Math.round(batteryLevel * 100),
         batteryState,
         lowPowerMode,
       });
@@ -34,7 +34,7 @@ export function useBatteryHelperViewModel() {
     getBatteryInfo();
 
     const batteryLevelListener = Battery.addBatteryLevelListener(({ batteryLevel }) => {
-      setBatteryInfo((prev: any) => ({ ...prev, batteryLevel: Math.round(batteryLevel * 100) }));
+      setBatteryInfo((prev: any) => ({ ...prev, batteryLevel: batteryLevel === -1 ? null : Math.round(batteryLevel * 100) }));
     });
 
     const batteryStateListener = Battery.addBatteryStateListener(({ batteryState }) => {

@@ -56,7 +56,7 @@ export function BatteryHelperScreen() {
             </ThemedText>
             {batteryInfo && (
               <View>
-                <ThemedText>Battery Level: {batteryInfo.batteryLevel}%</ThemedText>
+                <ThemedText>Battery Level: {batteryInfo.batteryLevel !== null ? `${batteryInfo.batteryLevel}%` : 'Not available on simulator'}</ThemedText>
                 <ThemedText>Battery State: {getBatteryStateText(batteryInfo.batteryState)}</ThemedText>
                 <ThemedText>Low Power Mode: {batteryInfo.lowPowerMode ? 'Enabled' : 'Disabled'}</ThemedText>
               </View>
