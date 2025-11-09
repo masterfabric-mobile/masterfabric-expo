@@ -1,5 +1,5 @@
 import { navigationUtils } from '@/src/navigation/utils';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { useMemo } from 'react';
 import { useOnboardingStore } from '../store/onboarding-store';

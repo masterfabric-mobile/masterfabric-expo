@@ -1,5 +1,5 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';

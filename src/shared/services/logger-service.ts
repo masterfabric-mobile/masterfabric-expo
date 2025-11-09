@@ -188,7 +188,6 @@ class LoggerService implements LoggerServiceInterface {
 
 // Initialize singleton instance and register with core logger helper
 const loggerServiceInstance = LoggerService.getInstance();
-setLoggerService(loggerServiceInstance);
 
 export const loggerService = loggerServiceInstance;
 export { loggerHelper };

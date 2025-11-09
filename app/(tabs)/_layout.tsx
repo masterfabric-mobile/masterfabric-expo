@@ -5,7 +5,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { HapticTab } from '@/src/shared/components/HapticTab';
 import { IconSymbol } from '@/src/shared/components/ui/IconSymbol';
 import TabBarBackground from '@/src/shared/components/ui/TabBarBackground';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 

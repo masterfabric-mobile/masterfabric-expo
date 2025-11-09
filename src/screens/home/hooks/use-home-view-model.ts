@@ -1,5 +1,5 @@
 import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';

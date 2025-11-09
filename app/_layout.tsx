@@ -13,9 +13,10 @@ import { ToastContainer } from '@/src/screens/toast-helper/components/toast-cont
 import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
 import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
 import { LocaleProvider } from '@/src/shared/contexts';
+import { loggerService } from '@/src/shared/services/logger-service';
 import { initializeToastService } from '@/src/shared/services/toast-service';
 import { useAppStore } from '@/src/shared/store';
-import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
+import { ThemeProvider as MasterViewThemeProvider, initMasterView, setLoggerService, useTheme } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
 
 // Keep the splash screen visible while we fetch resources
@@ -97,6 +98,8 @@ export default function RootLayout() {
           console.log('Locale Changed:', locale);
         },
       }).then(() => {
+        // Initialize logger service
+        setLoggerService(loggerService);
         // Initialize toast service
         initializeToastService();
         // MasterView initialized, app is ready for splash screen

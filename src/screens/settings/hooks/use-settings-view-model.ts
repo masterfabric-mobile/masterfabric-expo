@@ -1,5 +1,5 @@
 import { useHomeStore } from '@/src/screens/home/store/home-store';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { StorageService } from '@/src/shared/services/storage';
 import { router } from 'expo-router';
 import { useTheme } from 'masterfabric-expo-core';

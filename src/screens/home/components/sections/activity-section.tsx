@@ -1,5 +1,5 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { useLocale } from '@/src/shared/hooks/use-locale';
+import { useLocale } from '@/src/shared/contexts/locale-context';
 import { getCurrentLocale, getTranslatedTitle, t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';

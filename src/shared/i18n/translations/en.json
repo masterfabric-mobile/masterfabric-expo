@@ -379,6 +379,11 @@
       "title": "Firebase Helper",
       "description": "Auth, analytics (web only), and Firestore utilities"
     },
+    "batteryHelper": {
+      "title": "Battery Helper",
+      "description": "Device battery information and utilities",
+      "batteryInfo": "Battery Information"
+    },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {

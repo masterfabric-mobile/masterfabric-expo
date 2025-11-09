@@ -2,7 +2,7 @@ import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useHelpersViewModel } from '../hooks/use-helpers-view-model';
 import { helpersScreenStyles } from '../styles/helpers-screen.styles';
@@ -34,14 +34,18 @@ export function HelpersScreen() {
         contentContainerStyle={helpersScreenStyles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={helpersScreenStyles.categoriesContainer}>
-          {helpers.map((helper) => (
-            <HelperItemCard 
-              key={helper.id}
-              helper={helper}
-            />
-          ))}
-        </View>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={colors.primary} />
+        ) : (
+          <View style={helpersScreenStyles.categoriesContainer}>
+            {helpers.map((helper) => (
+              <HelperItemCard 
+                key={helper.id}
+                helper={helper}
+              />
+            ))}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

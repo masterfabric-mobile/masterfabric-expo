@@ -2,7 +2,6 @@ export { NotificationItemComponent } from './components/notification-item';
 export { NotificationScreen } from './components/notification-screen';
 export { NotificationTabs } from './components/notification-tabs';
 export * from './hooks/use-notification-view-model';
-export { useNotificationViewModel } from './hooks/use-notification-view-model';
 export * from './models/notification-models';
 export { useNotificationStore } from './store/notification-store';
 

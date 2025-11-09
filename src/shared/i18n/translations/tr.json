@@ -379,6 +379,11 @@
       "title": "Firebase Yardımcısı",
       "description": "Kimlik doğrulama, analitik (yalnızca web) ve Firestore araçları"
     },
+    "batteryHelper": {
+      "title": "Pil Yardımcısı",
+      "description": "Cihaz pil bilgileri ve araçları",
+      "batteryInfo": "Pil Bilgileri"
+    },
     "title": "Yardımcılar",
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",
     "stringHelper": {
