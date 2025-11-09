@@ -8,6 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useBatteryHelperViewModel } from '../hooks/use-battery-helper-view-model';
 import { batteryHelperScreenStyles } from '../styles/battery-helper-screen.styles';
 import { BatteryState } from 'expo-battery';
+import { BatteryInfoItem } from './battery-info-item';
+import { BatteryBar } from './battery-bar';
 
 export function BatteryHelperScreen() {
   const { currentTheme } = useTheme();
@@ -19,15 +21,15 @@ export function BatteryHelperScreen() {
   const getBatteryStateText = (state: BatteryState) => {
     switch (state) {
       case BatteryState.UNKNOWN:
-        return 'Unknown';
+        return t('common.unknown');
       case BatteryState.UNPLUGGED:
-        return 'Unplugged';
+        return t('helpers.batteryHelper.unplugged');
       case BatteryState.CHARGING:
-        return 'Charging';
+        return t('helpers.batteryHelper.charging');
       case BatteryState.FULL:
-        return 'Full';
+        return t('helpers.batteryHelper.full');
       default:
-        return 'Unknown';
+        return t('common.unknown');
     }
   };
 
@@ -50,15 +52,31 @@ export function BatteryHelperScreen() {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.primary} />
         ) : (
-          <View>
+          <View style={batteryHelperScreenStyles.infoCard}>
             <ThemedText type="subtitle" style={[batteryHelperScreenStyles.resultsTitle, { color: colors.sectionTitle }]}>
               {t('helpers.batteryHelper.batteryInfo')}
             </ThemedText>
             {batteryInfo && (
               <View>
-                <ThemedText>Battery Level: {batteryInfo.batteryLevel !== null ? `${batteryInfo.batteryLevel}%` : 'Not available on simulator'}</ThemedText>
-                <ThemedText>Battery State: {getBatteryStateText(batteryInfo.batteryState)}</ThemedText>
-                <ThemedText>Low Power Mode: {batteryInfo.lowPowerMode ? 'Enabled' : 'Disabled'}</ThemedText>
+                <BatteryBar level={batteryInfo.batteryLevel} />
+                <BatteryInfoItem 
+                  iconName="battery-half-outline" 
+                  label={t('helpers.batteryHelper.level')} 
+                  value={batteryInfo.batteryLevel !== null ? `${batteryInfo.batteryLevel}%` : t('helpers.batteryHelper.notAvailable')} 
+                  color={batteryInfo.batteryLevel !== null && batteryInfo.batteryLevel <= 20 ? colors.error : colors.text}
+                />
+                <BatteryInfoItem 
+                  iconName="flash-outline" 
+                  label={t('helpers.batteryHelper.state')} 
+                  value={getBatteryStateText(batteryInfo.batteryState)} 
+                  color={batteryInfo.batteryState === BatteryState.CHARGING ? colors.success : colors.text}
+                />
+                <BatteryInfoItem 
+                  iconName="power-outline" 
+                  label={t('helpers.batteryHelper.lowPowerMode')} 
+                  value={batteryInfo.lowPowerMode ? t('common.enabled') : t('common.disabled')} 
+                  color={batteryInfo.lowPowerMode ? colors.warning : colors.text}
+                />
               </View>
             )}
           </View>

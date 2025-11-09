@@ -40,7 +40,9 @@
     "confirm": "Onayla",
     "done": "Tamam",
     "select": "Seç...",
-    "selectOption": "Bir seçenek seç"
+    "selectOption": "Bir seçenek seç",
+    "enabled": "Etkin",
+    "disabled": "Devre Dışı"
   },
   "greetings": {
     "goodMorning": "Günaydın",
@@ -382,7 +384,14 @@
     "batteryHelper": {
       "title": "Pil Yardımcısı",
       "description": "Cihaz pil bilgileri ve araçları",
-      "batteryInfo": "Pil Bilgileri"
+      "batteryInfo": "Pil Bilgileri",
+      "unplugged": "Takılı Değil",
+      "charging": "Şarj Ediliyor",
+      "full": "Tam Dolu",
+      "level": "Seviye",
+      "state": "Durum",
+      "lowPowerMode": "Düşük Güç Modu",
+      "notAvailable": "Simülatörde mevcut değil"
     },
     "title": "Yardımcılar",
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",

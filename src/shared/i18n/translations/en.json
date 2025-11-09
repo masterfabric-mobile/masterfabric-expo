@@ -40,7 +40,9 @@
     "confirm": "Confirm",
     "done": "Done",
     "select": "Select...",
-    "selectOption": "Select an option"
+    "selectOption": "Select an option",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
   },
   "onboarding": {
     "back": "Back",
@@ -382,7 +384,14 @@
     "batteryHelper": {
       "title": "Battery Helper",
       "description": "Device battery information and utilities",
-      "batteryInfo": "Battery Information"
+      "batteryInfo": "Battery Information",
+      "unplugged": "Unplugged",
+      "charging": "Charging",
+      "full": "Full",
+      "level": "Level",
+      "state": "State",
+      "lowPowerMode": "Low Power Mode",
+      "notAvailable": "Not available on simulator"
     },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
