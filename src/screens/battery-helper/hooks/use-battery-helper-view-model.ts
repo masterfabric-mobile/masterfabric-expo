@@ -1,8 +1,10 @@
 import * as Battery from 'expo-battery';
+import * as Device from 'expo-device';
 import { useCallback, useEffect, useState } from 'react';
 
 export function useBatteryHelperViewModel() {
   const [batteryInfo, setBatteryInfo] = useState<any>(null);
+  const [deviceInfo, setDeviceInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const getBatteryInfo = useCallback(async () => {
@@ -23,6 +25,13 @@ export function useBatteryHelperViewModel() {
         batteryState,
         lowPowerMode,
       });
+
+      setDeviceInfo({
+        modelName: Device.modelName,
+        osVersion: Device.osVersion,
+        deviceType: Device.deviceType,
+      });
+
     } catch (error) {
       console.error('Error getting battery info:', error);
     } finally {
@@ -54,6 +63,7 @@ export function useBatteryHelperViewModel() {
 
   return {
     batteryInfo,
+    deviceInfo,
     isLoading,
     getBatteryInfo,
   };

@@ -3,7 +3,6 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { Colors } from '@/src/shared/constants/Colors';
-import { useLocale } from '@/src/shared/contexts/locale-context';
 import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { t } from '@/src/shared/i18n';
 import { navigationConfig } from './navigation-config';
@@ -14,7 +13,6 @@ import { navigationConfig } from './navigation-config';
  */
 export function AppNavigator() {
   const colorScheme = useColorScheme();
-  const { locale } = useLocale(); // This will trigger re-render on locale change
 
   return (
     <Stack

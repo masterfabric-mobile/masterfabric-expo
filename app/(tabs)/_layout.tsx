@@ -5,14 +5,12 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { HapticTab } from '@/src/shared/components/HapticTab';
 import { IconSymbol } from '@/src/shared/components/ui/IconSymbol';
 import TabBarBackground from '@/src/shared/components/ui/TabBarBackground';
-import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 
 export default function TabLayout() {
   const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
-  const { locale } = useLocale();
 
   return (
     <View style={{ flex: 1 }}>

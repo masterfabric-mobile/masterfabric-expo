@@ -298,6 +298,9 @@
     "copiedMessage": "Cihaz bilgileri panoya kopyalandı!",
     "copyError": "Panoya kopyalama başarısız",
     "getInfoError": "Cihaz bilgileri alınamadı\n\nLütfen konsolu kontrol edin.",
+    "model": "Model",
+    "osVersion": "İS Sürümü",
+    "deviceType": "Cihaz Tipi",
     "compatibility": {
       "iosVersionTooLow": "iOS sürümü 12.0 veya daha yüksek olmalıdır",
       "iosVersionLow": "iOS sürümü 14.0'ın altında olduğu için bazı özellikler sınırlı olabilir",

@@ -10,13 +10,14 @@ import { batteryHelperScreenStyles } from '../styles/battery-helper-screen.style
 import { BatteryState } from 'expo-battery';
 import { BatteryInfoItem } from './battery-info-item';
 import { BatteryBar } from './battery-bar';
+import * as Device from 'expo-device';
 
 export function BatteryHelperScreen() {
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   
-  const { batteryInfo, isLoading } = useBatteryHelperViewModel();
+  const { batteryInfo, deviceInfo, isLoading } = useBatteryHelperViewModel();
 
   const getBatteryStateText = (state: BatteryState) => {
     switch (state) {
@@ -52,34 +53,60 @@ export function BatteryHelperScreen() {
         {isLoading ? (
           <ActivityIndicator size="large" color={colors.primary} />
         ) : (
-          <View style={batteryHelperScreenStyles.infoCard}>
-            <ThemedText type="subtitle" style={[batteryHelperScreenStyles.resultsTitle, { color: colors.sectionTitle }]}>
-              {t('helpers.batteryHelper.batteryInfo')}
-            </ThemedText>
-            {batteryInfo && (
-              <View>
-                <BatteryBar level={batteryInfo.batteryLevel} />
-                <BatteryInfoItem 
-                  iconName="battery-half-outline" 
-                  label={t('helpers.batteryHelper.level')} 
-                  value={batteryInfo.batteryLevel !== null ? `${batteryInfo.batteryLevel}%` : t('helpers.batteryHelper.notAvailable')} 
-                  color={batteryInfo.batteryLevel !== null && batteryInfo.batteryLevel <= 20 ? colors.error : colors.text}
-                />
-                <BatteryInfoItem 
-                  iconName="flash-outline" 
-                  label={t('helpers.batteryHelper.state')} 
-                  value={getBatteryStateText(batteryInfo.batteryState)} 
-                  color={batteryInfo.batteryState === BatteryState.CHARGING ? colors.success : colors.text}
-                />
-                <BatteryInfoItem 
-                  iconName="power-outline" 
-                  label={t('helpers.batteryHelper.lowPowerMode')} 
-                  value={batteryInfo.lowPowerMode ? t('common.enabled') : t('common.disabled')} 
-                  color={batteryInfo.lowPowerMode ? colors.warning : colors.text}
-                />
-              </View>
-            )}
-          </View>
+          <>
+            <View style={batteryHelperScreenStyles.infoCard}>
+              <ThemedText type="subtitle" style={[batteryHelperScreenStyles.resultsTitle, { color: colors.sectionTitle }]}>
+                {t('helpers.batteryHelper.batteryInfo')}
+              </ThemedText>
+              {batteryInfo && (
+                <View>
+                  <BatteryBar level={batteryInfo.batteryLevel} />
+                  <BatteryInfoItem 
+                    iconName="battery-half-outline" 
+                    label={t('helpers.batteryHelper.level')} 
+                    value={batteryInfo.batteryLevel !== null ? `${batteryInfo.batteryLevel}%` : t('helpers.batteryHelper.notAvailable')} 
+                    color={batteryInfo.batteryLevel !== null && batteryInfo.batteryLevel <= 20 ? colors.error : colors.text}
+                  />
+                  <BatteryInfoItem 
+                    iconName="flash-outline" 
+                    label={t('helpers.batteryHelper.state')} 
+                    value={getBatteryStateText(batteryInfo.batteryState)} 
+                    color={batteryInfo.batteryState === BatteryState.CHARGING ? colors.success : colors.text}
+                  />
+                  <BatteryInfoItem 
+                    iconName="power-outline" 
+                    label={t('helpers.batteryHelper.lowPowerMode')} 
+                    value={batteryInfo.lowPowerMode ? t('common.enabled') : t('common.disabled')} 
+                    color={batteryInfo.lowPowerMode ? colors.warning : colors.text}
+                  />
+                </View>
+              )}
+            </View>
+            <View style={[batteryHelperScreenStyles.infoCard, { marginTop: 20 }]}>
+              <ThemedText type="subtitle" style={[batteryHelperScreenStyles.resultsTitle, { color: colors.sectionTitle }]}>
+                {t('deviceInfo.title')}
+              </ThemedText>
+              {deviceInfo && (
+                <View>
+                  <BatteryInfoItem 
+                    iconName="hardware-chip-outline" 
+                    label={t('deviceInfo.model')} 
+                    value={deviceInfo.modelName} 
+                  />
+                  <BatteryInfoItem 
+                    iconName="cog-outline" 
+                    label={t('deviceInfo.osVersion')} 
+                    value={deviceInfo.osVersion} 
+                  />
+                  <BatteryInfoItem 
+                    iconName="phone-portrait-outline" 
+                    label={t('deviceInfo.deviceType')} 
+                    value={Device.DeviceType[deviceInfo.deviceType]} 
+                  />
+                </View>
+              )}
+            </View>
+          </>
         )}
       </ScrollView>
     </SafeAreaView>

@@ -23,7 +23,8 @@ export * from './services';
 export * from './store';
 
 // Shared Contexts
-export * from './contexts';
+export { LocaleProvider } from './contexts/locale-context';
+export { ThemeProvider, useTheme } from './contexts/theme-context';
 
 // Shared i18n
 export * from './i18n';

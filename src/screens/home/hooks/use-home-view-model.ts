@@ -1,5 +1,4 @@
 import { useBasicDeviceInfo, useDeviceCompatibility } from '@/src/shared/hooks/use-device-info';
-import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';
@@ -13,7 +12,6 @@ import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '
 export function useHomeViewModel() {
   const { user } = useAppStore();
   const { quickActions, recentActivity, addActivity } = useHomeStore();
-  const { locale } = useLocale();
   const deviceInfo = useBasicDeviceInfo();
   const { compatibility, isLoading: compatibilityLoading } = useDeviceCompatibility();
   // Theme is available but not used in this hook
@@ -22,11 +20,11 @@ export function useHomeViewModel() {
 
   const greeting = useMemo(() => {
     return formatGreeting(user);
-  }, [user, locale]);
+  }, [user]);
 
   const defaultQuickActions = useMemo(() => {
     return createDefaultQuickActions();
-  }, [locale]); // Add locale dependency so it updates when locale changes
+  }, []);
 
   const developerActions = useMemo(() => {
     return getDeveloperActions();

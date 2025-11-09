@@ -1,5 +1,4 @@
 import { navigationUtils } from '@/src/navigation/utils';
-import { useLocale } from '@/src/shared/contexts/locale-context';
 import { t } from '@/src/shared/i18n';
 import { useMemo } from 'react';
 import { useOnboardingStore } from '../store/onboarding-store';
@@ -13,9 +12,8 @@ export function useOnboardingViewModel() {
     previousStep,
     completeOnboarding,
   } = useOnboardingStore();
-  const { locale } = useLocale(); // This will trigger re-render on locale change
 
-  const steps = useMemo(() => getTranslatedOnboardingSteps(t), [locale]); // Re-compute when locale changes
+  const steps = useMemo(() => getTranslatedOnboardingSteps(t), []);
   const currentStep = steps[currentStepIndex];
   const totalSteps = steps.length;
 

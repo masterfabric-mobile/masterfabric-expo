@@ -342,6 +342,9 @@
     "copiedMessage": "Device information copied to clipboard!",
     "copyError": "Failed to copy to clipboard",
     "getInfoError": "Failed to get device information\n\nPlease check console for details.",
+    "model": "Model",
+    "osVersion": "OS Version",
+    "deviceType": "Device Type",
     "compatibility": {
       "iosVersionTooLow": "iOS version must be 12.0 or higher",
       "iosVersionLow": "iOS version below 14.0 may have limited functionality",
