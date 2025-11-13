@@ -78,13 +78,33 @@ export interface ThemeColors {
   splashSubtext: string;
   splashProgress: string;
   splashProgressBg: string;
-  // Additional colors for string-helper
-  titleText: string;
+  // Input & Form colors (shared by helpers)
   inputBackground: string;
+  placeholderText: string;
+  primary: string;
+  titleText: string;
+  // Additional colors for string-helper
   successBackground: string;
   successBorder: string;
   successText: string;
-  placeholderText: string;
+  // Time helper colors
+  timeHelperSuccessBackground: string;
+  timeHelperSuccessBorder: string;
+  timeHelperSuccessText: string;
+  timeHelperErrorBackground: string;
+  timeHelperErrorBorder: string;
+  // Snackbar helper colors
+  snackbarCustomDefault: string;
+  snackbarInfo: string;
+  snackbarInfoDark: string;
+  snackbarBorderLight: string;
+  snackbarBorderWhite: string;
+  snackbarWhite: string;
+  snackbarBlack: string;
+  snackbarTransparent: string;
+  snackbarSwitchActiveLight: string;
+  snackbarSwitchInactiveDark: string;
+  snackbarSwitchInactiveLight: string;
 }
 
 // Navigation Types

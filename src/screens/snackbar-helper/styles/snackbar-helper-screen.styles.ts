@@ -1,5 +1,5 @@
+import { Colors } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
-import { SNACKBAR_HELPER_COLORS } from '../constants/snackbar-colors';
 
 export const snackbarHelperScreenStyles = StyleSheet.create({
   container: {
@@ -106,8 +106,8 @@ export const snackbarHelperScreenStyles = StyleSheet.create({
   },
   colorBoxSelected: {
     borderWidth: 3,
-    borderColor: SNACKBAR_HELPER_COLORS.borderWhite,
-    shadowColor: SNACKBAR_HELPER_COLORS.black,
+    borderColor: Colors.light.snackbarBorderWhite,
+    shadowColor: Colors.light.snackbarBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,

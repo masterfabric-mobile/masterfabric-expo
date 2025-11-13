@@ -1,7 +1,5 @@
-import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
 import { SnackbarScenarioResult } from '../models/snackbar-helper-models';

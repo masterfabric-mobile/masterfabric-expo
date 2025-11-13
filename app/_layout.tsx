@@ -18,6 +18,15 @@ import 'react-native-get-random-values';
 import 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { ToastContainer } from '@/src/screens/toast-helper/components/toast-container';
+import { ErrorBoundary } from '@/src/shared/components/ErrorBoundary';
+import { SnackbarQueue } from '@/src/shared/components/SnackbarQueue';
+import { LocaleProvider } from '@/src/shared/contexts';
+import '@/src/shared/services/logger-service';
+import { useAppStore } from '@/src/shared/store';
+import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
+import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
+
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 

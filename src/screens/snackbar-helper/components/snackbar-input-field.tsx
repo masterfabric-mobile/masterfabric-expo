@@ -1,6 +1,4 @@
-import { ThemedText } from '@/src/shared/components/ThemedText';
-import { ThemedView } from '@/src/shared/components/ThemedView';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TextInput, View } from 'react-native';
 import { snackbarInputFieldStyles } from '../styles/snackbar-input-field.styles';
