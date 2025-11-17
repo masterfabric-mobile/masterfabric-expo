@@ -739,6 +739,32 @@
         "error": "error",
         "verbose": "verbose"
       }
+    },
+    "batteryHelper": {
+      "title": "Pil Yardımcısı",
+      "description": "Pil seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri",
+      "batteryStatus": "Pil Durumu",
+      "level": "Seviye",
+      "status": "Durum",
+      "charging": "Şarj Oluyor",
+      "notCharging": "Şarj Olmuyor",
+      "lowPowerMode": "Düşük Güç Modu",
+      "lowPowerModeOn": "Açık",
+      "lowPowerModeOff": "Kapalı",
+      "lowPowerModeNotAvailable": "Mevcut Değil",
+      "lowPowerModeDescriptionIOS": "Düşük Güç Modu, pil ömrünü uzatmak için arka plan etkinliğini ve görsel efektleri azaltır. Ayarlar > Pil bölümünden etkinleştirebilir veya devre dışı bırakabilirsiniz.",
+      "lowPowerModeDescriptionAndroid": "Pil tasarrufu modu, performansı ve arka plan etkinliğini azaltarak pil ömrünü uzatmaya yardımcı olur. Ayarlar > Pil bölümünden yönetebilirsiniz.",
+      "openSettings": "Ayarları Aç",
+      "deviceInformation": "Cihaz Bilgileri",
+      "deviceModel": "Cihaz Modeli",
+      "deviceType": "Cihaz Tipi",
+      "osVersion": "İşletim Sistemi Sürümü",
+      "platform": "Platform",
+      "brand": "Marka",
+      "appVersion": "Uygulama Sürümü",
+      "deviceInfoUnavailable": "Cihaz bilgileri mevcut değil",
+      "unknown": "Bilinmiyor",
+      "errorRetry": "Pil bilgileri yüklenirken hata oluştu. Tekrar denemek için dokunun"
     }
   },
   "documentation": {

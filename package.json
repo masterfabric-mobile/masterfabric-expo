@@ -46,6 +46,7 @@
     "@sentry/react-native": "~7.1.0",
     "@tanstack/react-query": "^5.80.6",
     "expo": "^54.0.12",
+    "expo-battery": "~10.0.7",
     "expo-blur": "~15.0.7",
     "expo-constants": "~18.0.9",
     "expo-dev-client": "~6.0.13",
@@ -82,7 +83,6 @@
     "@babel/core": "^7.25.2",
     "@testing-library/react-native": "^13.2.0",
     "@types/react": "~19.1.10",
-
     "@typescript-eslint/eslint-plugin": "^8.33.1",
     "@typescript-eslint/parser": "^8.33.1",
     "eslint": "^9.25.0",

@@ -37,6 +37,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'flame-outline';
     case 'time-helper':
       return 'time-outline';
+    case 'battery-helper':
+      return 'battery-charging-outline';
     default:
       return 'help-outline';
   }
@@ -67,6 +69,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#F5820D'; // Firebase brand-like orange
     case 'time-helper':
       return '#FF9500'; // Orange for time helpers
+    case 'battery-helper':
+      return '#34C759'; // Green for battery/device helpers
     default:
       return '#8E8E93';
   }
@@ -132,6 +136,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/time-helper',
     available: true,
     category: 'time-helpers'
+  },
+  {
+    id: 'battery-helper',
+    name: 'Battery Helper',
+    description: 'Battery level, charging status, low power mode, and device information',
+    icon: 'battery-charging-outline',
+    color: '#34C759',
+    route: '/battery-helper',
+    available: true,
+    category: 'device-helpers'
   }
 ];
 
