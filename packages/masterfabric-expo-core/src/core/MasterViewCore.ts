@@ -240,7 +240,25 @@ class MasterViewCore {
   private async initializeFirebase(): Promise<void> {
     try {
       await this.firebaseIntegration.initialize(this.config.firebaseConfig);
+
+      // Console log if we're initializing at the app side (for explicit dev debugging)
+      // (You might define what "app side" is more clearly if desired;
+      //  for now, a generic message)
+      if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log('[MasterView] Firebase initialized at app side');
+      }
+
       this.log('info', 'Firebase initialized');
+      // Pre-initialize Auth on native to avoid 'component not registered' errors
+      if (this.config.enableFirebaseAuth) {
+        const auth = this.firebaseIntegration.getAuth();
+        if (auth) {
+          this.log('info', 'Firebase Auth pre-initialized');
+        } else {
+          this.log('warn', 'Firebase Auth could not be initialized');
+        }
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.log('warn', 'Failed to initialize Firebase', { error: errorMessage });
