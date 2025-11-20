@@ -2,6 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
@@ -11,6 +12,9 @@
       ],
       "@/assets/*": [
         "./src/assets/*"
+      ],
+      "@firebase-helper/*": [
+        "./src/screens/firebase-helper/*"
       ]
     }
   },

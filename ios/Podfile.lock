@@ -1,10 +1,10 @@
 PODS:
-  - EXConstants (18.0.9):
+  - EXConstants (18.0.10):
     - ExpoModulesCore
   - EXJSONUtils (0.15.0)
   - EXManifests (1.0.8):
     - ExpoModulesCore
-  - Expo (54.0.12):
+  - Expo (54.0.21):
     - ExpoModulesCore
     - hermes-engine
     - RCTRequired
@@ -29,15 +29,15 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-client (6.0.13):
+  - expo-dev-client (6.0.16):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (6.0.13):
+  - expo-dev-launcher (6.0.16):
     - EXManifests
-    - expo-dev-launcher/Main (= 6.0.13)
+    - expo-dev-launcher/Main (= 6.0.16)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -66,7 +66,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Main (6.0.13):
+  - expo-dev-launcher/Main (6.0.16):
     - EXManifests
     - expo-dev-launcher/Unsafe
     - expo-dev-menu
@@ -97,7 +97,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Unsafe (6.0.13):
+  - expo-dev-launcher/Unsafe (6.0.16):
     - EXManifests
     - expo-dev-menu
     - expo-dev-menu-interface
@@ -127,9 +127,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-menu (7.0.13):
-    - expo-dev-menu/Main (= 7.0.13)
-    - expo-dev-menu/ReactNativeCompatibles (= 7.0.13)
+  - expo-dev-menu (7.0.15):
+    - expo-dev-menu/Main (= 7.0.15)
+    - expo-dev-menu/ReactNativeCompatibles (= 7.0.15)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -152,7 +152,7 @@ PODS:
     - ReactNativeDependencies
     - Yoga
   - expo-dev-menu-interface (2.0.0)
-  - expo-dev-menu/Main (7.0.13):
+  - expo-dev-menu/Main (7.0.15):
     - EXManifests
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -178,7 +178,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-menu/ReactNativeCompatibles (7.0.13):
+  - expo-dev-menu/ReactNativeCompatibles (7.0.15):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -206,16 +206,16 @@ PODS:
     - ExpoModulesCore
   - ExpoDevice (8.0.9):
     - ExpoModulesCore
-  - ExpoFileSystem (19.0.16):
+  - ExpoFileSystem (19.0.17):
     - ExpoModulesCore
-  - ExpoFont (14.0.8):
+  - ExpoFont (14.0.9):
     - ExpoModulesCore
   - ExpoHaptics (15.0.7):
     - ExpoModulesCore
-  - ExpoHead (6.0.10):
+  - ExpoHead (6.0.14):
     - ExpoModulesCore
     - RNScreens
-  - ExpoImage (3.0.8):
+  - ExpoImage (3.0.10):
     - ExpoModulesCore
     - libavif/libdav1d
     - SDWebImage (~> 5.21.0)
@@ -230,7 +230,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalization (17.0.7):
     - ExpoModulesCore
-  - ExpoModulesCore (3.0.20):
+  - ExpoModulesCore (3.0.23):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -257,7 +257,7 @@ PODS:
     - ExpoModulesCore
   - ExpoSymbols (1.0.7):
     - ExpoModulesCore
-  - ExpoSystemUI (6.0.7):
+  - ExpoSystemUI (6.0.8):
     - ExpoModulesCore
   - ExpoWebBrowser (15.0.8):
     - ExpoModulesCore
@@ -1563,7 +1563,9 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-  - react-native-safe-area-context (5.6.1):
+  - react-native-get-random-values (1.11.0):
+    - React-Core
+  - react-native-safe-area-context (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1575,8 +1577,8 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.6.1)
-    - react-native-safe-area-context/fabric (= 5.6.1)
+    - react-native-safe-area-context/common (= 5.6.2)
+    - react-native-safe-area-context/fabric (= 5.6.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1587,7 +1589,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/common (5.6.1):
+  - react-native-safe-area-context/common (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1609,7 +1611,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-safe-area-context/fabric (5.6.1):
+  - react-native-safe-area-context/fabric (5.6.2):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1622,6 +1624,51 @@ PODS:
     - React-ImageManager
     - React-jsi
     - react-native-safe-area-context/common
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - react-native-slider (5.1.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - react-native-slider/common (= 5.1.0)
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
+  - react-native-slider/common (5.1.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-Core-prebuilt
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -2048,7 +2095,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNReanimated (4.1.2):
+  - RNReanimated (4.1.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2070,10 +2117,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNReanimated/reanimated (= 4.1.2)
+    - RNReanimated/reanimated (= 4.1.3)
     - RNWorklets
     - Yoga
-  - RNReanimated/reanimated (4.1.2):
+  - RNReanimated/reanimated (4.1.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2095,10 +2142,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
-    - RNReanimated/reanimated/apple (= 4.1.2)
+    - RNReanimated/reanimated/apple (= 4.1.3)
     - RNWorklets
     - Yoga
-  - RNReanimated/reanimated/apple (4.1.2):
+  - RNReanimated/reanimated/apple (4.1.3):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2341,7 +2388,9 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
@@ -2517,8 +2566,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-get-random-values:
+    :path: "../node_modules/react-native-get-random-values"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -2599,30 +2652,30 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  EXConstants: a95804601ee4a6aa7800645f9b070d753b1142b3
+  EXConstants: fd688cef4e401dcf798a021cfb5d87c890c30ba3
   EXJSONUtils: 1d3e4590438c3ee593684186007028a14b3686cd
   EXManifests: 224345a575fca389073c416297b6348163f28d1a
-  Expo: 24375439ae3be9e01cdd3ab8e03967d453e66d3e
-  expo-dev-client: 1a85ab54efbaddd5fcce4c8b12935092e47dedd1
-  expo-dev-launcher: 580fbee90435be1bd33e28b2b09c2aaff332b4f1
-  expo-dev-menu: 5e8df6707643fb90aa3ecb3e5708c61808412509
+  Expo: 27ae59be9be4feab2b1c1ae06550752c524ca558
+  expo-dev-client: 974463bca58c100a32f099450e9413893bee3de8
+  expo-dev-launcher: adcbbff3464b908458255d0fdf3e8cf79c67d614
+  expo-dev-menu: 78e39c8cca65695b7ccb2c70c618043137f6735c
   expo-dev-menu-interface: 600df12ea01efecdd822daaf13cc0ac091775533
   ExpoAsset: 9ba6fbd677fb8e241a3899ac00fa735bc911eadf
   ExpoBlur: 2dd8f64aa31f5d405652c21d3deb2d2588b1852f
   ExpoDevice: 148accb4071873d19fba80a2506c58ffa433d620
-  ExpoFileSystem: f4bf6bac4ede3b6671c22777f01102a02a028412
-  ExpoFont: 86ceec09ffed1c99cfee36ceb79ba149074901b5
+  ExpoFileSystem: b79eadbda7b7f285f378f95f959cc9313a1c9c61
+  ExpoFont: cf9d90ec1d3b97c4f513211905724c8171f82961
   ExpoHaptics: 807476b0c39e9d82b7270349d6487928ce32df84
-  ExpoHead: b1843315be5ef6751b4ecb2404b3effffbb33d96
-  ExpoImage: e88f500585913969b930e13a4be47277eb7c6de8
+  ExpoHead: e317214fa14edeaf17748d39ec9e550a3d1194fb
+  ExpoImage: 9c3428921c536ab29e5c6721d001ad5c1f469566
   ExpoKeepAwake: 1a2e820692e933c94a565ec3fbbe38ac31658ffe
   ExpoLinearGradient: a464898cb95153125e3b81894fd479bcb1c7dd27
   ExpoLinking: f051f28e50ea9269ff539317c166adec81d9342d
   ExpoLocalization: b852a5d8ec14c5349c1593eca87896b5b3ebfcca
-  ExpoModulesCore: e646280de9e06297a3668c568ddc6b8564fa2896
+  ExpoModulesCore: 5f20603cf25698682d7c43c05fbba8c748b189d2
   ExpoSplashScreen: cbb839de72110dea1851dd3e85080b7923af2540
   ExpoSymbols: 1ae04ce686de719b9720453b988d8bc5bf776c68
-  ExpoSystemUI: 6cd74248a2282adf6dec488a75fa532d69dee314
+  ExpoSystemUI: 2761aa6875849af83286364811d46e8ed8ea64c7
   ExpoWebBrowser: d04a0d6247a0bea4519fbc2ea816610019ad83e0
   EXUpdatesInterface: 5adf50cb41e079c861da6d9b4b954c3db9a50734
   FBLazyVector: 9e0cd874afd81d9a4d36679daca991b58b260d42
@@ -2663,7 +2716,9 @@ SPEC CHECKSUMS:
   React-logger: 7b234de35acb469ce76d6bbb0457f664d6f32f62
   React-Mapbuffer: fbe1da882a187e5898bdf125e1cc6e603d27ecae
   React-microtasksnativemodule: 76905804171d8ccbe69329fc84c57eb7934add7f
-  react-native-safe-area-context: 42a1b4f8774b577d03b53de7326e3d5757fe9513
+  react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
+  react-native-safe-area-context: 37e680fc4cace3c0030ee46e8987d24f5d3bdab2
+  react-native-slider: 2fdd2c77773a91470d3e6b8338a9a6f9e23b0aee
   react-native-webview: b29007f4723bca10872028067b07abacfa1cb35a
   React-NativeModulesApple: a9464983ccc0f66f45e93558671f60fc7536e438
   React-oscompat: 73db7dbc80edef36a9d6ed3c6c4e1724ead4236d
@@ -2698,7 +2753,7 @@ SPEC CHECKSUMS:
   ReactNativeDependencies: ed6d1e64802b150399f04f1d5728ec16b437251e
   RNCAsyncStorage: 3a4f5e2777dae1688b781a487923a08569e27fe4
   RNGestureHandler: 2914750df066d89bf9d8f48a10ad5f0051108ac3
-  RNReanimated: d87360cba850e1df46f5b74d6ee74653a520b631
+  RNReanimated: 3895a29fdf77bbe2a627e1ed599a5e5d1df76c29
   RNScreens: d8d6f1792f6e7ac12b0190d33d8d390efc0c1845
   RNSentry: dbee413744aec703b8763b620b14ed7a1e2db095
   RNWorklets: 76fce72926e28e304afb44f0da23b2d24f2c1fa0
