@@ -2,20 +2,21 @@ import { Button } from '@/src/shared/components/button';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import {
-    getThemeColors,
-    htmlToPlainText,
-    parseHtmlToText,
-    parseMarkdown,
-    sanitizeHtml,
-    ThemedText,
-    ThemedView,
-    useTheme
+  getThemeColors,
+  htmlToPlainText,
+  parseHtmlToText,
+  parseMarkdown,
+  sanitizeHtml,
+  ThemedText,
+  ThemedView,
+  useTheme
 } from 'masterfabric-expo-core';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 import { getDefaultHtmlInput } from '../constants';
 import { ComparisonType } from '../models';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage, formatFormattedTextParts } from '../utils';
 
 export function TextComparisonCard() {
   const { currentTheme } = useTheme();
@@ -44,37 +45,13 @@ export function TextComparisonCard() {
         case 'html': {
           const parsed = parseHtmlToText(input);
           setOriginalResult(input);
-          setProcessedResult(
-            parsed
-              .map((part) => {
-                const styleInfo =
-                  Object.keys(part.style || {}).length > 0
-                    ? ` [${Object.entries(part.style || {})
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join(', ')}]`
-                    : '';
-                return `${part.text}${styleInfo}`;
-              })
-              .join('\n')
-          );
+          setProcessedResult(formatFormattedTextParts(parsed));
           break;
         }
         case 'markdown': {
           const parsed = parseMarkdown(input);
           setOriginalResult(input);
-          setProcessedResult(
-            parsed
-              .map((part) => {
-                const styleInfo =
-                  Object.keys(part.style || {}).length > 0
-                    ? ` [${Object.entries(part.style || {})
-                        .map(([k, v]) => `${k}: ${v}`)
-                        .join(', ')}]`
-                    : '';
-                return `${part.text}${styleInfo}`;
-              })
-              .join('\n')
-          );
+          setProcessedResult(formatFormattedTextParts(parsed));
           break;
         }
         case 'sanitize': {
@@ -91,7 +68,7 @@ export function TextComparisonCard() {
         }
       }
     } catch (error) {
-      setProcessedResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setProcessedResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

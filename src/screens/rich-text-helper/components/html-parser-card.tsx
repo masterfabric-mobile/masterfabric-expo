@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { getDefaultHtmlInput } from '../constants';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage, formatFormattedTextParts } from '../utils';
 
 export function HtmlParserCard() {
   const { currentTheme } = useTheme();
@@ -37,16 +38,10 @@ export function HtmlParserCard() {
     setIsLoading(true);
     try {
       const parsed = parseHtmlToText(htmlInput);
-      // Format result for display: show readable text with style info
-      const formatted = parsed.map((part, index) => {
-        const styleInfo = Object.keys(part.style || {}).length > 0 
-          ? ` [${Object.entries(part.style || {}).map(([k, v]) => `${k}: ${v}`).join(', ')}]`
-          : '';
-        return `${part.text}${styleInfo}`;
-      }).join('\n');
+      const formatted = formatFormattedTextParts(parsed);
       setResult(formatted || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -60,7 +55,7 @@ export function HtmlParserCard() {
       const plain = htmlToPlainText(htmlInput);
       setResult(plain || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +69,7 @@ export function HtmlParserCard() {
       const stripped = stripHtmlTags(htmlInput, true);
       setResult(stripped || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +83,7 @@ export function HtmlParserCard() {
       const unescaped = unescapeHtmlEntities(htmlInput);
       setResult(unescaped || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

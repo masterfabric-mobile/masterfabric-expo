@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { getDefaultLinkProcessorInput } from '../constants';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage, formatLinksForDisplay } from '../utils';
 
 export function LinkProcessorCard() {
   const { currentTheme } = useTheme();
@@ -27,15 +28,12 @@ export function LinkProcessorCard() {
     try {
       const links = extractHtmlLinks(htmlInput);
       if (links.length > 0) {
-        const formatted = links.map((link, index) => 
-          `${index + 1}. ${link.text || '(no text)'} → ${link.url}`
-        ).join('\n');
-        setResult(formatted);
+        setResult(formatLinksForDisplay(links));
       } else {
         setResult(t('helpers.richTextHelper.noLinksFound'));
       }
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

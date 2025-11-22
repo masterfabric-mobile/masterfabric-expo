@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { getDefaultSanitizerInput } from '../constants';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage } from '../utils';
 
 export function TextSanitizerCard() {
   const { currentTheme } = useTheme();
@@ -31,7 +32,7 @@ export function TextSanitizerCard() {
       const sanitized = sanitizeHtml(htmlInput);
       setAfterResult(sanitized || '(empty)');
     } catch (error) {
-      setAfterResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setAfterResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

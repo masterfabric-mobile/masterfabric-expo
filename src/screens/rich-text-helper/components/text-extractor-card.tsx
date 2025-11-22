@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { getDefaultTextExtractorInput } from '../constants';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage } from '../utils';
 
 export function TextExtractorCard() {
   const { currentTheme } = useTheme();
@@ -40,7 +41,7 @@ export function TextExtractorCard() {
       const urls = extractUrls(textInput);
       setResult(urls.length > 0 ? urls.join('\n') : t('helpers.richTextHelper.noUrlsFound'));
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +55,7 @@ export function TextExtractorCard() {
       const mentions = extractMentions(textInput);
       setResult(mentions.length > 0 ? mentions.map(m => `@${m}`).join('\n') : t('helpers.richTextHelper.noMentionsFound'));
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +69,7 @@ export function TextExtractorCard() {
       const hashtags = extractHashtags(textInput);
       setResult(hashtags.length > 0 ? hashtags.map(h => `#${h}`).join('\n') : t('helpers.richTextHelper.noHashtagsFound'));
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +83,7 @@ export function TextExtractorCard() {
       const emails = extractEmails(textInput);
       setResult(emails.length > 0 ? emails.join('\n') : t('helpers.richTextHelper.noEmailsFound'));
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +97,7 @@ export function TextExtractorCard() {
       const phones = extractPhoneNumbers(textInput);
       setResult(phones.length > 0 ? phones.join('\n') : t('helpers.richTextHelper.noPhonesFound'));
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

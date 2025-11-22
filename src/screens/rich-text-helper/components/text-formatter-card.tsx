@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { getDefaultTextInput } from '../constants';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
+import { formatErrorMessage, formatFormattedTextParts } from '../utils';
 
 export function TextFormatterCard() {
   const { currentTheme } = useTheme();
@@ -32,16 +33,10 @@ export function TextFormatterCard() {
         { text: '!', style: {} },
       ];
       const formatted = createFormattedText(formattedParts);
-      // Format result for display
-      const displayText = formatted.map((part, index) => {
-        const styleInfo = Object.keys(part.style || {}).length > 0 
-          ? ` [${Object.entries(part.style || {}).map(([k, v]) => `${k}: ${v}`).join(', ')}]`
-          : '';
-        return `${index + 1}. "${part.text}"${styleInfo}`;
-      }).join('\n');
+      const displayText = formatFormattedTextParts(formatted, true);
       setResult(displayText || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -53,16 +48,10 @@ export function TextFormatterCard() {
     setIsLoading(true);
     try {
       const linkified = linkifyText(textInput);
-      // Format result for display: show readable text with style info
-      const formatted = linkified.map((part, index) => {
-        const styleInfo = Object.keys(part.style || {}).length > 0 
-          ? ` [${Object.entries(part.style || {}).map(([k, v]) => `${k}: ${v}`).join(', ')}]`
-          : '';
-        return `${part.text}${styleInfo}`;
-      }).join('\n');
+      const formatted = formatFormattedTextParts(linkified);
       setResult(formatted || '(empty)');
     } catch (error) {
-      setResult(`${t('helpers.richTextHelper.error')}: ${error instanceof Error ? error.message : String(error)}`);
+      setResult(formatErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
