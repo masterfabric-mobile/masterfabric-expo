@@ -1,4 +1,4 @@
-import { Button } from '@/src/shared/components/button';
+import { RichTextButton as Button } from './rich-text-button';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import {

@@ -1,4 +1,3 @@
-import { Button } from '@/src/shared/components/button';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { t } from '@/src/shared/i18n';
 import {
@@ -17,6 +16,7 @@ import { getDefaultHtmlInput } from '../constants';
 import { ComparisonType } from '../models';
 import { richTextTestCardStyles } from '../styles/rich-text-test-card.styles';
 import { formatErrorMessage, formatFormattedTextParts } from '../utils';
+import { RichTextButton as Button } from './rich-text-button';
 
 export function TextComparisonCard() {
   const { currentTheme } = useTheme();
