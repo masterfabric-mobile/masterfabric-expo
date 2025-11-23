@@ -87,6 +87,9 @@ export interface ThemeColors {
   successBackground: string;
   successBorder: string;
   successText: string;
+  // Border colors for cards and surfaces
+  cardBorderLight: string;
+  cardBorderDark: string;
   // Time helper colors
   timeHelperSuccessBackground: string;
   timeHelperSuccessBorder: string;

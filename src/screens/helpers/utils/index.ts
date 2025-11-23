@@ -37,6 +37,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'flame-outline';
     case 'time-helper':
       return 'time-outline';
+    case 'rich-text-helper':
+      return 'document-text-outline';
     default:
       return 'help-outline';
   }
@@ -67,6 +69,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#F5820D'; // Firebase brand-like orange
     case 'time-helper':
       return '#FF9500'; // Orange for time helpers
+    case 'rich-text-helper':
+      return '#AF52DE'; // Purple for rich text helpers
     default:
       return '#8E8E93';
   }
@@ -132,6 +136,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/time-helper',
     available: true,
     category: 'time-helpers'
+  },
+  {
+    id: 'rich-text-helper',
+    name: 'Rich Text Helper',
+    description: 'HTML, Markdown, and text formatting utilities',
+    icon: 'document-text-outline',
+    color: '#AF52DE',
+    route: '/rich-text-helper',
+    available: true,
+    category: 'text-helpers'
   }
 ];
 
