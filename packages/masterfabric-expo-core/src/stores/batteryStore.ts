@@ -1,4 +1,5 @@
 import * as Battery from 'expo-battery';
+import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { BatteryState as BatteryStateModel } from '../types/battery';
 
@@ -36,6 +37,21 @@ export const useBatteryHelperStore = create<BatteryHelperStore>((set) => ({
     })),
   refreshBatteryInfo: async () => {
     set({ isLoading: true, error: null });
+
+    // Battery API is not available on web platform
+    if (Platform.OS === 'web') {
+      set({
+        batteryState: {
+          batteryLevel: 1.0, // Default to 100% for web
+          isCharging: false,
+          lowPowerMode: null,
+          lastUpdated: Date.now(),
+        },
+        isLoading: false,
+        error: null,
+      });
+      return;
+    }
 
     try {
       // Get power state which includes battery level, charging status, and low power mode

@@ -26,6 +26,11 @@ export const useBatteryHelper = () => {
     // Initial refresh
     refreshBatteryInfo();
 
+    // Battery API is not available on web platform, skip listeners
+    if (Platform.OS === 'web') {
+      return;
+    }
+
     // Set up battery level listener
     const batteryLevelSubscription = Battery.addBatteryLevelListener((event) => {
       const level = event.batteryLevel >= 0 ? event.batteryLevel : 0;

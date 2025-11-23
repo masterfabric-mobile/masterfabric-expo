@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Appearance, ColorSchemeName } from 'react-native';
+import { Appearance, ColorSchemeName, Platform } from 'react-native';
 import { getColorsByTheme } from '../constants/Colors';
 import { ThemeColors, ThemeMode } from '../types';
 
@@ -86,6 +86,27 @@ export function ThemeProvider({
 
   // Get current colors
   const colors = getColorsByTheme(currentTheme, isDark);
+
+  // Sync theme to DOM for web platform
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const htmlElement = document.documentElement;
+      const themeValue = isDark ? 'dark' : 'light';
+      
+      // Remove existing theme classes/attributes
+      htmlElement.removeAttribute('data-theme');
+      htmlElement.classList.remove('light', 'dark');
+      
+      // Apply new theme
+      htmlElement.setAttribute('data-theme', themeValue);
+      htmlElement.classList.add(themeValue);
+      
+      // Also set color-scheme CSS property for better browser support
+      htmlElement.style.colorScheme = themeValue;
+      
+      console.log('🎨 ThemeProvider: Synced theme to DOM:', themeValue);
+    }
+  }, [isDark]);
 
   // Set theme function with persistence
   const setTheme = async (theme: ThemeMode) => {
