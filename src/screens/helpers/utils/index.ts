@@ -39,6 +39,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'time-outline';
     case 'battery-helper':
       return 'battery-charging-outline';
+    case 'rich-text-helper':
+      return 'document-text-outline';
     default:
       return 'help-outline';
   }
@@ -71,6 +73,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#FF9500'; // Orange for time helpers
     case 'battery-helper':
       return '#34C759'; // Green for battery/device helpers
+    case 'rich-text-helper':
+      return '#AF52DE'; // Purple for rich text helpers
     default:
       return '#8E8E93';
   }
@@ -146,6 +150,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/battery-helper',
     available: true,
     category: 'device-helpers'
+  },
+  {
+    id: 'rich-text-helper',
+    name: 'Rich Text Helper',
+    description: 'HTML, Markdown, and text formatting utilities',
+    icon: 'document-text-outline',
+    color: '#AF52DE',
+    route: '/rich-text-helper',
+    available: true,
+    category: 'text-helpers'
   }
 ];
 

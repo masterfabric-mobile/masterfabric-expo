@@ -101,6 +101,10 @@ export const Colors = {
     successBorder: '#34C759',
     successText: '#2E7D32',
     
+    // Border colors for cards and surfaces (lighter for better visibility)
+    cardBorderLight: 'rgba(0, 0, 0, 0.05)',
+    cardBorderDark: 'rgba(255, 255, 255, 0.08)',
+    
     // Time helper colors
     timeHelperSuccessBackground: '#E8F5E8',
     timeHelperSuccessBorder: '#34C759',
@@ -218,6 +222,10 @@ export const Colors = {
     successBorder: '#34C759',
     successText: '#4CAF50',
     
+    // Border colors for cards and surfaces (lighter for better visibility)
+    cardBorderLight: 'rgba(0, 0, 0, 0.05)',
+    cardBorderDark: 'rgba(255, 255, 255, 0.08)',
+    
     // Time helper colors
     timeHelperSuccessBackground: '#1B5E20',
     timeHelperSuccessBorder: '#34C759',
@@ -312,6 +320,29 @@ export const Colors = {
     successBackground: '#E8F5E8',
     successBorder: '#34C759',
     successText: '#2E7D32',
+    
+    // Border colors for cards and surfaces (lighter for better visibility)
+    cardBorderLight: 'rgba(0, 0, 0, 0.05)',
+    cardBorderDark: 'rgba(255, 255, 255, 0.08)',
+    
+    // Time helper colors
+    timeHelperSuccessBackground: '#E8F5E8',
+    timeHelperSuccessBorder: '#34C759',
+    timeHelperSuccessText: '#2E7D32',
+    timeHelperErrorBackground: '#F8D7DA',
+    timeHelperErrorBorder: '#DC3545',
+    
+    // Snackbar helper colors
+    snackbarCustomDefault: '#9C27B0',
+    snackbarInfo: '#2196F3',
+    snackbarInfoDark: '#0D47A1',
+    snackbarBorderLight: '#E0E0E0',
+    snackbarBorderWhite: '#FFFFFF',
+    snackbarBlack: '#000000',
+    snackbarTransparent: 'transparent',
+    snackbarSwitchActiveLight: '#FFFFFF',
+    snackbarSwitchInactiveDark: '#48484A',
+    snackbarSwitchInactiveLight: '#F4F3F4',
   },
 };
 

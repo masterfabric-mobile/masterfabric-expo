@@ -21,6 +21,12 @@ export const createDocumentationSections = (): DocumentationSection[] => [
         route: '/toast-helper',
       },
       {
+        id: 'rich-text-helper',
+        titleKey: 'documentation.sections.helpers.richTextHelper.title',
+        descriptionKey: 'documentation.sections.helpers.richTextHelper.description',
+        route: '/rich-text-helper',
+      },
+      {
         id: 'device-info-helper',
         titleKey: 'documentation.sections.helpers.deviceInfo.title',
         descriptionKey: 'documentation.sections.helpers.deviceInfo.description',
