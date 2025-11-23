@@ -883,6 +883,32 @@
         "error": "error",
         "verbose": "verbose"
       }
+    },
+    "batteryHelper": {
+      "title": "Battery Helper",
+      "description": "Battery level, charging status, low power mode, and device information",
+      "batteryStatus": "Battery Status",
+      "level": "Level",
+      "status": "Status",
+      "charging": "Charging",
+      "notCharging": "Not Charging",
+      "lowPowerMode": "Low Power Mode",
+      "lowPowerModeOn": "On",
+      "lowPowerModeOff": "Off",
+      "lowPowerModeNotAvailable": "Not Available",
+      "lowPowerModeDescriptionIOS": "Low Power Mode reduces background activity and visual effects to extend battery life. You can enable or disable it in Settings > Battery.",
+      "lowPowerModeDescriptionAndroid": "Battery saver mode helps extend battery life by reducing performance and background activity. You can manage it in Settings > Battery.",
+      "openSettings": "Open Settings",
+      "deviceInformation": "Device Information",
+      "deviceModel": "Device Model",
+      "deviceType": "Device Type",
+      "osVersion": "OS Version",
+      "platform": "Platform",
+      "brand": "Brand",
+      "appVersion": "App Version",
+      "deviceInfoUnavailable": "Device information is not available",
+      "unknown": "Unknown",
+      "errorRetry": "Error loading battery info. Tap to retry"
     }
   },
   "documentation": {

@@ -1,5 +1,4 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
@@ -18,20 +17,11 @@
       ]
     }
   },
+  "extends": "expo/tsconfig.base",
   "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "packages/masterfabric-expo-core/src/**/*.ts",
-    "packages/masterfabric-expo-core/src/**/*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules",
-    "dist",
-    "build"
   ]
 }

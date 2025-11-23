@@ -46,3 +46,13 @@ export {
   // These methods are available on the singleton; re-exported for discoverability
 } from './integrations/FirebaseIntegration';
 
+// Battery Helper
+export * from './components/battery/BatteryHelperView';
+export * from './components/battery/BatteryStatusCard';
+export * from './components/battery/DeviceInfoCard';
+export * from './components/battery/LowPowerModeCard';
+export * from './hooks/useBatteryHelper';
+export * from './stores/batteryStore';
+export * from './helpers/batteryHelper';
+export * from './types/battery';
+
