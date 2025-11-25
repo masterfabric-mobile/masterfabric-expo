@@ -112,6 +112,11 @@ export const Colors = {
     timeHelperErrorBackground: '#F8D7DA',
     timeHelperErrorBorder: '#DC3545',
     
+    // Validator helper colors
+    validatorErrorBackground: '#F8D7DA',
+    validatorErrorBorder: '#FF3B30',
+    validatorErrorText: '#DC3545',
+    
     // Snackbar helper colors
     snackbarCustomDefault: '#9C27B0',
     snackbarInfo: '#2196F3',
@@ -233,6 +238,11 @@ export const Colors = {
     timeHelperErrorBackground: '#3A1C1C',
     timeHelperErrorBorder: '#FF3B30',
     
+    // Validator helper colors
+    validatorErrorBackground: '#3A1C1C',
+    validatorErrorBorder: '#FF3B30',
+    validatorErrorText: '#FF6B6B',
+    
     // Snackbar helper colors
     snackbarCustomDefault: '#9C27B0',
     snackbarInfo: '#2196F3',
@@ -331,6 +341,11 @@ export const Colors = {
     timeHelperSuccessText: '#2E7D32',
     timeHelperErrorBackground: '#F8D7DA',
     timeHelperErrorBorder: '#DC3545',
+    
+    // Validator helper colors
+    validatorErrorBackground: '#F8D7DA',
+    validatorErrorBorder: '#FF3B30',
+    validatorErrorText: '#DC3545',
     
     // Snackbar helper colors
     snackbarCustomDefault: '#9C27B0',
