@@ -89,7 +89,7 @@ export function ValidatorTestCard({ result }: ValidatorTestCardProps) {
                 { color: colors.bodyText },
               ]}
             >
-              {result.input || '(empty)'}
+              {result.input || t('helpers.validatorHelper.empty')}
             </ThemedText>
           </ThemedView>
         </View>

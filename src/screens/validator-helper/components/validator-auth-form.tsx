@@ -6,6 +6,8 @@ import React from 'react';
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 import {
   AUTH_ERROR_COLORS,
+  FONT_WEIGHTS,
+  ICON_SIZES,
   PASSWORD_MAX_LENGTH,
   SOCIAL_LOGIN_ICON_COLORS,
   SOCIAL_LOGIN_PROVIDERS,
@@ -83,7 +85,7 @@ export function ValidatorAuthForm() {
             <ThemedText
               style={[
                 validatorAuthFormStyles.tabButtonText,
-                activeTab === 'login' && { color: buttonBlue, fontWeight: '600' },
+                activeTab === 'login' && { color: buttonBlue, fontWeight: FONT_WEIGHTS.semiBold },
               ]}
             >
               {t('auth.signIn')}
@@ -99,7 +101,7 @@ export function ValidatorAuthForm() {
             <ThemedText
               style={[
                 validatorAuthFormStyles.tabButtonText,
-                activeTab === 'register' && { color: buttonBlue, fontWeight: '600' },
+                activeTab === 'register' && { color: buttonBlue, fontWeight: FONT_WEIGHTS.semiBold },
               ]}
             >
               {t('auth.signUp')}
@@ -193,7 +195,7 @@ export function ValidatorAuthForm() {
                 ]}
               >
                 {rememberMe && (
-                  <Ionicons name="checkmark" size={16} color={WHITE_COLOR} />
+                  <Ionicons name="checkmark" size={ICON_SIZES.small} color={WHITE_COLOR} />
                 )}
               </View>
               <ThemedText style={[validatorAuthFormStyles.rememberMeText, { color: authColors.text }]}>
@@ -371,7 +373,7 @@ export function ValidatorAuthForm() {
                     <View key={index} style={validatorAuthFormStyles.requirementItem}>
                       <Ionicons
                         name={req.met ? 'checkmark-circle' : 'ellipse-outline'}
-                        size={16}
+                        size={ICON_SIZES.small}
                         color={req.met ? AUTH_ERROR_COLORS.success : authColors.textSecondary}
                       />
                       <ThemedText
@@ -440,7 +442,7 @@ export function ValidatorAuthForm() {
                 registerPassword.value &&
                 registerPassword.value === registerConfirmPassword.value && (
                   <View style={validatorAuthFormStyles.matchContainer}>
-                    <Ionicons name="checkmark-circle" size={16} color={AUTH_ERROR_COLORS.success} />
+                    <Ionicons name="checkmark-circle" size={ICON_SIZES.small} color={AUTH_ERROR_COLORS.success} />
                     <ThemedText style={[validatorAuthFormStyles.matchText, { color: AUTH_ERROR_COLORS.success }]}>
                       {t('validation.passwordsMatch')}
                     </ThemedText>
@@ -495,7 +497,7 @@ export function ValidatorAuthForm() {
           onPress={() => handleSocialLogin(SOCIAL_LOGIN_PROVIDERS.GOOGLE)}
           activeOpacity={0.7}
         >
-          <Ionicons name="logo-google" size={20} color={SOCIAL_LOGIN_ICON_COLORS.google} />
+          <Ionicons name="logo-google" size={ICON_SIZES.medium} color={SOCIAL_LOGIN_ICON_COLORS.google} />
           <ThemedText style={[validatorAuthFormStyles.socialButtonText, { color: authColors.text }]}>
             {t('auth.continueWithGoogle')}
           </ThemedText>
@@ -506,7 +508,7 @@ export function ValidatorAuthForm() {
           onPress={() => handleSocialLogin(SOCIAL_LOGIN_PROVIDERS.GITHUB)}
           activeOpacity={0.7}
         >
-          <Ionicons name="logo-github" size={20} color={authColors.text} />
+          <Ionicons name="logo-github" size={ICON_SIZES.medium} color={authColors.text} />
           <ThemedText style={[validatorAuthFormStyles.socialButtonText, { color: authColors.text }]}>
             {t('auth.continueWithGitHub')}
           </ThemedText>
@@ -518,7 +520,7 @@ export function ValidatorAuthForm() {
             onPress={() => handleSocialLogin(SOCIAL_LOGIN_PROVIDERS.APPLE)}
             activeOpacity={0.7}
           >
-            <Ionicons name="logo-apple" size={20} color={authColors.text} />
+            <Ionicons name="logo-apple" size={ICON_SIZES.medium} color={authColors.text} />
             <ThemedText style={[validatorAuthFormStyles.socialButtonText, { color: authColors.text }]}>
               {t('auth.continueWithApple')}
             </ThemedText>
