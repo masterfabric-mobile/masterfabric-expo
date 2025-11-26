@@ -117,3 +117,22 @@ export const DEFAULT_MAX_LENGTH_PLACEHOLDER = '20';
  */
 export const BORDER_OPACITY_SUFFIX = '30';
 
+/**
+ * Icon sizes used in validator helper components
+ */
+export const ICON_SIZES = {
+  small: 16,
+  medium: 20,
+  large: 24,
+} as const;
+
+/**
+ * Font weights used in validator helper components
+ */
+export const FONT_WEIGHTS = {
+  regular: '400',
+  medium: '500',
+  semiBold: '600',
+  bold: '700',
+} as const;
+
