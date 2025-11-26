@@ -26,6 +26,9 @@ export * from './toast_helper';
 // Rich Text Helper
 export * from './rich_text_helper';
 
+// Validator Helper
+export * from './validator_helper';
+
 // Re-export types with different names to avoid conflicts
 export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device-info';
 
