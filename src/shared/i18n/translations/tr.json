@@ -528,7 +528,7 @@
       "calculateLineHeight": "Font boyutundan satır yüksekliğini hesaplar",
       "calculateTightLineHeight": "Sıkı satır yüksekliğini hesaplar (1.2x)",
       "calculateNormalLineHeight": "Normal satır yüksekliğini hesaplar (1.5x)",
-      "calculateRelaxedLineHeight": "Gevşek satır yüksekliğini hesaplar (1.8x)",
+      "calculateRelaxedLineHeight": "Esnek satır yüksekliğini hesaplar (1.8x)",
       "calculateLetterSpacing": "Piksel cinsinden harf aralığını hesaplar",
       "normalizeLetterSpacing": "Tracking değerini normalize eder",
       "convertFontWeightToNumeric": "Font ağırlığı string'ini sayıya çevirir",
