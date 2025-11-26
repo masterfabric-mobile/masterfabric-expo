@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, useColorScheme, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 
 interface CardProps {
   children: React.ReactNode;
@@ -14,15 +15,15 @@ export function Card({
   padding = 16,
   shadow = true 
 }: CardProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
+  const colors = getThemeColors(isDark);
 
   return (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: isDark ? '#1C1C1E' : '#FFFFFF',
+          backgroundColor: colors.surfaceBackground,
           padding,
         },
         shadow && (isDark ? styles.shadowDark : styles.shadowLight),

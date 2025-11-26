@@ -1,10 +1,9 @@
 import { Stack } from 'expo-router';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { Colors } from '@/src/shared/constants/Colors';
 import { useLocale } from '@/src/shared/hooks/use-locale';
-import { useColorScheme } from '@/src/shared/hooks/useColorScheme';
 import { t } from '@/src/shared/i18n';
 import { navigationConfig } from './navigation-config';
 
@@ -13,7 +12,8 @@ import { navigationConfig } from './navigation-config';
  * Handles the main navigation stack configuration
  */
 export function AppNavigator() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useTheme();
+  const colors = getThemeColors(isDark);
   const { locale } = useLocale(); // This will trigger re-render on locale change
 
   return (
@@ -21,15 +21,15 @@ export function AppNavigator() {
       screenOptions={{
         ...navigationConfig.defaultScreenOptions,
         headerStyle: {
-          backgroundColor: Colors[colorScheme ?? 'light'].background,
+          backgroundColor: colors.background,
         },
-        headerTintColor: Colors[colorScheme ?? 'light'].text,
+        headerTintColor: colors.text,
         headerTitleStyle: {
           fontWeight: '600',
         },
         // iOS specific options
         ...(Platform.OS === 'ios' && {
-          headerBlurEffect: colorScheme === 'dark' ? 'dark' : 'light',
+          headerBlurEffect: isDark ? 'dark' : 'light',
           headerTransparent: false,
         }),
       }}

@@ -6,9 +6,9 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors } from 'masterfabric-expo-core';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSnackbar } from '../hooks/use-snackbar';
@@ -21,8 +21,7 @@ interface SingleSnackbarProps {
 }
 
 function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
   const insets = useSafeAreaInsets();
   

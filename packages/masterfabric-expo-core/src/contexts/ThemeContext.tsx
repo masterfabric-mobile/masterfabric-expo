@@ -56,6 +56,7 @@ export function ThemeProvider({
 
   // Apply initial theme to DOM IMMEDIATELY on web (synchronously, before any async operations)
   // This happens during splash screen and ensures no flash of wrong theme
+  // This runs on every render to ensure theme is always applied, especially during splash
   if (Platform.OS === 'web' && typeof document !== 'undefined') {
     // Calculate initial isDark state based on browser preference
     const initialIsDark = defaultTheme === 'system' 
@@ -74,6 +75,13 @@ export function ThemeProvider({
     htmlElement.setAttribute('data-theme', themeValue);
     htmlElement.classList.add(themeValue);
     htmlElement.style.colorScheme = themeValue;
+    
+    // Also apply to body for better coverage
+    if (document.body) {
+      document.body.classList.remove('light', 'dark');
+      document.body.classList.add(themeValue);
+      document.body.setAttribute('data-theme', themeValue);
+    }
     
     console.log('🎨 ThemeProvider: Applied initial theme to DOM (splash time):', themeValue, '(browser preference:', initialBrowserScheme, ')');
   }
@@ -189,7 +197,8 @@ export function ThemeProvider({
   // Get current colors
   const colors = getColorsByTheme(currentTheme, isDark);
 
-  // Sync theme to DOM for web platform
+  // Sync theme to DOM for web platform - runs whenever theme changes
+  // This ensures all pages get the correct theme immediately
   useEffect(() => {
     if (Platform.OS === 'web' && typeof document !== 'undefined') {
       const htmlElement = document.documentElement;
@@ -206,9 +215,16 @@ export function ThemeProvider({
       // Also set color-scheme CSS property for better browser support
       htmlElement.style.colorScheme = themeValue;
       
-      console.log('🎨 ThemeProvider: Synced theme to DOM:', themeValue);
+      // Apply to body as well for better coverage
+      if (document.body) {
+        document.body.classList.remove('light', 'dark');
+        document.body.classList.add(themeValue);
+        document.body.setAttribute('data-theme', themeValue);
+      }
+      
+      console.log('🎨 ThemeProvider: Synced theme to DOM:', themeValue, '(currentTheme:', currentTheme, ', systemColorScheme:', systemColorScheme, ')');
     }
-  }, [isDark]);
+  }, [isDark, currentTheme, systemColorScheme]);
 
   // Set theme function with persistence
   const setTheme = async (theme: ThemeMode) => {

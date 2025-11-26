@@ -1,10 +1,11 @@
 import React from 'react';
-import { Pressable, StyleSheet, TextStyle, useColorScheme, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring
 } from 'react-native-reanimated';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 
 import { getButtonAccessibilityProps } from '@/src/shared/utils/accessibility';
 import { ThemedText } from './ThemedText';
@@ -36,10 +37,9 @@ export function Button({
   accessibilityHint,
   testID
 }: ButtonProps) {
-  const colorScheme = useColorScheme();
+  const { isDark } = useTheme();
+  const colors = getThemeColors(isDark);
   const scale = useSharedValue(1);
-  
-  const isDark = colorScheme === 'dark';
 
   const handlePressIn = () => {
     scale.value = withSpring(0.95);
@@ -62,8 +62,8 @@ export function Button({
           ...baseStyle,
           {
             backgroundColor: disabled 
-              ? (isDark ? '#333' : '#E5E5E5')
-              : (isDark ? '#007AFF' : '#0066CC'),
+              ? colors.buttonBackground
+              : colors.tint,
           }
         ];
       case 'secondary':
@@ -71,8 +71,8 @@ export function Button({
           ...baseStyle,
           {
             backgroundColor: disabled 
-              ? (isDark ? '#333' : '#E5E5E5')
-              : (isDark ? '#34C759' : '#4CAF50'),
+              ? colors.buttonBackground
+              : colors.successColor,
           }
         ];
       case 'outline':
@@ -81,7 +81,7 @@ export function Button({
           {
             backgroundColor: 'transparent',
             borderWidth: 1,
-            borderColor: isDark ? '#333' : '#E5E5E5',
+            borderColor: colors.surfaceBorder,
           }
         ];
       default:
@@ -97,14 +97,14 @@ export function Button({
         return [
           ...baseTextStyle,
           {
-            color: disabled ? (isDark ? '#666' : '#999') : '#FFFFFF',
+            color: disabled ? colors.inactiveText : '#FFFFFF',
           }
         ];
       case 'secondary':
         return [
           ...baseTextStyle,
           {
-            color: disabled ? (isDark ? '#666' : '#999') : (isDark ? '#FFFFFF' : '#000000'),
+            color: disabled ? colors.inactiveText : '#FFFFFF',
           }
         ];
       case 'outline':

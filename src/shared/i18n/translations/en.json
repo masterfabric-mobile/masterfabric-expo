@@ -381,6 +381,7 @@
     },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
+    "comingSoon": "Coming Soon",
     "stringHelper": {
       "title": "String Helper",
       "description": "Text manipulation and validation utilities",
@@ -558,7 +559,8 @@
         "weak": "Weak",
         "connect": "Connect",
         "connected": "Connected"
-      }
+      },
+      "notAvailableOnWeb": "Not Available on Web"
     },
     "dateHelper": {
       "title": "Date Helper",

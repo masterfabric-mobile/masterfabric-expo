@@ -381,6 +381,7 @@
     },
     "title": "Yardımcılar",
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",
+    "comingSoon": "Yakında",
     "stringHelper": {
       "title": "String Yardımcısı",
       "description": "Metin manipülasyonu ve doğrulama araçları",
@@ -558,7 +559,8 @@
         "weak": "Zayıf",
         "connect": "Bağlan",
         "connected": "Bağlı"
-      }
+      },
+      "notAvailableOnWeb": "Web'de Kullanılamıyor"
     },
     "dateHelper": {
       "title": "Tarih Yardımcısı",

@@ -104,35 +104,34 @@ export default function RootLayout() {
     }
   }, [loaded, setAppReady]);
 
-  if (!loaded || !isAppReady) {
-    return null;
-  }
-
+  // Always render theme provider, even during splash, to ensure theme is applied immediately on web
+  // This prevents flash of wrong theme during splash screen
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ErrorBoundary>
         <LocaleProvider>
           <MasterViewThemeProvider>
-            <QueryClientProvider client={queryClient}>
-              <SafeAreaProvider>
-              <NavigationWrapper>
-                  <Stack 
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="splash" />
-                    <Stack.Screen name="onboarding" />
-                    <Stack.Screen name="projects" />
-                    <Stack.Screen name="settings" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
-                  <StatusBar style="auto" />
-                  <SnackbarQueue />
-                  <ToastContainer />
-
-                </NavigationWrapper>
-              </SafeAreaProvider>
-            </QueryClientProvider>
+            {!loaded || !isAppReady ? null : (
+              <QueryClientProvider client={queryClient}>
+                <SafeAreaProvider>
+                  <NavigationWrapper>
+                    <Stack 
+                      screenOptions={{ headerShown: false }}
+                    >
+                      <Stack.Screen name="splash" />
+                      <Stack.Screen name="onboarding" />
+                      <Stack.Screen name="projects" />
+                      <Stack.Screen name="settings" />
+                      <Stack.Screen name="(tabs)" />
+                      <Stack.Screen name="+not-found" />
+                    </Stack>
+                    <StatusBar style="auto" />
+                    <SnackbarQueue />
+                    <ToastContainer />
+                  </NavigationWrapper>
+                </SafeAreaProvider>
+              </QueryClientProvider>
+            )}
           </MasterViewThemeProvider>
         </LocaleProvider>
       </ErrorBoundary>

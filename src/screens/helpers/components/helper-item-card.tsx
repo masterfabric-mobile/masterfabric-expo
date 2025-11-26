@@ -1,10 +1,11 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import { HelperItem } from '../models/helpers-models';
 import { helperItemCardStyles } from '../styles/helper-item-card.styles';
 
@@ -85,7 +86,9 @@ export function HelperItemCard({ helper }: HelperItemCardProps) {
                   { color: '#FF9500' }
                 ]}
               >
-                Coming Soon
+                {helper.id === 'ble-helper' && Platform.OS === 'web'
+                  ? t('helpers.bleHelper.notAvailableOnWeb')
+                  : t('helpers.comingSoon') || 'Coming Soon'}
               </ThemedText>
             </View>
           )}

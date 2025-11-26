@@ -4,8 +4,9 @@
  */
 
 import { Button } from '@/src/shared/components/button';
+import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { TextStyle, useColorScheme, ViewStyle } from 'react-native';
+import { TextStyle, ViewStyle } from 'react-native';
 
 interface RichTextButtonProps {
   title: string;
@@ -26,13 +27,13 @@ export function RichTextButton({
   textStyle,
   ...props
 }: RichTextButtonProps) {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { isDark } = useTheme();
+  const colors = getThemeColors(isDark);
 
   // Map 'success' variant to 'secondary' with custom styling
   if (variant === 'success') {
     const successStyle: ViewStyle = {
-      backgroundColor: isDark ? '#34C759' : '#4CAF50',
+      backgroundColor: colors.successColor,
       ...style,
     };
 

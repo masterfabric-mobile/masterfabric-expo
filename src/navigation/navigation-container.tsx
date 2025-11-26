@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, NavigationContainer as RNNavigationContainer } from '@react-navigation/native';
+import { useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { useColorScheme } from 'react-native';
 import { t } from '../shared/i18n';
 
 import { navigationConfig } from './navigation-config';
@@ -14,11 +14,11 @@ interface NavigationContainerProps {
  * Handles theme switching and navigation configuration
  */
 export function NavigationContainer({ children }: NavigationContainerProps) {
-  const colorScheme = useColorScheme();
+  const { isDark } = useTheme();
 
   return (
     <RNNavigationContainer
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+      theme={isDark ? DarkTheme : DefaultTheme}
       linking={navigationConfig.linking}
       documentTitle={{
         formatter: (options, route) => 
