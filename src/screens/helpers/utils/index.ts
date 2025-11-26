@@ -39,6 +39,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'time-outline';
     case 'rich-text-helper':
       return 'document-text-outline';
+    case 'validator-helper':
+      return 'checkmark-circle-outline';
     default:
       return 'help-outline';
   }
@@ -71,6 +73,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#FF9500'; // Orange for time helpers
     case 'rich-text-helper':
       return '#AF52DE'; // Purple for rich text helpers
+    case 'validator-helper':
+      return '#34C759'; // Green for validation helpers
     default:
       return '#8E8E93';
   }
@@ -146,6 +150,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/rich-text-helper',
     available: true,
     category: 'text-helpers'
+  },
+  {
+    id: 'validator-helper',
+    name: 'Validator Helper',
+    description: 'Form validation utilities',
+    icon: 'checkmark-circle-outline',
+    color: '#34C759',
+    route: '/validator-helper',
+    available: true,
+    category: 'validation-helpers'
   }
 ];
 
