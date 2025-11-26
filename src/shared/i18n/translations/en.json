@@ -580,6 +580,7 @@
       "valid": "Valid",
       "invalid": "Invalid",
       "input": "Input:",
+      "empty": "(empty)",
       "validatorTypes": {
         "username": "Username",
         "password": "Password",

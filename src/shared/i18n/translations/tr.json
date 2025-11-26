@@ -581,6 +581,7 @@
       "valid": "Geçerli",
       "invalid": "Geçersiz",
       "input": "Giriş:",
+      "empty": "(boş)",
       "validatorTypes": {
         "username": "Kullanıcı Adı",
         "password": "Şifre",
