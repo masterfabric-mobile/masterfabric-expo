@@ -40,8 +40,8 @@ export const AUTH_COLORS = {
   },
   light: {
     background: '#FFFFFF',
-    cardBackground: '#FAFAFA',
-    text: '#000000',
+    cardBackground: '#FFFFFF',
+    text: '#1A1A1A',
     textSecondary: '#6C757D',
     border: '#E1E4E8',
     inputBackground: '#FFFFFF',
@@ -79,7 +79,7 @@ export const PASSWORD_MAX_LENGTH = 128;
  */
 export const HEADER_BACKGROUND_COLORS = {
   dark: '#000000',
-  light: '#1A1A1A',
+  light: '#FFFFFF',
 } as const;
 
 /**
