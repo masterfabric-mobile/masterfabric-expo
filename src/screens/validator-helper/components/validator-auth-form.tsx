@@ -57,7 +57,7 @@ export function ValidatorAuthForm() {
   const buttonBlue = getButtonPrimaryColor(colors.tint);
 
   return (
-    <View style={validatorAuthFormStyles.wrapper}>
+    <View style={[validatorAuthFormStyles.wrapper, { backgroundColor: authColors.background }]}>
       {/* Header Section with Dark Background */}
       <View style={[validatorAuthFormStyles.headerContainer, { backgroundColor: headerBackground }]}>
         <View style={validatorAuthFormStyles.logoContainer}>
