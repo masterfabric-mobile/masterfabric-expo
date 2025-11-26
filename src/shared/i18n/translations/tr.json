@@ -498,6 +498,68 @@
       "sendToast": "Toast Gönder",
       "messageRequired": "Lütfen bir mesaj girin"
     },
+    "bleHelper": {
+      "title": "BLE Yardımcısı",
+      "description": "Bluetooth Düşük Enerji cihaz iletişim yardımcısı. BLE cihazlarını tarayın, bağlanın ve etkileşime geçin.",
+      "status": {
+        "title": "Durum",
+        "bluetoothState": "Bluetooth Durumu",
+        "connectionStatus": "Bağlantı Durumu",
+        "initialized": "Başlatıldı"
+      },
+      "permissions": {
+        "title": "İzinler",
+        "granted": "Bluetooth ve Konum izinleri verildi",
+        "required": "Bluetooth ve Konum izinleri gerekli",
+        "request": "İzin İste"
+      },
+      "scan": {
+        "title": "Cihaz Tarama",
+        "start": "Taramayı Başlat",
+        "stop": "Taramayı Durdur",
+        "scanning": "Cihazlar taranıyor..."
+      },
+      "devices": {
+        "title": "Bulunan Cihazlar",
+        "unknownDevice": "Bilinmeyen Cihaz"
+      },
+      "connectedDevice": {
+        "title": "Bağlı Cihaz",
+        "disconnect": "Bağlantıyı Kes",
+        "discoverServices": "Servisleri Keşfet",
+        "serviceUUID": "Servis UUID",
+        "characteristicUUID": "Karakteristik UUID",
+        "read": "Oku",
+        "write": "Yaz",
+        "subscribe": "Abone Ol",
+        "unsubscribe": "Abonelikten Çık",
+        "writeValue": "Yazma Değeri",
+        "value": "Değer"
+      },
+      "logs": {
+        "title": "Günlükler",
+        "clear": "Temizle",
+        "empty": "Henüz günlük yok. BLE işlemleri burada görünecek."
+      },
+      "bluetoothStatus": {
+        "poweredOff": "Bluetooth Kapalı",
+        "poweredOffDescription": "BLE özelliklerini kullanmak için lütfen cihaz ayarlarından Bluetooth'u açın.",
+        "notAvailable": "Bluetooth Kullanılamıyor",
+        "notAvailableDescription": "BLE özellikleri bu platformda kullanılamıyor. Fiziksel bir cihazda development build kullanın.",
+        "openSettings": "Ayarları Aç"
+      },
+      "deviceDetail": {
+        "deviceId": "Cihaz ID",
+        "rssi": "Sinyal Gücü (RSSI)",
+        "services": "Servisler",
+        "manufacturerData": "Üretici Verisi",
+        "excellent": "Mükemmel",
+        "good": "İyi",
+        "weak": "Zayıf",
+        "connect": "Bağlan",
+        "connected": "Bağlı"
+      }
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
@@ -862,6 +924,10 @@
         "richTextHelper": {
           "title": "Zengin Metin Yardımcısı",
           "description": "React Native için HTML, Markdown ve metin formatlama araçları. HTML'i React Native metin bileşenlerine ayrıştır, Markdown'ı formatlanmış metne dönüştür, URL/mention/hashtag çıkar, XSS önleme için içeriği temizle, çoklu stillerle formatlanmış metin oluştur ve zengin metin içeriğini interaktif olarak işle."
+        },
+        "bleHelper": {
+          "title": "BLE Yardımcısı",
+          "description": "Bluetooth Düşük Enerji cihaz iletişim yardımcısı. BLE cihazlarını tarayın, bağlanın ve etkileşime geçin."
         },
         "deviceInfo": {
           "title": "Cihaz Bilgisi Yardımcısı",

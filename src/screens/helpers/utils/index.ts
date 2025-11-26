@@ -41,6 +41,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'battery-charging-outline';
     case 'rich-text-helper':
       return 'document-text-outline';
+    case 'ble-helper':
+      return 'bluetooth-outline';
     default:
       return 'help-outline';
   }
@@ -75,6 +77,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#34C759'; // Green for battery/device helpers
     case 'rich-text-helper':
       return '#AF52DE'; // Purple for rich text helpers
+    case 'ble-helper':
+      return '#007AFF'; // Blue for BLE/device helpers
     default:
       return '#8E8E93';
   }
@@ -160,6 +164,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/rich-text-helper',
     available: true,
     category: 'text-helpers'
+  },
+  {
+    id: 'ble-helper',
+    name: 'BLE Helper',
+    description: 'Bluetooth Low Energy device communication helper',
+    icon: 'bluetooth-outline',
+    color: '#007AFF',
+    route: '/ble-helper',
+    available: true,
+    category: 'device-helpers'
   }
 ];
 

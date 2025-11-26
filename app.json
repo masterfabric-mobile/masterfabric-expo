@@ -19,7 +19,12 @@
       "supportsTablet": true,
       "icon": "./src/assets/images/app-icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "This app needs Bluetooth access to connect to BLE devices.",
+        "NSLocationWhenInUseUsageDescription": "This app needs location access to scan for nearby Bluetooth Low Energy devices.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs location access to scan for nearby Bluetooth Low Energy devices."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +33,13 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.masterfabric.expo.android",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_CONNECT",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -46,7 +57,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "This app needs location access to scan for nearby Bluetooth Low Energy devices."
+        }
+      ],
+      "react-native-ble-plx/app.plugin"
     ],
     "experiments": {
       "typedRoutes": true

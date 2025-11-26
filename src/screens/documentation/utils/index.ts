@@ -27,6 +27,12 @@ export const createDocumentationSections = (): DocumentationSection[] => [
         route: '/rich-text-helper',
       },
       {
+        id: 'ble-helper',
+        titleKey: 'documentation.sections.helpers.bleHelper.title',
+        descriptionKey: 'documentation.sections.helpers.bleHelper.description',
+        route: '/ble-helper',
+      },
+      {
         id: 'device-info-helper',
         titleKey: 'documentation.sections.helpers.deviceInfo.title',
         descriptionKey: 'documentation.sections.helpers.deviceInfo.description',

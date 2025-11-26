@@ -77,6 +77,7 @@ export const navigationConfig = {
         'string-helper': '/string-helper',
         'toast-helper': '/toast-helper',
         'battery-helper': '/battery-helper',
+        'ble-helper': '/ble-helper',
         documentation: '/documentation',
         '(tabs)': {
           screens: {

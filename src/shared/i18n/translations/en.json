@@ -498,6 +498,68 @@
       "sendToast": "Send Toast",
       "messageRequired": "Please enter a message"
     },
+    "bleHelper": {
+      "title": "BLE Helper",
+      "description": "Bluetooth Low Energy device communication helper. Scan, connect, and interact with BLE devices.",
+      "status": {
+        "title": "Status",
+        "bluetoothState": "Bluetooth State",
+        "connectionStatus": "Connection Status",
+        "initialized": "Initialized"
+      },
+      "permissions": {
+        "title": "Permissions",
+        "granted": "Bluetooth and Location permissions are granted",
+        "required": "Bluetooth and Location permissions are required",
+        "request": "Request Permissions"
+      },
+      "scan": {
+        "title": "Device Scanning",
+        "start": "Start Scan",
+        "stop": "Stop Scan",
+        "scanning": "Scanning for devices..."
+      },
+      "devices": {
+        "title": "Discovered Devices",
+        "unknownDevice": "Unknown Device"
+      },
+      "connectedDevice": {
+        "title": "Connected Device",
+        "disconnect": "Disconnect",
+        "discoverServices": "Discover Services",
+        "serviceUUID": "Service UUID",
+        "characteristicUUID": "Characteristic UUID",
+        "read": "Read",
+        "write": "Write",
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe",
+        "writeValue": "Write Value",
+        "value": "Value"
+      },
+      "logs": {
+        "title": "Logs",
+        "clear": "Clear",
+        "empty": "No logs yet. BLE operations will appear here."
+      },
+      "bluetoothStatus": {
+        "poweredOff": "Bluetooth is Powered Off",
+        "poweredOffDescription": "Please enable Bluetooth in your device settings to use BLE features.",
+        "notAvailable": "Bluetooth Not Available",
+        "notAvailableDescription": "BLE features are not available on this platform. Use a development build on a physical device.",
+        "openSettings": "Open Settings"
+      },
+      "deviceDetail": {
+        "deviceId": "Device ID",
+        "rssi": "Signal Strength (RSSI)",
+        "services": "Services",
+        "manufacturerData": "Manufacturer Data",
+        "excellent": "Excellent",
+        "good": "Good",
+        "weak": "Weak",
+        "connect": "Connect",
+        "connected": "Connected"
+      }
+    },
     "dateHelper": {
       "title": "Date Helper",
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
@@ -925,6 +987,10 @@
         "richTextHelper": {
           "title": "Rich Text Helper",
           "description": "HTML, Markdown, and text formatting utilities for React Native. Parse HTML to React Native text components, convert Markdown to formatted text, extract URLs/mentions/hashtags, sanitize content for XSS prevention, create formatted text with multiple styles, and process rich text content interactively."
+        },
+        "bleHelper": {
+          "title": "BLE Helper",
+          "description": "Bluetooth Low Energy device communication helper. Scan, connect, and interact with BLE devices."
         },
         "deviceInfo": {
           "title": "Device Info Helper",
