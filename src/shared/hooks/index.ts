@@ -6,6 +6,8 @@ export { useSnackbar } from './use-snackbar';
 export type { UseSnackbarReturn } from './use-snackbar';
 export * from './use-toast';
 export { useColorScheme } from './useColorScheme';
+export { useTypography } from './use-typography';
+export type { UseTypographyReturn } from './use-typography';
 
 // Device Information Hooks
 export {
