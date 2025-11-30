@@ -821,6 +821,28 @@
         "verbose": "verbose"
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Boyut Yardımcısı",
+      "description": "Boyutlandırma sistemi, boşluk, tipografi ve duyarlı tasarım araçları",
+      "spacing": "Boşluk",
+      "typography": "Tipografi",
+      "buttons": "Butonlar",
+      "inputs": "Girişler",
+      "cards": "Kartlar",
+      "modals": "Modallar",
+      "icons": "İkonlar",
+      "responsive": "Duyarlı",
+      "variables": "Değişkenler",
+      "sizingVariablesViewer": "Boyutlandırma Değişkenleri Görüntüleyici",
+      "viewAllVariables": "Tüm boyutlandırma değişkenlerini görüntüle",
+      "deviceType": "Cihaz Tipi",
+      "phone": "Telefon",
+      "tablet": "Tablet",
+      "desktop": "Masaüstü",
+      "baseUnit": "Temel Birim",
+      "breakpoints": "Kırılma Noktaları",
+      "touchTargets": "Dokunma Hedefleri"
+    },
     "batteryHelper": {
       "title": "Pil Yardımcısı",
       "description": "Pil seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri",

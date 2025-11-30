@@ -884,6 +884,28 @@
         "verbose": "verbose"
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Size Helper",
+      "description": "Sizing system, spacing, typography, and responsive design utilities",
+      "spacing": "Spacing",
+      "typography": "Typography",
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "cards": "Cards",
+      "modals": "Modals",
+      "icons": "Icons",
+      "responsive": "Responsive",
+      "variables": "Variables",
+      "sizingVariablesViewer": "Sizing Variables Viewer",
+      "viewAllVariables": "View all sizing variables",
+      "deviceType": "Device Type",
+      "phone": "Phone",
+      "tablet": "Tablet",
+      "desktop": "Desktop",
+      "baseUnit": "Base Unit",
+      "breakpoints": "Breakpoints",
+      "touchTargets": "Touch Targets"
+    },
     "batteryHelper": {
       "title": "Battery Helper",
       "description": "Battery level, charging status, low power mode, and device information",
