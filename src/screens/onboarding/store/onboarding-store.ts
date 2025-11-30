@@ -1,6 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createOnboardingSteps } from '../utils';
+import { 
+  markOnboardingCompleted, 
+  resetOnboarding as resetOnboardingHelper,
+  hasCompletedOnboarding 
+} from 'masterfabric-expo-core';
 
 interface OnboardingState {
   currentStepIndex: number;
@@ -16,8 +20,6 @@ interface OnboardingState {
   loadOnboardingStatus: () => Promise<void>;
   setHasSeenOnboarding: (hasSeen: boolean) => void;
 }
-
-const ONBOARDING_STORAGE_KEY = '@masterfabric_onboarding_completed';
 
 const initialState = {
   currentStepIndex: 0,
@@ -57,7 +59,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     
   completeOnboarding: async () => {
     try {
-      await AsyncStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+      await markOnboardingCompleted();
       set({ isCompleted: true, hasSeenOnboarding: true });
     } catch (error) {
       console.error('Error saving onboarding completion:', error);
@@ -66,7 +68,7 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     
   resetOnboarding: async () => {
     try {
-      await AsyncStorage.removeItem(ONBOARDING_STORAGE_KEY);
+      await resetOnboardingHelper();
       set(initialState);
     } catch (error) {
       console.error('Error resetting onboarding:', error);
@@ -75,10 +77,10 @@ export const useOnboardingStore = create<OnboardingState>((set, get) => ({
     
   loadOnboardingStatus: async () => {
     try {
-      const hasCompleted = await AsyncStorage.getItem(ONBOARDING_STORAGE_KEY);
+      const hasCompleted = await hasCompletedOnboarding();
       set({ 
-        hasSeenOnboarding: hasCompleted === 'true',
-        isCompleted: hasCompleted === 'true'
+        hasSeenOnboarding: hasCompleted,
+        isCompleted: hasCompleted
       });
     } catch (error) {
       console.error('Error loading onboarding status:', error);
