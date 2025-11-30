@@ -41,6 +41,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'battery-charging-outline';
     case 'rich-text-helper':
       return 'document-text-outline';
+    case 'typography-helper':
+      return 'text-outline';
     default:
       return 'help-outline';
   }
@@ -75,6 +77,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#34C759'; // Green for battery/device helpers
     case 'rich-text-helper':
       return '#AF52DE'; // Purple for rich text helpers
+    case 'typography-helper':
+      return '#007AFF'; // Blue for typography helpers
     default:
       return '#8E8E93';
   }
@@ -158,6 +162,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     icon: 'document-text-outline',
     color: '#AF52DE',
     route: '/rich-text-helper',
+    available: true,
+    category: 'text-helpers'
+  },
+  {
+    id: 'typography-helper',
+    name: 'Typography Helper',
+    description: 'Typography utilities, font scaling, and text styling with Flutter-style copyWith pattern',
+    icon: 'text-outline',
+    color: '#007AFF',
+    route: '/typography-helper',
     available: true,
     category: 'text-helpers'
   }
