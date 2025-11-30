@@ -41,6 +41,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'battery-charging-outline';
     case 'rich-text-helper':
       return 'document-text-outline';
+    case 'ui-size-helper':
+      return 'resize-outline';
     default:
       return 'help-outline';
   }
@@ -75,6 +77,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#34C759'; // Green for battery/device helpers
     case 'rich-text-helper':
       return '#AF52DE'; // Purple for rich text helpers
+    case 'ui-size-helper':
+      return '#007AFF'; // Blue for UI sizing helpers
     default:
       return '#8E8E93';
   }
@@ -160,6 +164,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/rich-text-helper',
     available: true,
     category: 'text-helpers'
+  },
+  {
+    id: 'ui-size-helper',
+    name: 'UI Size Helper',
+    description: 'Sizing system, spacing, typography, and responsive design utilities',
+    icon: 'resize-outline',
+    color: '#007AFF',
+    route: '/ui-size-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 
