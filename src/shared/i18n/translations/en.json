@@ -498,6 +498,102 @@
       "sendToast": "Send Toast",
       "messageRequired": "Please enter a message"
     },
+    "typographyHelper": {
+      "title": "Typography Helper",
+      "description": "Font scaling and typography calculation utilities",
+      "testSuite": "Typography Helper Test Suite",
+      "testInput": "Test Input",
+      "textInput": "Text Input:",
+      "textPlaceholder": "Enter text to preview...",
+      "fontSize": "Font Size",
+      "fontScale": "Font Scale",
+      "lineHeightMultiplier": "Line Height Multiplier",
+      "letterSpacing": "Letter Spacing",
+      "fontWeight": "Font Weight",
+      "fontStyle": "Font Style",
+      "textColor": "Text Color",
+      "stylePreset": "Style Preset",
+      "preview": "Preview",
+      "runTests": "Run All Tests",
+      "runningTests": "Running Tests...",
+      "testResults": "Test Results",
+      "functions": "functions",
+      "input": "Input:",
+      "output": "Output:",
+      "lineHeight": "Line Height",
+      "scaleFontSize": "Scales font size based on system font scale",
+      "scaleFontSizeByScreen": "Scales font size based on screen width",
+      "normalizeFontSize": "Normalizes font size within bounds",
+      "calculateAccessibleFontSize": "Calculates accessible font size with limits",
+      "calculateLineHeight": "Calculates line height from font size",
+      "calculateTightLineHeight": "Calculates tight line height (1.2x)",
+      "calculateNormalLineHeight": "Calculates normal line height (1.5x)",
+      "calculateRelaxedLineHeight": "Calculates relaxed line height (1.8x)",
+      "calculateLetterSpacing": "Calculates letter spacing in pixels",
+      "normalizeLetterSpacing": "Normalizes tracking value",
+      "convertFontWeightToNumeric": "Converts font weight string to number",
+      "convertFontWeightToString": "Converts font weight number to string",
+      "isValidFontWeight": "Validates font weight value",
+      "normalizeFontWeight": "Normalizes font weight to standard values",
+      "isBoldFontWeight": "Checks if weight is considered bold (>= 600)",
+      "options": {
+        "fontSize": {
+          "xs": "Extra Small (12px)",
+          "sm": "Small (14px)",
+          "md": "Medium (16px)",
+          "lg": "Large (18px)",
+          "xl": "Extra Large (20px)",
+          "xxl": "2X Large (24px)",
+          "xxxl": "3X Large (32px)"
+        },
+        "fontWeight": {
+          "normal": "Normal (400)",
+          "medium": "Medium (500)",
+          "semibold": "Semibold (600)",
+          "bold": "Bold (700)"
+        },
+        "fontStyle": {
+          "normal": "Normal",
+          "italic": "Italic"
+        },
+        "lineHeight": {
+          "tight": "Tight (1.2x)",
+          "normal": "Normal (1.5x)",
+          "relaxed": "Relaxed (1.8x)"
+        },
+        "letterSpacing": {
+          "none": "None (0)",
+          "tight": "Tight (10)",
+          "normal": "Normal (20)",
+          "wide": "Wide (30)",
+          "wider": "Wider (50)",
+          "widest": "Widest (100)"
+        },
+        "previewText": {
+          "default": "The quick brown fox jumps over the lazy dog",
+          "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+          "short": "Hello World",
+          "long": "This is a longer text example to demonstrate how typography looks with multiple lines and different text lengths",
+          "numbers": "1234567890",
+          "special": "Special! @#$%^&*()",
+          "mixed": "Mixed Case Text with Numbers 123"
+        },
+        "stylePreset": {
+          "custom": "Custom",
+          "h1": "Header 1",
+          "h2": "Header 2",
+          "h3": "Header 3",
+          "h4": "Header 4",
+          "h5": "Header 5",
+          "h6": "Header 6",
+          "title": "Title",
+          "subtitle": "Subtitle",
+          "body": "Body",
+          "caption": "Caption",
+          "label": "Label"
+        }
+      }
+    },
     "dateHelper": {
       "title": "Date Helper",
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
