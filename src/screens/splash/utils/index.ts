@@ -46,11 +46,6 @@ export const getStepById = (steps: SplashStep[], id: string): SplashStep | undef
   return steps.find(step => step.id === id);
 };
 
-// Navigation utilities
-export const shouldShowOnboarding = (hasSeenOnboarding: boolean, isCompleted: boolean): boolean => {
-  return !hasSeenOnboarding && !isCompleted;
-};
-
 // Loading message utilities
 export const getLoadingMessage = (stepId: string): string => {
   switch (stepId) {

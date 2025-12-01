@@ -1005,6 +1005,10 @@
       "deviceInfoUnavailable": "Device information is not available",
       "unknown": "Unknown",
       "errorRetry": "Error loading battery info. Tap to retry"
+    },
+    "onboardingHelper": {
+      "title": "Onboarding Helper",
+      "description": "Tool for managing and testing the app's initial onboarding experience."
     }
   },
   "documentation": {

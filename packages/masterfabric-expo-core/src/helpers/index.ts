@@ -26,6 +26,9 @@ export * from './toast_helper';
 // Rich Text Helper
 export * from './rich_text_helper';
 
+// Onboarding Helper
+export * from './onboarding_helper';
+
 // Re-export types with different names to avoid conflicts
 export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device-info';
 
