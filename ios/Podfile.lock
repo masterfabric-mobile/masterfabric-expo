@@ -29,15 +29,15 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-client (6.0.16):
+  - expo-dev-client (6.0.17):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (6.0.16):
+  - expo-dev-launcher (6.0.17):
     - EXManifests
-    - expo-dev-launcher/Main (= 6.0.16)
+    - expo-dev-launcher/Main (= 6.0.17)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -66,7 +66,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Main (6.0.16):
+  - expo-dev-launcher/Main (6.0.17):
     - EXManifests
     - expo-dev-launcher/Unsafe
     - expo-dev-menu
@@ -97,7 +97,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Unsafe (6.0.16):
+  - expo-dev-launcher/Unsafe (6.0.17):
     - EXManifests
     - expo-dev-menu
     - expo-dev-menu-interface
@@ -127,9 +127,9 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-menu (7.0.15):
-    - expo-dev-menu/Main (= 7.0.15)
-    - expo-dev-menu/ReactNativeCompatibles (= 7.0.15)
+  - expo-dev-menu (7.0.16):
+    - expo-dev-menu/Main (= 7.0.16)
+    - expo-dev-menu/ReactNativeCompatibles (= 7.0.16)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -152,7 +152,7 @@ PODS:
     - ReactNativeDependencies
     - Yoga
   - expo-dev-menu-interface (2.0.0)
-  - expo-dev-menu/Main (7.0.15):
+  - expo-dev-menu/Main (7.0.16):
     - EXManifests
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -178,7 +178,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-menu/ReactNativeCompatibles (7.0.15):
+  - expo-dev-menu/ReactNativeCompatibles (7.0.16):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -201,6 +201,8 @@ PODS:
     - ReactNativeDependencies
     - Yoga
   - ExpoAsset (12.0.9):
+    - ExpoModulesCore
+  - ExpoBattery (10.0.7):
     - ExpoModulesCore
   - ExpoBlur (15.0.7):
     - ExpoModulesCore
@@ -1634,7 +1636,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-slider (5.1.0):
+  - react-native-slider (5.1.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1646,7 +1648,7 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-slider/common (= 5.1.0)
+    - react-native-slider/common (= 5.1.1)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1657,7 +1659,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-slider/common (5.1.0):
+  - react-native-slider/common (5.1.1):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2335,6 +2337,7 @@ DEPENDENCIES:
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoBattery (from `../node_modules/expo-battery/ios`)
   - ExpoBlur (from `../node_modules/expo-blur/ios`)
   - ExpoDevice (from `../node_modules/expo-device/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
@@ -2461,6 +2464,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-dev-menu-interface/ios"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoBattery:
+    :path: "../node_modules/expo-battery/ios"
   ExpoBlur:
     :path: "../node_modules/expo-blur/ios"
   ExpoDevice:
@@ -2656,11 +2661,12 @@ SPEC CHECKSUMS:
   EXJSONUtils: 1d3e4590438c3ee593684186007028a14b3686cd
   EXManifests: 224345a575fca389073c416297b6348163f28d1a
   Expo: 27ae59be9be4feab2b1c1ae06550752c524ca558
-  expo-dev-client: 974463bca58c100a32f099450e9413893bee3de8
-  expo-dev-launcher: adcbbff3464b908458255d0fdf3e8cf79c67d614
-  expo-dev-menu: 78e39c8cca65695b7ccb2c70c618043137f6735c
+  expo-dev-client: b6e7b4f4063ae44b5e68cc6a8bcc0c79c3037c1a
+  expo-dev-launcher: c8813e0064e8768d676ee490c0f7ef1784d70b98
+  expo-dev-menu: 0a1194185c9eec1da0e507b734180775363be442
   expo-dev-menu-interface: 600df12ea01efecdd822daaf13cc0ac091775533
   ExpoAsset: 9ba6fbd677fb8e241a3899ac00fa735bc911eadf
+  ExpoBattery: a5d7037bbdc0ecf6619ce23a92b8d74d470ac54f
   ExpoBlur: 2dd8f64aa31f5d405652c21d3deb2d2588b1852f
   ExpoDevice: 148accb4071873d19fba80a2506c58ffa433d620
   ExpoFileSystem: b79eadbda7b7f285f378f95f959cc9313a1c9c61
@@ -2718,7 +2724,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 76905804171d8ccbe69329fc84c57eb7934add7f
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-safe-area-context: 37e680fc4cace3c0030ee46e8987d24f5d3bdab2
-  react-native-slider: 2fdd2c77773a91470d3e6b8338a9a6f9e23b0aee
+  react-native-slider: f954578344106f0a732a4358ce3a3e11015eb6e1
   react-native-webview: b29007f4723bca10872028067b07abacfa1cb35a
   React-NativeModulesApple: a9464983ccc0f66f45e93558671f60fc7536e438
   React-oscompat: 73db7dbc80edef36a9d6ed3c6c4e1724ead4236d

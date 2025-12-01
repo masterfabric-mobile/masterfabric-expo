@@ -544,6 +544,102 @@
       "sendToast": "Toast Gönder",
       "messageRequired": "Lütfen bir mesaj girin"
     },
+    "typographyHelper": {
+      "title": "Tipografi Yardımcısı",
+      "description": "Font ölçeklendirme ve tipografi hesaplama yardımcıları",
+      "testSuite": "Tipografi Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "textInput": "Metin Girişi:",
+      "textPlaceholder": "Önizlenecek metni girin...",
+      "fontSize": "Font Boyutu",
+      "fontScale": "Font Ölçeği",
+      "lineHeightMultiplier": "Satır Yüksekliği Çarpanı",
+      "letterSpacing": "Harf Aralığı",
+      "fontWeight": "Font Ağırlığı",
+      "fontStyle": "Font Stili",
+      "textColor": "Metin Rengi",
+      "stylePreset": "Stil Ön Ayarı",
+      "preview": "Önizleme",
+      "runTests": "Tüm Testleri Çalıştır",
+      "runningTests": "Testler Çalışıyor...",
+      "testResults": "Test Sonuçları",
+      "functions": "fonksiyon",
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "lineHeight": "Satır Yüksekliği",
+      "scaleFontSize": "Sistem font ölçeğine göre font boyutunu ölçeklendirir",
+      "scaleFontSizeByScreen": "Ekran genişliğine göre font boyutunu ölçeklendirir",
+      "normalizeFontSize": "Font boyutunu sınırlar içinde normalize eder",
+      "calculateAccessibleFontSize": "Sınırlarla erişilebilir font boyutunu hesaplar",
+      "calculateLineHeight": "Font boyutundan satır yüksekliğini hesaplar",
+      "calculateTightLineHeight": "Sıkı satır yüksekliğini hesaplar (1.2x)",
+      "calculateNormalLineHeight": "Normal satır yüksekliğini hesaplar (1.5x)",
+      "calculateRelaxedLineHeight": "Esnek satır yüksekliğini hesaplar (1.8x)",
+      "calculateLetterSpacing": "Piksel cinsinden harf aralığını hesaplar",
+      "normalizeLetterSpacing": "Tracking değerini normalize eder",
+      "convertFontWeightToNumeric": "Font ağırlığı string'ini sayıya çevirir",
+      "convertFontWeightToString": "Font ağırlığı sayısını string'e çevirir",
+      "isValidFontWeight": "Font ağırlığı değerini doğrular",
+      "normalizeFontWeight": "Font ağırlığını standart değerlere normalize eder",
+      "isBoldFontWeight": "Ağırlığın kalın olup olmadığını kontrol eder (>= 600)",
+      "options": {
+        "fontSize": {
+          "xs": "Çok Küçük (12px)",
+          "sm": "Küçük (14px)",
+          "md": "Orta (16px)",
+          "lg": "Büyük (18px)",
+          "xl": "Çok Büyük (20px)",
+          "xxl": "2X Büyük (24px)",
+          "xxxl": "3X Büyük (32px)"
+        },
+        "fontWeight": {
+          "normal": "Normal (400)",
+          "medium": "Orta (500)",
+          "semibold": "Yarı Kalın (600)",
+          "bold": "Kalın (700)"
+        },
+        "fontStyle": {
+          "normal": "Normal",
+          "italic": "İtalik"
+        },
+        "lineHeight": {
+          "tight": "Sıkı (1.2x)",
+          "normal": "Normal (1.5x)",
+          "relaxed": "Gevşek (1.8x)"
+        },
+        "letterSpacing": {
+          "none": "Yok (0)",
+          "tight": "Sıkı (10)",
+          "normal": "Normal (20)",
+          "wide": "Geniş (30)",
+          "wider": "Daha Geniş (50)",
+          "widest": "En Geniş (100)"
+        },
+        "previewText": {
+          "default": "The quick brown fox jumps over the lazy dog",
+          "lorem": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+          "short": "Merhaba Dünya",
+          "long": "Bu, tipografinin birden fazla satır ve farklı metin uzunluklarıyla nasıl göründüğünü göstermek için daha uzun bir metin örneğidir",
+          "numbers": "1234567890",
+          "special": "Özel! @#$%^&*()",
+          "mixed": "Karışık Büyük Küçük Harf Metni 123"
+        },
+        "stylePreset": {
+          "custom": "Özel",
+          "h1": "Başlık 1",
+          "h2": "Başlık 2",
+          "h3": "Başlık 3",
+          "h4": "Başlık 4",
+          "h5": "Başlık 5",
+          "h6": "Başlık 6",
+          "title": "Başlık",
+          "subtitle": "Alt Başlık",
+          "body": "Gövde",
+          "caption": "Alt Yazı",
+          "label": "Etiket"
+        }
+      }
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
@@ -926,6 +1022,32 @@
         "error": "error",
         "verbose": "verbose"
       }
+    },
+    "batteryHelper": {
+      "title": "Pil Yardımcısı",
+      "description": "Pil seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri",
+      "batteryStatus": "Pil Durumu",
+      "level": "Seviye",
+      "status": "Durum",
+      "charging": "Şarj Oluyor",
+      "notCharging": "Şarj Olmuyor",
+      "lowPowerMode": "Düşük Güç Modu",
+      "lowPowerModeOn": "Açık",
+      "lowPowerModeOff": "Kapalı",
+      "lowPowerModeNotAvailable": "Mevcut Değil",
+      "lowPowerModeDescriptionIOS": "Düşük Güç Modu, pil ömrünü uzatmak için arka plan etkinliğini ve görsel efektleri azaltır. Ayarlar > Pil bölümünden etkinleştirebilir veya devre dışı bırakabilirsiniz.",
+      "lowPowerModeDescriptionAndroid": "Pil tasarrufu modu, performansı ve arka plan etkinliğini azaltarak pil ömrünü uzatmaya yardımcı olur. Ayarlar > Pil bölümünden yönetebilirsiniz.",
+      "openSettings": "Ayarları Aç",
+      "deviceInformation": "Cihaz Bilgileri",
+      "deviceModel": "Cihaz Modeli",
+      "deviceType": "Cihaz Tipi",
+      "osVersion": "İşletim Sistemi Sürümü",
+      "platform": "Platform",
+      "brand": "Marka",
+      "appVersion": "Uygulama Sürümü",
+      "deviceInfoUnavailable": "Cihaz bilgileri mevcut değil",
+      "unknown": "Bilinmiyor",
+      "errorRetry": "Pil bilgileri yüklenirken hata oluştu. Tekrar denemek için dokunun"
     }
   },
   "documentation": {

@@ -8,6 +8,8 @@ export * from './use-toast';
 export { useValidator } from './use-validator';
 export type { UseValidatorReturn } from './use-validator';
 export { useColorScheme } from './useColorScheme';
+export { useTypography } from './use-typography';
+export type { UseTypographyReturn } from './use-typography';
 
 // Device Information Hooks
 export {

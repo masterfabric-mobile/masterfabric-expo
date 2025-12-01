@@ -76,6 +76,7 @@ export const navigationConfig = {
         helpers: '/helpers',
         'string-helper': '/string-helper',
         'toast-helper': '/toast-helper',
+        'battery-helper': '/battery-helper',
         'validator-helper': '/validator-helper',
         documentation: '/documentation',
         '(tabs)': {
