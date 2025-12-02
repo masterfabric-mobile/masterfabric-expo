@@ -2,9 +2,9 @@ import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { useOnboardingStore } from '../../onboarding/store/onboarding-store';
 import { useSplashStore } from '../store/splash-store';
-import { createSplashSteps, getProgressPercentage, shouldShowOnboarding } from '../utils';
+import { createSplashSteps, getProgressPercentage } from '../utils';
+import { shouldShowOnboarding } from 'masterfabric-expo-core';
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
@@ -18,25 +18,13 @@ export function useSplashViewModel() {
     setCurrentStep,
     addCompletedStep 
   } = useSplashStore();
-  const { hasSeenOnboarding, isCompleted, loadOnboardingStatus } = useOnboardingStore();
 
   useEffect(() => {
     initializeApp();
   }, []);
 
-  // Listen for onboarding completion
-  useEffect(() => {
-    if (isCompleted && !isLoading) {
-      console.log('🎉 Onboarding completed, navigating to home tabs');
-      navigationUtils.replace('(tabs)');
-    }
-  }, [isCompleted, isLoading]);
-
   const initializeApp = async () => {
     setLoading(true);
-    
-    // Load onboarding status first
-    await loadOnboardingStatus();
     
     const steps = createSplashSteps();
     const completed: string[] = [];
@@ -67,14 +55,11 @@ export function useSplashViewModel() {
     }, 500);
   };
 
-  const navigateToNextScreen = () => {
+  const navigateToNextScreen = async () => {
     console.log('🧿 Splash screen completed, checking onboarding status');
-    console.log('hasSeenOnboarding:', hasSeenOnboarding);
-    console.log('isCompleted:', isCompleted);
     
     try {
-      // Use utility function to determine navigation
-      if (shouldShowOnboarding(hasSeenOnboarding, isCompleted)) {
+      if (await shouldShowOnboarding()) {
         console.log('First time user - navigating to onboarding');
         router.push('/onboarding');
       } else {
