@@ -79,6 +79,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#34C759'; // Green for battery/device helpers
     case 'rich-text-helper':
       return '#AF52DE'; // Purple for rich text helpers
+    case 'validator-helper':
+      return '#FF3B30'; // Red for validation helpers
     default:
       return '#8E8E93';
   }
@@ -164,6 +166,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/rich-text-helper',
     available: true,
     category: 'text-helpers'
+  },
+  {
+    id: 'validator-helper',
+    name: 'Validator Helper',
+    description: 'Form validation utilities',
+    icon: 'checkmark-circle-outline',
+    color: '#FF3B30',
+    route: '/validator-helper',
+    available: true,
+    category: 'validation-helpers'
   }
 ];
 

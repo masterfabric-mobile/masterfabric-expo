@@ -1,7 +1,8 @@
+import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
 import { useValidator } from '@/src/shared/hooks/use-validator';
 import { t } from '@/src/shared/i18n';
 import { ValidatorType } from 'masterfabric-expo-core';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   PASSWORD_MAX_LENGTH,
   type SocialLoginProvider,
@@ -13,6 +14,17 @@ import {
 import { checkPasswordRequirements } from '../utils/validator-helper-utils';
 
 export function useValidatorAuthFormViewModel() {
+  const { showSnackbar: show } = useSnackbar();
+  
+  const showSnackbar = useCallback(
+    (message: string, options?: { type?: 'success' | 'error' | 'warning' | 'info'; duration?: number }) => {
+      return show({
+        message,
+        ...options,
+      });
+    },
+    [show]
+  );
   const [activeTab, setActiveTab] = useState<AuthTab>('login');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -115,7 +127,10 @@ export function useValidatorAuthFormViewModel() {
 
   const handleSocialLogin = (provider: SocialLoginProvider) => {
     console.log(`Login with ${provider}`);
-    alert(t('auth.socialLoginDemo', { provider }));
+    showSnackbar(t('auth.socialLoginDemo', { provider }), {
+      type: 'info',
+      duration: 3000,
+    });
   };
 
   const handleTabChange = (tab: AuthTab) => {

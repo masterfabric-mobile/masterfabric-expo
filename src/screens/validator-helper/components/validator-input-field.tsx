@@ -100,7 +100,7 @@ export function ValidatorInputField({
       </View>
 
       <View style={validatorInputFieldStyles.inputRow}>
-        <View style={validatorInputFieldStyles.inputGroup}>
+        <View style={[validatorInputFieldStyles.inputGroup, validatorInputFieldStyles.inputGroupFlex]}>
           <ThemedText
             style={[validatorInputFieldStyles.label, { color: colors.bodyText }]}
           >
@@ -125,7 +125,7 @@ export function ValidatorInputField({
           />
         </View>
 
-        <View style={validatorInputFieldStyles.inputGroup}>
+        <View style={[validatorInputFieldStyles.inputGroup, validatorInputFieldStyles.inputGroupFlex]}>
           <ThemedText
             style={[validatorInputFieldStyles.label, { color: colors.bodyText }]}
           >
@@ -157,7 +157,7 @@ export function ValidatorInputField({
             value={testInput.trim !== false}
             onValueChange={(value) => onInputChange({ trim: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarWhite}
+            thumbColor={colors.snackbarSwitchActiveLight}
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}
@@ -171,7 +171,7 @@ export function ValidatorInputField({
             value={testInput.convertTurkishChars || false}
             onValueChange={(value) => onInputChange({ convertTurkishChars: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarWhite}
+            thumbColor={colors.snackbarSwitchActiveLight}
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}

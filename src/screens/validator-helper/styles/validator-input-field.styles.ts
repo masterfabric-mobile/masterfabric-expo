@@ -6,6 +6,7 @@ export const validatorInputFieldStyles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1.5,
     marginBottom: 20,
+    overflow: 'hidden',
   },
   title: {
     fontSize: 18,
@@ -15,9 +16,11 @@ export const validatorInputFieldStyles = StyleSheet.create({
   inputGroup: {
     marginBottom: 16,
   },
+  inputGroupFlex: {
+    flex: 1,
+  },
   inputRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     gap: 12,
   },
   label: {
@@ -38,7 +41,7 @@ export const validatorInputFieldStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    minWidth: 80,
+    flex: 1,
   },
   picker: {
     borderWidth: 1,
@@ -52,6 +55,7 @@ export const validatorInputFieldStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
+    height: 44,
   },
   checkboxLabel: {
     fontSize: 14,
