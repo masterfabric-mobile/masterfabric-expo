@@ -1,33 +1,75 @@
 /**
  * UI Size Helper
- * 
- * Provides utilities for working with the Sizing system, including
- * responsive design helpers, spacing calculations, and size conversions.
- * Integrates with device-info helper to automatically get screen dimensions.
- * 
+ *
+ * Provides a rich set of utilities around the `Sizing` system:
+ * - Responsive helpers (phone / tablet / desktop)
+ * - Spacing, padding, margin, grid and touch–target calculations
+ * - Introspection helpers to list all sizing tokens (used by the UI Size Helper screen)
+ *
+ * The examples below show **practical usage patterns** you would typically have
+ * in screens and components.
+ *
  * @example
  * ```typescript
  * import { uiSizeHelper, Sizing } from 'masterfabric-expo-core';
- * 
- * // Get responsive spacing (automatically uses device info)
- * const padding = await uiSizeHelper.getResponsiveSpacingAuto({
+ *
+ * //
+ * // 1. Responsive spacing for a screen container
+ * //
+ *
+ * // Automatically picks the right value based on current device width
+ * const containerPadding = await uiSizeHelper.getResponsiveSpacingAuto({
  *   phone: Sizing.padding.l,
  *   tablet: Sizing.padding.xl,
- *   desktop: Sizing.padding.xxl
+ *   desktop: Sizing.padding.xxl,
  * });
- * 
- * // Or manually with width
- * const padding = uiSizeHelper.getResponsiveSpacing(800, {
- *   phone: Sizing.padding.l,
- *   tablet: Sizing.padding.xl,
- *   desktop: Sizing.padding.xxl
+ *
+ * // Same logic, but with an explicit width (e.g. from Dimensions)
+ * const width = uiSizeHelper.getScreenWidth();
+ * const containerPaddingManual = uiSizeHelper.getResponsiveSpacing(width, {
+ *   phone: Sizing.padding.m,
+ *   tablet: Sizing.padding.l,
+ *   desktop: Sizing.padding.xl,
  * });
- * 
- * // Check if device is tablet (uses device info)
- * const isTablet = await uiSizeHelper.isTabletAuto();
- * 
- * // Get spacing value
- * const spacing = uiSizeHelper.getSpacing('l'); // 16px
+ *
+ * //
+ * // 2. Device–type & grid usage
+ * //
+ *
+ * const deviceType = uiSizeHelper.getDeviceTypeAuto(); // 'phone' | 'tablet' | 'desktop'
+ * const columns = uiSizeHelper.getGridColumnsAuto();   // e.g. 4 / 8 / 12
+ *
+ * // You can branch your layout according to device type:
+ * const cardWidth =
+ *   deviceType === 'phone'
+ *     ? Sizing.card.width.small
+ *     : deviceType === 'tablet'
+ *     ? Sizing.card.width.medium
+ *     : Sizing.card.width.large;
+ *
+ * //
+ * // 3. Working with base unit & spacing tokens
+ * //
+ *
+ * // Base unit of the 8pt grid system
+ * const baseUnit = uiSizeHelper.getBaseUnit(); // e.g. 8
+ *
+ * // Calculate a custom spacing on the fly (3 * baseUnit)
+ * const customSpacing = uiSizeHelper.calculateSpacing(3); // 24px
+ *
+ * // Or use named spacing tokens directly
+ * const gapM = uiSizeHelper.getSpacing('m'); // Sizing.spacing.m
+ *
+ * //
+ * // 4. Introspection helpers (used by the UI Size Helper screen)
+ * //
+ *
+ * // You can list all spacing values to build a viewer/debug screen:
+ * const allSpacings = uiSizeHelper.getAllSpacings();
+ * // -> [{ size: 'xxs', value: 2, category: 'spacing' }, ...]
+ *
+ * const allButtonHeights = uiSizeHelper.getAllButtonHeights();
+ * // -> [{ size: 'small', value: 32, category: 'button.height' }, ...]
  * ```
  */
 
@@ -263,18 +305,6 @@ class UISizeHelper {
   }
 
   /**
-   * Gets all typography font sizes as an array
-   * @returns Array of font size info
-   */
-  getAllFontSizes(): SizeInfo[] {
-    return Object.entries(Sizing.typography.fontSize).map(([size, value]) => ({
-      value,
-      size,
-      category: 'fontSize',
-    }));
-  }
-
-  /**
    * Gets all icon sizes as an array
    * @returns Array of icon size info
    */
@@ -379,42 +409,6 @@ class UISizeHelper {
       value,
       size,
       category: 'gap',
-    }));
-  }
-
-  /**
-   * Gets all typography line heights as an array
-   * @returns Array of line height info
-   */
-  getAllLineHeights(): SizeInfo[] {
-    return Object.entries(Sizing.typography.lineHeight).map(([size, value]) => ({
-      value,
-      size,
-      category: 'typography.lineHeight',
-    }));
-  }
-
-  /**
-   * Gets all typography font weights as an array
-   * @returns Array of font weight info
-   */
-  getAllFontWeights(): SizeInfo[] {
-    return Object.entries(Sizing.typography.fontWeight).map(([size, value]) => ({
-      value,
-      size,
-      category: 'typography.fontWeight',
-    }));
-  }
-
-  /**
-   * Gets all typography letter spacing values as an array
-   * @returns Array of letter spacing info
-   */
-  getAllLetterSpacings(): SizeInfo[] {
-    return Object.entries(Sizing.typography.letterSpacing).map(([size, value]) => ({
-      value,
-      size,
-      category: 'typography.letterSpacing',
     }));
   }
 
@@ -527,18 +521,6 @@ class UISizeHelper {
   }
 
   /**
-   * Gets all button font sizes as an array
-   * @returns Array of button font size info
-   */
-  getAllButtonFontSizes(): SizeInfo[] {
-    return Object.entries(Sizing.button.fontSize).map(([size, value]) => ({
-      value,
-      size,
-      category: 'button.fontSize',
-    }));
-  }
-
-  /**
    * Gets all button border radiuses as an array
    * @returns Array of button border radius info
    */
@@ -607,18 +589,6 @@ class UISizeHelper {
       value,
       size,
       category: 'input.borderWidth',
-    }));
-  }
-
-  /**
-   * Gets all input font sizes as an array
-   * @returns Array of input font size info
-   */
-  getAllInputFontSizes(): SizeInfo[] {
-    return Object.entries(Sizing.input.fontSize).map(([size, value]) => ({
-      value,
-      size,
-      category: 'input.fontSize',
     }));
   }
 
@@ -1187,18 +1157,6 @@ class UISizeHelper {
   }
 
   /**
-   * Gets all badge font sizes as an array
-   * @returns Array of badge font size info
-   */
-  getAllBadgeFontSizes(): SizeInfo[] {
-    return Object.entries(Sizing.badge.fontSize).map(([size, value]) => ({
-      value,
-      size,
-      category: 'badge.fontSize',
-    }));
-  }
-
-  /**
    * Gets all divider heights as an array
    * @returns Array of divider height info
    */
@@ -1231,18 +1189,6 @@ class UISizeHelper {
       value,
       size,
       category: 'tabBar.iconSize',
-    }));
-  }
-
-  /**
-   * Gets all tab bar label font sizes as an array
-   * @returns Array of tab bar label font size info
-   */
-  getAllTabBarLabelFontSizes(): SizeInfo[] {
-    return Object.entries(Sizing.tabBar.labelFontSize).map(([size, value]) => ({
-      value,
-      size,
-      category: 'tabBar.labelFontSize',
     }));
   }
 
@@ -1353,7 +1299,6 @@ class UISizeHelper {
       padding: Sizing.padding,
       margin: Sizing.margin,
       gap: Sizing.gap,
-      typography: Sizing.typography,
       borderRadius: Sizing.borderRadius,
       borderWidth: Sizing.borderWidth,
       width: Sizing.width,
