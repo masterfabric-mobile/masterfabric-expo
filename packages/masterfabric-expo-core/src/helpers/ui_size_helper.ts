@@ -122,6 +122,78 @@ class UISizeHelper {
   }
 
   /**
+   * Gets a gap value by size key
+   * @param size - The gap size key
+   * @returns The gap value in pixels
+   */
+  getGap(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'): number {
+    return Sizing.gap[size];
+  }
+
+  /**
+   * Gets a scroll padding value by size key
+   * @param size - The scroll padding size key
+   * @returns The scroll padding value in pixels
+   */
+  getScrollPadding(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'): number {
+    return Sizing.scroll.padding[size];
+  }
+
+  /**
+   * Gets a scroll margin value by size key
+   * @param size - The scroll margin size key
+   * @returns The scroll margin value in pixels
+   */
+  getScrollMargin(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'): number {
+    return Sizing.scroll.margin[size];
+  }
+
+  /**
+   * Gets a border radius value by size key
+   * @param size - The border radius size key
+   * @returns The border radius value in pixels
+   */
+  getBorderRadius(size: 'small' | 'large'): number {
+    return Sizing.borderRadius[size];
+  }
+
+  /**
+   * Gets a border width value by size key
+   * @param size - The border width size key
+   * @returns The border width value in pixels
+   */
+  getBorderWidth(size: 'none' | 'hairline' | 's' | 'm' | 'l' | 'xl' | 'xxl'): number {
+    return Sizing.borderWidth[size];
+  }
+
+  /**
+   * Gets a button height value by size key
+   * @param size - The button height size key
+   * @returns The button height value in pixels
+   */
+  getButtonHeight(size: 'small' | 'medium' | 'large'): number {
+    return Sizing.button.height[size];
+  }
+
+  /**
+   * Gets an input height value by size key
+   * @param size - The input height size key
+   * @returns The input height value in pixels
+   */
+  getInputHeight(size: 'small' | 'medium' | 'large'): number {
+    return Sizing.input.height[size];
+  }
+
+  /**
+   * Gets a card padding value by size key
+   * @param size - The card padding size key
+   * @returns The card padding value in pixels
+   */
+  getCardPadding(size: 'xxs' | 'xs' | 'small' | 'medium' | 'large' | 'xl' | 'xxl'): number {
+    return Sizing.card.padding[size];
+  }
+
+  /**
    * Gets responsive spacing based on screen width
    * @param width - Current screen width
    * @param options - Spacing options for different breakpoints
@@ -1261,6 +1333,18 @@ class UISizeHelper {
       value,
       size,
       category: 'scroll.padding',
+    }));
+  }
+
+  /**
+   * Gets all scroll margin values as an array
+   * @returns Array of scroll margin info
+   */
+  getAllScrollMargins(): SizeInfo[] {
+    return Object.entries(Sizing.scroll.margin).map(([size, value]) => ({
+      value,
+      size,
+      category: 'scroll.margin',
     }));
   }
 
