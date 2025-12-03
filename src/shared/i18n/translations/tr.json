@@ -594,6 +594,50 @@
         }
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Boyut Yardımcısı",
+      "description": "Boyutlandırma sistemi, boşluk ve duyarlı tasarım yardımcıları",
+      "testSuite": "UI Boyut Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "runTests": "Tüm Testleri Çalıştır",
+      "runningTests": "Testler Çalışıyor...",
+      "testResults": "Test Sonuçları",
+      "functions": "fonksiyon",
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "getSpacing": "Boyut anahtarına göre boşluk değerini alır",
+      "getPadding": "Boyut anahtarına göre dolgu değerini alır",
+      "getMargin": "Boyut anahtarına göre kenar boşluğu değerini alır",
+      "calculateSpacing": "Temel birim çarpanı kullanarak boşluk hesaplar",
+      "getBaseUnit": "Temel birimi alır (8pt grid)",
+      "getScreenWidth": "Mevcut ekran genişliğini alır",
+      "getDeviceTypeAuto": "Cihaz tipini otomatik olarak alır",
+      "getGridColumnsAuto": "Cihaza göre grid kolonlarını alır",
+      "getResponsiveSpacing": "Ekran genişliğine göre duyarlı boşluk alır",
+      "getButtonHeight": "Boyuta göre buton yüksekliğini alır",
+      "getInputHeight": "Boyuta göre giriş yüksekliğini alır",
+      "getCardPadding": "Boyuta göre kart dolgusunu alır",
+      "spacing": "Boşluk",
+      "padding": "Dolgu",
+      "margin": "Kenar Boşluğu",
+      "gap": "Aralık",
+      "borderRadius": "Kenar Yuvarlaklığı",
+      "borderWidth": "Kenar Kalınlığı",
+      "buttonHeight": "Buton Yüksekliği",
+      "inputHeight": "Giriş Yüksekliği",
+      "cardPadding": "Kart Dolgusu",
+      "scrollPadding": "Kaydırma Dolgusu",
+      "scrollMargin": "Kaydırma Kenar Boşluğu",
+      "preview": "Canlı Önizleme",
+      "showcase": "Boyutlandırma Vitrin",
+      "showcaseDescription": "Tüm mevcut boyutlandırma değerleri ve örnekleri",
+      "deviceType": {
+        "title": "Cihaz Tipi",
+        "phone": "📱 Telefon",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Masaüstü"
+      }
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
@@ -915,96 +959,6 @@
         "warning": "warning",
         "error": "error",
         "verbose": "verbose"
-      }
-    },
-    "uiSizeHelper": {
-      "title": "UI Boyut Yardımcısı",
-      "description": "Boyutlandırma sistemi, boşluk, tipografi ve duyarlı tasarım araçları",
-      "spacing": "Boşluk",
-      "typography": "Tipografi",
-      "buttons": "Butonlar",
-      "inputs": "Girişler",
-      "cards": "Kartlar",
-      "modals": "Modallar",
-      "icons": "İkonlar",
-      "responsive": "Duyarlı",
-      "variables": "Değişkenler",
-      "sizingVariablesViewer": "Boyutlandırma Değişkenleri Görüntüleyici",
-      "viewAllVariables": "Tüm boyutlandırma değişkenlerini görüntüle",
-      "deviceType": {
-        "title": "Cihaz Tipi",
-        "phone": "📱 Telefon",
-        "tablet": "📱 Tablet",
-        "desktop": "🖥️ Masaüstü"
-      },
-      "phone": "Telefon",
-      "tablet": "Tablet",
-      "desktop": "Masaüstü",
-      "baseUnit": "Temel Birim",
-      "breakpoints": "Kırılma Noktaları",
-      "touchTargets": "Dokunma Hedefleri",
-      "modal": {
-        "title": "Modal Örneği",
-        "description": "Bu modal genişlik, maksimum genişlik, maksimum yükseklik, kenar yuvarlaklığı ve dolgu için Sizing.modal değerlerini kullanır."
-      },
-      "examples": {
-        "interactive": {
-          "title": "Etkileşimli Boyutlandırma Örnekleri",
-          "description": "Boşluk, butonlar, girişler ve kartların canlı boyutlandırma ayarlamalarıyla etkileşimli örneklerini keşfedin"
-        },
-        "spacing": {
-          "title": "Boşluk",
-          "description": "Tüm boşluk değerleri 8pt grid sistemini takip eder",
-          "interactive": "Etkileşimli Boşluk",
-          "allSizes": "Tüm Boşluk Boyutları",
-          "spacerComponent": "Spacer Bileşeni",
-          "selected": "Seçilen"
-        },
-        "borderRadius": {
-          "title": "Kenar Yuvarlaklığı Örnekleri",
-          "interactive": "Etkileşimli Kenar Yuvarlaklığı",
-          "interactiveWidth": "Etkileşimli Kenar Kalınlığı",
-          "base": "Temel Kenar Yuvarlaklığı",
-          "variants": "Kenar Kalınlığı Varyantları"
-        },
-        "icon": {
-          "title": "İkon ve Avatar Örnekleri",
-          "interactiveIcon": "Etkileşimli İkon Boyutu",
-          "interactiveAvatar": "Etkileşimli Avatar Boyutu",
-          "allIcons": "Tüm İkon Boyutları",
-          "allAvatars": "Tüm Avatar Boyutları",
-          "selected": "Seçilen"
-        },
-        "button": {
-          "title": "Buton Örnekleri",
-          "interactiveRadius": "Etkileşimli Kenar Yuvarlaklığı",
-          "openModal": "Modal Örneğini Aç"
-        },
-        "input": {
-          "title": "Giriş Örnekleri",
-          "interactiveSize": "Etkileşimli Giriş Boyutu",
-          "interactiveRadius": "Etkileşimli Kenar Yuvarlaklığı",
-          "interactiveWidth": "Etkileşimli Kenar Kalınlığı",
-          "multiline": "Çok Satırlı Giriş"
-        },
-        "card": {
-          "title": "Kart Örnekleri",
-          "interactivePadding": "Etkileşimli Kart Dolgusu",
-          "interactiveRadius": "Etkileşimli Kenar Yuvarlaklığı",
-          "interactiveWidth": "Etkileşimli Kenar Kalınlığı",
-          "allPaddings": "Tüm Kart Dolgu Varyantları",
-          "selected": "Seçilen"
-        }
-      },
-      "placeholders": {
-        "selectSpacing": "Boşluk boyutu seç",
-        "selectSpacer": "Spacer boyutu seç",
-        "selectRadius": "Kenar yuvarlaklığı seç",
-        "selectWidth": "Kenar kalınlığı seç",
-        "selectIconSize": "İkon boyutu seç",
-        "selectAvatarSize": "Avatar boyutu seç",
-        "selectInputSize": "Giriş boyutu seç",
-        "selectCardPadding": "Kart dolgusu seç"
       }
     },
     "batteryHelper": {
