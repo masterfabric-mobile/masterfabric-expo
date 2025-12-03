@@ -9,7 +9,14 @@ export const uiSizeHelperScreenStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    paddingHorizontal: Sizing.padding.l,
+    paddingTop: Sizing.padding.l,
     paddingBottom: Sizing.padding.xxl,
+  },
+  resultsTitle: {
+    fontSize: Sizing.typography.fontSize.l,
+    marginBottom: Sizing.spacing.m,
+    marginTop: Sizing.spacing.l,
   },
   infoCard: {
     borderRadius: Sizing.card.borderRadius.m,
