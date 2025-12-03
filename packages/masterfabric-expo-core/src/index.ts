@@ -65,3 +65,8 @@ export * from './stores/batteryStore';
 export * from './helpers/batteryHelper';
 export * from './types/battery';
 
+// Onboarding Helper
+export * from './components/onboarding-helper/OnboardingHelperView';
+export * from './hooks/useOnboardingHelperViewModel';
+export * from './stores/onboardingStore';
+

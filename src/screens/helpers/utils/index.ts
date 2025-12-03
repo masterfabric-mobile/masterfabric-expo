@@ -43,6 +43,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'document-text-outline';
     case 'typography-helper':
       return 'text-outline';
+    case 'onboarding-helper':
+      return 'school-outline';
     case 'ui-size-helper':
       return 'resize-outline';
     default:
@@ -81,6 +83,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#AF52DE'; // Purple for rich text helpers
     case 'typography-helper':
       return '#007AFF'; // Blue for typography helpers
+    case 'onboarding-helper':
+      return '#FF3B30'; // Red for onboarding helper
     case 'ui-size-helper':
       return '#007AFF'; // Blue for UI sizing helpers
     default:
@@ -178,6 +182,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/typography-helper',
     available: true,
     category: 'text-helpers'
+  },
+  {
+    id: 'onboarding-helper',
+    name: 'Onboarding Flow Manager',
+    description: 'Tool for managing and testing the app\'s initial onboarding experience.',
+    icon: 'school-outline',
+    color: '#FF3B30',
+    route: '/onboarding-helper',
+    available: true,
+    category: 'dev-helpers'
   },
   {
     id: 'ui-size-helper',

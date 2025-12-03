@@ -26,6 +26,9 @@ export * from './toast_helper';
 // Rich Text Helper
 export * from './rich_text_helper';
 
+// Onboarding Helper
+export * from './onboarding_helper';
+
 // UI Size Helper
 export * from './ui_size_helper';
 

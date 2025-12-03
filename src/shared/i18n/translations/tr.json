@@ -1032,6 +1032,10 @@
       "deviceInfoUnavailable": "Cihaz bilgileri mevcut değil",
       "unknown": "Bilinmiyor",
       "errorRetry": "Pil bilgileri yüklenirken hata oluştu. Tekrar denemek için dokunun"
+    },
+    "onboardingHelper": {
+      "title": "Onboarding Yardımcısı",
+      "description": "Uygulamanın başlangıçtaki tanıtım deneyimini yönetme ve test etme aracı."
     }
   },
   "documentation": {
