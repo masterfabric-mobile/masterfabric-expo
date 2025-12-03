@@ -140,7 +140,6 @@ export function SizingVariablesViewer() {
         {renderSizeList(uiSizeHelper.getAllSpacings(), 'Spacing')}
         {renderSizeList(uiSizeHelper.getAllPaddings(), 'Padding')}
         {renderSizeList(uiSizeHelper.getAllMargins(), 'Margin')}
-        {renderSizeList(uiSizeHelper.getAllFontSizes(), 'Font Sizes')}
         {renderSizeList(uiSizeHelper.getAllIconSizes(), 'Icon Sizes')}
         {renderSizeList(uiSizeHelper.getAllAvatarSizes(), 'Avatar Sizes')}
         {renderSizeList(uiSizeHelper.getAllButtonHeights(), 'Button Heights')}

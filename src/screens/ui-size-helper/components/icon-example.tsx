@@ -1,9 +1,11 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { Dropdown } from '@/src/shared/components/Dropdown';
+import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { Sizing } from 'masterfabric-expo-core';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 
 export function IconExample() {
@@ -18,6 +20,9 @@ export function IconExample() {
   const avatarSizes: Array<keyof typeof Sizing.avatar> = [
     'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'
   ];
+
+  const [selectedIconSize, setSelectedIconSize] = useState<keyof typeof Sizing.icon>('m');
+  const [selectedAvatarSize, setSelectedAvatarSize] = useState<keyof typeof Sizing.avatar>('m');
 
   return (
     <ThemedView
@@ -36,9 +41,10 @@ export function IconExample() {
           marginBottom: Sizing.spacing.m,
         }}
       >
-        Icon & Avatar Examples
+        {t('uiSizeHelper.examples.icon.title')}
       </ThemedText>
 
+      {/* Interactive Icon Size */}
       <View style={{ marginBottom: Sizing.spacing.l }}>
         <ThemedText
           type="defaultSemiBold"
@@ -47,38 +53,36 @@ export function IconExample() {
             marginBottom: Sizing.spacing.s,
           }}
         >
-          Icon Sizes
+          {t('uiSizeHelper.examples.icon.interactiveIcon')}
         </ThemedText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: Sizing.gap.m, alignItems: 'center' }}>
-          {iconSizes.map((size) => (
-            <View
-              key={size}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: Sizing.icon[size] + Sizing.spacing.m,
-                height: Sizing.icon[size] + Sizing.spacing.m,
-              }}
-            >
-              <Ionicons
-                name="star"
-                size={Sizing.icon[size]}
-                color={colors.primary}
-              />
-              <ThemedText
-                style={{
-                  fontSize: Sizing.typography.fontSize.xxs,
-                  marginTop: Sizing.spacing.xxs,
-                  color: colors.bodyText,
-                }}
-              >
-                {size}
-              </ThemedText>
-            </View>
-          ))}
+        <Dropdown
+          options={iconSizes.map((size) => ({
+            label: `${size.toUpperCase()}: ${Sizing.icon[size]}px`,
+            value: size,
+          }))}
+          selectedValue={selectedIconSize}
+          onSelect={(value) => setSelectedIconSize(value as keyof typeof Sizing.icon)}
+          placeholder={t('uiSizeHelper.placeholders.selectIconSize')}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Sizing.spacing.m }}>
+          <Ionicons
+            name="star"
+            size={Sizing.icon[selectedIconSize]}
+            color={colors.primary}
+          />
+          <ThemedText
+            style={{
+              fontSize: Sizing.typography.fontSize.s,
+              marginLeft: Sizing.spacing.s,
+              color: colors.bodyText,
+            }}
+          >
+            {selectedIconSize} = {Sizing.icon[selectedIconSize]}px
+          </ThemedText>
         </View>
       </View>
 
+      {/* Interactive Avatar Size */}
       <View>
         <ThemedText
           type="defaultSemiBold"
@@ -87,47 +91,45 @@ export function IconExample() {
             marginBottom: Sizing.spacing.s,
           }}
         >
-          Avatar Sizes
+          {t('uiSizeHelper.examples.icon.interactiveAvatar')}
         </ThemedText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: Sizing.gap.m, alignItems: 'center' }}>
-          {avatarSizes.map((size) => (
-            <View
-              key={size}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <ThemedView
-                style={{
-                  width: Sizing.avatar[size],
-                  height: Sizing.avatar[size],
-                  borderRadius: Sizing.avatar[size] / 2,
-                  backgroundColor: colors.primary,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Ionicons
-                  name="person"
-                  size={Sizing.avatar[size] * 0.6}
-                  color="#FFFFFF"
-                />
-              </ThemedView>
-              <ThemedText
-                style={{
-                  fontSize: Sizing.typography.fontSize.xxs,
-                  marginTop: Sizing.spacing.xxs,
-                  color: colors.bodyText,
-                }}
-              >
-                {size}
-              </ThemedText>
-            </View>
-          ))}
+        <Dropdown
+          options={avatarSizes.map((size) => ({
+            label: `${size.toUpperCase()}: ${Sizing.avatar[size]}px`,
+            value: size,
+          }))}
+          selectedValue={selectedAvatarSize}
+          onSelect={(value) => setSelectedAvatarSize(value as keyof typeof Sizing.avatar)}
+          placeholder={t('uiSizeHelper.placeholders.selectAvatarSize')}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Sizing.spacing.m }}>
+          <ThemedView
+            style={{
+              width: Sizing.avatar[selectedAvatarSize],
+              height: Sizing.avatar[selectedAvatarSize],
+              borderRadius: Sizing.avatar[selectedAvatarSize] / 2,
+              backgroundColor: colors.primary,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight: Sizing.spacing.s,
+            }}
+          >
+            <Ionicons
+              name="person"
+              size={Sizing.avatar[selectedAvatarSize] * 0.6}
+              color="#FFFFFF"
+            />
+          </ThemedView>
+          <ThemedText
+            style={{
+              fontSize: Sizing.typography.fontSize.s,
+              color: colors.bodyText,
+            }}
+          >
+            {selectedAvatarSize} = {Sizing.avatar[selectedAvatarSize]}px
+          </ThemedText>
         </View>
       </View>
     </ThemedView>
   );
 }
-

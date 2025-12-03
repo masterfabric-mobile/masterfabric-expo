@@ -1,5 +1,7 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { Dropdown } from '@/src/shared/components/Dropdown';
+import { t } from '@/src/shared/i18n';
 import { Sizing } from 'masterfabric-expo-core';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
@@ -10,8 +12,13 @@ export function InputExample() {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   const [text, setText] = useState('');
+  const [selectedSize, setSelectedSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [selectedBorderRadius, setSelectedBorderRadius] = useState<'small' | 'large'>('large');
+  const [selectedBorderWidth, setSelectedBorderWidth] = useState<'s' | 'm' | 'l'>('s');
 
   const inputSizes: Array<'small' | 'medium' | 'large'> = ['small', 'medium', 'large'];
+  const borderRadiusOptions: Array<'small' | 'large'> = ['small', 'large'];
+  const borderWidthOptions: Array<'s' | 'm' | 'l'> = ['s', 'm', 'l'];
 
   return (
     <ThemedView
@@ -30,67 +37,123 @@ export function InputExample() {
           marginBottom: Sizing.spacing.m,
         }}
       >
-        Input Examples
+        {t('uiSizeHelper.examples.input.title')}
       </ThemedText>
 
-      {inputSizes.map((size) => (
-        <View key={size} style={{ marginBottom: Sizing.spacing.m }}>
-          <ThemedText
-            style={{
-              fontSize: Sizing.typography.fontSize.s,
-              marginBottom: Sizing.spacing.xs,
-              color: colors.bodyText,
-            }}
-          >
-            {size.toUpperCase()} Input
-          </ThemedText>
-          <TextInput
-            style={{
-              height: Sizing.input.height[size],
-              width: Sizing.input.width.full,
-              paddingHorizontal: Sizing.input.padding.horizontal.s,
-              paddingVertical: Sizing.input.padding.vertical.s,
-              borderRadius: Sizing.input.borderRadius.m,
-              borderWidth: Sizing.input.borderWidth.s,
-              borderColor: colors.surfaceBorder,
-              backgroundColor: colors.inputBackground,
-              color: colors.text,
-              fontSize: Sizing.input.fontSize.m,
-            }}
-            placeholder={`${size} input example`}
-            placeholderTextColor={colors.placeholderText}
-            value={text}
-            onChangeText={setText}
-          />
-        </View>
-      ))}
-
-      <View style={{ marginTop: Sizing.spacing.s }}>
+      {/* Interactive Input Size */}
+      <View style={{ marginBottom: Sizing.spacing.l }}>
         <ThemedText
+          type="defaultSemiBold"
           style={{
-            fontSize: Sizing.typography.fontSize.s,
-            marginBottom: Sizing.spacing.xs,
-            color: colors.bodyText,
+            fontSize: Sizing.typography.fontSize.m,
+            marginBottom: Sizing.spacing.s,
           }}
         >
-          Multiline Input (minHeight: {Sizing.input.minHeight.m}px)
+          {t('uiSizeHelper.examples.input.interactiveSize')}
         </ThemedText>
+        <Dropdown
+          options={inputSizes.map((size) => ({
+            label: `${size.toUpperCase()} (${Sizing.input.height[size]}px)`,
+            value: size,
+          }))}
+          selectedValue={selectedSize}
+          onSelect={(value) => setSelectedSize(value as 'small' | 'medium' | 'large')}
+          placeholder={t('uiSizeHelper.placeholders.selectInputSize')}
+        />
         <TextInput
-          multiline
           style={{
-            minHeight: Sizing.input.minHeight.m,
-            width: Sizing.input.width.full,
+            height: Sizing.input.height[selectedSize],
+            width: '100%',
             paddingHorizontal: Sizing.input.padding.horizontal.s,
             paddingVertical: Sizing.input.padding.vertical.s,
-            borderRadius: Sizing.input.borderRadius.m,
-            borderWidth: Sizing.input.borderWidth.s,
+            borderRadius: Sizing.borderRadius.large,
+            borderWidth: Sizing.borderWidth.s,
             borderColor: colors.surfaceBorder,
             backgroundColor: colors.inputBackground,
             color: colors.text,
-            fontSize: Sizing.input.fontSize.m,
-            textAlignVertical: 'top',
+            marginTop: Sizing.spacing.m,
           }}
-          placeholder="Multiline input example"
+          placeholder={`${selectedSize} (${Sizing.input.height[selectedSize]}px)`}
+          placeholderTextColor={colors.placeholderText}
+          value={text}
+          onChangeText={setText}
+        />
+      </View>
+
+      {/* Interactive Border Radius */}
+      <View style={{ marginBottom: Sizing.spacing.l }}>
+        <ThemedText
+          type="defaultSemiBold"
+          style={{
+            fontSize: Sizing.typography.fontSize.m,
+            marginBottom: Sizing.spacing.s,
+          }}
+        >
+          {t('uiSizeHelper.examples.input.interactiveRadius')}
+        </ThemedText>
+        <Dropdown
+          options={borderRadiusOptions.map((radius) => ({
+            label: `${radius.toUpperCase()} (${Sizing.borderRadius[radius]}px)`,
+            value: radius,
+          }))}
+          selectedValue={selectedBorderRadius}
+          onSelect={(value) => setSelectedBorderRadius(value as 'small' | 'large')}
+          placeholder={t('uiSizeHelper.placeholders.selectRadius')}
+        />
+        <TextInput
+          style={{
+            height: Sizing.input.height.medium,
+            width: '100%',
+            paddingHorizontal: Sizing.input.padding.horizontal.s,
+            paddingVertical: Sizing.input.padding.vertical.s,
+            borderRadius: Sizing.borderRadius[selectedBorderRadius],
+            borderWidth: Sizing.borderWidth.s,
+            borderColor: colors.surfaceBorder,
+            backgroundColor: colors.inputBackground,
+            color: colors.text,
+            marginTop: Sizing.spacing.m,
+          }}
+          placeholder={`${selectedBorderRadius} (${Sizing.borderRadius[selectedBorderRadius]}px)`}
+          placeholderTextColor={colors.placeholderText}
+          value={text}
+          onChangeText={setText}
+        />
+      </View>
+
+      {/* Interactive Border Width */}
+      <View>
+        <ThemedText
+          type="defaultSemiBold"
+          style={{
+            fontSize: Sizing.typography.fontSize.m,
+            marginBottom: Sizing.spacing.s,
+          }}
+        >
+          {t('uiSizeHelper.examples.input.interactiveWidth')}
+        </ThemedText>
+        <Dropdown
+          options={borderWidthOptions.map((width) => ({
+            label: `${width.toUpperCase()} (${Sizing.borderWidth[width]}px)`,
+            value: width,
+          }))}
+          selectedValue={selectedBorderWidth}
+          onSelect={(value) => setSelectedBorderWidth(value as 's' | 'm' | 'l')}
+          placeholder={t('uiSizeHelper.placeholders.selectWidth')}
+        />
+        <TextInput
+          style={{
+            height: Sizing.input.height.medium,
+            width: '100%',
+            paddingHorizontal: Sizing.input.padding.horizontal.s,
+            paddingVertical: Sizing.input.padding.vertical.s,
+            borderRadius: Sizing.borderRadius.large,
+            borderWidth: Sizing.borderWidth[selectedBorderWidth],
+            borderColor: colors.surfaceBorder,
+            backgroundColor: colors.inputBackground,
+            color: colors.text,
+            marginTop: Sizing.spacing.m,
+          }}
+          placeholder={`${selectedBorderWidth} (${Sizing.borderWidth[selectedBorderWidth]}px)`}
           placeholderTextColor={colors.placeholderText}
           value={text}
           onChangeText={setText}
@@ -99,4 +162,3 @@ export function InputExample() {
     </ThemedView>
   );
 }
-

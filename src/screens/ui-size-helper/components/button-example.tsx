@@ -1,8 +1,10 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { Dropdown } from '@/src/shared/components/Dropdown';
+import { t } from '@/src/shared/i18n';
 import { Sizing } from 'masterfabric-expo-core';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
 interface ButtonExampleProps {
@@ -14,7 +16,9 @@ export function ButtonExample({ onModalPress }: ButtonExampleProps) {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
 
-  const buttonSizes: Array<'small' | 'medium' | 'large'> = ['small', 'medium', 'large'];
+  const borderRadiusOptions: Array<'small' | 'large'> = ['small', 'large'];
+  
+  const [selectedRadius, setSelectedRadius] = useState<'small' | 'large'>('large');
 
   return (
     <ThemedView
@@ -33,9 +37,10 @@ export function ButtonExample({ onModalPress }: ButtonExampleProps) {
           marginBottom: Sizing.spacing.m,
         }}
       >
-        Button Examples
+        {t('uiSizeHelper.examples.button.title')}
       </ThemedText>
 
+      {/* Interactive Border Radius */}
       <View style={{ marginBottom: Sizing.spacing.l }}>
         <ThemedText
           type="defaultSemiBold"
@@ -44,72 +49,40 @@ export function ButtonExample({ onModalPress }: ButtonExampleProps) {
             marginBottom: Sizing.spacing.s,
           }}
         >
-          Button Sizes
+          {t('uiSizeHelper.examples.button.interactiveRadius')}
         </ThemedText>
-        {buttonSizes.map((size) => (
-          <TouchableOpacity
-            key={size}
+        <Dropdown
+          options={borderRadiusOptions.map((radius) => ({
+            label: `${radius.toUpperCase()}: ${Sizing.borderRadius[radius]}px`,
+            value: radius,
+          }))}
+          selectedValue={selectedRadius}
+          onSelect={(value) => setSelectedRadius(value as 'small' | 'large')}
+          placeholder={t('uiSizeHelper.placeholders.selectRadius')}
+        />
+        <View style={{ marginTop: Sizing.spacing.m }}>
+          <ThemedView
             style={{
+              width: '100%',
+              height: Sizing.button.height.medium,
               backgroundColor: colors.primary,
-              borderRadius: Sizing.button.borderRadius.l,
-              height: Sizing.button.height[size],
-              paddingHorizontal: Sizing.button.padding.horizontal[size],
-              paddingVertical: Sizing.button.padding.vertical[size],
-              alignItems: 'center',
+              borderRadius: Sizing.borderRadius[selectedRadius],
               justifyContent: 'center',
-              marginBottom: Sizing.spacing.s,
+              alignItems: 'center',
+              paddingHorizontal: Sizing.spacing.s,
             }}
           >
             <ThemedText
               style={{
                 color: '#FFFFFF',
-                fontSize: Sizing.button.fontSize[size],
                 fontWeight: Sizing.typography.fontWeight.semibold,
               }}
+              numberOfLines={2}
+              adjustsFontSizeToFit
             >
-              {size.toUpperCase()} Button
+              Border Radius: {selectedRadius.toUpperCase()} ({Sizing.borderRadius[selectedRadius]}px)
             </ThemedText>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <View style={{ marginBottom: Sizing.spacing.l }}>
-        <ThemedText
-          type="defaultSemiBold"
-          style={{
-            fontSize: Sizing.typography.fontSize.m,
-            marginBottom: Sizing.spacing.s,
-          }}
-        >
-          Border Radius Variants
-        </ThemedText>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: Sizing.gap.s }}>
-          {(['xs', 's', 'm', 'l', 'xl', 'round'] as const).map((radius) => (
-            <TouchableOpacity
-              key={radius}
-              style={{
-                backgroundColor: colors.primary,
-                borderRadius: radius === 'round' 
-                  ? Sizing.button.borderRadius.round 
-                  : Sizing.button.borderRadius[radius],
-                height: Sizing.button.height.small,
-                paddingHorizontal: Sizing.button.padding.horizontal.small,
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: Sizing.width.s,
-              }}
-            >
-              <ThemedText
-                style={{
-                  color: '#FFFFFF',
-                  fontSize: Sizing.button.fontSize.small,
-                  fontWeight: Sizing.typography.fontWeight.medium,
-                }}
-              >
-                {radius}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
+          </ThemedView>
         </View>
       </View>
 
@@ -117,24 +90,25 @@ export function ButtonExample({ onModalPress }: ButtonExampleProps) {
         onPress={onModalPress}
         style={{
           backgroundColor: colors.primary,
-          borderRadius: Sizing.button.borderRadius.l,
+          borderRadius: Sizing.borderRadius.large,
           height: Sizing.button.height.medium,
           paddingHorizontal: Sizing.button.padding.horizontal.medium,
           alignItems: 'center',
           justifyContent: 'center',
+          alignSelf: 'stretch',
         }}
       >
         <ThemedText
           style={{
             color: '#FFFFFF',
-            fontSize: Sizing.button.fontSize.medium,
             fontWeight: Sizing.typography.fontWeight.semibold,
           }}
+          numberOfLines={2}
+          adjustsFontSizeToFit
         >
-          Open Modal Example
+          {t('uiSizeHelper.examples.button.openModal')}
         </ThemedText>
       </TouchableOpacity>
     </ThemedView>
   );
 }
-

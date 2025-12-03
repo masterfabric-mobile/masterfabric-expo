@@ -1,8 +1,10 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
+import { Dropdown } from '@/src/shared/components/Dropdown';
+import { t } from '@/src/shared/i18n';
 import { Sizing, Spacer } from 'masterfabric-expo-core';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 
 export function SpacingExample() {
@@ -11,6 +13,8 @@ export function SpacingExample() {
   const colors = getThemeColors(isDark);
 
   const spacingSizes: Array<keyof typeof Sizing.spacing> = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'];
+  const [selectedSpacing, setSelectedSpacing] = useState<keyof typeof Sizing.spacing>('m');
+  const [selectedSpacer, setSelectedSpacer] = useState<keyof typeof Sizing.spacer>('m');
 
   return (
     <ThemedView
@@ -29,87 +33,93 @@ export function SpacingExample() {
           marginBottom: Sizing.spacing.m,
         }}
       >
-        Spacing Examples
-      </ThemedText>
-      <ThemedText
-        style={{
-          fontSize: Sizing.typography.fontSize.s,
-          marginBottom: Sizing.spacing.l,
-          color: colors.bodyText,
-        }}
-      >
-        All spacing values follow the 8pt grid system
+        {t('uiSizeHelper.examples.spacing.title')}
       </ThemedText>
 
-      {spacingSizes.map((size) => (
-        <View key={size} style={{ marginBottom: Sizing.spacing.s }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <ThemedView
-              style={{
-                width: Sizing.spacing[size],
-                height: Sizing.spacing[size],
-                backgroundColor: colors.primary,
-                borderRadius: Sizing.borderRadius.small,
-                marginRight: Sizing.spacing.s,
-              }}
-            />
-            <ThemedText
-              style={{
-                fontSize: Sizing.typography.fontSize.s,
-                color: colors.bodyText,
-              }}
-            >
-              {size}: {Sizing.spacing[size]}px
-            </ThemedText>
-          </View>
+      {/* Interactive Spacing */}
+      <View style={{ marginBottom: Sizing.spacing.l }}>
+        <ThemedText
+          type="defaultSemiBold"
+          style={{
+            fontSize: Sizing.typography.fontSize.m,
+            marginBottom: Sizing.spacing.s,
+          }}
+        >
+          {t('uiSizeHelper.examples.spacing.interactive')}
+        </ThemedText>
+        <Dropdown
+          options={spacingSizes.map((size) => ({
+            label: `${size.toUpperCase()}: ${Sizing.spacing[size]}px`,
+            value: size,
+          }))}
+          selectedValue={selectedSpacing}
+          onSelect={(value) => setSelectedSpacing(value as keyof typeof Sizing.spacing)}
+          placeholder={t('uiSizeHelper.placeholders.selectSpacing')}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: Sizing.spacing.m, flexWrap: 'wrap' }}>
+          <ThemedView
+            style={{
+              width: Sizing.spacing[selectedSpacing],
+              height: Sizing.spacing[selectedSpacing],
+              backgroundColor: colors.primary,
+              borderRadius: Sizing.borderRadius.small,
+              marginRight: Sizing.spacing.s,
+            }}
+          />
+          <ThemedText
+            style={{
+              fontSize: Sizing.typography.fontSize.s,
+              color: colors.bodyText,
+              flex: 1,
+              flexShrink: 1,
+            }}
+            numberOfLines={2}
+          >
+            {selectedSpacing} = {Sizing.spacing[selectedSpacing]}px
+          </ThemedText>
         </View>
-      ))}
+      </View>
 
-      <Spacer size="m" />
-
-      <ThemedText
-        type="defaultSemiBold"
-        style={{
-          fontSize: Sizing.typography.fontSize.m,
-          marginBottom: Sizing.spacing.s,
-        }}
-      >
-        Spacer Component
-      </ThemedText>
+      {/* Interactive Spacer Component */}
       <View>
-        <ThemedView
+        <ThemedText
+          type="defaultSemiBold"
           style={{
-            height: Sizing.height.xs,
-            backgroundColor: colors.primary,
-            borderRadius: Sizing.borderRadius.small,
+            fontSize: Sizing.typography.fontSize.m,
+            marginBottom: Sizing.spacing.s,
           }}
+        >
+          {t('uiSizeHelper.examples.spacing.spacerComponent')}
+        </ThemedText>
+        <Dropdown
+          options={spacingSizes.map((size) => ({
+            label: `${size.toUpperCase()}: ${Sizing.spacer[size]}px`,
+            value: size,
+          }))}
+          selectedValue={selectedSpacer}
+          onSelect={(value) => setSelectedSpacer(value as keyof typeof Sizing.spacer)}
+          placeholder={t('uiSizeHelper.placeholders.selectSpacer')}
         />
-        <Spacer size="s" />
-        <ThemedView
-          style={{
-            height: Sizing.height.xs,
-            backgroundColor: colors.primary,
-            borderRadius: Sizing.borderRadius.small,
-          }}
-        />
-        <Spacer size="m" />
-        <ThemedView
-          style={{
-            height: Sizing.height.xs,
-            backgroundColor: colors.primary,
-            borderRadius: Sizing.borderRadius.small,
-          }}
-        />
-        <Spacer size="l" />
-        <ThemedView
-          style={{
-            height: Sizing.height.xs,
-            backgroundColor: colors.primary,
-            borderRadius: Sizing.borderRadius.small,
-          }}
-        />
+        <View style={{ marginTop: Sizing.spacing.m }}>
+          <ThemedView
+            style={{
+              height: Sizing.height.xs,
+              width: '100%',
+              backgroundColor: colors.primary,
+              borderRadius: Sizing.borderRadius.small,
+            }}
+          />
+          <Spacer size={selectedSpacer} />
+          <ThemedView
+            style={{
+              height: Sizing.height.xs,
+              width: '100%',
+              backgroundColor: colors.primary,
+              borderRadius: Sizing.borderRadius.small,
+            }}
+          />
+        </View>
       </View>
     </ThemedView>
   );
 }
-

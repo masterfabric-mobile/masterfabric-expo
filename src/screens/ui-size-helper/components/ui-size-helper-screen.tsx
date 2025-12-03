@@ -1,26 +1,24 @@
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
-import { Sizing, Spacer, useResponsive } from 'masterfabric-expo-core';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { t } from '@/src/shared/i18n';
+import {
+  getThemeColors,
+  Sizing,
+  Spacer,
+  useResponsive,
+  useTheme
+} from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import {
-  ScrollView,
-  View,
-  TouchableOpacity,
   Modal,
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { uiSizeHelperScreenStyles } from '../styles/ui-size-helper-screen.styles';
-import { SpacingExample } from './spacing-example';
-import { TypographyExample } from './typography-example';
-import { ButtonExample } from './button-example';
-import { InputExample } from './input-example';
-import { CardExample } from './card-example';
-import { BorderRadiusExample } from './border-radius-example';
-import { IconExample } from './icon-example';
-import { ResponsiveExample } from './responsive-example';
 import { SizingVariablesViewer } from './sizing-variables-viewer';
+import { InteractiveSizingExample } from './interactive-sizing-example';
 
 export function UISizeHelperScreen() {
   const { currentTheme } = useTheme();
@@ -35,14 +33,21 @@ export function UISizeHelperScreen() {
     Sizing.padding.xxl
   );
 
+  const getDeviceTypeText = () => {
+    if (isPhone) return t('uiSizeHelper.deviceType.phone');
+    if (isTablet) return t('uiSizeHelper.deviceType.tablet');
+    if (isDesktop) return t('uiSizeHelper.deviceType.desktop');
+    return t('common.unknown');
+  };
+
   return (
     <SafeAreaView
       style={[uiSizeHelperScreenStyles.container, { backgroundColor: colors.background }]}
       edges={['top']}
     >
       <ScreenHeader
-        title="UI Size Helper"
-        subtitle="Sizing system examples"
+        title={t('uiSizeHelper.title')}
+        subtitle={t('uiSizeHelper.description')}
         variant="minimal"
       />
       <ScrollView
@@ -67,54 +72,17 @@ export function UISizeHelperScreen() {
             type="defaultSemiBold"
             style={{ fontSize: Sizing.typography.fontSize.m, marginBottom: Sizing.spacing.xs }}
           >
-            Device Type
+            {t('uiSizeHelper.deviceType.title')}
           </ThemedText>
           <ThemedText style={{ fontSize: Sizing.typography.fontSize.s }}>
-            {isPhone && '📱 Phone'}
-            {isTablet && '📱 Tablet'}
-            {isDesktop && '🖥️ Desktop'}
+            {getDeviceTypeText()}
           </ThemedText>
         </ThemedView>
 
         <Spacer size="l" />
 
-        {/* Spacing Examples */}
-        <SpacingExample />
-
-        <Spacer size="xl" />
-
-        {/* Typography Examples */}
-        <TypographyExample />
-
-        <Spacer size="xl" />
-
-        {/* Border Radius Examples */}
-        <BorderRadiusExample />
-
-        <Spacer size="xl" />
-
-        {/* Icon Examples */}
-        <IconExample />
-
-        <Spacer size="xl" />
-
-        {/* Button Examples */}
-        <ButtonExample onModalPress={() => setModalVisible(true)} />
-
-        <Spacer size="xl" />
-
-        {/* Input Examples */}
-        <InputExample />
-
-        <Spacer size="xl" />
-
-        {/* Card Examples */}
-        <CardExample />
-
-        <Spacer size="xl" />
-
-        {/* Responsive Examples */}
-        <ResponsiveExample />
+        {/* Interactive Sizing Examples */}
+        <InteractiveSizingExample onModalPress={() => setModalVisible(true)} />
 
         <Spacer size="xl" />
 
@@ -162,7 +130,7 @@ export function UISizeHelperScreen() {
                 marginBottom: Sizing.spacing.m,
               }}
             >
-              Modal Example
+              {t('uiSizeHelper.modal.title')}
             </ThemedText>
             <ThemedText
               style={{
@@ -171,7 +139,7 @@ export function UISizeHelperScreen() {
                 lineHeight: Sizing.typography.fontSize.m * Sizing.typography.lineHeight.normal,
               }}
             >
-              This modal uses Sizing.modal values for width, maxWidth, maxHeight, borderRadius, and padding.
+              {t('uiSizeHelper.modal.description')}
             </ThemedText>
             <TouchableOpacity
               style={[
@@ -189,11 +157,10 @@ export function UISizeHelperScreen() {
               <ThemedText
                 style={{
                   color: '#FFFFFF',
-                  fontSize: Sizing.button.fontSize.medium,
                   fontWeight: Sizing.typography.fontWeight.semibold,
                 }}
               >
-                Close
+                {t('common.close')}
               </ThemedText>
             </TouchableOpacity>
           </ThemedView>
@@ -202,4 +169,3 @@ export function UISizeHelperScreen() {
     </SafeAreaView>
   );
 }
-
