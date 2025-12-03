@@ -994,13 +994,81 @@
       "variables": "Variables",
       "sizingVariablesViewer": "Sizing Variables Viewer",
       "viewAllVariables": "View all sizing variables",
-      "deviceType": "Device Type",
+      "deviceType": {
+        "title": "Device Type",
+        "phone": "📱 Phone",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Desktop"
+      },
       "phone": "Phone",
       "tablet": "Tablet",
       "desktop": "Desktop",
       "baseUnit": "Base Unit",
       "breakpoints": "Breakpoints",
-      "touchTargets": "Touch Targets"
+      "touchTargets": "Touch Targets",
+      "modal": {
+        "title": "Modal Example",
+        "description": "This modal uses Sizing.modal values for width, maxWidth, maxHeight, borderRadius, and padding."
+      },
+      "examples": {
+        "interactive": {
+          "title": "Interactive Sizing Examples",
+          "description": "Explore interactive examples of spacing, buttons, inputs, and cards with live sizing adjustments"
+        },
+        "spacing": {
+          "title": "Spacing",
+          "description": "All spacing values follow the 8pt grid system",
+          "interactive": "Interactive Spacing",
+          "allSizes": "All Spacing Sizes",
+          "spacerComponent": "Spacer Component",
+          "selected": "Selected"
+        },
+        "borderRadius": {
+          "title": "Border Radius Examples",
+          "interactive": "Interactive Border Radius",
+          "interactiveWidth": "Interactive Border Width",
+          "base": "Base Border Radius",
+          "variants": "Border Width Variants"
+        },
+        "icon": {
+          "title": "Icon & Avatar Examples",
+          "interactiveIcon": "Interactive Icon Size",
+          "interactiveAvatar": "Interactive Avatar Size",
+          "allIcons": "All Icon Sizes",
+          "allAvatars": "All Avatar Sizes",
+          "selected": "Selected"
+        },
+        "button": {
+          "title": "Button Examples",
+          "interactiveRadius": "Interactive Border Radius",
+          "openModal": "Open Modal Example"
+        },
+        "input": {
+          "title": "Input Examples",
+          "interactiveSize": "Interactive Input Size",
+          "interactiveRadius": "Interactive Border Radius",
+          "interactiveWidth": "Interactive Border Width",
+          "multiline": "Multiline Input"
+        },
+        "card": {
+          "title": "Card Examples",
+          "interactivePadding": "Interactive Card Padding",
+          "interactiveRadius": "Interactive Border Radius",
+          "interactiveWidth": "Interactive Border Width",
+          "allPaddings": "All Card Padding Variants",
+          "selected": "Selected"
+        }
+      },
+      "placeholders": {
+        "selectSpacing": "Select spacing size",
+        "selectSpacer": "Select spacer size",
+        "selectRadius": "Select border radius",
+        "selectWidth": "Select border width",
+        "selectIconSize": "Select icon size",
+        "selectAvatarSize": "Select avatar size",
+        "selectInputSize": "Select input size",
+        "selectCardPadding": "Select card padding"
+      }
     },
     "batteryHelper": {
       "title": "Battery Helper",
