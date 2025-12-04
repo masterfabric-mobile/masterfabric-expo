@@ -209,7 +209,6 @@ export function useUISizeHelperViewModel() {
         description: t('helpers.uiSizeHelper.getCardPadding'),
         category: 'spacing',
       });
-
     } catch (error) {
       console.error('Error running UI size helper tests:', error);
     }
@@ -224,6 +223,11 @@ export function useUISizeHelperViewModel() {
     setTestResults,
     setIsLoading,
   ]);
+
+  // Make the test area live: recompute results automatically when inputs change
+  useEffect(() => {
+    runAllTests();
+  }, [runAllTests]);
 
   const updateTestInput = useCallback((updates: Partial<UISizeTestInput>) => {
     setTestInput((prev) => ({ ...prev, ...updates }));

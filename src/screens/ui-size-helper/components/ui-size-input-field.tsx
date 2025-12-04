@@ -1,4 +1,3 @@
-import { Button } from '@/src/shared/components/button';
 import { Dropdown } from '@/src/shared/components/Dropdown';
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
@@ -12,8 +11,6 @@ import { uiSizeInputFieldStyles } from '../styles/ui-size-input-field.styles';
 interface UISizeInputFieldProps {
   testInput: UISizeTestInput;
   onInputChange: (updates: Partial<UISizeTestInput>) => void;
-  onRunTests: () => void;
-  isLoading: boolean;
   deviceInfo: {
     deviceType: 'phone' | 'tablet' | 'desktop';
     screenWidth: number;
@@ -26,8 +23,6 @@ interface UISizeInputFieldProps {
 export function UISizeInputField({
   testInput,
   onInputChange,
-  onRunTests,
-  isLoading,
   deviceInfo,
 }: UISizeInputFieldProps) {
   const { currentTheme } = useTheme();
@@ -263,13 +258,6 @@ export function UISizeInputField({
         />
       </View>
 
-      <Button
-        title={isLoading ? t('helpers.uiSizeHelper.runningTests') : t('helpers.uiSizeHelper.runTests')}
-        onPress={onRunTests}
-        disabled={isLoading}
-        variant="primary"
-        size="large"
-      />
     </ThemedView>
   );
 }
