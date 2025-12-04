@@ -104,6 +104,7 @@ export const Sizing = {
   borderWidth: {
     none: 0,
     hairline: StyleSheet.hairlineWidth,
+    xs: 0.5,
     s: 1,
     m: 1.5,
     l: 2,
