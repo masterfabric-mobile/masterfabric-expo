@@ -24,6 +24,17 @@ export interface DeveloperTools {
   route?: string; // Add optional route property
 }
 
+export interface SupabaseAction {
+  id: string;
+  title: string;
+  description: string;
+  iconName?: string; // Ionicons name for icon
+  iconType?: 'image' | 'text' | 'icon';
+  icon?: any; // For image assets
+  iconText?: string; // For text/emoji icons
+  route?: string;
+}
+
 export const validateHomeAction = (action: QuickAction): boolean => {
   if (!action) return false;
   if (!action.id || typeof action.id !== 'string') return false;
@@ -161,6 +172,34 @@ export const getDeveloperActions = (): DeveloperTools[] => [
     description: 'home.developer.deviceInfo.description',
     icon: 'phone-portrait',
     color: QUICK_ACTION_COLORS['dev-device-info'],
+  },
+];
+
+// Supabase section utilities
+export const createSupabaseActions = (): SupabaseAction[] => [
+  {
+    id: 'supabase-auth',
+    title: t('home.supabase.actions.auth.title'),
+    description: t('home.supabase.actions.auth.description'),
+    iconType: 'icon',
+    iconName: 'lock-closed',
+    route: '/supabase/auth',
+  },
+  {
+    id: 'supabase-database',
+    title: t('home.supabase.actions.database.title'),
+    description: t('home.supabase.actions.database.description'),
+    iconType: 'icon',
+    iconName: 'server',
+    route: '/supabase/database',
+  },
+  {
+    id: 'supabase-storage',
+    title: t('home.supabase.actions.storage.title'),
+    description: t('home.supabase.actions.storage.description'),
+    iconType: 'icon',
+    iconName: 'folder',
+    route: '/supabase/storage',
   },
 ];
 

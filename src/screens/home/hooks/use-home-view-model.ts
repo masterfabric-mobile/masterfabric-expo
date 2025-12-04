@@ -8,7 +8,7 @@ import { getDeviceInfoForLogging } from 'masterfabric-expo-core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Clipboard } from 'react-native';
 import { ActivityActionType, ActivityItem, ActivityType, useHomeStore } from '../store/home-store';
-import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '../utils';
+import { createDefaultQuickActions, createSupabaseActions, formatGreeting, getDeveloperActions } from '../utils';
 
 export function useHomeViewModel() {
   const { user } = useAppStore();
@@ -54,6 +54,10 @@ export function useHomeViewModel() {
   const developerActions = useMemo(() => {
     return getDeveloperActions();
   }, []);
+
+  const supabaseActions = useMemo(() => {
+    return createSupabaseActions();
+  }, [locale]);
 
   // Add device info activity when component mounts only once
   useEffect(() => {
@@ -416,6 +420,7 @@ export function useHomeViewModel() {
     greeting: greeting,
     quickActions: quickActions.length > 0 ? quickActions : defaultQuickActions,
     developerActions,
+    supabaseActions,
     recentActivity,
     deviceInfo,
     compatibility,

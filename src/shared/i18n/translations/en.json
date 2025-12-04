@@ -159,6 +159,24 @@
         "title": "Device Information",
         "description": "Show detailed device and system information"
       }
+    },
+    "supabase": {
+      "title": "Supabase",
+      "description": "Backend services and database management",
+      "actions": {
+        "auth": {
+          "title": "Authentication",
+          "description": "User authentication and authorization"
+        },
+        "database": {
+          "title": "Database",
+          "description": "PostgreSQL database management"
+        },
+        "storage": {
+          "title": "Storage",
+          "description": "File storage and management"
+        }
+      }
     }
   },
   "explore": {

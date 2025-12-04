@@ -3,8 +3,8 @@ import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
-    useMasterView,
-    useThemeColors
+  useMasterView,
+  useThemeColors
 } from 'masterfabric-expo-core';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { homeScreenStyles } from '../styles/home-screen.styles';
@@ -14,6 +14,7 @@ import { ActivitySection } from './sections/activity-section';
 import { DeveloperSection } from './sections/developer-section';
 import { DeviceInfoSection } from './sections/device-info-section';
 import { QuickActionsSection } from './sections/quick-actions-section';
+import { SupabaseSection } from './sections/supabase-section';
 import { WelcomeSection } from './sections/welcome-section';
 
 // Hook-based MasterView implementation for Home Screen
@@ -25,6 +26,7 @@ function HomeScreenContent() {
     user,
     greeting,
     quickActions,
+    supabaseActions,
     deviceInfo,
     compatibility,
     compatibilityLoading,
@@ -59,6 +61,11 @@ function HomeScreenContent() {
         showsVerticalScrollIndicator={false}
       >
         <WelcomeSection greeting={greeting} user={user} />
+        
+        <SupabaseSection 
+          supabaseActions={supabaseActions}
+          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
+        />
         
         <QuickActionsSection 
           quickActions={quickActions}

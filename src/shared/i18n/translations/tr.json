@@ -115,6 +115,24 @@
         "title": "Cihaz Bilgileri",
         "description": "Detaylı cihaz ve sistem bilgilerini göster"
       }
+    },
+    "supabase": {
+      "title": "Supabase",
+      "description": "Backend servisleri ve veritabanı yönetimi",
+      "actions": {
+        "auth": {
+          "title": "Kimlik Doğrulama",
+          "description": "Kullanıcı kimlik doğrulama ve yetkilendirme"
+        },
+        "database": {
+          "title": "Veritabanı",
+          "description": "PostgreSQL veritabanı yönetimi"
+        },
+        "storage": {
+          "title": "Depolama",
+          "description": "Dosya depolama ve yönetimi"
+        }
+      }
     }
   },
   "explore": {
