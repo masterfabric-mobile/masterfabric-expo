@@ -5,7 +5,7 @@ import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { getDeviceInfoForLogging } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Clipboard } from 'react-native';
 import { ActivityActionType, ActivityItem, ActivityType, useHomeStore } from '../store/home-store';
 import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '../utils';
@@ -20,9 +20,32 @@ export function useHomeViewModel() {
   // const { isDark } = useMasterView();
   const initialDeviceInfoAdded = useRef(false);
 
+  // Track current hour to update greeting when time changes
+  const [currentHour, setCurrentHour] = useState(() => new Date().getHours());
+
+  // Update hour every minute to ensure greeting updates when hour changes
+  useEffect(() => {
+    const updateHour = () => {
+      const now = new Date();
+      const hour = now.getHours();
+      setCurrentHour(prevHour => {
+        // Only update if hour actually changed to avoid unnecessary re-renders
+        return hour !== prevHour ? hour : prevHour;
+      });
+    };
+
+    // Update immediately
+    updateHour();
+
+    // Set up interval to check every minute
+    const interval = setInterval(updateHour, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval);
+  }, []);
+
   const greeting = useMemo(() => {
-    return formatGreeting(user);
-  }, [user, locale]);
+    return formatGreeting(user, currentHour);
+  }, [user, locale, currentHour]);
 
   const defaultQuickActions = useMemo(() => {
     return createDefaultQuickActions();

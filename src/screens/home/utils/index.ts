@@ -34,11 +34,17 @@ export const validateHomeAction = (action: QuickAction): boolean => {
   return true;
 };
 
-export const formatGreeting = (user: User | null): string => {
-  const hour = new Date().getHours();
+export const formatGreeting = (user: User | null, hour?: number): string => {
+  // Use provided hour or get current hour
+  const currentHour = hour !== undefined ? hour : new Date().getHours();
+  
+  // Determine greeting based on time of day
+  // Morning: 5:00 - 11:59
+  // Afternoon: 12:00 - 17:59
+  // Evening: 18:00 - 4:59
   const timeKey = 
-    hour < 12 ? 'greetings.goodMorning' :
-    hour < 18 ? 'greetings.goodAfternoon' :
+    currentHour >= 5 && currentHour < 12 ? 'greetings.goodMorning' :
+    currentHour >= 12 && currentHour < 18 ? 'greetings.goodAfternoon' :
     'greetings.goodEvening';
   
   const timeGreeting = t(timeKey);
