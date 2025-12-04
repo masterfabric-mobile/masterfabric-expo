@@ -96,6 +96,10 @@ export interface ThemeColors {
   timeHelperSuccessText: string;
   timeHelperErrorBackground: string;
   timeHelperErrorBorder: string;
+  // Validator helper colors
+  validatorErrorBackground: string;
+  validatorErrorBorder: string;
+  validatorErrorText: string;
   // Snackbar helper colors
   snackbarCustomDefault: string;
   snackbarInfo: string;
