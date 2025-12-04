@@ -69,5 +69,23 @@ export const supabaseSectionStyles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
+  footer: {
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(62, 207, 142, 0.1)',
+  },
+  footerParagraph: {
+    fontSize: 14,
+    lineHeight: 20,
+    opacity: 0.8,
+    marginBottom: 8,
+  },
+  footerSlogan: {
+    fontSize: 13,
+    fontWeight: '600',
+    fontStyle: 'italic',
+    opacity: 0.9,
+  },
 });
 

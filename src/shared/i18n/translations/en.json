@@ -176,6 +176,10 @@
           "title": "Storage",
           "description": "File storage and management"
         }
+      },
+      "footer": {
+        "paragraph": "Build faster with Supabase's open source Firebase alternative. Get instant APIs, authentication, and real-time subscriptions.",
+        "slogan": "Build in a weekend, scale to millions."
       }
     }
   },

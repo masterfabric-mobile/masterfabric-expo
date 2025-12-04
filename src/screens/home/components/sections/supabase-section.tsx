@@ -138,6 +138,25 @@ export function SupabaseSection({
           </TouchableOpacity>
         ))}
       </View>
+      
+      <View style={supabaseSectionStyles.footer}>
+        <ThemedText 
+          style={[
+            supabaseSectionStyles.footerParagraph,
+            { color: colors.actionDescription }
+          ]}
+        >
+          {t('home.supabase.footer.paragraph')}
+        </ThemedText>
+        <ThemedText 
+          style={[
+            supabaseSectionStyles.footerSlogan,
+            { color: supabaseGreen }
+          ]}
+        >
+          {t('home.supabase.footer.slogan')}
+        </ThemedText>
+      </View>
     </View>
   );
 }
