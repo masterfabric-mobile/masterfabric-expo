@@ -5,22 +5,68 @@ export const supabaseSectionStyles = StyleSheet.create({
     marginBottom: 20,
   },
   header: {
+    marginBottom: 12,
+  },
+  logoTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
+    flexWrap: 'nowrap',
   },
   logo: {
     width: 32,
     height: 32,
-    marginRight: 12,
+    marginRight: 10,
+    flexShrink: 0,
   },
   headerText: {
     flex: 1,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flexShrink: 1,
+    flexWrap: 'nowrap',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 4,
+  },
+  statusDotContainer: {
+    position: 'relative',
+    width: 12,
+    height: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    position: 'absolute',
+  },
+  statusDotPulse: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    position: 'absolute',
+  },
+  signedInCard: {
+    marginTop: 8,
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  signedInRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  signedInText: {
+    fontSize: 13,
+    fontWeight: '500',
   },
   sectionDescription: {
     fontSize: 14,

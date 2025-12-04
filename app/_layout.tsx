@@ -78,6 +78,13 @@ export default function RootLayout() {
           enableFirebase: true,
           enableFirebaseAuth: true,
           enableFirebaseAnalytics: true,
+          // Supabase integration
+          enableSupabase: true,
+          enableSupabaseAuth: true,
+          supabaseConfig: {
+            supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL as string,
+            supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY as string,
+          },
         },
         onError: (error) => {
           console.error('MasterView Error:', error);
@@ -123,6 +130,8 @@ export default function RootLayout() {
                     <Stack.Screen name="onboarding" />
                     <Stack.Screen name="projects" />
                     <Stack.Screen name="settings" />
+                    <Stack.Screen name="supabase-auth" />
+                    <Stack.Screen name="supabase-database" />
                     <Stack.Screen name="(tabs)" />
                     <Stack.Screen name="+not-found" />
                   </Stack>

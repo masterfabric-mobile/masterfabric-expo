@@ -59,6 +59,65 @@ export function useHomeViewModel() {
     return createSupabaseActions();
   }, [locale]);
 
+  // Supabase auth state
+  const [supabaseUser, setSupabaseUser] = useState<any | null>(null);
+  const [supabaseConnected, setSupabaseConnected] = useState(false);
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const checkSupabaseStatus = async () => {
+      try {
+        // Dynamic import to avoid build issues
+        const masterfabricCore = await import('masterfabric-expo-core') as any;
+        const supabase = masterfabricCore.supabaseIntegration;
+        
+        if (!supabase) {
+          setSupabaseConnected(false);
+          return;
+        }
+
+        const isAvailable = supabase.isAvailable();
+        setSupabaseConnected(isAvailable);
+        
+        if (isAvailable) {
+          supabase.getCurrentUser().then((user: any) => {
+            setSupabaseUser(user);
+          }).catch(() => {
+            setSupabaseUser(null);
+          });
+          
+          // Subscribe to auth changes
+          const { data } = supabase.onAuthStateChange(async (event: any, session: any) => {
+            if (session?.user) {
+              setSupabaseUser(session.user);
+            } else {
+              setSupabaseUser(null);
+            }
+          });
+          
+          if (data?.subscription) {
+            unsubscribe = () => {
+              data.subscription.unsubscribe();
+            };
+          }
+        }
+      } catch (error) {
+        console.error('[Home] Error checking Supabase status:', error);
+        setSupabaseConnected(false);
+      }
+    };
+
+    checkSupabaseStatus();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Add device info activity when component mounts only once
   useEffect(() => {
     // Only add the initial device info activity if it hasn't been added yet
@@ -291,6 +350,21 @@ export function useHomeViewModel() {
           activityDescription = t('home.developer.deviceInfo.description');
           activityType = 'dev_tool';
           break;
+        case 'supabase-auth':
+          activityDescription = t('home.supabase.actions.auth.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
+        case 'supabase-database':
+          activityDescription = t('home.supabase.actions.database.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
+        case 'supabase-storage':
+          activityDescription = t('home.supabase.actions.storage.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
         default:
           activityDescription = `${actionTitle} ${t('home.activity.opened')}`;
           activityType = 'project';
@@ -388,6 +462,24 @@ export function useHomeViewModel() {
         case 'dev-device-info':
           handleDeviceInfoPress(isDark);
           break;
+        case 'supabase-auth':
+          console.log('🔐 Navigating to Supabase Auth...');
+          router.push('/supabase-auth');
+          break;
+        case 'supabase-database':
+          console.log('🗄️ Navigating to Supabase Database...');
+          router.push('/supabase-database');
+          break;
+        case 'supabase-storage':
+          console.log('📦 Navigating to Supabase Storage...');
+          // TODO: Create storage screen
+          Alert.alert(
+            'Coming Soon',
+            'Storage management screen will be available soon.',
+            [{ text: 'OK' }],
+            { userInterfaceStyle: isDark ? 'dark' : 'light' }
+          );
+          break;
         default:
           console.log(`Unknown action: ${actionId}`);
           break;
@@ -421,6 +513,8 @@ export function useHomeViewModel() {
     quickActions: quickActions.length > 0 ? quickActions : defaultQuickActions,
     developerActions,
     supabaseActions,
+    supabaseUser,
+    supabaseConnected,
     recentActivity,
     deviceInfo,
     compatibility,

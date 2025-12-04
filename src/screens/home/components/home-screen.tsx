@@ -27,6 +27,8 @@ function HomeScreenContent() {
     greeting,
     quickActions,
     supabaseActions,
+    supabaseUser,
+    supabaseConnected,
     deviceInfo,
     compatibility,
     compatibilityLoading,
@@ -64,6 +66,8 @@ function HomeScreenContent() {
         
         <SupabaseSection 
           supabaseActions={supabaseActions}
+          supabaseUser={supabaseUser}
+          supabaseConnected={supabaseConnected}
           onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
         />
         
