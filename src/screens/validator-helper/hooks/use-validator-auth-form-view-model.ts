@@ -44,15 +44,24 @@ export function useValidatorAuthFormViewModel() {
 
   // Login validators
   const loginEmail = useValidator(ValidatorType.EMAIL);
-  const loginPassword = useValidator(ValidatorType.PASSWORD, { minLength: 8 });
+  // For sign in, password doesn't need format validation, just non-empty
+  const loginPassword = useValidator(ValidatorType.NON_EMPTY);
 
   // Register validators
   const registerFullName = useValidator(ValidatorType.FULL_NAME);
   const registerEmail = useValidator(ValidatorType.EMAIL);
   const registerUsername = useValidator(ValidatorType.USERNAME, { minLength: 3, maxLength: 20 });
+  const registerPhone = useValidator(ValidatorType.PHONE_NUMBER);
   const registerPassword = useValidator(ValidatorType.PASSWORD, { minLength: 8 });
   // Confirm password doesn't need regex validation, only matching check
   const registerConfirmPassword = useValidator(ValidatorType.NON_EMPTY);
+
+  // Password visibility states
+  const [showPassword, setShowPassword] = useState({
+    login: false,
+    register: false,
+    registerConfirm: false,
+  });
 
   // Track touched state for each field
   const [touched, setTouched] = useState<AuthFormTouchedState>({
@@ -61,6 +70,7 @@ export function useValidatorAuthFormViewModel() {
     registerFullName: false,
     registerEmail: false,
     registerUsername: false,
+    registerPhone: false,
     registerPassword: false,
     registerConfirmPassword: false,
   });
@@ -70,15 +80,22 @@ export function useValidatorAuthFormViewModel() {
     
     // Validate all fields
     const emailValid = loginEmail.validate(loginEmail.value);
+    // For sign in, password just needs to be non-empty
     const passwordValid = loginPassword.validate(loginPassword.value);
 
-    if (emailValid.isValid && passwordValid.isValid) {
+    if (emailValid.isValid && passwordValid.isValid && loginPassword.value.length > 0) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Login successful:', { email: loginEmail.value });
-      alert(t('auth.loginSuccess'));
+      showSnackbar(t('auth.loginSuccess'), {
+        type: 'success',
+        duration: 3000,
+      });
     } else {
-      alert(t('auth.fixErrors'));
+      showSnackbar(t('auth.fixErrors'), {
+        type: 'error',
+        duration: 3000,
+      });
     }
     
     setIsSubmitting(false);
@@ -91,6 +108,7 @@ export function useValidatorAuthFormViewModel() {
     const fullNameValid = registerFullName.validate(registerFullName.value);
     const emailValid = registerEmail.validate(registerEmail.value);
     const usernameValid = registerUsername.validate(registerUsername.value);
+    const phoneValid = registerPhone.validate(registerPhone.value);
     const passwordValid = registerPassword.validate(registerPassword.value);
     // Confirm password only needs to be non-empty and match
     const confirmPasswordNonEmpty = registerConfirmPassword.validate(registerConfirmPassword.value);
@@ -102,6 +120,7 @@ export function useValidatorAuthFormViewModel() {
       fullNameValid.isValid &&
       emailValid.isValid &&
       usernameValid.isValid &&
+      phoneValid.isValid &&
       passwordValid.isValid &&
       confirmPasswordNonEmpty.isValid &&
       passwordsMatch
@@ -112,13 +131,23 @@ export function useValidatorAuthFormViewModel() {
         fullName: registerFullName.value,
         email: registerEmail.value,
         username: registerUsername.value,
+        phone: registerPhone.value,
       });
-      alert(t('auth.registrationSuccess'));
+      showSnackbar(t('auth.registrationSuccess'), {
+        type: 'success',
+        duration: 3000,
+      });
     } else {
       if (!passwordsMatch) {
-        alert(t('auth.passwordsNoMatchAlert'));
+        showSnackbar(t('auth.passwordsNoMatchAlert'), {
+          type: 'error',
+          duration: 3000,
+        });
       } else {
-        alert(t('auth.fixErrors'));
+        showSnackbar(t('auth.fixErrors'), {
+          type: 'error',
+          duration: 3000,
+        });
       }
     }
     
@@ -141,8 +170,15 @@ export function useValidatorAuthFormViewModel() {
       registerFullName: false,
       registerEmail: false,
       registerUsername: false,
+      registerPhone: false,
       registerPassword: false,
       registerConfirmPassword: false,
+    });
+    // Reset password visibility on tab change
+    setShowPassword({
+      login: false,
+      register: false,
+      registerConfirm: false,
     });
   };
 
@@ -280,6 +316,7 @@ export function useValidatorAuthFormViewModel() {
     registerFullName.isValid &&
     registerEmail.isValid &&
     registerUsername.isValid &&
+    registerPhone.isValid &&
     registerPassword.isValid &&
     registerConfirmPassword.isValid &&
     passwordsMatch;
@@ -295,6 +332,9 @@ export function useValidatorAuthFormViewModel() {
     rememberMe,
     setRememberMe,
     displayValues,
+    setDisplayValues,
+    showPassword,
+    setShowPassword,
     
     // Validators
     loginEmail,
@@ -302,6 +342,7 @@ export function useValidatorAuthFormViewModel() {
     registerFullName,
     registerEmail,
     registerUsername,
+    registerPhone,
     registerPassword,
     registerConfirmPassword,
     

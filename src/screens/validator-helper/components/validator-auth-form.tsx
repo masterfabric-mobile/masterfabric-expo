@@ -6,12 +6,16 @@ import React from 'react';
 import { Platform, TextInput, TouchableOpacity, View } from 'react-native';
 import {
   AUTH_ERROR_COLORS,
+  EMAIL_MAX_LENGTH,
   FONT_WEIGHTS,
+  FULL_NAME_MAX_LENGTH,
   ICON_SIZES,
   PASSWORD_MAX_LENGTH,
+  PHONE_MAX_LENGTH,
   SOCIAL_LOGIN_ICON_COLORS,
   SOCIAL_LOGIN_PROVIDERS,
   TRANSPARENT_COLOR,
+  USERNAME_MAX_LENGTH,
   WHITE_COLOR,
 } from '../constants/validator-helper-constants';
 import { useValidatorAuthFormViewModel } from '../hooks/use-validator-auth-form-view-model';
@@ -33,11 +37,15 @@ export function ValidatorAuthForm() {
     rememberMe,
     setRememberMe,
     displayValues,
+    setDisplayValues,
+    showPassword,
+    setShowPassword,
     loginEmail,
     loginPassword,
     registerFullName,
     registerEmail,
     registerUsername,
+    registerPhone,
     registerPassword,
     registerConfirmPassword,
     handleLogin,
@@ -124,15 +132,16 @@ export function ValidatorAuthForm() {
                   {
                     backgroundColor: authColors.inputBackground,
                     color: authColors.text,
-                    borderColor: (!touched.loginEmail || loginEmail.isValid)
-                      ? authColors.border
-                      : AUTH_ERROR_COLORS.error,
+                    borderColor: authColors.border,
                   },
                 ]}
                 value={loginEmail.value}
                 onChangeText={(text) => {
-                  loginEmail.setValue(text);
-                  handleFieldTouch('loginEmail');
+                  // Enforce max length for email
+                  if (text.length <= EMAIL_MAX_LENGTH) {
+                    loginEmail.setValue(text);
+                    handleFieldTouch('loginEmail');
+                  }
                 }}
                 onFocus={() => {
                   handleFieldTouch('loginEmail');
@@ -142,6 +151,7 @@ export function ValidatorAuthForm() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
+                maxLength={EMAIL_MAX_LENGTH}
               />
               {/* No validation errors shown in login (user already registered) */}
             </View>
@@ -151,31 +161,52 @@ export function ValidatorAuthForm() {
               <ThemedText style={[validatorAuthFormStyles.label, { color: authColors.text }]}>
                 {t('auth.password')} *
               </ThemedText>
-              <TextInput
-                style={[
-                  validatorAuthFormStyles.input,
-                  {
-                    backgroundColor: authColors.inputBackground,
-                    color: authColors.text,
-                    borderColor: (!touched.loginPassword || loginPassword.isValid)
-                      ? authColors.border
-                      : AUTH_ERROR_COLORS.error,
-                  },
-                ]}
-                value={displayValues.login}
-                onChangeText={(text) => {
-                  handlePasswordChange(text, 'login', loginPassword.setValue, 'loginPassword');
-                }}
-                onFocus={() => {
-                  handleFieldTouch('loginPassword');
-                }}
-                placeholder={t('auth.passwordPlaceholder')}
-                placeholderTextColor={authColors.textSecondary}
-                secureTextEntry={false}
-                maxLength={PASSWORD_MAX_LENGTH}
-                autoCapitalize="none"
-                autoComplete="password"
-              />
+              <View style={validatorAuthFormStyles.passwordInputContainer}>
+                <TextInput
+                  style={[
+                    validatorAuthFormStyles.passwordInput,
+                    {
+                      backgroundColor: authColors.inputBackground,
+                      color: authColors.text,
+                      borderColor: authColors.border,
+                    },
+                  ]}
+                  value={showPassword.login ? loginPassword.value : displayValues.login}
+                  onChangeText={(text) => {
+                    if (showPassword.login) {
+                      // When password is visible, handle input directly
+                      if (text.length <= PASSWORD_MAX_LENGTH) {
+                        loginPassword.setValue(text);
+                        setDisplayValues(prev => ({ ...prev, login: '•'.repeat(text.length) }));
+                        handleFieldTouch('loginPassword');
+                      }
+                    } else {
+                      // When password is hidden, use the bullet masking logic
+                      handlePasswordChange(text, 'login', loginPassword.setValue, 'loginPassword');
+                    }
+                  }}
+                  onFocus={() => {
+                    handleFieldTouch('loginPassword');
+                  }}
+                  placeholder={t('auth.passwordPlaceholder')}
+                  placeholderTextColor={authColors.textSecondary}
+                  secureTextEntry={!showPassword.login}
+                  maxLength={PASSWORD_MAX_LENGTH}
+                  autoCapitalize="none"
+                  autoComplete="password"
+                />
+                <TouchableOpacity
+                  style={validatorAuthFormStyles.passwordToggleButton}
+                  onPress={() => setShowPassword(prev => ({ ...prev, login: !prev.login }))}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={showPassword.login ? 'eye-off-outline' : 'eye-outline'}
+                    size={ICON_SIZES.medium}
+                    color={authColors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
               {/* No validation errors shown in login (user already registered) */}
             </View>
 
@@ -246,8 +277,11 @@ export function ValidatorAuthForm() {
                 ]}
                 value={registerFullName.value}
                 onChangeText={(text) => {
-                  registerFullName.setValue(text);
-                  handleFieldTouch('registerFullName');
+                  // Enforce max length for full name
+                  if (text.length <= FULL_NAME_MAX_LENGTH) {
+                    registerFullName.setValue(text);
+                    handleFieldTouch('registerFullName');
+                  }
                 }}
                 onFocus={() => {
                   handleFieldTouch('registerFullName');
@@ -256,6 +290,7 @@ export function ValidatorAuthForm() {
                 placeholderTextColor={authColors.textSecondary}
                 autoCapitalize="words"
                 autoComplete="name"
+                maxLength={FULL_NAME_MAX_LENGTH}
               />
               {!registerFullName.isValid && touched.registerFullName && (
                 <ThemedText style={[validatorAuthFormStyles.errorText, { color: AUTH_ERROR_COLORS.error }]}>
@@ -282,8 +317,11 @@ export function ValidatorAuthForm() {
                 ]}
                 value={registerEmail.value}
                 onChangeText={(text) => {
-                  registerEmail.setValue(text);
-                  handleFieldTouch('registerEmail');
+                  // Enforce max length for email
+                  if (text.length <= EMAIL_MAX_LENGTH) {
+                    registerEmail.setValue(text);
+                    handleFieldTouch('registerEmail');
+                  }
                 }}
                 onFocus={() => {
                   handleFieldTouch('registerEmail');
@@ -293,6 +331,8 @@ export function ValidatorAuthForm() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
+                editable={true}
+                maxLength={EMAIL_MAX_LENGTH}
               />
               {!registerEmail.isValid && touched.registerEmail && (
                 <ThemedText style={[validatorAuthFormStyles.errorText, { color: AUTH_ERROR_COLORS.error }]}>
@@ -319,8 +359,11 @@ export function ValidatorAuthForm() {
                 ]}
                 value={registerUsername.value}
                 onChangeText={(text) => {
-                  registerUsername.setValue(text);
-                  handleFieldTouch('registerUsername');
+                  // Enforce max length for username
+                  if (text.length <= USERNAME_MAX_LENGTH) {
+                    registerUsername.setValue(text);
+                    handleFieldTouch('registerUsername');
+                  }
                 }}
                 onFocus={() => {
                   handleFieldTouch('registerUsername');
@@ -329,10 +372,53 @@ export function ValidatorAuthForm() {
                 placeholderTextColor={authColors.textSecondary}
                 autoCapitalize="none"
                 autoComplete="username"
+                maxLength={USERNAME_MAX_LENGTH}
               />
               {!registerUsername.isValid && touched.registerUsername && (
                 <ThemedText style={[validatorAuthFormStyles.errorText, { color: AUTH_ERROR_COLORS.error }]}>
                   {registerUsername.error}
+                </ThemedText>
+              )}
+            </View>
+
+            {/* Phone Field */}
+            <View style={validatorAuthFormStyles.fieldContainer}>
+              <ThemedText style={[validatorAuthFormStyles.label, { color: authColors.text }]}>
+                {t('auth.phoneNumber')} *
+              </ThemedText>
+              <TextInput
+                style={[
+                  validatorAuthFormStyles.input,
+                  {
+                    backgroundColor: authColors.inputBackground,
+                    color: authColors.text,
+                    borderColor: (!touched.registerPhone || registerPhone.isValid)
+                      ? authColors.border
+                      : AUTH_ERROR_COLORS.error,
+                  },
+                ]}
+                value={registerPhone.value}
+                onChangeText={(text) => {
+                  // Only allow numbers and common phone characters (+, -, spaces, parentheses)
+                  const phoneRegex = /^[\d+\-\s()]*$/;
+                  if (phoneRegex.test(text) && text.length <= PHONE_MAX_LENGTH) {
+                    registerPhone.setValue(text);
+                    handleFieldTouch('registerPhone');
+                  }
+                }}
+                onFocus={() => {
+                  handleFieldTouch('registerPhone');
+                }}
+                placeholder={t('auth.phonePlaceholder')}
+                placeholderTextColor={authColors.textSecondary}
+                keyboardType="phone-pad"
+                autoCapitalize="none"
+                autoComplete="tel"
+                maxLength={PHONE_MAX_LENGTH}
+              />
+              {!registerPhone.isValid && touched.registerPhone && (
+                <ThemedText style={[validatorAuthFormStyles.errorText, { color: AUTH_ERROR_COLORS.error }]}>
+                  {registerPhone.error}
                 </ThemedText>
               )}
             </View>
@@ -342,31 +428,54 @@ export function ValidatorAuthForm() {
               <ThemedText style={[validatorAuthFormStyles.label, { color: authColors.text }]}>
                 {t('auth.password')} *
               </ThemedText>
-              <TextInput
-                style={[
-                  validatorAuthFormStyles.input,
-                  {
-                    backgroundColor: authColors.inputBackground,
-                    color: authColors.text,
-                    borderColor: (!touched.registerPassword || registerPassword.isValid)
-                      ? authColors.border
-                      : AUTH_ERROR_COLORS.error,
-                  },
-                ]}
-                value={displayValues.register}
-                onChangeText={(text) => {
-                  handlePasswordChange(text, 'register', registerPassword.setValue, 'registerPassword');
-                }}
-                onFocus={() => {
-                  handleFieldTouch('registerPassword');
-                }}
-                placeholder={t('auth.passwordPlaceholderCreate')}
-                placeholderTextColor={authColors.textSecondary}
-                secureTextEntry={false}
-                maxLength={PASSWORD_MAX_LENGTH}
-                autoCapitalize="none"
-                autoComplete="password-new"
-              />
+              <View style={validatorAuthFormStyles.passwordInputContainer}>
+                <TextInput
+                  style={[
+                    validatorAuthFormStyles.passwordInput,
+                    {
+                      backgroundColor: authColors.inputBackground,
+                      color: authColors.text,
+                      borderColor: (!touched.registerPassword || registerPassword.isValid)
+                        ? authColors.border
+                        : AUTH_ERROR_COLORS.error,
+                    },
+                  ]}
+                  value={showPassword.register ? registerPassword.value : displayValues.register}
+                  onChangeText={(text) => {
+                    if (showPassword.register) {
+                      // When password is visible, handle input directly
+                      if (text.length <= PASSWORD_MAX_LENGTH) {
+                        registerPassword.setValue(text);
+                        setDisplayValues(prev => ({ ...prev, register: '•'.repeat(text.length) }));
+                        handleFieldTouch('registerPassword');
+                      }
+                    } else {
+                      // When password is hidden, use the bullet masking logic
+                      handlePasswordChange(text, 'register', registerPassword.setValue, 'registerPassword');
+                    }
+                  }}
+                  onFocus={() => {
+                    handleFieldTouch('registerPassword');
+                  }}
+                  placeholder={t('auth.passwordPlaceholderCreate')}
+                  placeholderTextColor={authColors.textSecondary}
+                  secureTextEntry={!showPassword.register}
+                  maxLength={PASSWORD_MAX_LENGTH}
+                  autoCapitalize="none"
+                  autoComplete="password-new"
+                />
+                <TouchableOpacity
+                  style={validatorAuthFormStyles.passwordToggleButton}
+                  onPress={() => setShowPassword(prev => ({ ...prev, register: !prev.register }))}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={showPassword.register ? 'eye-off-outline' : 'eye-outline'}
+                    size={ICON_SIZES.medium}
+                    color={authColors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
               {registerPassword.value && (
                 <View style={validatorAuthFormStyles.requirementsContainer}>
                   {checkPasswordRequirements(registerPassword.value).map((req, index) => (
@@ -402,33 +511,56 @@ export function ValidatorAuthForm() {
               <ThemedText style={[validatorAuthFormStyles.label, { color: authColors.text }]}>
                 {t('auth.confirmPassword')} *
               </ThemedText>
-              <TextInput
-                style={[
-                  validatorAuthFormStyles.input,
-                  {
-                    backgroundColor: authColors.inputBackground,
-                    color: authColors.text,
-                    borderColor:
-                      (!touched.registerConfirmPassword ||
-                        (isConfirmPasswordValid && passwordsMatch))
-                        ? authColors.border
-                        : AUTH_ERROR_COLORS.error,
-                  },
-                ]}
-                value={displayValues.registerConfirm}
-                onChangeText={(text) => {
-                  handlePasswordChange(text, 'registerConfirm', registerConfirmPassword.setValue, 'registerConfirmPassword');
-                }}
-                onFocus={() => {
-                  handleFieldTouch('registerConfirmPassword');
-                }}
-                placeholder={t('auth.confirmPasswordPlaceholder')}
-                placeholderTextColor={authColors.textSecondary}
-                secureTextEntry={false}
-                maxLength={PASSWORD_MAX_LENGTH}
-                autoCapitalize="none"
-                autoComplete="password-new"
-              />
+              <View style={validatorAuthFormStyles.passwordInputContainer}>
+                <TextInput
+                  style={[
+                    validatorAuthFormStyles.passwordInput,
+                    {
+                      backgroundColor: authColors.inputBackground,
+                      color: authColors.text,
+                      borderColor:
+                        (!touched.registerConfirmPassword ||
+                          (isConfirmPasswordValid && passwordsMatch))
+                          ? authColors.border
+                          : AUTH_ERROR_COLORS.error,
+                    },
+                  ]}
+                  value={showPassword.registerConfirm ? registerConfirmPassword.value : displayValues.registerConfirm}
+                  onChangeText={(text) => {
+                    if (showPassword.registerConfirm) {
+                      // When password is visible, handle input directly
+                      if (text.length <= PASSWORD_MAX_LENGTH) {
+                        registerConfirmPassword.setValue(text);
+                        setDisplayValues(prev => ({ ...prev, registerConfirm: '•'.repeat(text.length) }));
+                        handleFieldTouch('registerConfirmPassword');
+                      }
+                    } else {
+                      // When password is hidden, use the bullet masking logic
+                      handlePasswordChange(text, 'registerConfirm', registerConfirmPassword.setValue, 'registerConfirmPassword');
+                    }
+                  }}
+                  onFocus={() => {
+                    handleFieldTouch('registerConfirmPassword');
+                  }}
+                  placeholder={t('auth.confirmPasswordPlaceholder')}
+                  placeholderTextColor={authColors.textSecondary}
+                  secureTextEntry={!showPassword.registerConfirm}
+                  maxLength={PASSWORD_MAX_LENGTH}
+                  autoCapitalize="none"
+                  autoComplete="password-new"
+                />
+                <TouchableOpacity
+                  style={validatorAuthFormStyles.passwordToggleButton}
+                  onPress={() => setShowPassword(prev => ({ ...prev, registerConfirm: !prev.registerConfirm }))}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={showPassword.registerConfirm ? 'eye-off-outline' : 'eye-outline'}
+                    size={ICON_SIZES.medium}
+                    color={authColors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
               {touched.registerConfirmPassword &&
                 registerConfirmPassword.value &&
                 registerPassword.value &&

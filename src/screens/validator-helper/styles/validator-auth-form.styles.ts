@@ -114,6 +114,27 @@ export const validatorAuthFormStyles = StyleSheet.create({
     fontWeight: '400',
     minHeight: 48,
   },
+  passwordInputContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+    borderWidth: 1.5,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingRight: 48,
+    paddingVertical: 14,
+    fontSize: 16,
+    fontWeight: '400',
+    minHeight: 48,
+  },
+  passwordToggleButton: {
+    position: 'absolute',
+    right: 12,
+    padding: 8,
+  },
   errorText: {
     fontSize: 13,
     marginTop: 8,

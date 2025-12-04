@@ -75,6 +75,31 @@ export type SocialLoginProvider = typeof SOCIAL_LOGIN_PROVIDERS[keyof typeof SOC
 export const PASSWORD_MAX_LENGTH = 128;
 
 /**
+ * Email field max length (RFC 5321)
+ */
+export const EMAIL_MAX_LENGTH = 254;
+
+/**
+ * Full name field max length
+ */
+export const FULL_NAME_MAX_LENGTH = 100;
+
+/**
+ * Username field max length
+ */
+export const USERNAME_MAX_LENGTH = 20;
+
+/**
+ * Phone number field max length
+ */
+export const PHONE_MAX_LENGTH = 20;
+
+/**
+ * Min/Max length input field max value
+ */
+export const MIN_MAX_LENGTH_MAX_VALUE = 1000;
+
+/**
  * Header background colors
  */
 export const HEADER_BACKGROUND_COLORS = {

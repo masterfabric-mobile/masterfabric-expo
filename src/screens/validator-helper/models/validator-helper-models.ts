@@ -39,6 +39,7 @@ export interface AuthFormTouchedState {
   registerFullName: boolean;
   registerEmail: boolean;
   registerUsername: boolean;
+  registerPhone: boolean;
   registerPassword: boolean;
   registerConfirmPassword: boolean;
 }
