@@ -106,9 +106,23 @@ export function useSupabaseDatabaseViewModel() {
 
       // Approach 2: Use Supabase REST API to fetch metadata (most reliable)
       try {
-        const config = supabaseIntegration.getConfig();
-        const supabaseUrl = config?.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL;
-        const anonKey = config?.supabaseAnonKey || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+        // Try to get config from integration, fallback to env vars
+        let supabaseUrl: string | undefined;
+        let anonKey: string | undefined;
+        
+        try {
+          const config = supabaseIntegration.getConfig?.();
+          if (config) {
+            supabaseUrl = config.supabaseUrl;
+            anonKey = config.supabaseAnonKey;
+          }
+        } catch (configErr) {
+          // getConfig might not be available, use env vars
+        }
+        
+        // Fallback to environment variables
+        if (!supabaseUrl) supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+        if (!anonKey) anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
         
         if (supabaseUrl && anonKey) {
           // Fetch tables using Supabase REST API metadata endpoint
@@ -167,6 +181,9 @@ export function useSupabaseDatabaseViewModel() {
       setSelectedTable(tableName.trim());
       setCrudMode('read');
       setFormData({});
+      // Clear query results when selecting a table (but keep query text)
+      setQueryResult(null);
+      setQueryError(null);
     } else {
       setSelectedTable(null);
       setCrudMode(null);
@@ -201,22 +218,68 @@ export function useSupabaseDatabaseViewModel() {
       // Try to execute as RPC function first (for custom SQL)
       // If that fails, try parsing as a simple SELECT query
       const queryLower = query.trim().toLowerCase();
+      const queryTrimmed = query.trim();
       
       if (queryLower.startsWith('select')) {
         // Simple SELECT query - extract table name and columns
-        const match = query.match(/from\s+['"]?(\w+)['"]?/i);
+        const match = queryTrimmed.match(/from\s+['"]?(\w+)['"]?/i);
         if (match) {
           const tableName = match[1];
-          const { data, error } = await client.from(tableName).select('*').limit(100);
+          
+          // Parse WHERE clause if exists
+          const whereMatch = queryTrimmed.match(/where\s+(.+?)(?:\s+order\s+by|\s+limit|$)/i);
+          const orderByMatch = queryTrimmed.match(/order\s+by\s+(.+?)(?:\s+limit|$)/i);
+          const limitMatch = queryTrimmed.match(/limit\s+(\d+)/i);
+          
+          let queryBuilder = client.from(tableName).select('*');
+          
+          // Apply WHERE clause if exists
+          if (whereMatch) {
+            const whereClause = whereMatch[1].trim();
+            // Simple WHERE parsing - handle basic cases
+            if (whereClause.includes('=')) {
+              const [column, value] = whereClause.split('=').map(s => s.trim().replace(/['"]/g, ''));
+              queryBuilder = queryBuilder.eq(column, value);
+            } else if (whereClause.includes('LIKE') || whereClause.includes('like')) {
+              const [column, pattern] = whereClause.split(/like/i).map(s => s.trim().replace(/['"]/g, ''));
+              queryBuilder = queryBuilder.ilike(column, `%${pattern}%`);
+            }
+          }
+          
+          // Apply ORDER BY if exists
+          if (orderByMatch) {
+            const orderClause = orderByMatch[1].trim();
+            const parts = orderClause.split(/\s+/);
+            const column = parts[0];
+            const direction = parts[1]?.toLowerCase() === 'desc' ? 'desc' : 'asc';
+            queryBuilder = queryBuilder.order(column, { ascending: direction === 'asc' });
+          }
+          
+          // Apply LIMIT if exists
+          const limit = limitMatch ? parseInt(limitMatch[1], 10) : 100;
+          queryBuilder = queryBuilder.limit(limit);
+          
+          const { data, error } = await queryBuilder;
           
           if (error) throw error;
           setQueryResult(data);
         } else {
           throw new Error('Could not parse SELECT query. Please use format: SELECT * FROM table_name');
         }
+      } else if (queryLower.startsWith('count') || queryLower.includes('count(*)')) {
+        // Handle COUNT queries
+        const match = queryTrimmed.match(/from\s+['"]?(\w+)['"]?/i);
+        if (match) {
+          const tableName = match[1];
+          const { count, error } = await client.from(tableName).select('*', { count: 'exact', head: true });
+          if (error) throw error;
+          setQueryResult({ total: count });
+        } else {
+          throw new Error('Could not parse COUNT query');
+        }
       } else {
         // For other queries, try RPC
-        throw new Error('Only SELECT queries are supported. Use the table browser for other operations.');
+        throw new Error('Only SELECT and COUNT queries are supported. Use the table browser for other operations.');
       }
     } catch (e: any) {
       console.error('[SupabaseDatabase] Query error:', e);

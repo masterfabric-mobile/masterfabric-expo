@@ -68,12 +68,13 @@ export function useHomeViewModel() {
 
     const checkSupabaseStatus = async () => {
       try {
-        // Dynamic import to avoid build issues
-        const masterfabricCore = await import('masterfabric-expo-core') as any;
-        const supabase = masterfabricCore.supabaseIntegration;
+        // Import supabaseIntegration directly using named import
+        const masterfabricCore = await import('masterfabric-expo-core');
+        const supabase = (masterfabricCore as any).supabaseIntegration;
         
         if (!supabase) {
           setSupabaseConnected(false);
+          setSupabaseUser(null);
           return;
         }
 
@@ -81,30 +82,38 @@ export function useHomeViewModel() {
         setSupabaseConnected(isAvailable);
         
         if (isAvailable) {
-          supabase.getCurrentUser().then((user: any) => {
+          try {
+            const user = await supabase.getCurrentUser();
             setSupabaseUser(user);
-          }).catch(() => {
+          } catch (err) {
             setSupabaseUser(null);
-          });
+          }
           
           // Subscribe to auth changes
-          const { data } = supabase.onAuthStateChange(async (event: any, session: any) => {
-            if (session?.user) {
-              setSupabaseUser(session.user);
-            } else {
-              setSupabaseUser(null);
+          try {
+            const { data } = supabase.onAuthStateChange(async (event: any, session: any) => {
+              if (session?.user) {
+                setSupabaseUser(session.user);
+              } else {
+                setSupabaseUser(null);
+              }
+            });
+            
+            if (data?.subscription) {
+              unsubscribe = () => {
+                data.subscription.unsubscribe();
+              };
             }
-          });
-          
-          if (data?.subscription) {
-            unsubscribe = () => {
-              data.subscription.unsubscribe();
-            };
+          } catch (authErr) {
+            console.warn('[Home] Error subscribing to auth changes:', authErr);
           }
+        } else {
+          setSupabaseUser(null);
         }
       } catch (error) {
         console.error('[Home] Error checking Supabase status:', error);
         setSupabaseConnected(false);
+        setSupabaseUser(null);
       }
     };
 

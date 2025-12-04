@@ -127,6 +127,78 @@ export function SupabaseDatabaseScreen() {
               SQL Query
             </Text>
             <View style={supabaseDatabaseScreenStyles.section}>
+              {/* Quick Query Badges */}
+              <View style={supabaseDatabaseScreenStyles.quickQueryContainer}>
+                <TouchableOpacity
+                  style={[
+                    supabaseDatabaseScreenStyles.quickQueryBadge,
+                    { 
+                      borderColor: supabaseGreen,
+                      backgroundColor: supabaseGreen + '15',
+                    }
+                  ]}
+                  onPress={async () => {
+                    // Clear previous results and table selection
+                    actions.clearQueryResult();
+                    actions.selectTable('');
+                    const query = 'SELECT * FROM ataturk ORDER BY year ASC;';
+                    actions.setQuery(query);
+                    // Execute immediately
+                    await actions.executeQuery();
+                  }}
+                >
+                  <Ionicons name="flash" size={14} color={supabaseGreen} />
+                  <Text style={[supabaseDatabaseScreenStyles.quickQueryBadgeText, { color: supabaseGreen }]}>
+                    Ataturk Table
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    supabaseDatabaseScreenStyles.quickQueryBadge,
+                    { 
+                      borderColor: supabaseGreen,
+                      backgroundColor: supabaseGreen + '15',
+                    }
+                  ]}
+                  onPress={async () => {
+                    // Clear previous results and table selection
+                    actions.clearQueryResult();
+                    actions.selectTable('');
+                    const query = 'SELECT * FROM ataturk WHERE category = \'Reform\' ORDER BY year ASC;';
+                    actions.setQuery(query);
+                    // Execute immediately
+                    await actions.executeQuery();
+                  }}
+                >
+                  <Ionicons name="flash" size={14} color={supabaseGreen} />
+                  <Text style={[supabaseDatabaseScreenStyles.quickQueryBadgeText, { color: supabaseGreen }]}>
+                    Reforms
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    supabaseDatabaseScreenStyles.quickQueryBadge,
+                    { 
+                      borderColor: supabaseGreen,
+                      backgroundColor: supabaseGreen + '15',
+                    }
+                  ]}
+                  onPress={async () => {
+                    // Clear previous results and table selection
+                    actions.clearQueryResult();
+                    actions.selectTable('');
+                    const query = 'SELECT COUNT(*) as total FROM ataturk;';
+                    actions.setQuery(query);
+                    // Execute immediately
+                    await actions.executeQuery();
+                  }}
+                >
+                  <Ionicons name="flash" size={14} color={supabaseGreen} />
+                  <Text style={[supabaseDatabaseScreenStyles.quickQueryBadgeText, { color: supabaseGreen }]}>
+                    Count
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <TextInput
                 style={[
                   supabaseDatabaseScreenStyles.input,
@@ -195,86 +267,6 @@ export function SupabaseDatabaseScreen() {
           </View>
         )}
 
-        {/* Table Browser */}
-        {state.isConnected && (
-          <View style={[supabaseDatabaseScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <Text style={[supabaseDatabaseScreenStyles.sectionTitle, { color: colors.labelText }]}>
-                Tables
-              </Text>
-              <TouchableOpacity
-                onPress={actions.fetchTables}
-                style={{ padding: 8 }}
-                disabled={state.isLoading}
-              >
-                <Ionicons name="refresh" size={20} color={state.isLoading ? colors.actionDescription : supabaseGreen} />
-              </TouchableOpacity>
-            </View>
-            {state.isLoading ? (
-              <ActivityIndicator size="small" color={supabaseGreen} />
-            ) : (
-              <>
-                <View style={supabaseDatabaseScreenStyles.section}>
-                  <Text style={[supabaseDatabaseScreenStyles.formLabel, { color: colors.labelText }]}>
-                    Enter Table Name
-                  </Text>
-                  <View style={{ flexDirection: 'row', gap: 8 }}>
-                    <TextInput
-                      style={[
-                        supabaseDatabaseScreenStyles.formInput,
-                        { flex: 1, backgroundColor: colors.inputBackground || colors.surfaceBackground, borderColor: colors.surfaceBorder, color: colors.bodyText }
-                      ]}
-                      placeholder="e.g., users, posts, products"
-                      placeholderTextColor={colors.actionDescription}
-                      value={state.selectedTable || ''}
-                      onChangeText={(text) => {
-                        if (text.trim()) {
-                          actions.selectTable(text.trim());
-                        } else {
-                          actions.selectTable('');
-                        }
-                      }}
-                    />
-                    {state.selectedTable && (
-                      <TouchableOpacity
-                        onPress={() => actions.selectTable('')}
-                        style={{ padding: 12, justifyContent: 'center' }}
-                      >
-                        <Ionicons name="close-circle" size={20} color={colors.actionDescription} />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-                {state.tables.length > 0 && (
-                  <View style={supabaseDatabaseScreenStyles.tableList}>
-                    {state.tables.map((table) => (
-                      <TouchableOpacity
-                        key={table}
-                        onPress={() => actions.selectTable(table)}
-                        style={[
-                          supabaseDatabaseScreenStyles.tableItem,
-                          { 
-                            backgroundColor: state.selectedTable === table ? supabaseGreen + '15' : colors.inputBackground || colors.surfaceBackground,
-                            borderWidth: state.selectedTable === table ? 1.5 : 0,
-                            borderColor: supabaseGreen + '30',
-                          }
-                        ]}
-                      >
-                        <Ionicons name="table" size={20} color={supabaseGreen} />
-                        <Text style={[supabaseDatabaseScreenStyles.tableItemText, { color: colors.bodyText }]}>
-                          {table}
-                        </Text>
-                        {state.selectedTable === table && (
-                          <Ionicons name="checkmark-circle" size={20} color={supabaseGreen} />
-                        )}
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                )}
-              </>
-            )}
-          </View>
-        )}
 
         {/* Table Data Display */}
         {state.isConnected && state.selectedTable && state.crudMode === 'read' && (

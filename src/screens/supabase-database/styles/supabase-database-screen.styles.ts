@@ -177,5 +177,24 @@ export const supabaseDatabaseScreenStyles = StyleSheet.create({
     opacity: 0.7,
     textAlign: 'center',
   },
+  quickQueryBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  quickQueryBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  quickQueryContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 8,
+  },
 });
 
