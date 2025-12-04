@@ -631,6 +631,63 @@
       "preview": "Canlı Önizleme",
       "showcase": "Boyutlandırma Vitrin",
       "showcaseDescription": "Tüm mevcut boyutlandırma değerleri ve örnekleri",
+      "examples": {
+        "spacing": {
+          "title": "Boşluk",
+          "description": "Boşluk, elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Boşluk Boyutu Seç"
+        },
+        "padding": {
+          "title": "Dolgu",
+          "description": "Dolgu, içerik ile kenarlık arasındaki mesafeyi belirler",
+          "selectSize": "Dolgu Boyutu Seç"
+        },
+        "margin": {
+          "title": "Kenar Boşluğu",
+          "description": "Kenar boşluğu, elemanın dışındaki mesafeyi belirler",
+          "selectSize": "Kenar Boşluğu Boyutu Seç"
+        },
+        "gap": {
+          "title": "Aralık",
+          "description": "Aralık, flex container içindeki elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Aralık Boyutu Seç"
+        },
+        "borderRadius": {
+          "title": "Kenar Yuvarlaklığı",
+          "description": "Kenar yuvarlaklığı, köşelerin yuvarlaklığını belirler",
+          "selectSize": "Kenar Yuvarlaklığı Seç"
+        },
+        "borderWidth": {
+          "title": "Kenar Kalınlığı",
+          "description": "Kenar kalınlığı, kenarlıkların kalınlığını belirler",
+          "selectSize": "Kenar Kalınlığı Seç"
+        },
+        "buttonHeight": {
+          "title": "Buton Yüksekliği",
+          "description": "Buton yüksekliği, butonların yüksekliğini belirler",
+          "selectSize": "Buton Yüksekliği Seç"
+        },
+        "inputHeight": {
+          "title": "Giriş Yüksekliği",
+          "description": "Giriş yüksekliği, giriş alanlarının yüksekliğini belirler",
+          "selectSize": "Giriş Yüksekliği Seç"
+        },
+        "cardPadding": {
+          "title": "Kart Dolgusu",
+          "description": "Kart dolgusu, kart içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kart Dolgusu Seç"
+        },
+        "scrollPadding": {
+          "title": "Kaydırma Dolgusu",
+          "description": "Kaydırma dolgusu, kaydırma içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Dolgusu Seç"
+        },
+        "scrollMargin": {
+          "title": "Kaydırma Kenar Boşluğu",
+          "description": "Kaydırma kenar boşluğu, kaydırma öğeleri arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Kenar Boşluğu Seç"
+        }
+      },
       "deviceType": {
         "title": "Cihaz Tipi",
         "phone": "📱 Telefon",

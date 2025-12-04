@@ -631,6 +631,63 @@
       "preview": "Live Preview",
       "showcase": "Sizing Showcase",
       "showcaseDescription": "All available sizing values and examples",
+      "examples": {
+        "spacing": {
+          "title": "Spacing",
+          "description": "Spacing determines the space between elements",
+          "selectSize": "Select Spacing Size"
+        },
+        "padding": {
+          "title": "Padding",
+          "description": "Padding determines the space between content and border",
+          "selectSize": "Select Padding Size"
+        },
+        "margin": {
+          "title": "Margin",
+          "description": "Margin determines the space outside the element",
+          "selectSize": "Select Margin Size"
+        },
+        "gap": {
+          "title": "Gap",
+          "description": "Gap determines the space between elements in a flex container",
+          "selectSize": "Select Gap Size"
+        },
+        "borderRadius": {
+          "title": "Border Radius",
+          "description": "Border radius determines the roundness of corners",
+          "selectSize": "Select Border Radius"
+        },
+        "borderWidth": {
+          "title": "Border Width",
+          "description": "Border width determines the thickness of borders",
+          "selectSize": "Select Border Width"
+        },
+        "buttonHeight": {
+          "title": "Button Height",
+          "description": "Button height determines the height of buttons",
+          "selectSize": "Select Button Height"
+        },
+        "inputHeight": {
+          "title": "Input Height",
+          "description": "Input height determines the height of input fields",
+          "selectSize": "Select Input Height"
+        },
+        "cardPadding": {
+          "title": "Card Padding",
+          "description": "Card padding determines the space between card content and edges",
+          "selectSize": "Select Card Padding"
+        },
+        "scrollPadding": {
+          "title": "Scroll Padding",
+          "description": "Scroll padding determines the space between scroll content and edges",
+          "selectSize": "Select Scroll Padding"
+        },
+        "scrollMargin": {
+          "title": "Scroll Margin",
+          "description": "Scroll margin determines the space between scroll items",
+          "selectSize": "Select Scroll Margin"
+        }
+      },
       "deviceType": {
         "title": "Device Type",
         "phone": "📱 Phone",
