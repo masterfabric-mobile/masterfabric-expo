@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScaffoldMessage } from '@/src/shared/components';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
+import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useNotificationViewModel } from '../hooks/use-notification-view-model';
@@ -13,6 +14,7 @@ import { useNotificationViewModel } from '../hooks/use-notification-view-model';
 import { NotificationTab } from '../models/notification-models';
 import { notificationScreenStyles } from '../styles/notification-screen.styles';
 import { NotificationItemComponent } from './notification-item';
+import { NotificationSkeleton } from './notification-skeleton';
 import { NotificationTabs } from './notification-tabs';
 
 export function NotificationScreen() {
@@ -32,6 +34,8 @@ export function NotificationScreen() {
     notifications: filteredNotifications,
     isLoading,
     unreadCount,
+    isAuthenticated,
+    isInitialLoad,
     markAsRead,
     markAllAsRead,
     clearAll,
@@ -82,7 +86,70 @@ export function NotificationScreen() {
           onTabChange={setActiveTab}
         />
 
-        {filteredNotifications.length > 0 && (
+        {/* Sign-in prompt for unauthenticated users */}
+        {isAuthenticated === false && !isLoading && (
+          <View
+            style={[
+              notificationScreenStyles.modernEmptyContainer,
+              {
+                padding: 20,
+                margin: 16,
+                borderRadius: 16,
+                backgroundColor: colors.tint + '10',
+                borderWidth: 1,
+                borderColor: colors.tint + '30',
+              },
+            ]}
+          >
+            <Ionicons
+              name="lock-closed"
+              size={48}
+              color={colors.tint}
+              style={{ opacity: 0.8, marginBottom: 12 }}
+            />
+            <ThemedText
+              style={[
+                notificationScreenStyles.modernEmptyTitle,
+                { color: colors.text, marginBottom: 8 },
+              ]}
+            >
+              Sign in to track notifications
+            </ThemedText>
+            <ThemedText
+              style={[
+                notificationScreenStyles.modernEmptyMessage,
+                { color: colors.labelText, marginBottom: 16, textAlign: 'center' },
+              ]}
+            >
+              Sign in to mark notifications as read and keep track of what you've seen.
+            </ThemedText>
+            <TouchableOpacity
+              onPress={() => router.push('/supabase-auth')}
+              style={{
+                backgroundColor: colors.tint,
+                paddingHorizontal: 24,
+                paddingVertical: 12,
+                borderRadius: 12,
+                alignItems: 'center',
+              }}
+            >
+              <ThemedText
+                style={{
+                  color: '#FFFFFF',
+                  fontWeight: '600',
+                  fontSize: 16,
+                }}
+              >
+                Sign In
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Skeleton loading during initial load */}
+        {isInitialLoad && isLoading && <NotificationSkeleton />}
+
+        {filteredNotifications.length > 0 && !isInitialLoad && (
           <View style={[notificationScreenStyles.actionBar, { 
             backgroundColor: 'transparent',
             borderBottomColor: colors.surfaceBorder,
@@ -119,7 +186,7 @@ export function NotificationScreen() {
           </View>
         )}
 
-        {filteredNotifications.length === 0 ? (
+        {filteredNotifications.length === 0 && !isInitialLoad && !isLoading && (
           <View style={notificationScreenStyles.modernEmptyContainer}>
             <View style={[
               notificationScreenStyles.modernEmptyIconContainer,
@@ -139,7 +206,9 @@ export function NotificationScreen() {
               {t('notifications.empty.message')}
             </Text>
           </View>
-        ) : (
+        )}
+
+        {filteredNotifications.length > 0 && !isInitialLoad && (
           <FlatList
             style={notificationScreenStyles.modernListContainer}
             data={filteredNotifications}

@@ -62,11 +62,13 @@ export function useHomeViewModel() {
   // Supabase auth state
   const [supabaseUser, setSupabaseUser] = useState<any | null>(null);
   const [supabaseConnected, setSupabaseConnected] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
     let unsubscribe: (() => void) | null = null;
 
     const checkSupabaseStatus = async () => {
+      setIsInitialLoad(true);
       try {
         // Import supabaseIntegration directly using named import
         const masterfabricCore = await import('masterfabric-expo-core');
@@ -114,6 +116,11 @@ export function useHomeViewModel() {
         console.error('[Home] Error checking Supabase status:', error);
         setSupabaseConnected(false);
         setSupabaseUser(null);
+      } finally {
+        // Mark initial load as complete after a short delay to show skeleton
+        setTimeout(() => {
+          setIsInitialLoad(false);
+        }, 500);
       }
     };
 
@@ -537,6 +544,7 @@ export function useHomeViewModel() {
     deviceInfo,
     compatibility,
     compatibilityLoading,
+    isInitialLoad,
     // Actions
     handleQuickActionPress,
     handleNotificationPress,
