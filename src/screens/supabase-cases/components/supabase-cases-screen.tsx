@@ -9,6 +9,8 @@ import { useSupabaseCasesViewModel } from '../hooks/use-supabase-cases-view-mode
 import { supabaseCasesScreenStyles } from '../styles/supabase-cases-screen.styles';
 import { AuthCaseView } from './auth-case-view';
 import { CaseCard } from './case-card';
+import { OrderViewCaseView } from './order-view-case-view';
+import { PixelCanvasCaseView } from './pixel-canvas-case-view';
 import { ProductListCaseView } from './product-list-case-view';
 
 const supabaseGreen = '#3ECF8E';
@@ -28,6 +30,20 @@ const cases = [
     icon: 'cube',
     color: '#007AFF',
   },
+  {
+    id: 'order-view',
+    title: 'Order View',
+    description: 'View detailed orders with items, totals, and status',
+    icon: 'receipt',
+    color: '#5856D6',
+  },
+  {
+    id: 'pixel-canvas',
+    title: 'Pixel Canvas',
+    description: 'Collaborative pixel art game with real-time updates',
+    icon: 'grid',
+    color: '#FF6B6B',
+  },
 ];
 
 export function SupabaseCasesScreen() {
@@ -40,8 +56,11 @@ export function SupabaseCasesScreen() {
     if (state.selectedCase === 'product-list' && state.products.length === 0 && !state.isLoadingProducts) {
       actions.fetchProducts();
     }
+    if (state.selectedCase === 'order-view' && state.orders.length === 0 && !state.isLoadingOrders) {
+      actions.fetchOrders();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedCase, state.products.length, state.isLoadingProducts]);
+  }, [state.selectedCase, state.products.length, state.isLoadingProducts, state.orders.length, state.isLoadingOrders]);
 
   // Show case detail views
   if (state.selectedCase === 'auth') {
@@ -81,6 +100,48 @@ export function SupabaseCasesScreen() {
           error={state.lastError}
           onBack={() => actions.selectCase(null)}
           onRefresh={() => actions.fetchProducts()}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'order-view') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Order view example"
+          variant="minimal"
+        />
+        <OrderViewCaseView
+          orders={state.orders}
+          isLoading={state.isLoadingOrders}
+          error={state.lastError}
+          onBack={() => actions.selectCase(null)}
+          onRefresh={() => actions.fetchOrders()}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'pixel-canvas') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Pixel Canvas game"
+          variant="minimal"
+        />
+        <PixelCanvasCaseView
+          user={state.user}
+          isConnected={state.isConnected}
+          onBack={() => actions.selectCase(null)}
         />
       </SafeAreaView>
     );

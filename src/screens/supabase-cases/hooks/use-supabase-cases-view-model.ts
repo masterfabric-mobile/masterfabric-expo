@@ -15,6 +15,25 @@ export interface Product {
   updated_at: string;
 }
 
+export interface OrderItem {
+  product_id: number;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: number;
+  user_id: string | null;
+  items: OrderItem[];
+  total_price: number;
+  status: string;
+  shipping_address: string | null;
+  payment_method: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Case {
   id: string;
   title: string;
@@ -30,6 +49,8 @@ export interface SupabaseCasesState {
   selectedCase: string | null;
   products: Product[];
   isLoadingProducts: boolean;
+  orders: Order[];
+  isLoadingOrders: boolean;
   lastError: string | null;
 }
 
@@ -37,6 +58,7 @@ export interface SupabaseCasesActions {
   refreshStatus: () => Promise<void>;
   selectCase: (caseId: string | null) => void;
   fetchProducts: () => Promise<void>;
+  fetchOrders: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -47,9 +69,12 @@ export function useSupabaseCasesViewModel() {
   const [selectedCase, setSelectedCase] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const cancelRequested = useRef(false);
   const isLoadingRef = useRef(false);
+  const isLoadingOrdersRef = useRef(false);
 
   const refreshStatus = useCallback(async () => {
     try {
@@ -145,6 +170,57 @@ export function useSupabaseCasesViewModel() {
     }
   }, []);
 
+  const fetchOrders = useCallback(async () => {
+    // Prevent multiple simultaneous fetches
+    if (isLoadingOrdersRef.current) {
+      console.log('[SupabaseCases] Orders fetch already in progress, skipping...');
+      return;
+    }
+
+    if (!supabaseIntegration.isAvailable()) {
+      setLastError('Supabase is not available');
+      setIsLoadingOrders(false);
+      isLoadingOrdersRef.current = false;
+      return;
+    }
+
+    // Reset error state before fetching
+    setLastError(null);
+    setIsLoadingOrders(true);
+    isLoadingOrdersRef.current = true;
+
+    try {
+      const client = supabaseIntegration.getClient();
+      if (!client) {
+        throw new Error('Supabase client not initialized');
+      }
+
+      const { data, error } = await client
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+
+      if (!cancelRequested.current) {
+        setOrders(data as Order[] || []);
+        setLastError(null);
+      }
+    } catch (e: any) {
+      console.error('[SupabaseCases] Error fetching orders:', e);
+      if (!cancelRequested.current) {
+        setLastError(e?.message ?? String(e));
+        // Don't clear orders on error, keep existing data
+      }
+    } finally {
+      if (!cancelRequested.current) {
+        setIsLoadingOrders(false);
+        isLoadingOrdersRef.current = false;
+      }
+    }
+  }, []);
+
   useEffect(() => {
     refreshStatus();
     return () => {
@@ -186,6 +262,8 @@ export function useSupabaseCasesViewModel() {
     selectedCase,
     products,
     isLoadingProducts,
+    orders,
+    isLoadingOrders,
     lastError,
   };
 
@@ -193,6 +271,7 @@ export function useSupabaseCasesViewModel() {
     refreshStatus,
     selectCase,
     fetchProducts,
+    fetchOrders,
     refreshUser,
   };
 
