@@ -179,4 +179,23 @@ export const notificationScreenStyles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 20,
   },
+
+  // Supabase Badge Styles
+  supabaseBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 2,
+    paddingBottom: 6,
+    gap: 4,
+  },
+  supabaseLogo: {
+    width: 14,
+    height: 14,
+  },
+  supabaseBadgeText: {
+    fontSize: 12,
+    opacity: 0.7,
+    lineHeight: 14,
+  },
 });

@@ -23,10 +23,17 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
   } = useNotificationStore();
 
   const unsubscribeRef = useRef<(() => void) | null>(null);
+  const isLoadingRef = useRef(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null);
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
   const loadNotifications = useCallback(async () => {
+    // Prevent multiple simultaneous loads
+    if (isLoadingRef.current) {
+      return;
+    }
+    
+    isLoadingRef.current = true;
     setLoading(true);
     
     try {
@@ -59,6 +66,7 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
       setLoading(false);
       setIsInitialLoad(false);
       updateLastUpdated();
+      isLoadingRef.current = false;
     } catch (error: any) {
       console.error('[NotificationViewModel] Failed to load notifications:', error);
       // On error, set empty array but don't show error to user
@@ -66,6 +74,7 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
       setNotifications([]);
       setLoading(false);
       setIsInitialLoad(false);
+      isLoadingRef.current = false;
       // Try to determine auth status even on error
       if (supabaseIntegration.isAvailable()) {
         try {
@@ -191,9 +200,12 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
     };
   }, [loadNotifications, addNotification]);
 
-  const refreshNotifications = () => {
-    loadNotifications();
-  };
+  const refreshNotifications = useCallback(async () => {
+    // Only refresh if not already loading
+    if (!isLoadingRef.current) {
+      await loadNotifications();
+    }
+  }, [loadNotifications]);
 
   // Tabs configuration
   const tabs: TabItem[] = [

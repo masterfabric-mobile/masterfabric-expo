@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,6 +17,7 @@ import { notificationScreenStyles } from '../styles/notification-screen.styles';
 import { NotificationItemComponent } from './notification-item';
 import { NotificationSkeleton } from './notification-skeleton';
 import { NotificationTabs } from './notification-tabs';
+import { SupabaseBadge } from './supabase-badge';
 
 export function NotificationScreen() {
   const { currentTheme } = useTheme();
@@ -42,6 +44,29 @@ export function NotificationScreen() {
     refreshNotifications,
     removeNotification,
   } = useNotificationViewModel(activeTab);
+
+  // Refresh notifications when screen comes into focus (e.g., after signing in)
+  // Use a ref to prevent multiple refreshes
+  const isRefreshingRef = React.useRef(false);
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      // Only refresh if not already refreshing and not currently loading
+      if (!isRefreshingRef.current && !isLoading) {
+        isRefreshingRef.current = true;
+        refreshNotifications();
+        // Reset flag after a short delay to allow refresh to complete
+        setTimeout(() => {
+          isRefreshingRef.current = false;
+        }, 500);
+      }
+      
+      return () => {
+        // Reset flag when screen loses focus
+        isRefreshingRef.current = false;
+      };
+    }, [isLoading, refreshNotifications])
+  );
 
   const handleNotificationPress = (notification: any) => {
     if (!notification.isRead) {
@@ -80,6 +105,9 @@ export function NotificationScreen() {
           showStageBadge={true}
           variant="minimal"
         />
+
+        {/* Supabase badge */}
+        <SupabaseBadge additionalText="Real-time instant notification sync" />
 
         <NotificationTabs
           activeTab={activeTab}
@@ -149,85 +177,90 @@ export function NotificationScreen() {
         {/* Skeleton loading during initial load */}
         {isInitialLoad && isLoading && <NotificationSkeleton />}
 
-        {filteredNotifications.length > 0 && !isInitialLoad && (
-          <View style={[notificationScreenStyles.actionBar, { 
-            backgroundColor: 'transparent',
-            borderBottomColor: colors.surfaceBorder,
-          }]}>
-            <View style={notificationScreenStyles.actionContainer}>
-              <TouchableOpacity
-                onPress={markAllAsRead}
-                style={[notificationScreenStyles.modernActionButton, {
-                  backgroundColor: colors.tint + '12',
-                }]}
-                accessibilityRole="button"
-                accessibilityLabel={t('notifications.markAllRead')}
-              >
-                <Ionicons name="checkmark-done" size={16} color={colors.tint} />
-                <Text style={[notificationScreenStyles.modernActionText, { color: colors.tint }]}>
-                  {t('notifications.markAllRead')}
+        {/* Only show notification items when authenticated */}
+        {isAuthenticated && (
+          <>
+            {filteredNotifications.length > 0 && !isInitialLoad && (
+              <View style={[notificationScreenStyles.actionBar, { 
+                backgroundColor: 'transparent',
+                borderBottomColor: colors.surfaceBorder,
+              }]}>
+                <View style={notificationScreenStyles.actionContainer}>
+                  <TouchableOpacity
+                    onPress={markAllAsRead}
+                    style={[notificationScreenStyles.modernActionButton, {
+                      backgroundColor: colors.tint + '12',
+                    }]}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('notifications.markAllRead')}
+                  >
+                    <Ionicons name="checkmark-done" size={16} color={colors.tint} />
+                    <Text style={[notificationScreenStyles.modernActionText, { color: colors.tint }]}>
+                      {t('notifications.markAllRead')}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={clearAll}
+                    style={[notificationScreenStyles.modernActionButton, {
+                      backgroundColor: colors.errorColor + '12',
+                    }]}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('notifications.clearAll')}
+                  >
+                    <Ionicons name="trash-outline" size={16} color={colors.errorColor} />
+                    <Text style={[notificationScreenStyles.modernActionText, { color: colors.errorColor }]}>
+                      {t('notifications.clearAll')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
+            {filteredNotifications.length === 0 && !isInitialLoad && !isLoading && (
+              <View style={notificationScreenStyles.modernEmptyContainer}>
+                <View style={[
+                  notificationScreenStyles.modernEmptyIconContainer,
+                  { backgroundColor: colors.tint + '10' }
+                ]}>
+                  <Ionicons
+                    name="notifications-outline"
+                    size={48}
+                    color={colors.tint}
+                    style={{ opacity: 0.8 }}
+                  />
+                </View>
+                <Text style={[notificationScreenStyles.modernEmptyTitle, { color: colors.text }]}>
+                  {t('notifications.empty.title')}
                 </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={clearAll}
-                style={[notificationScreenStyles.modernActionButton, {
-                  backgroundColor: colors.errorColor + '12',
-                }]}
-                accessibilityRole="button"
-                accessibilityLabel={t('notifications.clearAll')}
-              >
-                <Ionicons name="trash-outline" size={16} color={colors.errorColor} />
-                <Text style={[notificationScreenStyles.modernActionText, { color: colors.errorColor }]}>
-                  {t('notifications.clearAll')}
+                <Text style={[notificationScreenStyles.modernEmptyMessage, { color: colors.labelText }]}>
+                  {t('notifications.empty.message')}
                 </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+              </View>
+            )}
 
-        {filteredNotifications.length === 0 && !isInitialLoad && !isLoading && (
-          <View style={notificationScreenStyles.modernEmptyContainer}>
-            <View style={[
-              notificationScreenStyles.modernEmptyIconContainer,
-              { backgroundColor: colors.tint + '10' }
-            ]}>
-              <Ionicons
-                name="notifications-outline"
-                size={48}
-                color={colors.tint}
-                style={{ opacity: 0.8 }}
-              />
-            </View>
-            <Text style={[notificationScreenStyles.modernEmptyTitle, { color: colors.text }]}>
-              {t('notifications.empty.title')}
-            </Text>
-            <Text style={[notificationScreenStyles.modernEmptyMessage, { color: colors.labelText }]}>
-              {t('notifications.empty.message')}
-            </Text>
-          </View>
-        )}
-
-        {filteredNotifications.length > 0 && !isInitialLoad && (
-          <FlatList
-            style={notificationScreenStyles.modernListContainer}
-            data={filteredNotifications}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <NotificationItemComponent
-                notification={item}
-                onPress={handleNotificationPress}
-                onDelete={handleNotificationDelete}
+            {filteredNotifications.length > 0 && !isInitialLoad && (
+              <FlatList
+                style={notificationScreenStyles.modernListContainer}
+                data={filteredNotifications}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <NotificationItemComponent
+                    notification={item}
+                    onPress={handleNotificationPress}
+                    onDelete={handleNotificationDelete}
+                  />
+                )}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={notificationScreenStyles.listContentContainer}
+                refreshing={isLoading}
+                onRefresh={refreshNotifications}
+                scrollEnabled={true}
+                bounces={true}
+                alwaysBounceVertical={true}
               />
             )}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={notificationScreenStyles.listContentContainer}
-            refreshing={isLoading}
-            onRefresh={refreshNotifications}
-            scrollEnabled={true}
-            bounces={true}
-            alwaysBounceVertical={true}
-          />
+          </>
         )}
       </SafeAreaView>
 
