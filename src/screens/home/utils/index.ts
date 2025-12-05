@@ -194,6 +194,14 @@ export const createSupabaseActions = (): SupabaseAction[] => [
     route: '/supabase/database',
   },
   {
+    id: 'supabase-cases',
+    title: 'Cases',
+    description: 'Example use cases and implementations',
+    iconType: 'icon',
+    iconName: 'briefcase',
+    route: '/supabase-cases',
+  },
+  {
     id: 'supabase-storage',
     title: t('home.supabase.actions.storage.title'),
     description: t('home.supabase.actions.storage.description'),

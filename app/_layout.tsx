@@ -132,6 +132,7 @@ export default function RootLayout() {
                     <Stack.Screen name="settings" />
                     <Stack.Screen name="supabase-auth" />
                     <Stack.Screen name="supabase-database" />
+                    <Stack.Screen name="supabase-cases" />
                     <Stack.Screen name="(tabs)" />
                     <Stack.Screen name="+not-found" />
                   </Stack>

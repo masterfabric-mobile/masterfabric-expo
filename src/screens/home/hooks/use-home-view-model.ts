@@ -369,6 +369,11 @@ export function useHomeViewModel() {
           activityType = 'settings';
           actionType = 'settings';
           break;
+        case 'supabase-cases':
+          activityDescription = 'Cases section opened';
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
         case 'supabase-storage':
           activityDescription = t('home.supabase.actions.storage.description');
           activityType = 'settings';
@@ -478,6 +483,10 @@ export function useHomeViewModel() {
         case 'supabase-database':
           console.log('🗄️ Navigating to Supabase Database...');
           router.push('/supabase-database');
+          break;
+        case 'supabase-cases':
+          console.log('📋 Navigating to Supabase Cases...');
+          router.push('/supabase-cases');
           break;
         case 'supabase-storage':
           console.log('📦 Navigating to Supabase Storage...');
