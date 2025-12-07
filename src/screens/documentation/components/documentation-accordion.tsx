@@ -1,7 +1,7 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { DocumentationSection } from '../models/documentation-models';
@@ -38,7 +38,7 @@ export function DocumentationAccordion({ sections }: AccordionProps) {
             { 
               backgroundColor: colors.surfaceBackground,
               borderColor: colors.surfaceBorder + '30',
-              borderWidth: 1,
+              borderWidth: Sizing.borderWidth.s,
             }
           ]}
           onPress={() => toggleSection(section.id)}
@@ -51,7 +51,7 @@ export function DocumentationAccordion({ sections }: AccordionProps) {
             ]}>
               <Ionicons 
                 name={section.icon as any} 
-                size={24} 
+                size={Sizing.icon.m} 
                 color={section.color} 
               />
             </View>
@@ -79,7 +79,7 @@ export function DocumentationAccordion({ sections }: AccordionProps) {
             
             <Ionicons 
               name={isExpanded ? 'chevron-up' : 'chevron-down'} 
-              size={20} 
+              size={Sizing.icon.s} 
               color={colors.labelText} 
             />
           </View>
@@ -91,7 +91,7 @@ export function DocumentationAccordion({ sections }: AccordionProps) {
             { 
               backgroundColor: colors.background,
               borderLeftColor: section.color + '40',
-              borderLeftWidth: 3,
+              borderLeftWidth: Sizing.borderWidth.l,
             }
           ]}>
             {section.items.map((item) => (
@@ -102,7 +102,7 @@ export function DocumentationAccordion({ sections }: AccordionProps) {
                   { 
                     backgroundColor: colors.surfaceBackground,
                     borderColor: colors.surfaceBorder + '20',
-                    borderWidth: 1,
+                    borderWidth: Sizing.borderWidth.s,
                   }
                 ]}
               >
