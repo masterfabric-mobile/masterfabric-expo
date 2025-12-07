@@ -1,33 +1,33 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const onboardingScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   contentContainer: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   skipContainer: {
-    alignItems: 'flex-end',
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    alignItems: Sizing.layout.alignItems.flexEnd,
+    paddingHorizontal: Sizing.padding.m,
+    paddingTop: Sizing.padding.m,
   },
   skipButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: Sizing.gap.s,
+    paddingHorizontal: Sizing.padding.m,
   },
   skipButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    opacity: 0.6,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'medium', 'normal'),
+    opacity: Sizing.opacity.s,
   },
   stepContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
+    flex: Sizing.flexNumber.full,
+    justifyContent: Sizing.layout.justifyContent.center,
+    paddingHorizontal: Sizing.padding.m,
   },
   controlsContainer: {
     width: '100%',
-    paddingBottom: 20,
+    paddingBottom: Sizing.padding.l,
   },
 });
