@@ -1,6 +1,5 @@
 // Device Information Helpers
 export * from './connectivity';
-export * from './device-info';
 
 // Platform Helpers
 export * from './platform';
@@ -37,4 +36,7 @@ export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device
 
 // Typography Helpers
 export * from './typography_helper';
+
+// URL Launcher Helper
+export * from './url_launcher_helper';
 
