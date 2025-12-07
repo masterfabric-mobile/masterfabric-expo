@@ -2,7 +2,7 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { HelperCategory } from '../models/helpers-models';
@@ -49,7 +49,7 @@ export function HelperCategoryCard({ category }: HelperCategoryCardProps) {
         ]}>
           <Ionicons 
             name={category.icon as any} 
-            size={28} 
+            size={Sizing.icon.l} 
             color={category.color} 
           />
         </View>
@@ -96,7 +96,7 @@ export function HelperCategoryCard({ category }: HelperCategoryCardProps) {
         <View style={helperCategoryCardStyles.arrowContainer}>
           <Ionicons 
             name="chevron-forward" 
-            size={20} 
+            size={Sizing.icon.s} 
             color={colors.icon} 
           />
         </View>
