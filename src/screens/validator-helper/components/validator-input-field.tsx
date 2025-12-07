@@ -236,7 +236,7 @@ export function ValidatorInputField({
             value={testInput.trim !== false}
             onValueChange={(value) => onInputChange({ trim: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarSwitchActiveLight}
+            thumbColor="#FFFFFF"
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}
@@ -250,7 +250,7 @@ export function ValidatorInputField({
             value={testInput.convertTurkishChars || false}
             onValueChange={(value) => onInputChange({ convertTurkishChars: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarSwitchActiveLight}
+            thumbColor="#FFFFFF"
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}
