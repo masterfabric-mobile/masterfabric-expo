@@ -8,10 +8,10 @@ export const helperItemCardStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Sizing.padding.m,
+    padding: Sizing.padding.s,
     borderRadius: Sizing.card.borderRadius.m,
     marginHorizontal: Sizing.padding.m,
-    marginVertical: Sizing.spacing.s,
+    marginVertical: Sizing.spacing.xxs,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: Sizing.borderWidth.s },
     shadowOpacity: 0.1,
@@ -24,7 +24,7 @@ export const helperItemCardStyles = StyleSheet.create({
     borderRadius: Sizing.borderRadius.small,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Sizing.padding.m,
+    marginRight: Sizing.padding.s,
   },
   content: {
     flex: 1,

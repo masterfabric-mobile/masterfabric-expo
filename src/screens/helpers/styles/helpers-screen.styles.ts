@@ -14,6 +14,6 @@ export const helpersScreenStyles = StyleSheet.create({
     paddingBottom: Sizing.padding.xxl,
   },
   categoriesContainer: {
-    gap: Sizing.gap.l,
+    gap: Sizing.gap.xs,
   },
 });

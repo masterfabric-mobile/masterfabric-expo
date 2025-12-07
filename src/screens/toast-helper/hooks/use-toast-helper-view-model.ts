@@ -1,5 +1,5 @@
 import { t } from '@/src/shared/i18n';
-import { toastHelper } from '@/src/shared/services/toast-service';
+import { toastHelper } from 'masterfabric-expo-core';
 import { useCallback } from 'react';
 import { ToastInput, ToastResult, ToastType } from '../models/toast-helper.models';
 import { useToastHelperStore } from '../store/toast-helper-store';
