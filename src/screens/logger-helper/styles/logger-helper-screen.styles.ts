@@ -1,36 +1,35 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const loggerHelperScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollContent: {
-    padding: 16,
-    gap: 16,
+    padding: Sizing.padding.l,
+    gap: Sizing.gap.l,
   },
   header: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 4,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xl', 'bold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   section: {
-    gap: 12,
+    gap: Sizing.gap.m,
   },
   card: {
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.m,
+    borderWidth: Sizing.borderWidth.s,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    opacity: 0.8,
-    marginBottom: 4,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal'),
+    opacity: Sizing.opacity.xl,
+    marginBottom: Sizing.spacing.xxs,
   },
   actions: {
-    gap: 8,
+    gap: Sizing.gap.s,
   },
   resultsList: {
-    gap: 10,
+    gap: Sizing.gap.s,
   },
 });

@@ -1,7 +1,7 @@
 import { Button, Dropdown, ThemedText } from '@/src/shared/components';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +27,7 @@ export function LoggerHelperScreen() {
         variant="minimal"
       />
       <ScrollView
-        style={{ flex: 1 }}
+        style={{ flex: Sizing.flexNumber.full }}
         contentContainerStyle={[loggerHelperScreenStyles.scrollContent]}
         showsVerticalScrollIndicator={false}
       >
@@ -50,8 +50,8 @@ export function LoggerHelperScreen() {
             />
 
             {/* Log level selection dropdown */}
-            <View style={{ gap: 10, marginTop: 8 }}>
-              <ThemedText style={{ color: colors.titleText, fontWeight: '600' }}>
+            <View style={{ gap: Sizing.gap.s, marginTop: Sizing.spacing.s }}>
+              <ThemedText style={[{ color: colors.titleText }, typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal')]}>
                 {t('helpers.loggerHelper.level')} {input.level.toUpperCase()}
               </ThemedText>
               <Dropdown
@@ -63,7 +63,7 @@ export function LoggerHelperScreen() {
             </View>
 
             {/* Toggle timestamp visibility in logs */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
+            <View style={{ flexDirection: Sizing.layout.flexDirection.row, alignItems: Sizing.layout.alignItems.center, gap: Sizing.gap.s, marginTop: Sizing.spacing.s }}>
               <Switch
                 value={input.showTimestamp}
                 onValueChange={(value) => updateInput({ showTimestamp: value })}
@@ -75,7 +75,7 @@ export function LoggerHelperScreen() {
             </View>
 
             {/* Action buttons - run single test or run all tests */}
-            <View style={[loggerHelperScreenStyles.actions, { gap: 12 }]}>
+            <View style={[loggerHelperScreenStyles.actions, { gap: Sizing.gap.m }]}>
               <Button
                 title={isLoading ? t('helpers.loggerHelper.running') : t('helpers.loggerHelper.run')}
                 onPress={runSingleTest}
@@ -103,7 +103,7 @@ export function LoggerHelperScreen() {
           <Text style={[loggerHelperScreenStyles.sectionTitle, { color: colors.labelText }]}>
             {t('helpers.toastHelper.results')}
           </Text>
-          <View style={[loggerHelperScreenStyles.resultsList, { marginTop: 8 }]}>
+          <View style={[loggerHelperScreenStyles.resultsList, { marginTop: Sizing.spacing.s }]}>
             <LogViewer />
           </View>
         </View>
