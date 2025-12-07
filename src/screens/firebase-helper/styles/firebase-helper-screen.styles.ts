@@ -1,4 +1,8 @@
 import { StyleSheet } from 'react-native';
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const firebaseHelperScreenStyles = StyleSheet.create({
   container: {
@@ -8,30 +12,27 @@ export const firebaseHelperScreenStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 32,
-    gap: 16,
+    padding: Sizing.padding.m,
+    paddingBottom: Sizing.padding.xxl,
+    gap: Sizing.gap.m,
   },
   section: {
-    gap: 8,
+    gap: Sizing.gap.s,
   },
   card: {
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    borderRadius: 12,
-    padding: 12,
+    borderWidth: Sizing.borderWidth.s,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.s,
     backgroundColor: 'transparent',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 10,
+    borderWidth: Sizing.borderWidth.s,
+    borderRadius: Sizing.borderRadius.small,
+    padding: Sizing.padding.s,
   },
   divider: {
-    height: 1,
-    backgroundColor: '#e5e7eb',
-    marginVertical: 8,
+    height: Sizing.borderWidth.s,
+    marginVertical: Sizing.spacing.s,
   },
 });
 
