@@ -1,4 +1,4 @@
-import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TextInput, View } from 'react-native';
 import { snackbarInputFieldStyles } from '../styles/snackbar-input-field.styles';
@@ -50,7 +50,7 @@ export function SnackbarInputField({
             snackbarInputFieldStyles.input,
             {
               color: colors.text,
-              minHeight: multiline ? 80 : 44,
+              minHeight: multiline ? Sizing.height.xxl : Sizing.button.height.medium,
             },
           ]}
           multiline={multiline}

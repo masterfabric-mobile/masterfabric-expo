@@ -1,23 +1,23 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const timeHelperScreenStyles = StyleSheet.create({
   // Container styles
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollView: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: Sizing.padding.m,
+    paddingBottom: Sizing.padding.xxl,
   },
   
   // Results section
   resultsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 24,
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginTop: Sizing.padding.xl,
+    marginBottom: Sizing.padding.m,
   },
 });

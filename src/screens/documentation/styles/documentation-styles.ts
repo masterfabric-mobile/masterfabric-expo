@@ -1,3 +1,4 @@
+import { Sizing } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const documentationStyles = StyleSheet.create({
@@ -8,7 +9,7 @@ export const documentationStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 20,
+    paddingHorizontal: Sizing.padding.m,
+    paddingBottom: Sizing.padding.l,
   },
 });

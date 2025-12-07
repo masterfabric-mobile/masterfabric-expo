@@ -1,71 +1,66 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const validatorTestCardStyles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    marginBottom: 12,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.m,
+    marginBottom: Sizing.spacing.s,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: Sizing.spacing.xs,
   },
   validatorType: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'bold', 'normal'),
   },
   statusBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: Sizing.padding.xs,
+    paddingVertical: Sizing.padding.xxs,
+    borderRadius: Sizing.borderRadius.s,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'semibold', 'normal'),
     textTransform: 'uppercase',
   },
   description: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 12,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    marginBottom: Sizing.spacing.s,
     opacity: 0.8,
   },
   inputOutputContainer: {
-    gap: 12,
+    gap: Sizing.gap.s,
   },
   inputOutputGroup: {
-    gap: 6,
+    gap: Sizing.gap.xs,
   },
   label: {
-    fontSize: 12,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'semibold', 'normal'),
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   inputOutputBox: {
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    minHeight: 44,
+    padding: Sizing.padding.s,
+    borderRadius: Sizing.borderRadius.m,
+    borderWidth: Sizing.borderWidth.s,
+    minHeight: Sizing.input.height.medium,
     justifyContent: 'center',
   },
   inputOutputText: {
-    fontSize: 14,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
     fontFamily: 'monospace',
-    lineHeight: 18,
   },
   errorContainer: {
-    marginTop: 8,
-    padding: 10,
-    borderRadius: 6,
-    borderWidth: 1,
+    marginTop: Sizing.spacing.xs,
+    padding: Sizing.padding.s,
+    borderRadius: Sizing.borderRadius.s,
+    borderWidth: Sizing.borderWidth.s,
   },
   errorText: {
-    fontSize: 13,
-    lineHeight: 18,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
   },
 });
 

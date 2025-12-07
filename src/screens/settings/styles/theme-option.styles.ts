@@ -1,31 +1,30 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const themeOptionStyles = StyleSheet.create({
   optionsContainer: {
-    gap: 8,
-    marginBottom: 24,
+    gap: Sizing.gap.s,
+    marginBottom: Sizing.padding.xl,
   },
   option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 2,
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.m,
   },
   optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
   },
   optionIcon: {
-    marginRight: 12,
+    marginRight: Sizing.padding.s,
   },
   optionText: {
-    fontSize: 16,
-    fontWeight: '500',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'medium', 'normal'),
   },
   checkmark: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'bold', 'normal'),
   },
 });

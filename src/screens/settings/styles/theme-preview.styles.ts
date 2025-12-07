@@ -1,36 +1,34 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const themePreviewStyles = StyleSheet.create({
   previewSection: {
-    marginTop: 8,
+    marginTop: Sizing.gap.s,
   },
   previewTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.s,
   },
   previewCard: {
-    padding: 16,
-    borderRadius: 12,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
   },
   previewCardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal'),
+    marginBottom: Sizing.gap.s,
   },
   previewCardText: {
-    fontSize: 14,
-    opacity: 0.7,
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
+    marginBottom: Sizing.padding.m,
   },
   previewButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
+    paddingHorizontal: Sizing.padding.l,
+    paddingVertical: Sizing.padding.s,
+    borderRadius: Sizing.gap.s,
+    alignSelf: Sizing.layout.alignSelf.flexStart,
   },
   previewButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal'),
   },
 });

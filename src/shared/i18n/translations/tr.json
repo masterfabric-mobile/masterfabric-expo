@@ -640,6 +640,126 @@
         }
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Boyut Yardımcısı",
+      "description": "Boyutlandırma sistemi, boşluk ve duyarlı tasarım yardımcıları",
+      "testSuite": "UI Boyut Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "runTests": "Tüm Testleri Çalıştır",
+      "runningTests": "Testler Çalışıyor...",
+      "testResults": "Test Sonuçları",
+      "functions": "fonksiyon",
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "getSpacing": "Boyut anahtarına göre boşluk değerini alır",
+      "getPadding": "Boyut anahtarına göre dolgu değerini alır",
+      "getMargin": "Boyut anahtarına göre kenar boşluğu değerini alır",
+      "calculateSpacing": "Temel birim çarpanı kullanarak boşluk hesaplar",
+      "getBaseUnit": "Temel birimi alır (8pt grid)",
+      "getScreenWidth": "Mevcut ekran genişliğini alır",
+      "getDeviceTypeAuto": "Cihaz tipini otomatik olarak alır",
+      "getGridColumnsAuto": "Cihaza göre grid kolonlarını alır",
+      "getResponsiveSpacing": "Ekran genişliğine göre duyarlı boşluk alır",
+      "getButtonHeight": "Boyuta göre buton yüksekliğini alır",
+      "getInputHeight": "Boyuta göre giriş yüksekliğini alır",
+      "getCardPadding": "Boyuta göre kart dolgusunu alır",
+      "spacing": "Boşluk",
+      "padding": "Dolgu",
+      "margin": "Kenar Boşluğu",
+      "gap": "Aralık",
+      "borderRadius": "Kenar Yuvarlaklığı",
+      "borderWidth": "Kenar Kalınlığı",
+      "buttonHeight": "Buton Yüksekliği",
+      "inputHeight": "Giriş Yüksekliği",
+      "cardPadding": "Kart Dolgusu",
+      "scrollPadding": "Kaydırma Dolgusu",
+      "scrollMargin": "Kaydırma Kenar Boşluğu",
+      "preview": "Canlı Önizleme",
+      "showcase": "Boyutlandırma Vitrin",
+      "showcaseDescription": "Tüm mevcut boyutlandırma değerleri ve örnekleri",
+      "selected": "Seçili",
+      "responsiveInfo": "Duyarlı Bilgi",
+      "device": "Cihaz",
+      "width": "Genişlik",
+      "columns": "Kolonlar",
+      "baseUnit": "Temel Birim",
+      "responsivePadding": "Duyarlı Dolgu",
+      "sizeLabels": {
+        "small": "Küçük",
+        "medium": "Orta",
+        "large": "Büyük",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
+      "examples": {
+        "spacing": {
+          "title": "Boşluk",
+          "description": "Boşluk, elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Boşluk Boyutu Seç"
+        },
+        "padding": {
+          "title": "Dolgu",
+          "description": "Dolgu, içerik ile kenarlık arasındaki mesafeyi belirler",
+          "selectSize": "Dolgu Boyutu Seç"
+        },
+        "margin": {
+          "title": "Kenar Boşluğu",
+          "description": "Kenar boşluğu, elemanın dışındaki mesafeyi belirler",
+          "selectSize": "Kenar Boşluğu Boyutu Seç"
+        },
+        "gap": {
+          "title": "Aralık",
+          "description": "Aralık, flex container içindeki elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Aralık Boyutu Seç"
+        },
+        "borderRadius": {
+          "title": "Kenar Yuvarlaklığı",
+          "description": "Kenar yuvarlaklığı, köşelerin yuvarlaklığını belirler",
+          "selectSize": "Kenar Yuvarlaklığı Seç"
+        },
+        "borderWidth": {
+          "title": "Kenar Kalınlığı",
+          "description": "Kenar kalınlığı, kenarlıkların kalınlığını belirler",
+          "selectSize": "Kenar Kalınlığı Seç"
+        },
+        "buttonHeight": {
+          "title": "Buton Yüksekliği",
+          "description": "Buton yüksekliği, butonların yüksekliğini belirler",
+          "selectSize": "Buton Yüksekliği Seç"
+        },
+        "inputHeight": {
+          "title": "Giriş Yüksekliği",
+          "description": "Giriş yüksekliği, giriş alanlarının yüksekliğini belirler",
+          "selectSize": "Giriş Yüksekliği Seç"
+        },
+        "cardPadding": {
+          "title": "Kart Dolgusu",
+          "description": "Kart dolgusu, kart içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kart Dolgusu Seç"
+        },
+        "scrollPadding": {
+          "title": "Kaydırma Dolgusu",
+          "description": "Kaydırma dolgusu, kaydırma içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Dolgusu Seç"
+        },
+        "scrollMargin": {
+          "title": "Kaydırma Kenar Boşluğu",
+          "description": "Kaydırma kenar boşluğu, kaydırma öğeleri arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Kenar Boşluğu Seç"
+        }
+      },
+      "deviceType": {
+        "title": "Cihaz Tipi",
+        "phone": "📱 Telefon",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Masaüstü"
+      }
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
@@ -1063,23 +1183,47 @@
         "description": "Yaygın geliştirme görevleri için yardımcı fonksiyonlar",
         "stringHelper": {
           "title": "String Yardımcısı",
-          "description": "Formatlama, doğrulama ve durum dönüştürme dahil string manipülasyon yardımcıları. capitalize, truncate, email doğrulama, URL doğrulama, para birimi formatlama, durum dönüştürme (camelCase, snake_case, kebab-case), HTML kaçırma ve daha fazlası gibi fonksiyonlar."
+          "description": "Metin manipülasyonu ve doğrulama yardımcıları"
+        },
+        "loggerHelper": {
+          "title": "Logger Yardımcısı",
+          "description": "Geliştirme ve üretim loglama yardımcıları"
+        },
+        "snackbarHelper": {
+          "title": "Snackbar Yardımcısı",
+          "description": "Aksiyon butonları ve konumlandırma ile snackbar bildirim yardımcıları"
+        },
+        "firebaseHelper": {
+          "title": "Firebase Yardımcısı",
+          "description": "Auth, Analytics (web) ve Firestore yardımcıları"
+        },
+        "toastHelper": {
+          "title": "Toast Yardımcısı",
+          "description": "UI geri bildirim ve bildirim yardımcıları"
+        },
+        "timeHelper": {
+          "title": "Zaman Yardımcısı",
+          "description": "Tarih ve zaman manipülasyon yardımcıları"
+        },
+        "batteryHelper": {
+          "title": "Batarya Yardımcısı",
+          "description": "Batarya seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri"
         },
         "richTextHelper": {
           "title": "Zengin Metin Yardımcısı",
-          "description": "React Native için HTML, Markdown ve metin formatlama araçları. HTML'i React Native metin bileşenlerine ayrıştır, Markdown'ı formatlanmış metne dönüştür, URL/mention/hashtag çıkar, XSS önleme için içeriği temizle, çoklu stillerle formatlanmış metin oluştur ve zengin metin içeriğini interaktif olarak işle."
+          "description": "HTML, Markdown ve metin formatlama yardımcıları"
         },
-        "deviceInfo": {
-          "title": "Cihaz Bilgisi Yardımcısı",
-          "description": "Platform detayları, OS sürümü, ekran boyutları, cihaz yetenekleri ve uyumluluk kontrolleri dahil kapsamlı cihaz bilgilerini alın. Responsive tasarım ve özellik tespiti için gerekli."
+        "typographyHelper": {
+          "title": "Tipografi Yardımcısı",
+          "description": "Tipografi yardımcıları, font ölçeklendirme ve Flutter tarzı copyWith deseni ile metin stillendirme"
         },
-        "validation": {
-          "title": "Doğrulama Yardımcısı",
-          "description": "Formlar ve veri işleme için giriş doğrulama yardımcıları. Email doğrulama, URL doğrulama, telefon numarası doğrulama ve güvenli veri işleme için özel doğrulama kuralları içerir."
+        "validatorHelper": {
+          "title": "Doğrulayıcı Yardımcısı",
+          "description": "Form doğrulama yardımcıları"
         },
-        "formatting": {
-          "title": "Formatlama Yardımcısı",
-          "description": "Tarihler, sayılar, para birimi ve metin için veri formatlama yardımcıları. Tarih formatlama, ondalık basamaklı sayı formatlama, para birimi formatlama ve metin dönüştürme fonksiyonları içerir."
+        "uiSizeHelper": {
+          "title": "UI Boyut Yardımcısı",
+          "description": "Boyutlandırma sistemi, boşluk, tipografi ve responsive tasarım yardımcıları"
         }
       },
       "core": {

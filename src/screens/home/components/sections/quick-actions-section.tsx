@@ -1,11 +1,14 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { quickActionsStyles } from '../../styles/quick-actions.styles';
 import { QuickAction } from '../../utils';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 interface QuickActionsSectionProps {
   quickActions: QuickAction[];
@@ -47,10 +50,10 @@ export function QuickActionsSection({
                 { 
                   backgroundColor: colors.surfaceBackground,
                   borderColor: colors.surfaceBorder + '30',
-                  borderWidth: 1.5,
-                  shadowOffset: { width: 0, height: 3 },
+                  borderWidth: Sizing.borderWidth.m,
+                  shadowOffset: { width: 0, height: Sizing.spacing.xxs },
                   shadowOpacity: 0.08,
-                  shadowRadius: 8,
+                  shadowRadius: Sizing.gap.s,
                   elevation: 3,
                 }
               ]}
@@ -59,13 +62,13 @@ export function QuickActionsSection({
                 quickActionsStyles.actionIcon,
                 { 
                   backgroundColor: action.color + '15',
-                  borderWidth: 1,
+                  borderWidth: Sizing.borderWidth.s,
                   borderColor: action.color + '25',
                 } 
               ]}>
                 <Ionicons 
                   name={getIconName(action.id)} 
-                  size={24} 
+                  size={Sizing.icon.m} 
                   color={action.color} 
                 />
               </View>
@@ -77,8 +80,7 @@ export function QuickActionsSection({
                     quickActionsStyles.actionTitle,
                     { 
                       color: colors.bodyText,
-                      fontSize: 17,
-                      fontWeight: '700'
+                      ...getTypographyStyle('m', 'bold', 'normal'),
                     }
                   ]}
                 >
@@ -90,8 +92,7 @@ export function QuickActionsSection({
                     quickActionsStyles.actionDescription,
                     { 
                       color: colors.actionDescription,
-                      fontSize: 15,
-                      lineHeight: 20
+                      ...getTypographyStyle('s', 'normal', 'normal'),
                     }
                   ]}
                 >

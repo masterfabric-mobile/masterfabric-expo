@@ -1,22 +1,23 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const snackbarInputFieldStyles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: Sizing.padding.m,
   },
   label: {
-    fontSize: 14,
-    marginBottom: 8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    marginBottom: Sizing.gap.s,
   },
   inputContainer: {
-    borderRadius: 8,
-    borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderRadius: Sizing.gap.s,
+    borderWidth: Sizing.borderWidth.s,
+    paddingHorizontal: Sizing.padding.s,
+    paddingVertical: Sizing.gap.s,
   },
   input: {
-    fontSize: 15,
-    paddingVertical: 8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    paddingVertical: Sizing.gap.s,
   },
 });
 

@@ -1,31 +1,32 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const progressSectionStyles = StyleSheet.create({
   loadingContainer: {
     width: '100%',
-    paddingHorizontal: 40,
-    marginBottom: 30,
+    paddingHorizontal: Sizing.padding.xxl,
+    marginBottom: Sizing.padding.xxl,
   },
   progressBar: {
-    height: 6,
-    borderRadius: 3,
-    overflow: 'hidden',
+    height: Sizing.spacing.xxs,
+    borderRadius: Sizing.spacing.xxs / 2,
+    overflow: Sizing.layout.overflow.hidden,
     width: '100%',
-    marginBottom: 16,
+    marginBottom: Sizing.padding.m,
   },
   progressFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: Sizing.spacing.xxs / 2,
   },
   progressText: {
-    fontSize: 14,
-    textAlign: 'center',
-    opacity: 0.8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    textAlign: Sizing.layout.textAlign.center,
+    opacity: Sizing.opacity.xl,
   },
   taskText: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginTop: 8,
-    opacity: 0.6,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    textAlign: Sizing.layout.textAlign.center,
+    marginTop: Sizing.gap.s,
+    opacity: Sizing.opacity.s,
   },
 });

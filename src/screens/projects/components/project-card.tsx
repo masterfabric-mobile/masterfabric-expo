@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { GitHubProject } from '../models/project-models';
 import { projectCardStyles } from '../styles/project-card.styles';
 import { formatProjectDate, getLanguageColor } from '../utils';
@@ -31,7 +31,7 @@ export function ProjectCard({ project, onPress }: ProjectCardProps) {
         }
       ]}
       onPress={() => onPress(project)}
-      activeOpacity={0.92}
+      activeOpacity={Sizing.opacity.xxl}
     >
       <View style={projectCardStyles.header}>
         <Text 
@@ -71,7 +71,7 @@ export function ProjectCard({ project, onPress }: ProjectCardProps) {
           <View style={projectCardStyles.stat}>
             <Ionicons 
               name="star" 
-              size={14} 
+              size={Sizing.icon.xs} 
               color={colors.warningColor} 
             />
             <Text style={[
@@ -85,7 +85,7 @@ export function ProjectCard({ project, onPress }: ProjectCardProps) {
           <View style={projectCardStyles.stat}>
             <Ionicons 
               name="git-branch" 
-              size={14} 
+              size={Sizing.icon.xs} 
               color={colors.labelText} 
             />
             <Text style={[

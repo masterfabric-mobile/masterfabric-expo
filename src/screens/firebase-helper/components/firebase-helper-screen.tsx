@@ -1,12 +1,15 @@
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { IconSymbol } from '@/src/shared/components/ui/IconSymbol';
 import { t } from '@/src/shared/i18n';
-import { firebaseIntegration, getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { firebaseIntegration, getThemeColors, Sizing, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Button, Modal, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFirebaseHelperViewModel } from '../hooks/use-firebase-helper-view-model';
 import { firebaseHelperScreenStyles } from '../styles/firebase-helper-screen.styles';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export function FirebaseHelperScreen() {
   const { currentTheme } = useTheme();
@@ -95,29 +98,29 @@ export function FirebaseHelperScreen() {
         {/* Status card */}
         {(() => { try { return !state.isReady; } catch { return true; } })() ? (
           <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-            <Text style={{ color: colors.labelText, fontWeight: '600', marginBottom: 8 }}>Firebase status</Text>
-            <Text style={{ color: colors.bodyText, marginBottom: 8 }}>
+            <Text style={[{ color: colors.labelText, marginBottom: Sizing.spacing.s }, getTypographyStyle('m', 'semibold', 'normal')]}>Firebase status</Text>
+            <Text style={[{ color: colors.bodyText, marginBottom: Sizing.spacing.s }, getTypographyStyle('s', 'normal', 'normal')]}>
               Not initialized. Enable Firebase in initMasterView config and set Expo env vars in your .env (EXPO_PUBLIC_FIREBASE_*).
             </Text>
-            <Text style={{ color: colors.bodyText, marginBottom: 8 }}>Required: API_KEY, PROJECT_ID, APP_ID</Text>
+            <Text style={[{ color: colors.bodyText, marginBottom: Sizing.spacing.s }, getTypographyStyle('s', 'normal', 'normal')]}>Required: API_KEY, PROJECT_ID, APP_ID</Text>
             <Button title="Refresh" onPress={actions.refreshStatus} />
           </View>
         ) : null}
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600' }}>Environment</Text>
-          <Text style={{ color: colors.bodyText }}>Ready: {String(state.isReady)} | Auth: {String(state.authAvailable)}</Text>
-          <Text style={{ color: colors.bodyText }}>Project: {firebaseIntegration.getConfig()?.projectId ?? '-'}</Text>
+          <Text style={[{ color: colors.labelText }, getTypographyStyle('m', 'semibold', 'normal')]}>Environment</Text>
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Ready: {String(state.isReady)} | Auth: {String(state.authAvailable)}</Text>
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Project: {firebaseIntegration.getConfig()?.projectId ?? '-'}</Text>
           {state.lastError ? (<Text style={{ color: colors.errorColor ?? '#ef4444' }}>Last error: {state.lastError}</Text>) : null}
         </View>
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>  
-          <Text style={{ color: colors.labelText, fontWeight: '600', marginBottom: 8 }}>Firebase Env Config (.env)</Text>
+          <Text style={[{ color: colors.labelText, marginBottom: Sizing.spacing.s }, getTypographyStyle('m', 'semibold', 'normal')]}>Firebase Env Config (.env)</Text>
           {envRows.map(({ key, label, icon }) => (
-            <View key={key} style={{ marginBottom: 12 }}>
+            <View key={key} style={{ marginBottom: Sizing.spacing.m }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <IconSymbol name={icon} color={colors.labelText} size={18} style={{ marginRight: 6 }} />
-                <Text style={{ color: colors.bodyText, fontWeight: '500', fontSize: 13 }}>{key}</Text>
+                <IconSymbol name={icon} color={colors.labelText} size={Sizing.icon.s} style={{ marginRight: Sizing.spacing.s }} />
+                <Text style={[{ color: colors.bodyText }, getTypographyStyle('xs', 'medium', 'normal')]}>{key}</Text>
               </View>
-              <Text style={{ color: colors.bodyText, fontSize: 15, marginTop: 2 }} selectable>{String((process.env as any)[key] ?? 'not set')}</Text>
+              <Text style={[{ color: colors.bodyText, marginTop: Sizing.spacing.xxs }, getTypographyStyle('s', 'normal', 'normal')]} selectable>{String((process.env as any)[key] ?? 'not set')}</Text>
             </View>
           ))}
         </View>
@@ -172,7 +175,7 @@ export function FirebaseHelperScreen() {
         </View>
 
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600', marginBottom: 8 }}>Forgot Password</Text>
+          <Text style={[{ color: colors.labelText, marginBottom: Sizing.spacing.s }, getTypographyStyle('m', 'semibold', 'normal')]}>Forgot Password</Text>
           <TextInput
             placeholder="Enter your email"
             placeholderTextColor={colors.placeholderText}
@@ -193,21 +196,21 @@ export function FirebaseHelperScreen() {
         </View>
 
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600' }}>Auth User ID</Text>
-          <Text style={{ color: colors.text }}>{state.authUserId ?? '-'}</Text>
+          <Text style={[{ color: colors.labelText }, getTypographyStyle('m', 'semibold', 'normal')]}>Auth User ID</Text>
+          <Text style={[{ color: colors.text }, getTypographyStyle('s', 'normal', 'normal')]}>{state.authUserId ?? '-'}</Text>
         </View>
 
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600' }}>Analytics</Text>
-          <Text style={{ color: colors.bodyText }}>Web-only with Firebase Web SDK</Text>
+          <Text style={[{ color: colors.labelText }, getTypographyStyle('m', 'semibold', 'normal')]}>Analytics</Text>
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Web-only with Firebase Web SDK</Text>
           <Button title="Log Demo Event" onPress={() => { setSheetTitle('Logging event'); setSheetDesc('Sending analytics event...'); setSheetVisible(true); try { actions.logDemoEvent(); setSheetVisible(false); Alert.alert('Analytics', 'Event logged (if supported)'); } catch (e: any) { setSheetVisible(false); Alert.alert('Analytics failed', e?.message ?? String(e)); } }} disabled={!state.canUseAnalytics} />
         </View>
 
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600', marginBottom: 8 }}>Social Sign-in</Text>
+          <Text style={[{ color: colors.labelText, marginBottom: Sizing.spacing.s }, getTypographyStyle('m', 'semibold', 'normal')]}>Social Sign-in</Text>
           <Button title={state.isLoading ? 'Google Popup…' : 'Sign in with Google (Web Popup)'} onPress={() => { actions.signInWithGoogleWeb().catch((e: any) => Alert.alert('Google sign-in failed', e?.message ?? String(e))); }} disabled={state.isLoading} />
-          <View style={{ height: 8 }} />
-          <Text style={{ color: colors.bodyText }}>Google ID Token</Text>
+          <View style={{ height: Sizing.spacing.s }} />
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Google ID Token</Text>
           <TextInput
             value={state.googleIdToken}
             onChangeText={actions.setGoogleIdToken}
@@ -215,7 +218,7 @@ export function FirebaseHelperScreen() {
             placeholderTextColor={colors.placeholderText}
             style={[firebaseHelperScreenStyles.input, { color: colors.text, backgroundColor: colors.inputBackground, borderColor: colors.surfaceBorder }]}
           />
-          <Text style={{ color: colors.bodyText }}>Google Access Token (optional)</Text>
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Google Access Token (optional)</Text>
           <TextInput
             value={state.googleAccessToken}
             onChangeText={actions.setGoogleAccessToken}
@@ -224,8 +227,8 @@ export function FirebaseHelperScreen() {
             style={[firebaseHelperScreenStyles.input, { color: colors.text, backgroundColor: colors.inputBackground, borderColor: colors.surfaceBorder }]}
           />
           <Button title={state.isLoading ? 'Signing…' : 'Sign in with Google tokens'} onPress={() => { actions.signInWithGoogleTokens().then(() => Alert.alert('Signed in with Google')).catch((e: any) => Alert.alert('Google token sign-in failed', e?.message ?? String(e))); }} disabled={state.isLoading} />
-          <View style={{ height: 8 }} />
-          <Text style={{ color: colors.bodyText }}>Apple ID Token</Text>
+          <View style={{ height: Sizing.spacing.s }} />
+          <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Apple ID Token</Text>
           <TextInput
             value={state.appleIdToken}
             onChangeText={actions.setAppleIdToken}
@@ -237,23 +240,23 @@ export function FirebaseHelperScreen() {
         </View>
 
         <View style={[firebaseHelperScreenStyles.card, { borderColor: colors.surfaceBorder, backgroundColor: colors.surfaceBackground }]}>
-          <Text style={{ color: colors.labelText, fontWeight: '600', marginBottom: 8 }}>Firestore</Text>
+          <Text style={[{ color: colors.labelText, marginBottom: Sizing.spacing.s }, getTypographyStyle('m', 'semibold', 'normal')]}>Firestore</Text>
           <Button
             title={firestoreConnected ? "✓ Firestore Connected" : "Check Firestore Connection"}
             onPress={handleFirestoreCheck}
             color={firestoreConnected ? colors.successColor ?? '#22c55e' : undefined}
           />
-          <View style={{ height: 8 }} />
+          <View style={{ height: Sizing.spacing.s }} />
           <Button title={state.isLoading ? 'Loading…' : 'Load items from collection "items"'} onPress={async () => { setSheetTitle('Loading data'); setSheetDesc('Fetching Firestore items...'); setSheetVisible(true); try { await actions.loadItems(); setSheetVisible(false); Alert.alert('Success', 'Loaded items'); } catch (e: any) { setSheetVisible(false); Alert.alert('Failed to load items', e?.message ?? String(e)); } }} disabled={state.isLoading || !firestoreConnected} />
-          <View style={{ height: 8 }} />
+          <View style={{ height: Sizing.spacing.s }} />
           <Button title={state.isLoading ? 'Adding…' : 'Create sample item'} onPress={async () => { setSheetTitle('Creating item'); setSheetDesc('Writing to Firestore...'); setSheetVisible(true); try { await actions.createSampleItem(); setSheetVisible(false); Alert.alert('Success', 'Item created'); } catch (e: any) { setSheetVisible(false); Alert.alert('Create failed', e?.message ?? String(e)); } }} disabled={state.isLoading || !firestoreConnected} />
-          <View style={{ marginTop: 8 }}>
-            <Text style={{ color: colors.bodyText }}>Session write count: {state.writeCount}</Text>
+          <View style={{ marginTop: Sizing.spacing.s }}>
+            <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>Session write count: {state.writeCount}</Text>
           </View>
           {state.items.map((item) => (
-            <View key={item.id} style={{ paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.surfaceBorder }}>
-              <Text style={{ color: colors.text, fontWeight: '500' }}>{item.id}</Text>
-              <Text style={{ color: colors.bodyText }}>{JSON.stringify(item)}</Text>
+            <View key={item.id} style={{ paddingVertical: Sizing.padding.s, borderBottomWidth: Sizing.borderWidth.s, borderBottomColor: colors.surfaceBorder }}>
+              <Text style={[{ color: colors.text }, getTypographyStyle('s', 'medium', 'normal')]}>{item.id}</Text>
+              <Text style={[{ color: colors.bodyText }, getTypographyStyle('s', 'normal', 'normal')]}>{JSON.stringify(item)}</Text>
             </View>
           ))}
         </View>
@@ -263,12 +266,12 @@ export function FirebaseHelperScreen() {
       {/* Bottom sheet modal */}
       <Modal visible={sheetVisible} transparent animationType="slide" onRequestClose={() => setSheetVisible(false)}>
         <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.2)' }}>
-          <View style={{ backgroundColor: colors.surfaceBackground, borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 16, borderColor: colors.surfaceBorder, borderWidth: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <Text style={{ color: colors.labelText, fontWeight: '600' }}>{sheetTitle}</Text>
+          <View style={{ backgroundColor: colors.surfaceBackground, borderTopLeftRadius: Sizing.card.borderRadius.m, borderTopRightRadius: Sizing.card.borderRadius.m, padding: Sizing.padding.m, borderColor: colors.surfaceBorder, borderWidth: Sizing.borderWidth.s }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: Sizing.spacing.s }}>
+              <Text style={[{ color: colors.labelText }, getTypographyStyle('m', 'semibold', 'normal')]}>{sheetTitle}</Text>
               <Button title="Cancel" onPress={() => setSheetVisible(false)} />
             </View>
-            <Text style={{ color: colors.bodyText, marginBottom: 12 }}>{sheetDesc}</Text>
+            <Text style={[{ color: colors.bodyText, marginBottom: Sizing.spacing.m }, getTypographyStyle('s', 'normal', 'normal')]}>{sheetDesc}</Text>
             <ActivityIndicator size="small" color={colors.tint} />
           </View>
         </View>
@@ -276,12 +279,12 @@ export function FirebaseHelperScreen() {
 
       <Modal visible={signInModalVisible} transparent animationType="fade" onRequestClose={() => setSignInModalVisible(false)}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)' }}>
-          <View style={{ backgroundColor: colors.surfaceBackground, padding: 20, borderRadius: 12, minWidth: 300, maxWidth: 340 }}>
-            <Text style={{ fontWeight: '600', fontSize: 18, marginBottom: 8, color: colors.labelText }}>Sign in required for Firestore</Text>
+          <View style={{ backgroundColor: colors.surfaceBackground, padding: Sizing.padding.l, borderRadius: Sizing.card.borderRadius.m, minWidth: 300, maxWidth: 340 }}>
+            <Text style={[{ marginBottom: Sizing.spacing.s, color: colors.labelText }, getTypographyStyle('l', 'semibold', 'normal')]}>Sign in required for Firestore</Text>
             <TextInput placeholder="Email"
               value={signInEmail}
               onChangeText={setSignInEmail}
-              style={{ padding: 8, marginBottom: 10, borderWidth: 1, borderColor: colors.surfaceBorder, borderRadius: 5, backgroundColor: colors.inputBackground, color: colors.text }}
+              style={{ padding: Sizing.padding.s, marginBottom: Sizing.spacing.m, borderWidth: Sizing.borderWidth.s, borderColor: colors.surfaceBorder, borderRadius: Sizing.borderRadius.small, backgroundColor: colors.inputBackground, color: colors.text }}
               autoCapitalize="none"
               autoCorrect={false}
               keyboardType="email-address"
@@ -289,10 +292,10 @@ export function FirebaseHelperScreen() {
             <TextInput placeholder="Password"
               value={signInPassword}
               onChangeText={setSignInPassword}
-              style={{ padding: 8, marginBottom: 10, borderWidth: 1, borderColor: colors.surfaceBorder, borderRadius: 5, backgroundColor: colors.inputBackground, color: colors.text }}
+              style={{ padding: Sizing.padding.s, marginBottom: Sizing.spacing.m, borderWidth: Sizing.borderWidth.s, borderColor: colors.surfaceBorder, borderRadius: Sizing.borderRadius.small, backgroundColor: colors.inputBackground, color: colors.text }}
               secureTextEntry
             />
-            {signInError ? <Text style={{ color: colors.errorColor ?? '#ef4444', marginBottom: 8 }}>{signInError}</Text> : null}
+            {signInError ? <Text style={[{ color: colors.errorColor ?? '#ef4444', marginBottom: Sizing.spacing.s }, getTypographyStyle('s', 'normal', 'normal')]}>{signInError}</Text> : null}
             <Button
               title={signInLoading ? 'Signing in...' : 'Sign in and continue'}
               onPress={async () => {
@@ -315,7 +318,7 @@ export function FirebaseHelperScreen() {
               }}
               disabled={signInLoading || !signInEmail || !signInPassword}
             />
-            <View style={{ height: 8 }} />
+            <View style={{ height: Sizing.spacing.s }} />
             <Button title="Cancel" color="#888" onPress={() => { setSignInModalVisible(false); setSignInError(''); setSignInEmail(''); setSignInPassword(''); }} />
           </View>
         </View>

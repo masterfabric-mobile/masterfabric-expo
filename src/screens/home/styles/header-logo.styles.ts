@@ -1,15 +1,18 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const headerLogoStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
   },
   logo: {
-    marginRight: 12,
+    marginRight: Sizing.padding.s,
   },
   appName: {
-    fontSize: 18,
-    fontWeight: '600',
+    ...getTypographyStyle('l', 'semibold', 'normal'),
   },
 });

@@ -1,36 +1,37 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const projectsTabBarStyles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingHorizontal: Sizing.padding.l,
+    paddingVertical: Sizing.padding.s,
   },
   tabContainer: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    padding: 4,
-    gap: 4,
+    flexDirection: Sizing.layout.flexDirection.row,
+    borderRadius: Sizing.gap.s,
+    padding: Sizing.spacing.xxs,
+    gap: Sizing.spacing.xxs,
   },
   tab: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 40,
+    flex: Sizing.flexNumber.full,
+    paddingVertical: Sizing.padding.s,
+    paddingHorizontal: Sizing.padding.m,
+    borderRadius: Sizing.borderRadius.small,
+    alignItems: Sizing.layout.alignItems.center,
+    justifyContent: Sizing.layout.justifyContent.center,
+    minHeight: Sizing.icon.xl,
   },
   activeTab: {
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: Sizing.spacing.xxs,
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: Sizing.shadowOpacity.m,
+    shadowRadius: Sizing.spacing.xxs,
+    elevation: Sizing.elevation.m,
   },
   tabText: {
-    fontSize: 14,
-    textAlign: 'center',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    textAlign: Sizing.layout.textAlign.center,
   },
 });

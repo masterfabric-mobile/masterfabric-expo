@@ -3,7 +3,7 @@ import React from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { OnboardingStep } from '../models/onboarding-models';
 import { stepContentStyles } from '../styles/step-content.styles';
 import { getDescriptionAsParagraph } from '../utils';
@@ -30,7 +30,7 @@ export function StepContent({ step }: StepContentProps) {
         ]}>
           <Ionicons 
             name={step.icon as any} 
-            size={48} 
+            size={Sizing.icon.xxxl} 
             color={colors.onboardingIcon} 
           />
         </View>

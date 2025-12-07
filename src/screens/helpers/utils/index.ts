@@ -47,6 +47,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'school-outline';
     case 'validator-helper':
       return 'checkmark-circle-outline';
+    case 'ui-size-helper':
+      return 'resize-outline';
     default:
       return 'help-outline';
   }
@@ -85,6 +87,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for typography helpers
     case 'validator-helper':
       return '#FF3B30'; // Red for validation helpers
+    case 'ui-size-helper':
+      return '#007AFF'; // Blue for UI sizing helpers
     default:
       return '#8E8E93';
   }
@@ -190,6 +194,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/validator-helper',
     available: true,
     category: 'validation-helpers'
+  },
+  {
+    id: 'ui-size-helper',
+    name: 'UI Size Helper',
+    description: 'Sizing system, spacing, typography, and responsive design utilities',
+    icon: 'resize-outline',
+    color: '#007AFF',
+    route: '/ui-size-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 

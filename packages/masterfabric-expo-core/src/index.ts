@@ -7,10 +7,17 @@ export {
     UserPreferences
 } from './types';
 
+// Sizing Types
+export type {
+    SpacingSize, PaddingSize, MarginSize, GapSize, BorderRadiusSize, BorderWidthSize,
+    IconSize, AvatarSize, ButtonSize, WidthSize, HeightSize, SpacerSize
+} from './types/sizing';
+
 // MasterView Core
 export { MasterView as MasterViewComponent } from './components/MasterView';
 export { initMasterView, MasterView } from './core/MasterViewCore';
 export { useMasterView } from './hooks/useMasterView';
+export { useResponsive } from './hooks/useResponsive';
 export { createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore, MasterViewStoreFactory } from './stores/MasterViewStore';
 
 // Theme System
@@ -21,17 +28,20 @@ export { ThemeProvider, useIsDarkMode, useTheme, useThemeAwareColors, useThemeCo
 export { ScreenHeader } from './components/ScreenHeader';
 export { ThemedText } from './components/ThemedText';
 export { ThemedView } from './components/ThemedView';
+export { Spacer } from './components/Spacer';
 
 // Constants
 export {
     defaultMasterViewConfig, developmentMasterViewConfig, productionMasterViewConfig
 } from './constants/MasterViewConfig';
+export { Sizing } from './constants/Sizing';
 
 // Utilities
 export * from './utils';
 
 // Helpers
 export * from './helpers';
+export { getTypographyStyleFromSizing } from './helpers/typography_helper';
 
 // Note: Do not re-export DeviceInfo from './types' to avoid name conflicts
 

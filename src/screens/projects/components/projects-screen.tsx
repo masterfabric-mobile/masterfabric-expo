@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import { useProjectsViewModel } from '../hooks/use-projects-view-model';
 import { GitHubProject } from '../models/project-models';
 import { projectsScreenStyles } from '../styles/projects-screen.styles';
@@ -35,30 +35,26 @@ export function ProjectsScreen() {
   );
 
   const renderEmpty = () => (
-    <View style={{ alignItems: 'center', paddingTop: 60 }}>
+    <View style={{ alignItems: Sizing.layout.alignItems.center, paddingTop: Sizing.padding.xxxl }}>
       <Ionicons 
         name="folder-open-outline" 
-        size={80} 
+        size={Sizing.icon.xxxl + Sizing.icon.xl} 
         color={colors.icon + '60'} 
       />
-      <Text style={{ 
+      <Text style={[{ 
         color: colors.icon, 
-        fontSize: 18, 
-        marginTop: 20,
-        textAlign: 'center',
-        fontWeight: '600'
-      }}>
+        marginTop: Sizing.padding.l,
+        textAlign: Sizing.layout.textAlign.center,
+      }, typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal')]}>
         {error ? t('projects.loadError') : t('projects.noProjects')}
       </Text>
       {error && (
-        <Text style={{ 
+        <Text style={[{ 
           color: colors.icon, 
-          fontSize: 14, 
-          marginTop: 8,
-          textAlign: 'center',
-          paddingHorizontal: 40,
-          lineHeight: 20
-        }}>
+          marginTop: Sizing.gap.s,
+          textAlign: Sizing.layout.textAlign.center,
+          paddingHorizontal: Sizing.padding.xxl,
+        }, typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal')]}>
           {t('projects.refreshHint')}
         </Text>
       )}
@@ -102,8 +98,8 @@ export function ProjectsScreen() {
           }
           ListEmptyComponent={!isLoading ? renderEmpty : null}
           contentContainerStyle={{ 
-            paddingBottom: 40,
-            flexGrow: 1,
+            paddingBottom: Sizing.padding.xxl,
+            flexGrow: Sizing.flexNumber.full,
             backgroundColor: 'transparent'
           }}
           style={{ backgroundColor: 'transparent' }}

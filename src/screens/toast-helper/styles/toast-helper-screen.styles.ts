@@ -1,20 +1,20 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const toastHelperScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollView: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: Sizing.padding.m,
+    paddingBottom: Sizing.padding.xl,
   },
   resultsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-    marginTop: 8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.m,
+    marginTop: Sizing.gap.s,
   },
 });

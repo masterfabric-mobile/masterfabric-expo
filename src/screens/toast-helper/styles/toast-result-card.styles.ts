@@ -1,44 +1,42 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const toastResultCardStyles = StyleSheet.create({
   card: {
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 16,
-    overflow: 'hidden',
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.s,
+    marginBottom: Sizing.padding.m,
+    overflow: Sizing.layout.overflow.hidden,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    paddingHorizontal: Sizing.padding.m,
+    paddingVertical: Sizing.padding.s,
+    borderBottomWidth: Sizing.borderWidth.s,
     borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   operationName: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal'),
   },
   content: {
-    padding: 16,
+    padding: Sizing.padding.m,
   },
   section: {
-    marginBottom: 12,
+    marginBottom: Sizing.padding.s,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   value: {
-    fontSize: 14,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
     fontFamily: 'monospace',
     backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    padding: 8,
-    borderRadius: 6,
-    borderWidth: 1,
+    padding: Sizing.gap.s,
+    borderRadius: Sizing.borderRadius.small,
+    borderWidth: Sizing.borderWidth.s,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   description: {
-    fontSize: 14,
-    lineHeight: 20,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
   },
 });

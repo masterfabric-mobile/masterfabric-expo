@@ -1,60 +1,62 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const quickActionsStyles = StyleSheet.create({
   section: {
-    marginBottom: 20,
+    marginBottom: Sizing.padding.l,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 12,
+    ...getTypographyStyle('xl', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.s,
   },
   actionsList: {
-    flexDirection: 'column',
-    gap: 8,
+    flexDirection: Sizing.layout.flexDirection.column,
+    gap: Sizing.gap.s,
   },
   actionGrid: {
-    flexDirection: 'column',
-    gap: 8,
+    flexDirection: Sizing.layout.flexDirection.column,
+    gap: Sizing.gap.s,
   },
   actionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOffset: { width: 0, height: Sizing.borderWidth.s },
+    shadowOpacity: Sizing.shadowOpacity.m,
+    shadowRadius: Sizing.spacing.xxs,
+    elevation: Sizing.elevation.s,
   },
   actionIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+    width: Sizing.icon.xl,
+    height: Sizing.icon.xl,
+    borderRadius: Sizing.borderRadius.small,
+    justifyContent: Sizing.layout.justifyContent.center,
+    alignItems: Sizing.layout.alignItems.center,
+    marginRight: Sizing.padding.m,
   },
   actionIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+    width: Sizing.icon.xl,
+    height: Sizing.icon.xl,
+    borderRadius: Sizing.borderRadius.small,
+    justifyContent: Sizing.layout.justifyContent.center,
+    alignItems: Sizing.layout.alignItems.center,
+    marginRight: Sizing.padding.m,
   },
   actionContent: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   actionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
+    ...getTypographyStyle('m', 'semibold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   actionDescription: {
-    fontSize: 14,
-    opacity: 0.7,
+    ...getTypographyStyle('s', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
   },
 });
 

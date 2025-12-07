@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Sizing } from 'masterfabric-expo-core';
 
 export const helpersScreenStyles = StyleSheet.create({
   container: {
@@ -8,11 +9,11 @@ export const helpersScreenStyles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 40,
+    paddingHorizontal: Sizing.padding.m,
+    paddingTop: Sizing.padding.m,
+    paddingBottom: Sizing.padding.xxl,
   },
   categoriesContainer: {
-    gap: 20,
+    gap: Sizing.gap.xs,
   },
 });

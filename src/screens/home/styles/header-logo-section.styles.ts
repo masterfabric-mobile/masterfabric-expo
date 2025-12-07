@@ -1,39 +1,40 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const headerLogoSectionStyles = StyleSheet.create({
   leftSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
   },
   logo: {
-    width: 32,
-    height: 32,
+    width: Sizing.icon.m,
+    height: Sizing.icon.m,
   },
   textContainer: {
-    marginLeft: 12,
+    marginLeft: Sizing.padding.s,
   },
   titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
+    gap: Sizing.gap.s,
   },
   appName: {
-    fontSize: 18,
-    fontWeight: '600',
+    ...getTypographyStyle('l', 'semibold', 'normal'),
   },
   divider: {
-    width: 0,
-    height: 0,
-    opacity: 0,
+    ...Sizing.divider.hidden,
   },
   typewriterText: {
     fontFamily: 'Courier New',
-    fontSize: 12,
-    opacity: 0.7,
-    marginTop: 2,
+    ...getTypographyStyle('xs', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
+    marginTop: Sizing.spacing.xxs,
   },
   cursor: {
     fontFamily: 'Courier New',
-    opacity: 1,
+    opacity: Sizing.opacity.full,
   },
 });

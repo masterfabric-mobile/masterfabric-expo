@@ -1,32 +1,31 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const richTextInputFieldStyles = StyleSheet.create({
   container: {
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    marginBottom: 20,
+    padding: Sizing.padding.l,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.m,
+    marginBottom: Sizing.padding.l,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.m,
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: Sizing.padding.m,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 6,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'medium', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   textInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    minHeight: 100,
+    borderWidth: Sizing.borderWidth.s,
+    borderRadius: Sizing.gap.s,
+    paddingHorizontal: Sizing.padding.s,
+    paddingVertical: Sizing.padding.s,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+    minHeight: Sizing.height.xxl,
     textAlignVertical: 'top',
   },
 });

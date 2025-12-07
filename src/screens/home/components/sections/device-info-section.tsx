@@ -1,6 +1,6 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
 import { deviceInfoStyles } from '../../styles/device-info.styles';
@@ -53,7 +53,7 @@ export function DeviceInfoSection({
         { 
           backgroundColor: colors.surfaceBackground,
           borderColor: colors.surfaceBorder,
-          borderWidth: 1,
+          borderWidth: Sizing.borderWidth.s,
         }
       ]}>
         <ThemedText 
