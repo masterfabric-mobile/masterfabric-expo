@@ -47,6 +47,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'school-outline';
     case 'validator-helper':
       return 'checkmark-circle-outline';
+    case 'url-launcher-helper':
+      return 'link-outline';
     default:
       return 'help-outline';
   }
@@ -85,6 +87,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for typography helpers
     case 'validator-helper':
       return '#FF3B30'; // Red for validation helpers
+    case 'url-launcher-helper':
+      return '#007AFF'; // Blue for URL launcher helpers
     default:
       return '#8E8E93';
   }
@@ -190,6 +194,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/validator-helper',
     available: true,
     category: 'validation-helpers'
+  },
+  {
+    id: 'url-launcher-helper',
+    name: 'URL Launcher Helper',
+    description: 'Open external URLs, emails, phone, SMS, maps, and deep links with unified API',
+    icon: 'link-outline',
+    color: '#007AFF',
+    route: '/url-launcher-helper',
+    available: true,
+    category: 'system-helpers'
   }
 ];
 
