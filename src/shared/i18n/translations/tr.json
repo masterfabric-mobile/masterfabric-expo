@@ -631,6 +631,25 @@
       "preview": "Canlı Önizleme",
       "showcase": "Boyutlandırma Vitrin",
       "showcaseDescription": "Tüm mevcut boyutlandırma değerleri ve örnekleri",
+      "selected": "Seçili",
+      "responsiveInfo": "Duyarlı Bilgi",
+      "device": "Cihaz",
+      "width": "Genişlik",
+      "columns": "Kolonlar",
+      "baseUnit": "Temel Birim",
+      "responsivePadding": "Duyarlı Dolgu",
+      "sizeLabels": {
+        "small": "Küçük",
+        "medium": "Orta",
+        "large": "Büyük",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
       "examples": {
         "spacing": {
           "title": "Boşluk",

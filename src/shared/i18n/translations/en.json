@@ -631,6 +631,25 @@
       "preview": "Live Preview",
       "showcase": "Sizing Showcase",
       "showcaseDescription": "All available sizing values and examples",
+      "selected": "Selected",
+      "responsiveInfo": "Responsive Info",
+      "device": "Device",
+      "width": "Width",
+      "columns": "Columns",
+      "baseUnit": "Base Unit",
+      "responsivePadding": "Responsive Padding",
+      "sizeLabels": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
       "examples": {
         "spacing": {
           "title": "Spacing",
