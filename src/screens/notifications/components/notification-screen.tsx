@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScaffoldMessage } from '@/src/shared/components';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useNotificationViewModel } from '../hooks/use-notification-view-model';
 
 import { NotificationTab } from '../models/notification-models';
@@ -96,7 +96,7 @@ export function NotificationScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={t('notifications.markAllRead')}
               >
-                <Ionicons name="checkmark-done" size={16} color={colors.tint} />
+                <Ionicons name="checkmark-done" size={Sizing.icon.s} color={colors.tint} />
                 <Text style={[notificationScreenStyles.modernActionText, { color: colors.tint }]}>
                   {t('notifications.markAllRead')}
                 </Text>
@@ -110,7 +110,7 @@ export function NotificationScreen() {
                 accessibilityRole="button"
                 accessibilityLabel={t('notifications.clearAll')}
               >
-                <Ionicons name="trash-outline" size={16} color={colors.errorColor} />
+                <Ionicons name="trash-outline" size={Sizing.icon.s} color={colors.errorColor} />
                 <Text style={[notificationScreenStyles.modernActionText, { color: colors.errorColor }]}>
                   {t('notifications.clearAll')}
                 </Text>
@@ -127,9 +127,9 @@ export function NotificationScreen() {
             ]}>
               <Ionicons
                 name="notifications-outline"
-                size={48}
+                size={Sizing.icon.xxxl}
                 color={colors.tint}
-                style={{ opacity: 0.8 }}
+                style={{ opacity: Sizing.opacity.xl }}
               />
             </View>
             <Text style={[notificationScreenStyles.modernEmptyTitle, { color: colors.text }]}>

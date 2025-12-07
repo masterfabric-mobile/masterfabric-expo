@@ -1,5 +1,6 @@
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
+import { Sizing } from 'masterfabric-expo-core';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
@@ -21,7 +22,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
             notificationItemStyles.container,
             {
               backgroundColor: pressed ? colors.surfaceBackground : colors.background,
-              opacity: pressed ? 0.9 : 1,
+              opacity: pressed ? Sizing.opacity.xl : Sizing.opacity.full,
             },
             !notification.isRead && notificationItemStyles.unreadContainer,
           ]}
@@ -40,7 +41,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
               ]}>
                 <Ionicons
                   name={notification.icon as any || 'notifications'}
-                  size={20}
+                  size={Sizing.icon.s}
                   color={getIconColor(notification.type)}
                 />
               </View>
@@ -74,7 +75,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
                 <View style={notificationItemStyles.metaContainer}>
                   <Ionicons 
                     name="time-outline" 
-                    size={12} 
+                    size={Sizing.icon.xs} 
                     color={colors.labelText} 
                     style={notificationItemStyles.timeIcon}
                   />
@@ -94,7 +95,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
                 ]}>
                   <Ionicons 
                     name={notification.category === 'app' ? 'apps' : 'settings'} 
-                    size={10} 
+                    size={Sizing.icon.xxs} 
                     color={getIconColor(notification.type)} 
                     style={notificationItemStyles.categoryIcon}
                   />

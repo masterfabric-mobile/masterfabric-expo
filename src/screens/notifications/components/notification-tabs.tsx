@@ -1,5 +1,5 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useNotificationViewModel } from '../hooks/use-notification-view-model';
@@ -24,7 +24,7 @@ export function NotificationTabs({ activeTab, onTabChange }: NotificationTabsPro
             notificationTabsStyles.tab,
             activeTab === tab.key && {
               borderBottomColor: colors.tint,
-              borderBottomWidth: 2,
+              borderBottomWidth: Sizing.borderWidth.m,
             }
           ]}
           onPress={() => onTabChange(tab.key)}
@@ -36,7 +36,7 @@ export function NotificationTabs({ activeTab, onTabChange }: NotificationTabsPro
               notificationTabsStyles.tabText,
               {
                 color: activeTab === tab.key ? colors.tint : colors.bodyText,
-                opacity: activeTab === tab.key ? 1 : 0.7,
+                opacity: activeTab === tab.key ? Sizing.opacity.full : Sizing.opacity.l,
               }
             ]}
           >
