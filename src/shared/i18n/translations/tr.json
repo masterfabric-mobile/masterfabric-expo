@@ -1183,23 +1183,47 @@
         "description": "Yaygın geliştirme görevleri için yardımcı fonksiyonlar",
         "stringHelper": {
           "title": "String Yardımcısı",
-          "description": "Formatlama, doğrulama ve durum dönüştürme dahil string manipülasyon yardımcıları. capitalize, truncate, email doğrulama, URL doğrulama, para birimi formatlama, durum dönüştürme (camelCase, snake_case, kebab-case), HTML kaçırma ve daha fazlası gibi fonksiyonlar."
+          "description": "Metin manipülasyonu ve doğrulama yardımcıları"
+        },
+        "loggerHelper": {
+          "title": "Logger Yardımcısı",
+          "description": "Geliştirme ve üretim loglama yardımcıları"
+        },
+        "snackbarHelper": {
+          "title": "Snackbar Yardımcısı",
+          "description": "Aksiyon butonları ve konumlandırma ile snackbar bildirim yardımcıları"
+        },
+        "firebaseHelper": {
+          "title": "Firebase Yardımcısı",
+          "description": "Auth, Analytics (web) ve Firestore yardımcıları"
+        },
+        "toastHelper": {
+          "title": "Toast Yardımcısı",
+          "description": "UI geri bildirim ve bildirim yardımcıları"
+        },
+        "timeHelper": {
+          "title": "Zaman Yardımcısı",
+          "description": "Tarih ve zaman manipülasyon yardımcıları"
+        },
+        "batteryHelper": {
+          "title": "Batarya Yardımcısı",
+          "description": "Batarya seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri"
         },
         "richTextHelper": {
           "title": "Zengin Metin Yardımcısı",
-          "description": "React Native için HTML, Markdown ve metin formatlama araçları. HTML'i React Native metin bileşenlerine ayrıştır, Markdown'ı formatlanmış metne dönüştür, URL/mention/hashtag çıkar, XSS önleme için içeriği temizle, çoklu stillerle formatlanmış metin oluştur ve zengin metin içeriğini interaktif olarak işle."
+          "description": "HTML, Markdown ve metin formatlama yardımcıları"
         },
-        "deviceInfo": {
-          "title": "Cihaz Bilgisi Yardımcısı",
-          "description": "Platform detayları, OS sürümü, ekran boyutları, cihaz yetenekleri ve uyumluluk kontrolleri dahil kapsamlı cihaz bilgilerini alın. Responsive tasarım ve özellik tespiti için gerekli."
+        "typographyHelper": {
+          "title": "Tipografi Yardımcısı",
+          "description": "Tipografi yardımcıları, font ölçeklendirme ve Flutter tarzı copyWith deseni ile metin stillendirme"
         },
-        "validation": {
-          "title": "Doğrulama Yardımcısı",
-          "description": "Formlar ve veri işleme için giriş doğrulama yardımcıları. Email doğrulama, URL doğrulama, telefon numarası doğrulama ve güvenli veri işleme için özel doğrulama kuralları içerir."
+        "validatorHelper": {
+          "title": "Doğrulayıcı Yardımcısı",
+          "description": "Form doğrulama yardımcıları"
         },
-        "formatting": {
-          "title": "Formatlama Yardımcısı",
-          "description": "Tarihler, sayılar, para birimi ve metin için veri formatlama yardımcıları. Tarih formatlama, ondalık basamaklı sayı formatlama, para birimi formatlama ve metin dönüştürme fonksiyonları içerir."
+        "uiSizeHelper": {
+          "title": "UI Boyut Yardımcısı",
+          "description": "Boyutlandırma sistemi, boşluk, tipografi ve responsive tasarım yardımcıları"
         }
       },
       "core": {
