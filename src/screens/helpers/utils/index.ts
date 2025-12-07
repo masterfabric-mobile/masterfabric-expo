@@ -45,6 +45,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'text-outline';
     case 'onboarding-helper':
       return 'school-outline';
+    case 'validator-helper':
+      return 'checkmark-circle-outline';
     case 'ui-size-helper':
       return 'resize-outline';
     default:
@@ -83,8 +85,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#AF52DE'; // Purple for rich text helpers
     case 'typography-helper':
       return '#007AFF'; // Blue for typography helpers
-    case 'onboarding-helper':
-      return '#FF3B30'; // Red for onboarding helper
+    case 'validator-helper':
+      return '#FF3B30'; // Red for validation helpers
     case 'ui-size-helper':
       return '#007AFF'; // Blue for UI sizing helpers
     default:
@@ -184,14 +186,14 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     category: 'text-helpers'
   },
   {
-    id: 'onboarding-helper',
-    name: 'Onboarding Flow Manager',
-    description: 'Tool for managing and testing the app\'s initial onboarding experience.',
-    icon: 'school-outline',
+    id: 'validator-helper',
+    name: 'Validator Helper',
+    description: 'Form validation utilities',
+    icon: 'checkmark-circle-outline',
     color: '#FF3B30',
-    route: '/onboarding-helper',
+    route: '/validator-helper',
     available: true,
-    category: 'dev-helpers'
+    category: 'validation-helpers'
   },
   {
     id: 'ui-size-helper',
