@@ -818,6 +818,10 @@ class UrlLauncherHelper {
         if (url.toLowerCase().startsWith(`${allowedScheme}:`)) {
           return true;
         }
+        // Support Android settings format: android.settings.SETTINGS
+        if (allowedScheme === 'android.settings' && url.toLowerCase().startsWith('android.settings.')) {
+          return true;
+        }
       }
       return false;
     }
