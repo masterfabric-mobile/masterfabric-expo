@@ -1,42 +1,42 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const cardStyles = StyleSheet.create({
   card: {
-    borderRadius: 16,
-    marginBottom: 20,
+    borderRadius: Sizing.card.borderRadius.l,
+    marginBottom: Sizing.padding.l,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOffset: { width: 0, height: Sizing.spacing.xxs },
+    shadowOpacity: Sizing.shadowOpacity.xs,
+    shadowRadius: Sizing.gap.s,
+    elevation: Sizing.elevation.s,
   },
   cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    paddingBottom: 16,
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
+    padding: Sizing.padding.l,
+    paddingBottom: Sizing.padding.m,
   },
   iconContainer: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+    width: Sizing.button.height.medium,
+    height: Sizing.button.height.medium,
+    borderRadius: Sizing.button.height.medium / 2,
+    justifyContent: Sizing.layout.justifyContent.center,
+    alignItems: Sizing.layout.alignItems.center,
+    marginRight: Sizing.padding.m,
   },
   cardHeaderContent: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 2,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   cardSubtitle: {
-    fontSize: 14,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
   },
   cardBody: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: Sizing.padding.l,
+    paddingBottom: Sizing.padding.l,
   },
 });

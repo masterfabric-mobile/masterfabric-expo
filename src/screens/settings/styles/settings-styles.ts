@@ -1,14 +1,15 @@
+import { Sizing } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const settingsStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   content: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   contentContainer: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: Sizing.padding.l,
+    paddingBottom: Sizing.padding.xxl,
   },
 });
