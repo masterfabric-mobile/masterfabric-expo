@@ -18,7 +18,7 @@ export class SupabaseIntegration {
   private supabaseInitialized: boolean = false;
   private client: SupabaseClient | null = null;
   private config: SupabaseConfig | null = null;
-  private authStateSubscription: { data: { subscription: any } } | null = null;
+  private authStateSubscription: { subscription: { unsubscribe: () => void } } | null = null;
 
   private constructor() {}
 
@@ -283,7 +283,7 @@ export class SupabaseIntegration {
    */
   public onAuthStateChange(
     callback: (event: AuthChangeEvent, session: Session | null) => void
-  ): { data: { subscription: { unsubscribe: () => void } } } {
+  ): { subscription: { unsubscribe: () => void } } {
     const client = this.getClient();
     if (!client) {
       throw new Error('Supabase is not available. Ensure Supabase is initialized.');
