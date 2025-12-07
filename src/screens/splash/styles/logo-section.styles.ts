@@ -1,26 +1,26 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const logoSectionStyles = StyleSheet.create({
   logoContainer: {
-    alignItems: 'center',
+    alignItems: Sizing.layout.alignItems.center,
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: Sizing.icon.xxxl + Sizing.icon.xxl,
+    height: Sizing.icon.xxxl + Sizing.icon.xxl,
   },
   textContainer: {
-    alignItems: 'center',
-    marginTop: 20,
+    alignItems: Sizing.layout.alignItems.center,
+    marginTop: Sizing.padding.l,
   },
   appName: {
-    fontSize: 32,
-    fontWeight: '700',
-    marginBottom: 8,
-    textAlign: 'center',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xxxl', 'bold', 'normal'),
+    marginBottom: Sizing.gap.s,
+    textAlign: Sizing.layout.textAlign.center,
   },
   tagline: {
-    fontSize: 16,
-    opacity: 0.7,
-    textAlign: 'center',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
+    textAlign: Sizing.layout.textAlign.center,
   },
 });

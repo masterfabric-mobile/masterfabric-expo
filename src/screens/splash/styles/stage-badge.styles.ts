@@ -1,17 +1,16 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const stageBadgeStyles = StyleSheet.create({
   badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignSelf: 'center',
-    marginBottom: 3,
+    paddingHorizontal: Sizing.padding.s,
+    paddingVertical: Sizing.spacing.xxs,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.s,
+    alignSelf: Sizing.layout.alignSelf.center,
+    marginBottom: Sizing.spacing.xxs,
   },
   badgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-    letterSpacing: 0.5,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xxs', 'semibold', 'normal'),
   },
 });
