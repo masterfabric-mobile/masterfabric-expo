@@ -18,7 +18,7 @@
  * //
  *
  * // Automatically picks the right value based on current device width
- * const containerPadding = await uiSizeHelper.getResponsiveSpacingAuto({
+ * const containerPadding = uiSizeHelper.getResponsiveSpacingAuto({
  *   phone: Sizing.padding.l,
  *   tablet: Sizing.padding.xl,
  *   desktop: Sizing.padding.xxl,
@@ -126,8 +126,134 @@ class UISizeHelper {
    * @param size - The gap size key
    * @returns The gap value in pixels
    */
-  getGap(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl'): number {
+  getGap(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
     return Sizing.gap[size];
+  }
+
+  /**
+   * Gets a padding start value by size key (RTL aware)
+   * @param size - The padding start size key
+   * @returns The padding start value in pixels
+   */
+  getPaddingStart(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingStart[size];
+  }
+
+  /**
+   * Gets a padding end value by size key (RTL aware)
+   * @param size - The padding end size key
+   * @returns The padding end value in pixels
+   */
+  getPaddingEnd(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingEnd[size];
+  }
+
+  /**
+   * Gets a padding top value by size key
+   * @param size - The padding top size key
+   * @returns The padding top value in pixels
+   */
+  getPaddingTop(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingTop[size];
+  }
+
+  /**
+   * Gets a padding bottom value by size key
+   * @param size - The padding bottom size key
+   * @returns The padding bottom value in pixels
+   */
+  getPaddingBottom(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingBottom[size];
+  }
+
+  /**
+   * Gets a padding left value by size key
+   * @param size - The padding left size key
+   * @returns The padding left value in pixels
+   */
+  getPaddingLeft(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingLeft[size];
+  }
+
+  /**
+   * Gets a padding right value by size key
+   * @param size - The padding right size key
+   * @returns The padding right value in pixels
+   */
+  getPaddingRight(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.paddingRight[size];
+  }
+
+  /**
+   * Gets a margin start value by size key (RTL aware)
+   * @param size - The margin start size key
+   * @returns The margin start value in pixels
+   */
+  getMarginStart(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginStart[size];
+  }
+
+  /**
+   * Gets a margin end value by size key (RTL aware)
+   * @param size - The margin end size key
+   * @returns The margin end value in pixels
+   */
+  getMarginEnd(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginEnd[size];
+  }
+
+  /**
+   * Gets a margin top value by size key
+   * @param size - The margin top size key
+   * @returns The margin top value in pixels
+   */
+  getMarginTop(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginTop[size];
+  }
+
+  /**
+   * Gets a margin bottom value by size key
+   * @param size - The margin bottom size key
+   * @returns The margin bottom value in pixels
+   */
+  getMarginBottom(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginBottom[size];
+  }
+
+  /**
+   * Gets a margin left value by size key
+   * @param size - The margin left size key
+   * @returns The margin left value in pixels
+   */
+  getMarginLeft(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginLeft[size];
+  }
+
+  /**
+   * Gets a margin right value by size key
+   * @param size - The margin right size key
+   * @returns The margin right value in pixels
+   */
+  getMarginRight(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.marginRight[size];
+  }
+
+  /**
+   * Gets a row gap value by size key
+   * @param size - The row gap size key
+   * @returns The row gap value in pixels
+   */
+  getRowGap(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.rowGap[size];
+  }
+
+  /**
+   * Gets a column gap value by size key
+   * @param size - The column gap size key
+   * @returns The column gap value in pixels
+   */
+  getColumnGap(size: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl'): number {
+    return Sizing.columnGap[size];
   }
 
   /**
@@ -217,9 +343,9 @@ class UISizeHelper {
    * @param options - Spacing options for different breakpoints
    * @returns The appropriate spacing value
    */
-  async getResponsiveSpacingAuto(
+  getResponsiveSpacingAuto(
     options: ResponsiveSpacingOptions
-  ): Promise<number | string> {
+  ): number | string {
     const deviceInfo = getBasicDeviceInfo();
     const width = deviceInfo.screenWidth || Dimensions.get('window').width;
     return this.getResponsiveSpacing(width, options);

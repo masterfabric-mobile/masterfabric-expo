@@ -480,6 +480,47 @@ export function applyTypographyPreset(
 }
 
 /**
+ * Creates a text style from Sizing system typography values
+ * @param sizing The Sizing object from constants
+ * @param fontSizeKey The fontSize size key (e.g., 's', 'm', 'l')
+ * @param fontWeightKey The fontWeight weight key (e.g., 'normal', 'bold', 'semibold')
+ * @param lineHeightKey The lineHeight type key (e.g., 'normal', 'tight', 'relaxed')
+ * @returns A complete text style object
+ * 
+ * @example
+ * ```typescript
+ * import { Sizing } from '../constants/Sizing';
+ * import { getTypographyStyleFromSizing } from './typography_helper';
+ * 
+ * const titleStyle = getTypographyStyleFromSizing(Sizing, 'l', 'bold', 'normal');
+ * // Returns: { fontSize: 18, fontWeight: '700', lineHeight: 27 }
+ * ```
+ */
+export function getTypographyStyleFromSizing(
+  sizing: {
+    typography: {
+      fontSize: Record<string, number>;
+      fontWeight: Record<string, string>;
+      lineHeight: Record<string, number>;
+    };
+  },
+  fontSizeKey: string,
+  fontWeightKey: string,
+  lineHeightKey: string = 'normal'
+): TextStyleObject {
+  const fontSize = sizing.typography.fontSize[fontSizeKey] || sizing.typography.fontSize.m;
+  const fontWeight = sizing.typography.fontWeight[fontWeightKey] || sizing.typography.fontWeight.normal;
+  const lineHeightMultiplier = sizing.typography.lineHeight[lineHeightKey] || sizing.typography.lineHeight.normal;
+  const lineHeight = fontSize * lineHeightMultiplier;
+  
+  return createTextStyle({
+    fontSize,
+    fontWeight,
+    lineHeight,
+  });
+}
+
+/**
  * Combines multiple text styles
  * @param styles Array of partial text styles
  * @returns Combined text style object
@@ -789,5 +830,10 @@ export const typographyHelper = {
     getHeadingSizes: getHeadingFontSizes,
     getResponsiveSizes: getResponsiveHeadingSizes,
   },
-} as const;
+  
+  // Sizing system integration
+  fromSizing: {
+    createStyle: getTypographyStyleFromSizing,
+  },
+};
 
