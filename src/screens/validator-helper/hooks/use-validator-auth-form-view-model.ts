@@ -156,7 +156,8 @@ export function useValidatorAuthFormViewModel() {
 
   const handleSocialLogin = (provider: SocialLoginProvider) => {
     console.log(`Login with ${provider}`);
-    showSnackbar(t('auth.socialLoginDemo', { provider }), {
+    const providerName = provider === 'google' ? 'Google' : provider === 'github' ? 'GitHub' : 'Apple';
+    showSnackbar(t('auth.socialLoginDemo', { provider: providerName }), {
       type: 'info',
       duration: 3000,
     });
@@ -189,12 +190,15 @@ export function useValidatorAuthFormViewModel() {
   };
 
   // Sync display values with actual values on mount/tab change
+  // Note: Password values are intentionally excluded from dependencies to avoid overriding
+  // the character reveal feature in handlePasswordChange
   useEffect(() => {
     setDisplayValues({
       login: '•'.repeat(loginPassword.value.length),
       register: '•'.repeat(registerPassword.value.length),
       registerConfirm: '•'.repeat(registerConfirmPassword.value.length),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const handlePasswordChange = (
@@ -299,6 +303,9 @@ export function useValidatorAuthFormViewModel() {
   // Cleanup timers on unmount
   useEffect(() => {
     return () => {
+      // Access ref directly in cleanup to get current timers at unmount time
+      // This ensures all timers created during component lifetime are cleared
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       Object.values(showCharacterTimers.current).forEach(timer => {
         if (timer) clearTimeout(timer);
       });
