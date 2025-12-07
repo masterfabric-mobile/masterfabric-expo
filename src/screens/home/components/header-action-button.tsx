@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable } from 'react-native';
 
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import { headerActionButtonStyles } from '../styles/header-action-button.styles';
 
 interface HeaderActionButtonProps {
@@ -17,7 +17,7 @@ export function HeaderActionButton({
   iconName, 
   onPress, 
   accessibilityLabel,
-  size = 20,
+  size = Sizing.icon.s,
   variant = 'default'
 }: HeaderActionButtonProps) {
   const { currentTheme } = useTheme();
