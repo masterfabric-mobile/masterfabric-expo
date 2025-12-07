@@ -41,6 +41,7 @@ export * from './utils';
 
 // Helpers
 export * from './helpers';
+export { getTypographyStyleFromSizing } from './helpers/typography_helper';
 
 // Note: Do not re-export DeviceInfo from './types' to avoid name conflicts
 
