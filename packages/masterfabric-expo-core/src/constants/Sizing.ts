@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const baseUnit = 8;
 
@@ -49,6 +49,7 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   // ============================================
@@ -667,6 +668,16 @@ export const Sizing = {
         l: 24,
       },
     },
+    hidden: {
+      width: 0,
+      height: 0,
+      opacity: 0,
+    },
+    invisible: {
+      width: 0,
+      height: 0,
+      opacity: 0,
+    },
   },
 
   // ============================================
@@ -735,11 +746,18 @@ export const Sizing = {
   // ============================================
   opacity: {
     transparent: 0,
-    invisible: 0.01,
+    invisible: 0.1,
     disabled: 0.3,
+    xs: 0.3,
+    s: 0.5,
     hover: 0.7,
+    m: 0.6,
+    l: 0.7,
     active: 0.8,
+    xl: 0.8,
+    xxl: 0.9,
     normal: 1,
+    full: 1,
   },
 
   // ============================================
@@ -814,6 +832,7 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   paddingEnd: {
@@ -824,6 +843,51 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  paddingTop: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  paddingBottom: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  paddingLeft: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  paddingRight: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   marginStart: {
@@ -834,6 +898,7 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   marginEnd: {
@@ -844,6 +909,51 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  marginTop: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  marginBottom: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  marginLeft: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
+  },
+
+  marginRight: {
+    xxs: baseUnit * 0.25,
+    xs: baseUnit * 0.5,
+    s: baseUnit,
+    m: baseUnit * 1.5,
+    l: baseUnit * 2,
+    xl: baseUnit * 3,
+    xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   rowGap: {
@@ -854,6 +964,7 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   columnGap: {
@@ -864,6 +975,7 @@ export const Sizing = {
     l: baseUnit * 2,
     xl: baseUnit * 3,
     xxl: baseUnit * 4,
+    xxxl: baseUnit * 6,
   },
 
   inset: {
@@ -887,16 +999,8 @@ export const Sizing = {
   },
 
   // ============================================
-  // FLEX LAYOUT
+  // FLEX LAYOUT (removed - using flexNumber instead)
   // ============================================
-  flex: {
-    none: 0,
-    auto: 1,
-    grow: 1,
-    shrink: 0,
-    initial: '0 1 auto',
-    full: '1 1 0%',
-  },
 
   flexGrow: {
     none: 0,
@@ -1126,6 +1230,100 @@ export const Sizing = {
     l: 12,
     xl: 16,
   },
+
+  // ============================================
+  // ELEVATION (SHADOW DEPTH)
+  // ============================================
+  elevation: {
+    none: 0,
+    xs: 1,
+    s: 2,
+    m: 3,
+    l: 4,
+    xl: 5,
+    xxl: 8,
+    xxxl: 12,
+  },
+
+  // ============================================
+  // SHADOW OPACITY
+  // ============================================
+  shadowOpacity: {
+    none: 0,
+    xs: 0.05,
+    s: 0.08,
+    m: 0.1,
+    l: 0.15,
+    xl: 0.2,
+    xxl: 0.25,
+    xxxl: 0.3,
+  },
+
+  // ============================================
+  // FLEX VALUES
+  // ============================================
+  flex: {
+    none: 0,
+    auto: 'auto' as const,
+    full: 1,
+    half: 0.5,
+    third: 0.33,
+    quarter: 0.25,
+  },
+  flexNumber: {
+    none: 0,
+    full: 1,
+    half: 0.5,
+    third: 0.33,
+    quarter: 0.25,
+  },
+
+  // ============================================
+  // LAYOUT PROPERTIES
+  // ============================================
+  layout: {
+    flexDirection: {
+      row: 'row',
+      column: 'column',
+      rowReverse: 'row-reverse',
+      columnReverse: 'column-reverse',
+    },
+    justifyContent: {
+      flexStart: 'flex-start',
+      flexEnd: 'flex-end',
+      center: 'center',
+      spaceBetween: 'space-between',
+      spaceAround: 'space-around',
+      spaceEvenly: 'space-evenly',
+    },
+    alignItems: {
+      flexStart: 'flex-start',
+      flexEnd: 'flex-end',
+      center: 'center',
+      stretch: 'stretch',
+      baseline: 'baseline',
+    },
+    alignSelf: {
+      auto: 'auto',
+      flexStart: 'flex-start',
+      flexEnd: 'flex-end',
+      center: 'center',
+      stretch: 'stretch',
+      baseline: 'baseline',
+    },
+    textAlign: {
+      left: 'left',
+      center: 'center',
+      right: 'right',
+      justify: 'justify',
+    },
+    overflow: {
+      visible: 'visible',
+      hidden: 'hidden',
+      scroll: 'scroll',
+    },
+  },
+
 
   // ============================================
   // SCROLL & LIST SIZING
