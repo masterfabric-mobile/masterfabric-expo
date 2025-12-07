@@ -11,7 +11,7 @@ export function GapExampleCard() {
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
 
-  const gapSizes: Array<keyof typeof Sizing.gap> = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
+  const gapSizes: Array<keyof typeof Sizing.gap> = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', 'xxxl'];
   const [selectedSize, setSelectedSize] = useState<keyof typeof Sizing.gap>('m');
   const gapValue = Sizing.gap[selectedSize];
 

@@ -2,7 +2,7 @@ export interface UISizeTestInput {
   spacingSize: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
   paddingSize: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
   marginSize: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
-  gapSize: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl';
+  gapSize: 'xxs' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
   borderRadius: 'small' | 'large';
   borderWidth: 's' | 'm' | 'l';
   buttonHeight: 'small' | 'medium' | 'large';

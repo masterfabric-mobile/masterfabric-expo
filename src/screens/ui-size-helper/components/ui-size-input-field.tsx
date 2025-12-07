@@ -40,7 +40,7 @@ export function UISizeInputField({
     { label: 'XXXL', value: 'xxxl' },
   ];
 
-  const gapSizeOptions = sizeOptions.filter(opt => opt.value !== 'xxxl');
+  const gapSizeOptions = sizeOptions;
   const borderRadiusOptions = [
     { label: 'Small', value: 'small' },
     { label: 'Large', value: 'large' },
