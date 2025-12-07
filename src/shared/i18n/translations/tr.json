@@ -220,7 +220,7 @@
     "registrationSuccess": "Kayıt başarılı!",
     "fixErrors": "Lütfen göndermeden önce hataları düzeltin.",
     "passwordsNoMatchAlert": "Şifreler eşleşmiyor!",
-    "socialLoginDemo": "{{provider}} ile giriş (Demo)",
+    "socialLoginDemo": "{{provider}} ile giriş",
     "rememberMe": "Beni hatırla",
     "continue": "Devam Et"
   },
@@ -841,7 +841,8 @@
         "error": "Hata",
         "unknownError": "Bilinmeyen hata",
         "noApplicationFound": "İşlem için uygulama bulunamadı",
-        "fallbackAlsoFailed": "yedek bağlantı da başarısız oldu"
+        "fallbackAlsoFailed": "yedek bağlantı da başarısız oldu",
+        "copyError": "Panoya kopyalama başarısız"
       },
       "copyText": {
         "type": "Tür",

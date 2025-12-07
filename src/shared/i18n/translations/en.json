@@ -264,7 +264,7 @@
     "registrationSuccess": "Registration successful!",
     "fixErrors": "Please fix the errors before submitting.",
     "passwordsNoMatchAlert": "Passwords do not match!",
-    "socialLoginDemo": "Login with {{provider}} (Demo)",
+    "socialLoginDemo": "Login with {{provider}}",
     "rememberMe": "Remember me",
     "continue": "Continue"
   },
@@ -842,7 +842,8 @@
         "unknownError": "Unknown error",
         "noApplicationFound": "No application found to handle",
         "fallbackAlsoFailed": "fallback also failed",
-        "url": "URL"
+        "url": "URL",
+        "copyError": "Failed to copy to clipboard"
       },
       "copyText": {
         "type": "Type",
