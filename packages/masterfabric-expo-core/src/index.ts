@@ -51,16 +51,6 @@ export type { FirebaseConfig } from './integrations/FirebaseIntegration';
 // Convenience re-exports for integration consumers
 export { } from './integrations/FirebaseIntegration';
 
-// Battery Helper
-export * from './components/battery/BatteryHelperView';
-export * from './components/battery/BatteryStatusCard';
-export * from './components/battery/DeviceInfoCard';
-export * from './components/battery/LowPowerModeCard';
-export * from './helpers/battery_helper';
-export * from './hooks/useBatteryHelper';
-export * from './stores/batteryStore';
-export * from './types/battery';
-
 // Onboarding Helper
 export * from './components/onboarding-helper/OnboardingHelperView';
 export * from './hooks/useOnboardingHelperViewModel';

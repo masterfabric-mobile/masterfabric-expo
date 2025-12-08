@@ -1,17 +1,17 @@
 import { Button, RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getThemeColors } from '../../constants/Colors';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useBatteryHelper } from '../../hooks/useBatteryHelper';
-import { batteryHelperScreenStyles } from '../../styles/battery_helper_view.styles';
-import { ScreenHeader } from '../ScreenHeader';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
-import { BatteryStatusCard } from './BatteryStatusCard';
-import { DeviceInfoCard } from './DeviceInfoCard';
-import { LowPowerModeCard } from './LowPowerModeCard';
+import { ScreenHeader } from '../../../shared/components/ScreenHeader';
+import { ThemedText } from '../../../shared/components/ThemedText';
+import { ThemedView } from '../../../shared/components/ThemedView';
+import { getThemeColors } from '../../../shared/constants/Colors';
+import { useTheme } from '../../../shared/contexts/theme-context';
+import { useBatteryHelperViewModel } from '../hooks/use-battery-helper-view-model';
+import { batteryHelperScreenStyles } from '../styles/battery-helper-screen.styles';
+import { BatteryStatusCard } from './battery-status-card';
+import { DeviceInfoCard } from './device-info-card';
+import { LowPowerModeCard } from './low-power-mode-card';
 
-export function BatteryHelperView() {
+export function BatteryHelperScreen() {
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
@@ -26,7 +26,7 @@ export function BatteryHelperView() {
     handleRefresh,
     openLowPowerModeSettings,
     getDeviceInformation,
-  } = useBatteryHelper();
+  } = useBatteryHelperViewModel();
 
   return (
     <SafeAreaView
@@ -46,7 +46,7 @@ export function BatteryHelperView() {
           <RefreshControl
             refreshing={isLoading}
             onRefresh={handleRefresh}
-            tintColor={colors.primary}
+            tintColor={colors.tint}
           />
         }
       >
@@ -78,7 +78,7 @@ export function BatteryHelperView() {
             <Button
               title="Retry"
               onPress={handleRefresh}
-              color={colors.primary}
+              color={colors.tint}
             />
           </ThemedView>
         )}

@@ -5,11 +5,11 @@ import {
   formatBatteryPercentage,
   getChargingStatusText,
   getLowPowerModeStatusText,
-} from '../helpers/battery_helper';
-import { getDeviceInfo } from '../helpers/device-info';
-import { useBatteryHelperStore } from '../stores/batteryStore';
+} from '../../../shared/helpers/battery_helper';
+import { getDeviceInfo } from '../../../shared/helpers/device-info';
+import { useBatteryHelperStore } from '../store/battery-helper-store';
 
-export const useBatteryHelper = () => {
+export const useBatteryHelperViewModel = () => {
   const {
     batteryState,
     isLoading,

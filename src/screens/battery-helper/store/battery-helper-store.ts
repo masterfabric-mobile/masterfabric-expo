@@ -1,7 +1,7 @@
 import * as Battery from 'expo-battery';
 import { Platform } from 'react-native';
 import { create } from 'zustand';
-import { BatteryState as BatteryStateModel } from '../types/battery';
+import { BatteryState as BatteryStateModel } from '../../../shared/types';
 
 interface BatteryHelperStore {
   batteryState: BatteryStateModel;
