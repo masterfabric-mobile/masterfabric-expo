@@ -1,16 +1,15 @@
-import React from 'react';
-import { ScrollView, View, RefreshControl, Button } from 'react-native';
+import { Button, RefreshControl, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getThemeColors } from '../../constants/Colors';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useBatteryHelper } from '../../hooks/useBatteryHelper';
+import { batteryHelperScreenStyles } from '../../styles/battery_helper_view.styles';
 import { ScreenHeader } from '../ScreenHeader';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import { useBatteryHelper } from '../../hooks/useBatteryHelper';
-import { batteryHelperScreenStyles } from '../../styles/BatteryHelperView.styles';
 import { BatteryStatusCard } from './BatteryStatusCard';
-import { LowPowerModeCard } from './LowPowerModeCard';
 import { DeviceInfoCard } from './DeviceInfoCard';
+import { LowPowerModeCard } from './LowPowerModeCard';
 
 export function BatteryHelperView() {
   const { currentTheme } = useTheme();

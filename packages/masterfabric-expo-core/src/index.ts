@@ -1,17 +1,14 @@
 // Core Types
 // Avoid re-exporting conflicting names; export specific groups as needed
 export {
-    ActivityActionType, ActivityItem, ActivityType, AppError, BaseStoreState, BaseTextProps, BaseViewProps, LoadingState,
-    // DeviceInfo intentionally omitted to avoid conflict
-    LocaleConfig, NavigationConfig, NotificationSettings, QuickAction, ScreenHeaderProps, ThemeColors, ThemeMode, User,
-    UserPreferences
+  ActivityActionType, ActivityItem, ActivityType, AppError, BaseStoreState, BaseTextProps, BaseViewProps, LoadingState,
+  // DeviceInfo intentionally omitted to avoid conflict
+  LocaleConfig, NavigationConfig, NotificationSettings, QuickAction, ScreenHeaderProps, ThemeColors, ThemeMode, User,
+  UserPreferences
 } from './types';
 
 // Sizing Types
-export type {
-    SpacingSize, PaddingSize, MarginSize, GapSize, BorderRadiusSize, BorderWidthSize,
-    IconSize, AvatarSize, ButtonSize, WidthSize, HeightSize, SpacerSize
-} from './types/sizing';
+export type { AvatarSize, BorderRadiusSize, BorderWidthSize, ButtonSize, GapSize, HeightSize, IconSize, MarginSize, PaddingSize, SpacerSize, SpacingSize, WidthSize } from './types/sizing';
 
 // MasterView Core
 export { MasterView as MasterViewComponent } from './components/MasterView';
@@ -26,13 +23,13 @@ export { ThemeProvider, useIsDarkMode, useTheme, useThemeAwareColors, useThemeCo
 
 // Components
 export { ScreenHeader } from './components/ScreenHeader';
+export { Spacer } from './components/Spacer';
 export { ThemedText } from './components/ThemedText';
 export { ThemedView } from './components/ThemedView';
-export { Spacer } from './components/Spacer';
 
 // Constants
 export {
-    defaultMasterViewConfig, developmentMasterViewConfig, productionMasterViewConfig
+  defaultMasterViewConfig, developmentMasterViewConfig, productionMasterViewConfig
 } from './constants/MasterViewConfig';
 export { Sizing } from './constants/Sizing';
 
@@ -52,18 +49,16 @@ export type { SentryConfig } from './integrations/SentryIntegration';
 export { FirebaseIntegration, firebaseIntegration } from './integrations/FirebaseIntegration';
 export type { FirebaseConfig } from './integrations/FirebaseIntegration';
 // Convenience re-exports for integration consumers
-export {
-  // These methods are available on the singleton; re-exported for discoverability
-} from './integrations/FirebaseIntegration';
+export { } from './integrations/FirebaseIntegration';
 
 // Battery Helper
 export * from './components/battery/BatteryHelperView';
 export * from './components/battery/BatteryStatusCard';
 export * from './components/battery/DeviceInfoCard';
 export * from './components/battery/LowPowerModeCard';
+export * from './helpers/battery_helper';
 export * from './hooks/useBatteryHelper';
 export * from './stores/batteryStore';
-export * from './helpers/batteryHelper';
 export * from './types/battery';
 
 // Onboarding Helper

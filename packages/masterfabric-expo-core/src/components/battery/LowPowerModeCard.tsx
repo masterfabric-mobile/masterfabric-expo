@@ -1,10 +1,9 @@
+import { Button, Platform, View } from 'react-native';
 import { getThemeColors } from '../../constants/Colors';
 import { useTheme } from '../../contexts/ThemeContext';
+import { lowPowerModeCardStyles } from '../../styles/low_power_mode_card.styles';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import React from 'react';
-import { View, Platform, Button } from 'react-native';
-import { lowPowerModeCardStyles } from '../../styles/LowPowerModeCard.styles';
 
 interface LowPowerModeCardProps {
   lowPowerMode: boolean | null;

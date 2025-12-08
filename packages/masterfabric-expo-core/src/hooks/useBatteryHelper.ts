@@ -1,13 +1,13 @@
 import * as Battery from 'expo-battery';
-import { getDeviceInfo } from '../helpers/device-info';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Platform, Linking } from 'react-native';
-import { useBatteryHelperStore } from '../stores/batteryStore';
+import { Linking, Platform } from 'react-native';
 import {
   formatBatteryPercentage,
   getChargingStatusText,
   getLowPowerModeStatusText,
-} from '../helpers/batteryHelper';
+} from '../helpers/battery_helper';
+import { getDeviceInfo } from '../helpers/device-info';
+import { useBatteryHelperStore } from '../stores/batteryStore';
 
 export const useBatteryHelper = () => {
   const {

@@ -1,11 +1,11 @@
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { getThemeColors } from '../../constants/Colors';
 import { useTheme } from '../../contexts/ThemeContext';
 import { DeviceInfo as DeviceInfoHelper } from '../../helpers/device-info';
+import { deviceInfoCardStyles } from '../../styles/device_info_card.styles';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { deviceInfoCardStyles } from '../../styles/DeviceInfoCard.styles';
 
 interface DeviceInfoCardProps {
   getDeviceInformation: () => Promise<DeviceInfoHelper | null>;
