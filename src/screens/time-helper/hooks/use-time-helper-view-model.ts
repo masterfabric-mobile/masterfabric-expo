@@ -1,5 +1,5 @@
 import { t } from '@/src/shared/i18n';
-import * as TimeHelpers from 'masterfabric-expo-core/src/helpers/time_helper';
+import * as TimeHelpers from 'masterfabric-expo-core';
 import { useCallback } from 'react';
 import { TimeTestResult } from '../models/time-helper-models';
 import { useTimeHelperStore } from '../store/time-helper-store';

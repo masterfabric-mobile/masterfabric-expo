@@ -1,21 +1,24 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const deviceInfoStyles = StyleSheet.create({
   section: {
-    marginBottom: 32,
+    marginBottom: Sizing.padding.xxl,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 16,
+    ...getTypographyStyle('xl', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.m,
   },
   infoCard: {
-    padding: 16,
-    borderRadius: 12,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
   },
   infoText: {
-    fontSize: 14,
-    marginBottom: 8,
-    opacity: 0.8,
+    ...getTypographyStyle('s', 'normal', 'normal'),
+    marginBottom: Sizing.gap.s,
+    opacity: Sizing.opacity.xl,
   },
 });

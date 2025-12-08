@@ -1,12 +1,13 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const packageInfoStyles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    paddingVertical: 4,
+    alignItems: Sizing.layout.alignItems.center,
+    paddingVertical: Sizing.spacing.xxs,
   },
   text: {
-    fontSize: 12,
-    textAlign: 'center',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'normal', 'normal'),
+    textAlign: Sizing.layout.textAlign.center,
   },
 });

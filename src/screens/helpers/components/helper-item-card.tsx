@@ -2,7 +2,7 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { ThemedView } from '@/src/shared/components/ThemedView';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { HelperItem } from '../models/helpers-models';
@@ -48,7 +48,7 @@ export function HelperItemCard({ helper }: HelperItemCardProps) {
         ]}>
           <Ionicons 
             name={helper.icon as any} 
-            size={24} 
+            size={Sizing.icon.m} 
             color={helper.color} 
           />
         </View>
@@ -94,7 +94,7 @@ export function HelperItemCard({ helper }: HelperItemCardProps) {
         <View style={helperItemCardStyles.arrowContainer}>
           <Ionicons 
             name="chevron-forward" 
-            size={24} 
+            size={Sizing.icon.m} 
             color={colors.icon} 
           />
         </View>

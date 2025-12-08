@@ -1,5 +1,5 @@
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { Switch, Text, TextInput, View } from 'react-native';
 import { LoggerLevel } from '../models/logger-helper-models';
@@ -19,29 +19,37 @@ export function LoggerInputField({ message, level, component, includeStackTrace,
   const colors = getThemeColors(currentTheme === 'dark');
 
   // Styling for input fields with theme colors
-  const inputStyle = { borderWidth: 1, borderRadius: 10, padding: 12, borderColor: colors.surfaceBorder, color: colors.bodyText, backgroundColor: colors.inputBackground, fontSize: 16 } as const;
+  const inputStyle = {
+    borderWidth: Sizing.borderWidth.s,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.m,
+    borderColor: colors.surfaceBorder,
+    color: colors.bodyText,
+    backgroundColor: colors.inputBackground,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+  } as const;
 
   return (
-    <View style={{ gap: 8 }}>
-      <Text style={{ color: colors.titleText }}>{t('helpers.loggerHelper.message')}</Text>
+    <View style={{ gap: Sizing.gap.s }}>
+      <Text style={[{ color: colors.titleText }, typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal')]}>{t('helpers.loggerHelper.message')}</Text>
       <TextInput
         value={message}
         onChangeText={(text) => onChange({ message: text })}
         placeholder={t('helpers.toastHelper.messagePlaceholder')}
         placeholderTextColor={colors.placeholderText}
-        style={[inputStyle, { minHeight: 88, textAlignVertical: 'top' }]}
+        style={[inputStyle, { minHeight: Sizing.height.xxl + Sizing.padding.l, textAlignVertical: 'top' }]}
         multiline
         numberOfLines={4}
       />
-      <Text style={{ color: colors.titleText }}>{t('helpers.loggerHelper.component')}</Text>
+      <Text style={[{ color: colors.titleText }, typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal')]}>{t('helpers.loggerHelper.component')}</Text>
       <TextInput
         value={component}
         onChangeText={(text) => onChange({ component: text })}
         placeholder={t('helpers.loggerHelper.component')}
         placeholderTextColor={colors.placeholderText}
-        style={[inputStyle, { minHeight: 52 }]}
+        style={[inputStyle, { minHeight: Sizing.button.height.medium }]}
       />
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <View style={{ flexDirection: Sizing.layout.flexDirection.row, alignItems: Sizing.layout.alignItems.center, gap: Sizing.gap.s }}>
         <Switch value={includeStackTrace} onValueChange={(v) => onChange({ includeStackTrace: v })} />
         <Text style={{ color: colors.bodyText }}>{t('helpers.loggerHelper.includeStack')}</Text>
       </View>

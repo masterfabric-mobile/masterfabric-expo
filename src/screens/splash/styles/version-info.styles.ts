@@ -1,17 +1,17 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const versionInfoStyles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    paddingVertical: 8,
+    alignItems: Sizing.layout.alignItems.center,
+    paddingVertical: Sizing.gap.s,
   },
   versionText: {
-    fontSize: 16,
-    fontWeight: '500',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'medium', 'normal'),
   },
   nameText: {
-    fontSize: 14,
-    marginTop: 2,
-    opacity: 0.8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    marginTop: Sizing.spacing.xxs,
+    opacity: Sizing.opacity.xl,
   },
 });

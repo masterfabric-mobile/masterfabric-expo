@@ -1,7 +1,7 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { DocumentationSection } from '../models/documentation-models';
@@ -25,7 +25,7 @@ export function DocumentationContent({ sections }: DocumentationContentProps) {
         ]}>
           <Ionicons 
             name={section.icon as any} 
-            size={24} 
+            size={Sizing.icon.m} 
             color={section.color} 
           />
         </View>
@@ -56,11 +56,11 @@ export function DocumentationContent({ sections }: DocumentationContentProps) {
             key={item.id}
             style={[
               documentationContentStyles.itemCard,
-              { 
-                backgroundColor: colors.surfaceBackground,
-                borderColor: colors.surfaceBorder + '30',
-                borderWidth: 1,
-              }
+            { 
+              backgroundColor: colors.surfaceBackground,
+              borderColor: colors.surfaceBorder + '30',
+              borderWidth: Sizing.borderWidth.s,
+            }
             ]}
             activeOpacity={0.8}
           >
@@ -77,7 +77,7 @@ export function DocumentationContent({ sections }: DocumentationContentProps) {
                 </ThemedText>
                 <Ionicons 
                   name="chevron-forward" 
-                  size={16} 
+                  size={Sizing.icon.s} 
                   color={colors.labelText} 
                 />
               </View>

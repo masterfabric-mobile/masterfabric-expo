@@ -1,48 +1,44 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const typographyTestCardStyles = StyleSheet.create({
   container: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    marginBottom: 12,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.m,
+    marginBottom: Sizing.padding.s,
   },
   header: {
-    marginBottom: 8,
+    marginBottom: Sizing.gap.s,
   },
   functionName: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'bold', 'normal'),
   },
   description: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 12,
-    opacity: 0.8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    marginBottom: Sizing.padding.s,
+    opacity: Sizing.opacity.xl,
   },
   inputOutputContainer: {
-    gap: 12,
+    gap: Sizing.padding.s,
   },
   inputOutputGroup: {
-    gap: 6,
+    gap: Sizing.spacing.xxs,
   },
   label: {
-    fontSize: 12,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'semibold', 'normal'),
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
   },
   inputOutputBox: {
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    minHeight: 44,
-    justifyContent: 'center',
+    padding: Sizing.padding.s,
+    borderRadius: Sizing.gap.s,
+    borderWidth: Sizing.borderWidth.s,
+    minHeight: Sizing.button.height.medium,
+    justifyContent: Sizing.layout.justifyContent.center,
   },
   inputOutputText: {
-    fontSize: 14,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
     fontFamily: 'monospace',
-    lineHeight: 18,
   },
 });
 

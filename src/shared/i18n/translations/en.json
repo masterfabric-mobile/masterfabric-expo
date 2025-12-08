@@ -637,6 +637,126 @@
         }
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Size Helper",
+      "description": "Sizing system, spacing, and responsive design utilities",
+      "testSuite": "UI Size Helper Test Suite",
+      "testInput": "Test Input",
+      "runTests": "Run All Tests",
+      "runningTests": "Running Tests...",
+      "testResults": "Test Results",
+      "functions": "functions",
+      "input": "Input:",
+      "output": "Output:",
+      "getSpacing": "Gets spacing value by size key",
+      "getPadding": "Gets padding value by size key",
+      "getMargin": "Gets margin value by size key",
+      "calculateSpacing": "Calculates spacing using base unit multiplier",
+      "getBaseUnit": "Gets the base unit (8pt grid)",
+      "getScreenWidth": "Gets current screen width",
+      "getDeviceTypeAuto": "Gets device type automatically",
+      "getGridColumnsAuto": "Gets grid columns based on device",
+      "getResponsiveSpacing": "Gets responsive spacing based on screen width",
+      "getButtonHeight": "Gets button height by size",
+      "getInputHeight": "Gets input height by size",
+      "getCardPadding": "Gets card padding by size",
+      "spacing": "Spacing",
+      "padding": "Padding",
+      "margin": "Margin",
+      "gap": "Gap",
+      "borderRadius": "Border Radius",
+      "borderWidth": "Border Width",
+      "buttonHeight": "Button Height",
+      "inputHeight": "Input Height",
+      "cardPadding": "Card Padding",
+      "scrollPadding": "Scroll Padding",
+      "scrollMargin": "Scroll Margin",
+      "preview": "Live Preview",
+      "showcase": "Sizing Showcase",
+      "showcaseDescription": "All available sizing values and examples",
+      "selected": "Selected",
+      "responsiveInfo": "Responsive Info",
+      "device": "Device",
+      "width": "Width",
+      "columns": "Columns",
+      "baseUnit": "Base Unit",
+      "responsivePadding": "Responsive Padding",
+      "sizeLabels": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
+      "examples": {
+        "spacing": {
+          "title": "Spacing",
+          "description": "Spacing determines the space between elements",
+          "selectSize": "Select Spacing Size"
+        },
+        "padding": {
+          "title": "Padding",
+          "description": "Padding determines the space between content and border",
+          "selectSize": "Select Padding Size"
+        },
+        "margin": {
+          "title": "Margin",
+          "description": "Margin determines the space outside the element",
+          "selectSize": "Select Margin Size"
+        },
+        "gap": {
+          "title": "Gap",
+          "description": "Gap determines the space between elements in a flex container",
+          "selectSize": "Select Gap Size"
+        },
+        "borderRadius": {
+          "title": "Border Radius",
+          "description": "Border radius determines the roundness of corners",
+          "selectSize": "Select Border Radius"
+        },
+        "borderWidth": {
+          "title": "Border Width",
+          "description": "Border width determines the thickness of borders",
+          "selectSize": "Select Border Width"
+        },
+        "buttonHeight": {
+          "title": "Button Height",
+          "description": "Button height determines the height of buttons",
+          "selectSize": "Select Button Height"
+        },
+        "inputHeight": {
+          "title": "Input Height",
+          "description": "Input height determines the height of input fields",
+          "selectSize": "Select Input Height"
+        },
+        "cardPadding": {
+          "title": "Card Padding",
+          "description": "Card padding determines the space between card content and edges",
+          "selectSize": "Select Card Padding"
+        },
+        "scrollPadding": {
+          "title": "Scroll Padding",
+          "description": "Scroll padding determines the space between scroll content and edges",
+          "selectSize": "Select Scroll Padding"
+        },
+        "scrollMargin": {
+          "title": "Scroll Margin",
+          "description": "Scroll margin determines the space between scroll items",
+          "selectSize": "Select Scroll Margin"
+        }
+      },
+      "deviceType": {
+        "title": "Device Type",
+        "phone": "📱 Phone",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Desktop"
+      }
+    },
     "dateHelper": {
       "title": "Date Helper",
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
@@ -1265,23 +1385,47 @@
         "description": "Utility functions for common development tasks",
         "stringHelper": {
           "title": "String Helper",
-          "description": "String manipulation utilities including formatting, validation, and case conversion. Functions like capitalize, truncate, email validation, URL validation, currency formatting, case conversion (camelCase, snake_case, kebab-case), HTML escaping, and more."
+          "description": "Text manipulation and validation utilities"
+        },
+        "loggerHelper": {
+          "title": "Logger Helper",
+          "description": "Development and production logging utilities"
+        },
+        "snackbarHelper": {
+          "title": "Snackbar Helper",
+          "description": "Snackbar notification utilities with action buttons and positioning"
+        },
+        "firebaseHelper": {
+          "title": "Firebase Helper",
+          "description": "Auth, Analytics (web), and Firestore utilities"
+        },
+        "toastHelper": {
+          "title": "Toast Helper",
+          "description": "UI feedback and notification utilities"
+        },
+        "timeHelper": {
+          "title": "Time Helper",
+          "description": "Date and time manipulation utilities"
+        },
+        "batteryHelper": {
+          "title": "Battery Helper",
+          "description": "Battery level, charging status, low power mode, and device information"
         },
         "richTextHelper": {
           "title": "Rich Text Helper",
-          "description": "HTML, Markdown, and text formatting utilities for React Native. Parse HTML to React Native text components, convert Markdown to formatted text, extract URLs/mentions/hashtags, sanitize content for XSS prevention, create formatted text with multiple styles, and process rich text content interactively."
+          "description": "HTML, Markdown, and text formatting utilities"
         },
-        "deviceInfo": {
-          "title": "Device Info Helper",
-          "description": "Get comprehensive device information including platform details, OS version, screen dimensions, device capabilities, and compatibility checks. Essential for responsive design and feature detection."
+        "typographyHelper": {
+          "title": "Typography Helper",
+          "description": "Typography utilities, font scaling, and text styling with Flutter-style copyWith pattern"
         },
-        "validation": {
-          "title": "Validation Helper",
-          "description": "Input validation utilities for forms and data processing. Includes email validation, URL validation, phone number validation, and custom validation rules for secure data handling."
+        "validatorHelper": {
+          "title": "Validator Helper",
+          "description": "Form validation utilities"
         },
-        "formatting": {
-          "title": "Formatting Helper",
-          "description": "Data formatting utilities for dates, numbers, currency, and text. Includes date formatting, number formatting with decimals, currency formatting, and text transformation functions."
+        "uiSizeHelper": {
+          "title": "UI Size Helper",
+          "description": "Sizing system, spacing, typography, and responsive design utilities"
         }
       },
       "core": {

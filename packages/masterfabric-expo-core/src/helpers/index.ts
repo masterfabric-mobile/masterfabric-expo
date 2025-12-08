@@ -34,12 +34,12 @@ export * from './onboarding_helper';
 // Device Info Helpers
 export * from './device-info';
 
+// UI Size Helper
+export * from './ui_size_helper';
+
 // Re-export types with different names to avoid conflicts
 export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device-info';
 
 // Typography Helpers
 export * from './typography_helper';
-
-// URL Launcher Helper
-export * from './url_launcher_helper';
 

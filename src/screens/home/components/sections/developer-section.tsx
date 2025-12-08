@@ -1,7 +1,7 @@
 import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useHomeViewModel } from '../../hooks/use-home-view-model';
@@ -21,7 +21,7 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
   if (!__DEV__) return null;
 
   return (
-    <View style={[quickActionsStyles.section, { marginBottom: 40 }]}>
+    <View style={[quickActionsStyles.section, { marginBottom: Sizing.padding.xxl }]}>
       <ThemedText 
         type="subtitle" 
         style={[
@@ -45,7 +45,7 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
                 { 
                   backgroundColor: colors.surfaceBackground,
                   borderColor: colors.surfaceBorder,
-                  borderWidth: 1,
+                  borderWidth: Sizing.borderWidth.s,
                 }
               ]}
             >
@@ -55,7 +55,7 @@ export function DeveloperSection({ onActionPress }: DeveloperSectionProps) {
               ]}>
                 <Ionicons 
                   name={getDeveloperIconName(action.id) as any}
-                  size={22}
+                  size={Sizing.icon.s}
                   color={action.color}
                 />
               </View>
