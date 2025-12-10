@@ -236,7 +236,7 @@ export function useSupabaseCasesViewModel() {
     }
 
     try {
-      const { data } = supabaseIntegration.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      const authSubscription = supabaseIntegration.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
         if (session?.user) {
           setUser(session.user);
         } else {
@@ -245,8 +245,8 @@ export function useSupabaseCasesViewModel() {
       });
 
       return () => {
-        if (data?.subscription) {
-          data.subscription.unsubscribe();
+        if (authSubscription && authSubscription.subscription) {
+          authSubscription.subscription.unsubscribe();
         }
       };
     } catch (e) {

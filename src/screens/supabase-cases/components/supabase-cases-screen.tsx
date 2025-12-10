@@ -9,9 +9,13 @@ import { useSupabaseCasesViewModel } from '../hooks/use-supabase-cases-view-mode
 import { supabaseCasesScreenStyles } from '../styles/supabase-cases-screen.styles';
 import { AuthCaseView } from './auth-case-view';
 import { CaseCard } from './case-card';
+import { DatabaseFunctionsCaseView } from './database-functions-case-view';
+import { EdgeFunctionsCaseView } from './edge-functions-case-view';
 import { OrderViewCaseView } from './order-view-case-view';
 import { PixelCanvasCaseView } from './pixel-canvas-case-view';
 import { ProductListCaseView } from './product-list-case-view';
+import { RealtimeChatCaseView } from './realtime-chat-case-view';
+import { StorageCaseView } from './storage-case-view';
 
 const supabaseGreen = '#3ECF8E';
 
@@ -43,6 +47,34 @@ const cases = [
     description: 'Collaborative pixel art game with real-time updates',
     icon: 'grid',
     color: '#FF6B6B',
+  },
+  {
+    id: 'realtime-chat',
+    title: 'Realtime Chat',
+    description: 'Real-time messaging with Supabase Realtime',
+    icon: 'chatbubbles',
+    color: '#10B981',
+  },
+  {
+    id: 'database-functions',
+    title: 'Database Functions',
+    description: 'PostgreSQL functions and stored procedures',
+    icon: 'code',
+    color: '#8B5CF6',
+  },
+  {
+    id: 'storage',
+    title: 'Storage',
+    description: 'File upload and download with Supabase Storage',
+    icon: 'cloud-upload',
+    color: '#3B82F6',
+  },
+  {
+    id: 'edge-functions',
+    title: 'Edge Functions',
+    description: 'Serverless functions with Supabase Edge Functions',
+    icon: 'flash',
+    color: '#F59E0B',
   },
 ];
 
@@ -139,6 +171,86 @@ export function SupabaseCasesScreen() {
           variant="minimal"
         />
         <PixelCanvasCaseView
+          user={state.user}
+          isConnected={state.isConnected}
+          onBack={() => actions.selectCase(null)}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'realtime-chat') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Realtime Chat example"
+          variant="minimal"
+        />
+        <RealtimeChatCaseView
+          user={state.user}
+          isConnected={state.isConnected}
+          onBack={() => actions.selectCase(null)}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'database-functions') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Database Functions example"
+          variant="minimal"
+        />
+        <DatabaseFunctionsCaseView
+          user={state.user}
+          isConnected={state.isConnected}
+          onBack={() => actions.selectCase(null)}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'storage') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Storage example"
+          variant="minimal"
+        />
+        <StorageCaseView
+          user={state.user}
+          isConnected={state.isConnected}
+          onBack={() => actions.selectCase(null)}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (state.selectedCase === 'edge-functions') {
+    return (
+      <SafeAreaView
+        style={[supabaseCasesScreenStyles.container, { backgroundColor: colors.background }]}
+        edges={['top']}
+      >
+        <ScreenHeader
+          title="Supabase Cases"
+          subtitle="Edge Functions example"
+          variant="minimal"
+        />
+        <EdgeFunctionsCaseView
           user={state.user}
           isConnected={state.isConnected}
           onBack={() => actions.selectCase(null)}
