@@ -6,6 +6,7 @@ import {
   useMasterView,
   useThemeColors
 } from 'masterfabric-expo-core';
+import { InAppMessageProvider } from '@/src/screens/in-app-messaging/components/in-app-message-provider';
 import { useHomeViewModel } from '../hooks/use-home-view-model';
 import { homeScreenStyles } from '../styles/home-screen.styles';
 import { getActionIconName } from '../utils';
@@ -53,50 +54,52 @@ function HomeScreenContent() {
   }
 
   return (
-    <SafeAreaView 
-      style={[
-        homeScreenStyles.container,
-        { backgroundColor: colors.background }
-      ]}
-      edges={['top']}
-    >
-      <HomeHeader 
-        onNotificationPress={handleNotificationPress}
-      />
-      
-      <ScrollView 
-        style={homeScreenStyles.content}
-        contentContainerStyle={homeScreenStyles.scrollContent}
-        showsVerticalScrollIndicator={false}
+    <InAppMessageProvider>
+      <SafeAreaView 
+        style={[
+          homeScreenStyles.container,
+          { backgroundColor: colors.background }
+        ]}
+        edges={['top']}
       >
-        <WelcomeSection greeting={greeting} user={user} />
-        
-        <SupabaseSection 
-          supabaseActions={supabaseActions}
-          supabaseUser={supabaseUser}
-          supabaseConnected={supabaseConnected}
-          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
+        <HomeHeader 
+          onNotificationPress={handleNotificationPress}
         />
         
-        <QuickActionsSection 
-          quickActions={quickActions}
-          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
-          getIconName={getActionIconName}
-        />
+        <ScrollView 
+          style={homeScreenStyles.content}
+          contentContainerStyle={homeScreenStyles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <WelcomeSection greeting={greeting} user={user} />
+          
+          <SupabaseSection 
+            supabaseActions={supabaseActions}
+            supabaseUser={supabaseUser}
+            supabaseConnected={supabaseConnected}
+            onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
+          />
+          
+          <QuickActionsSection 
+            quickActions={quickActions}
+            onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')}
+            getIconName={getActionIconName}
+          />
 
-        <ActivitySection />
+          <ActivitySection />
 
-        <DeviceInfoSection 
-          deviceInfo={deviceInfo as any}
-          compatibility={compatibility || undefined}
-          compatibilityLoading={compatibilityLoading}
-        />
+          <DeviceInfoSection 
+            deviceInfo={deviceInfo as any}
+            compatibility={compatibility || undefined}
+            compatibilityLoading={compatibilityLoading}
+          />
 
-        <DeveloperSection 
-          onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')} 
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <DeveloperSection 
+            onActionPress={(actionId, actionTitle) => handleQuickActionPress(actionId, actionTitle, colors.text === '#FFFFFF')} 
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </InAppMessageProvider>
   );
 }
 

@@ -24,8 +24,10 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
 
   const unsubscribeRef = useRef<(() => void) | null>(null);
   const isLoadingRef = useRef(false);
+  const isRefreshingRef = useRef(false);
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null);
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   const loadNotifications = useCallback(async () => {
     // Prevent multiple simultaneous loads
@@ -198,14 +200,67 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
       }
       notificationService.cleanup();
     };
-  }, [loadNotifications, addNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   const refreshNotifications = useCallback(async () => {
-    // Only refresh if not already loading
-    if (!isLoadingRef.current) {
-      await loadNotifications();
+    // Prevent multiple simultaneous refreshes using ref instead of state
+    if (isRefreshingRef.current) {
+      return;
     }
-  }, [loadNotifications]);
+    
+    isRefreshingRef.current = true;
+    setIsRefreshing(true);
+    
+    try {
+      // Create a dedicated refresh function that bypasses the loading check
+      const performRefresh = async () => {
+        setLoading(true);
+        
+        try {
+          // Get current user ID
+          let userId: string | null = null;
+          let authenticated = false;
+          if (supabaseIntegration.isAvailable()) {
+            try {
+              const user = await supabaseIntegration.getCurrentUser();
+              userId = user?.id || null;
+              authenticated = !!userId;
+            } catch (err) {
+              userId = null;
+              authenticated = false;
+            }
+          }
+          setIsAuthenticated(authenticated);
+
+          // Fetch notifications with read status from Supabase
+          const allNotifications = await notificationService.fetchNotificationsWithReadStatus(userId);
+
+          // Filter notifications by current language
+          const currentLanguage = getCurrentLocale();
+          const languageNotifications = allNotifications.filter(
+            notification => !notification.language || notification.language === currentLanguage
+          );
+
+          setNotifications(languageNotifications);
+          updateLastUpdated();
+        } catch (error: any) {
+          console.error('[NotificationViewModel] Failed to refresh notifications:', error);
+          // Don't clear notifications on refresh error, just keep existing ones
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      await performRefresh();
+    } catch (error) {
+      console.error('[NotificationViewModel] Error refreshing notifications:', error);
+    } finally {
+      // Always reset refreshing state
+      isRefreshingRef.current = false;
+      setIsRefreshing(false);
+    }
+  }, [setLoading, setNotifications, updateLastUpdated, setIsAuthenticated]);
 
   // Tabs configuration
   const tabs: TabItem[] = [
@@ -218,6 +273,7 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
     notifications: filteredNotifications,
     unreadCount,
     isLoading,
+    isRefreshing,
     isAuthenticated,
     isInitialLoad,
     markAsRead: handleMarkAsRead,

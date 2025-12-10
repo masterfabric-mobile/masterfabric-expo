@@ -35,6 +35,7 @@ export function NotificationScreen() {
   const {
     notifications: filteredNotifications,
     isLoading,
+    isRefreshing,
     unreadCount,
     isAuthenticated,
     isInitialLoad,
@@ -45,33 +46,31 @@ export function NotificationScreen() {
     removeNotification,
   } = useNotificationViewModel(activeTab);
 
-  // Refresh notifications when screen comes into focus (e.g., after signing in)
-  // Use a ref to prevent multiple refreshes
-  const isRefreshingRef = React.useRef(false);
+  // Track if we've already loaded notifications on this mount
+  const hasLoadedRef = React.useRef(false);
   
+  // Only refresh on initial focus, not on every focus
   useFocusEffect(
     React.useCallback(() => {
-      // Only refresh if not already refreshing and not currently loading
-      if (!isRefreshingRef.current && !isLoading) {
-        isRefreshingRef.current = true;
-        refreshNotifications();
-        // Reset flag after a short delay to allow refresh to complete
-        setTimeout(() => {
-          isRefreshingRef.current = false;
-        }, 500);
+      // Only refresh on the first focus if we haven't loaded yet
+      if (!hasLoadedRef.current && !isInitialLoad && !isLoading && !isRefreshing) {
+        hasLoadedRef.current = true;
+        // Don't auto-refresh, let the initial load handle it
       }
       
       return () => {
-        // Reset flag when screen loses focus
-        isRefreshingRef.current = false;
+        // Keep the flag when screen loses focus so we don't refresh again
       };
-    }, [isLoading, refreshNotifications])
+    }, [isInitialLoad, isLoading, isRefreshing])
   );
 
   const handleNotificationPress = (notification: any) => {
+    // Mark as read if unread, otherwise just handle the press
     if (!notification.isRead) {
       markAsRead(notification.id);
     }
+    // TODO: Add navigation or action handling here if needed
+    // For example: if (notification.actionUrl) { router.push(notification.actionUrl); }
   };
 
   const handleNotificationDelete = (notification: any) => {
@@ -253,7 +252,7 @@ export function NotificationScreen() {
                 )}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={notificationScreenStyles.listContentContainer}
-                refreshing={isLoading}
+                refreshing={isRefreshing}
                 onRefresh={refreshNotifications}
                 scrollEnabled={true}
                 bounces={true}

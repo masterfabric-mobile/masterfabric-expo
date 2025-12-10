@@ -1,9 +1,10 @@
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import * as Haptics from 'expo-haptics';
+import React, { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import { useNotificationItemGesture, useNotificationItemTheme, useNotificationItemTime } from '../hooks/use-notification-view-model';
 import { NotificationItemProps } from '../models/notification-models';
 import { notificationItemStyles } from '../styles/notification-item.styles';
@@ -12,20 +13,68 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
   const { isDark, colors, getIconColor } = useNotificationItemTheme();
   const { formatTime } = useNotificationItemTime();
   const { gestureHandler, animatedStyle } = useNotificationItemGesture(notification, onDelete);
+  
+  // Animated values for read state transitions
+  const unreadOpacity = useSharedValue(notification.isRead ? 0 : 1);
+  const titleWeight = useSharedValue(notification.isRead ? 500 : 600);
+  const scale = useSharedValue(1);
+  
+  // Update animated values when read state changes
+  useEffect(() => {
+    if (notification.isRead) {
+      unreadOpacity.value = withTiming(0, { duration: 300 });
+      titleWeight.value = withSpring(500);
+      // Subtle scale animation when marking as read
+      scale.value = withSequence(
+        withSpring(0.98, { duration: 100 }),
+        withSpring(1, { duration: 200 })
+      );
+    } else {
+      unreadOpacity.value = withTiming(1, { duration: 200 });
+      titleWeight.value = withSpring(600);
+      scale.value = 1;
+    }
+  }, [notification.isRead]);
+  
+  // Animated styles for unread indicators
+  const unreadIndicatorStyle = useAnimatedStyle(() => ({
+    opacity: unreadOpacity.value,
+  }));
+  
+  const unreadLineStyle = useAnimatedStyle(() => ({
+    opacity: unreadOpacity.value,
+  }));
+  
+  const titleAnimatedStyle = useAnimatedStyle(() => ({
+    fontWeight: titleWeight.value as any,
+  }));
+  
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+  
+  const handlePress = () => {
+    if (!notification.isRead) {
+      // Provide haptic feedback when marking as read
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    onPress(notification);
+  };
 
   return (
     <GestureDetector gesture={gestureHandler}>
       <Animated.View style={animatedStyle}>
-        <Pressable
-          style={({ pressed }) => [
-            notificationItemStyles.container,
-            {
-              backgroundColor: pressed ? colors.surfaceBackground : colors.background,
-              opacity: pressed ? 0.9 : 1,
-            },
-            !notification.isRead && notificationItemStyles.unreadContainer,
-          ]}
-          onPress={() => onPress(notification)}
+        <Animated.View style={containerAnimatedStyle}>
+          <Pressable
+            style={({ pressed }) => [
+              notificationItemStyles.container,
+              {
+                backgroundColor: pressed ? colors.surfaceBackground : colors.background,
+                opacity: pressed ? 0.9 : 1,
+              },
+              !notification.isRead && notificationItemStyles.unreadContainer,
+            ]}
+            onPress={handlePress}
           accessibilityRole="button"
           accessibilityState={{ selected: !notification.isRead }}
           accessibilityHint={t('notifications.swipeToDelete')}
@@ -48,19 +97,22 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
 
             <View style={notificationItemStyles.textContainer}>
               <View style={notificationItemStyles.header}>
-                <Text style={[
-                  notificationItemStyles.title,
-                  { color: colors.text },
-                  !notification.isRead && notificationItemStyles.unreadTitle
-                ]}>
+                <Animated.Text 
+                  style={[
+                    notificationItemStyles.title,
+                    { color: colors.text },
+                    titleAnimatedStyle
+                  ]}
+                >
                   {notification.title}
-                </Text>
-                {!notification.isRead && (
-                  <View style={[
+                </Animated.Text>
+                <Animated.View 
+                  style={[
                     notificationItemStyles.unreadIndicator,
-                    { backgroundColor: getIconColor(notification.type) }
-                  ]} />
-                )}
+                    { backgroundColor: getIconColor(notification.type) },
+                    unreadIndicatorStyle
+                  ]} 
+                />
               </View>
 
               <Text style={[
@@ -110,13 +162,15 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
           </View>
 
           {/* Unread indicator line */}
-          {!notification.isRead && (
-            <View style={[
+          <Animated.View 
+            style={[
               notificationItemStyles.unreadLine,
-              { backgroundColor: getIconColor(notification.type) }
-            ]} />
-          )}
-        </Pressable>
+              { backgroundColor: getIconColor(notification.type) },
+              unreadLineStyle
+            ]} 
+          />
+          </Pressable>
+        </Animated.View>
 
         {/* Separator line */}
         <View style={[
