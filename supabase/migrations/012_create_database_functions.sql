@@ -63,8 +63,97 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Function 4: Search products
+-- Filters products by category, brand, or price range
+CREATE OR REPLACE FUNCTION search_products(
+  p_category TEXT DEFAULT NULL,
+  p_brand TEXT DEFAULT NULL,
+  p_min_price NUMERIC DEFAULT NULL,
+  p_max_price NUMERIC DEFAULT NULL
+)
+RETURNS JSON AS $$
+DECLARE
+  result JSON;
+BEGIN
+  SELECT json_agg(
+    json_build_object(
+      'id', id,
+      'name', name,
+      'description', description,
+      'price', price,
+      'image_url', image_url,
+      'category', category,
+      'stock', stock,
+      'brand', brand,
+      'created_at', created_at
+    )
+    ORDER BY name
+  ) INTO result
+  FROM public.products
+  WHERE (p_category IS NULL OR category ILIKE '%' || p_category || '%')
+    AND (p_brand IS NULL OR brand ILIKE '%' || p_brand || '%')
+    AND (p_min_price IS NULL OR price >= p_min_price)
+    AND (p_max_price IS NULL OR price <= p_max_price);
+  
+  RETURN COALESCE(result, '[]'::JSON);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function 5: Get order statistics
+-- Returns aggregate statistics about all orders
+CREATE OR REPLACE FUNCTION get_order_statistics()
+RETURNS JSON AS $$
+DECLARE
+  result JSON;
+BEGIN
+  SELECT json_build_object(
+    'total_orders', COUNT(*),
+    'total_revenue', COALESCE(SUM(total_price), 0),
+    'average_order_value', COALESCE(ROUND(AVG(total_price)::numeric, 2), 0),
+    'min_order_value', COALESCE(MIN(total_price), 0),
+    'max_order_value', COALESCE(MAX(total_price), 0),
+    'pending_orders', COUNT(*) FILTER (WHERE status = 'pending'),
+    'delivered_orders', COUNT(*) FILTER (WHERE status = 'delivered'),
+    'cancelled_orders', COUNT(*) FILTER (WHERE status = 'cancelled'),
+    'total_unique_users', COUNT(DISTINCT user_id)
+  ) INTO result
+  FROM public.orders;
+  
+  RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function 6: Get category statistics
+-- Returns product statistics grouped by category
+CREATE OR REPLACE FUNCTION get_category_statistics()
+RETURNS JSON AS $$
+DECLARE
+  result JSON;
+BEGIN
+  SELECT json_agg(
+    json_build_object(
+      'category', category,
+      'product_count', COUNT(*),
+      'average_price', ROUND(AVG(price)::numeric, 2),
+      'min_price', MIN(price),
+      'max_price', MAX(price),
+      'total_stock', SUM(stock),
+      'low_stock_count', COUNT(*) FILTER (WHERE stock < 10)
+    )
+    ORDER BY category
+  ) INTO result
+  FROM public.products
+  GROUP BY category;
+  
+  RETURN COALESCE(result, '[]'::JSON);
+END;
+$$ LANGUAGE plpgsql;
+
 -- Grant execute permissions to authenticated and anonymous users
 GRANT EXECUTE ON FUNCTION get_product_statistics() TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION get_user_order_summary(UUID) TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION calculate_order_total(JSONB) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION search_products(TEXT, TEXT, NUMERIC, NUMERIC) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION get_order_statistics() TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION get_category_statistics() TO anon, authenticated;
 
