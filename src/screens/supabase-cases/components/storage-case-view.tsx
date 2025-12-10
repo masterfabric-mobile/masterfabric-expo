@@ -1,9 +1,9 @@
-import { ThemedText } from '@/src/shared/components/ThemedText';
+import { ConfirmationDialog, ThemedText } from '@/src/shared/components';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useStorageCaseViewModel } from '../hooks/use-storage-case-view-model';
 import { storageCaseStyles } from '../styles/storage-case.styles';
@@ -87,19 +87,25 @@ export function StorageCaseView({
     }
   };
 
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   const handleDelete = (fileName: string) => {
-    Alert.alert(
-      'Delete File',
-      `Are you sure you want to delete ${fileName}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => actions.deleteFile(fileName),
-        },
-      ]
-    );
+    setFileToDelete(fileName);
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (fileToDelete) {
+      actions.deleteFile(fileToDelete);
+      setFileToDelete(null);
+    }
+    setShowDeleteDialog(false);
+  };
+
+  const handleCancelDelete = () => {
+    setFileToDelete(null);
+    setShowDeleteDialog(false);
   };
 
   if (!isConnected) {
@@ -343,6 +349,18 @@ export function StorageCaseView({
           </View>
         )}
       </ScrollView>
+      
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        visible={showDeleteDialog}
+        title="Delete File"
+        message={fileToDelete ? `Are you sure you want to delete ${fileToDelete}?` : ''}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        destructive
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </View>
   );
 }

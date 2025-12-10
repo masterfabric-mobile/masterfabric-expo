@@ -42,6 +42,13 @@ ON storage.objects FOR DELETE
 TO authenticated
 USING (bucket_id = 'case-files' AND auth.uid()::text = (storage.foldername(name))[1]);
 
+-- Create storage policy for public delete (for root-level files)
+-- This allows deletion of files uploaded to the root of the bucket
+CREATE POLICY "Public delete"
+ON storage.objects FOR DELETE
+TO public
+USING (bucket_id = 'case-files');
+
 -- Note: For anonymous uploads, you can add:
 -- CREATE POLICY "Public upload"
 -- ON storage.objects FOR INSERT

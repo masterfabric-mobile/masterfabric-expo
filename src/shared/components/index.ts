@@ -3,6 +3,8 @@ export { Button } from './button';
 export { Card } from './card';
 export { Collapsible } from './Collapsible';
 export { ColorPickerModal } from './ColorPickerModal';
+export { ConfirmationDialog } from './ConfirmationDialog';
+export type { ConfirmationDialogProps } from './ConfirmationDialog';
 export { Dropdown } from './Dropdown';
 export { ErrorBoundary } from './ErrorBoundary';
 export { ExternalLink } from './ExternalLink';
