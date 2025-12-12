@@ -14,6 +14,9 @@ import { Switch, TextInput, View } from 'react-native';
 import {
   DEFAULT_MAX_LENGTH_PLACEHOLDER,
   DEFAULT_MIN_LENGTH_PLACEHOLDER,
+  EMAIL_MAX_LENGTH,
+  MIN_MAX_LENGTH_MAX_VALUE,
+  PHONE_MAX_LENGTH,
 } from '../constants/validator-helper-constants';
 import { ValidatorTestInput } from '../models/validator-helper-models';
 import { validatorInputFieldStyles } from '../styles/validator-input-field.styles';
@@ -45,6 +48,51 @@ export function ValidatorInputField({
 
   // Get validator type options (dynamically generated with translations)
   const validatorTypeOptions = getValidatorTypeOptions();
+
+  // Get keyboard type and max length based on validator type
+  const getInputKeyboardType = (): 'default' | 'email-address' | 'phone-pad' | 'numeric' => {
+    switch (testInput.validatorType) {
+      case ValidatorType.EMAIL:
+        return 'email-address';
+      case ValidatorType.PHONE_NUMBER:
+        return 'phone-pad';
+      case ValidatorType.NUMERIC:
+        return 'numeric';
+      default:
+        return 'default';
+    }
+  };
+
+  const getInputMaxLength = (): number | undefined => {
+    switch (testInput.validatorType) {
+      case ValidatorType.EMAIL:
+        return EMAIL_MAX_LENGTH;
+      case ValidatorType.PHONE_NUMBER:
+        return PHONE_MAX_LENGTH;
+      default:
+        return undefined;
+    }
+  };
+
+  const handleInputValueChange = (text: string) => {
+    // For numeric validator, only allow numbers
+    if (testInput.validatorType === ValidatorType.NUMERIC) {
+      const numericText = text.replace(/[^0-9]/g, '');
+      onInputChange({ value: numericText });
+    } else if (testInput.validatorType === ValidatorType.PHONE_NUMBER) {
+      // For phone, allow numbers and phone characters
+      const phoneRegex = /^[\d+\-\s()]*$/;
+      if (phoneRegex.test(text) && text.length <= PHONE_MAX_LENGTH) {
+        onInputChange({ value: text });
+      }
+    } else {
+      // For other types, allow all but check max length
+      const maxLength = getInputMaxLength();
+      if (!maxLength || text.length <= maxLength) {
+        onInputChange({ value: text });
+      }
+    }
+  };
 
   return (
     <ThemedView
@@ -93,9 +141,12 @@ export function ValidatorInputField({
             },
           ]}
           value={testInput.value}
-          onChangeText={(value) => onInputChange({ value })}
+          onChangeText={handleInputValueChange}
           placeholder={t('helpers.validatorHelper.inputPlaceholder')}
           placeholderTextColor={colors.placeholderText}
+          keyboardType={getInputKeyboardType()}
+          maxLength={getInputMaxLength()}
+          autoCapitalize={testInput.validatorType === ValidatorType.EMAIL ? 'none' : 'sentences'}
         />
       </View>
 
@@ -116,12 +167,26 @@ export function ValidatorInputField({
               },
             ]}
             value={testInput.minLength?.toString() || ''}
-            onChangeText={(text) =>
-              onInputChange({ minLength: text ? parseInt(text) : undefined })
-            }
+            onChangeText={(text) => {
+              // Only allow numeric input
+              const numericText = text.replace(/[^0-9]/g, '');
+              if (numericText === '') {
+                onInputChange({ minLength: undefined });
+              } else {
+                const numValue = parseInt(numericText);
+                // Enforce min value (at least 1) and max value
+                if (numValue >= 1 && numValue <= MIN_MAX_LENGTH_MAX_VALUE) {
+                  onInputChange({ minLength: numValue });
+                } else if (numValue > MIN_MAX_LENGTH_MAX_VALUE) {
+                  // If exceeds max, set to max value
+                  onInputChange({ minLength: MIN_MAX_LENGTH_MAX_VALUE });
+                }
+              }
+            }}
             placeholder={DEFAULT_MIN_LENGTH_PLACEHOLDER}
             placeholderTextColor={colors.placeholderText}
             keyboardType="numeric"
+            maxLength={4}
           />
         </View>
 
@@ -141,12 +206,26 @@ export function ValidatorInputField({
               },
             ]}
             value={testInput.maxLength?.toString() || ''}
-            onChangeText={(text) =>
-              onInputChange({ maxLength: text ? parseInt(text) : undefined })
-            }
+            onChangeText={(text) => {
+              // Only allow numeric input
+              const numericText = text.replace(/[^0-9]/g, '');
+              if (numericText === '') {
+                onInputChange({ maxLength: undefined });
+              } else {
+                const numValue = parseInt(numericText);
+                // Enforce min value (at least 1) and max value
+                if (numValue >= 1 && numValue <= MIN_MAX_LENGTH_MAX_VALUE) {
+                  onInputChange({ maxLength: numValue });
+                } else if (numValue > MIN_MAX_LENGTH_MAX_VALUE) {
+                  // If exceeds max, set to max value
+                  onInputChange({ maxLength: MIN_MAX_LENGTH_MAX_VALUE });
+                }
+              }
+            }}
             placeholder={DEFAULT_MAX_LENGTH_PLACEHOLDER}
             placeholderTextColor={colors.placeholderText}
             keyboardType="numeric"
+            maxLength={4}
           />
         </View>
       </View>
@@ -157,7 +236,7 @@ export function ValidatorInputField({
             value={testInput.trim !== false}
             onValueChange={(value) => onInputChange({ trim: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarSwitchActiveLight}
+            thumbColor="#FFFFFF"
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}
@@ -171,7 +250,7 @@ export function ValidatorInputField({
             value={testInput.convertTurkishChars || false}
             onValueChange={(value) => onInputChange({ convertTurkishChars: value })}
             trackColor={{ false: colors.surfaceBorder, true: colors.primary }}
-            thumbColor={colors.snackbarSwitchActiveLight}
+            thumbColor="#FFFFFF"
           />
           <ThemedText
             style={[validatorInputFieldStyles.checkboxLabel, { color: colors.bodyText }]}

@@ -110,6 +110,27 @@ export const validatorAuthFormStyles = StyleSheet.create({
     ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
     minHeight: Sizing.input.height.medium,
   },
+  passwordInputContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+    borderWidth: 1.5,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingRight: 48,
+    paddingVertical: 14,
+    fontSize: 16,
+    fontWeight: '400',
+    minHeight: 48,
+  },
+  passwordToggleButton: {
+    position: 'absolute',
+    right: 12,
+    padding: 8,
+  },
   errorText: {
     ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'medium', 'normal'),
     marginTop: Sizing.spacing.xs,

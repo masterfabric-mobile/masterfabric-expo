@@ -1,6 +1,5 @@
 // Device Information Helpers
 export * from './connectivity';
-export * from './device-info';
 
 // Platform Helpers
 export * from './platform';
@@ -32,6 +31,9 @@ export * from './validator_helper';
 // Onboarding Helper
 export * from './onboarding_helper';
 
+// Device Info Helpers
+export * from './device-info';
+
 // UI Size Helper
 export * from './ui_size_helper';
 
@@ -40,7 +42,4 @@ export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device
 
 // Typography Helpers
 export * from './typography_helper';
-
-// Time Helpers
-export * from './time_helper';
 

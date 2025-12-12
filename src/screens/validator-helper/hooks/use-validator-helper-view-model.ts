@@ -1,5 +1,5 @@
-import { t } from '@/src/shared/i18n';
 import { useLocale } from '@/src/shared/hooks/use-locale';
+import { t } from '@/src/shared/i18n';
 import {
   ValidatorType,
   getValidatorHelper,
@@ -38,17 +38,20 @@ export function useValidatorHelperViewModel() {
     
     // Only update if current value is one of the old default values (to avoid overwriting user input)
     // This ensures default value changes with locale, but user-entered values are preserved
-    if (testInput.value === oldEnglishDefault || testInput.value === oldTurkishDefault || testInput.value === '') {
-      setTestInput({ ...testInput, value: defaultValue });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]); // Only depend on locale to avoid infinite loops - testInput is intentionally excluded
+    setTestInput((prev) => {
+      if (prev.value === oldEnglishDefault || prev.value === oldTurkishDefault || prev.value === '') {
+        return { ...prev, value: defaultValue };
+      }
+      return prev;
+    });
+     
+  }, [locale, setTestInput]); // Only depend on locale to avoid infinite loops - testInput is intentionally excluded
 
   const updateTestInput = useCallback(
     (updates: Partial<typeof testInput>) => {
-      setTestInput({ ...testInput, ...updates });
+      setTestInput((prev) => ({ ...prev, ...updates }));
     },
-    [testInput, setTestInput]
+    [setTestInput]
   );
 
   // Test single validator (current selected type)
@@ -74,7 +77,8 @@ export function useValidatorHelperViewModel() {
     };
 
     setCurrentResult(testResult);
-  }, [testInput, t, setCurrentResult]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testInput, setCurrentResult, locale]);
 
   // Auto-test when input or validator type changes
   useEffect(() => {
@@ -100,8 +104,12 @@ export function useValidatorHelperViewModel() {
       };
 
       setCurrentResult(testResult);
+    } else {
+      // Clear result if value is empty
+      setCurrentResult(null);
     }
-  }, [testInput.value, testInput.validatorType, testInput.minLength, testInput.maxLength, testInput.trim, testInput.convertTurkishChars, locale, t, setCurrentResult]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testInput.value, testInput.validatorType, testInput.minLength, testInput.maxLength, testInput.trim, testInput.convertTurkishChars, setCurrentResult, locale]);
 
   const runAllTests = useCallback(() => {
     setIsLoading(true);
@@ -198,22 +206,38 @@ export function useValidatorHelperViewModel() {
         description: t('helpers.validatorHelper.validators.search'),
       });
 
-      // Current selected type validation
-      const validatorHelper = getValidatorHelper();
-      results.push({
-        id: 'currentType',
-        validatorType: testInput.validatorType,
-        input: value,
-        result: validatorHelper.validate(value, testInput.validatorType, options),
-        description: t(`helpers.validatorHelper.validators.${testInput.validatorType}`),
-      });
+      // Current selected type validation (only if not already in the list)
+      const allValidatorTypes = [
+        ValidatorType.USERNAME,
+        ValidatorType.PASSWORD,
+        ValidatorType.EMAIL,
+        ValidatorType.PHONE_NUMBER,
+        ValidatorType.URL,
+        ValidatorType.NUMERIC,
+        ValidatorType.NON_EMPTY,
+        ValidatorType.FULL_NAME,
+        ValidatorType.SEARCH,
+      ];
+      
+      // Only add current type if it's not already in the standard list
+      if (!allValidatorTypes.includes(testInput.validatorType)) {
+        const validatorHelper = getValidatorHelper();
+        results.push({
+          id: 'currentType',
+          validatorType: testInput.validatorType,
+          input: value,
+          result: validatorHelper.validate(value, testInput.validatorType, options),
+          description: t(`helpers.validatorHelper.validators.${testInput.validatorType}`),
+        });
+      }
     } catch (error) {
       console.error('Error running validator tests:', error);
     } finally {
       setTestResults(results);
       setIsLoading(false);
     }
-  }, [testInput, locale, t, setTestResults, setIsLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testInput, setTestResults, setIsLoading, locale]);
 
   return {
     testInput,
