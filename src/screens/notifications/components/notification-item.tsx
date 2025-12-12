@@ -3,7 +3,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import React, { useEffect } from 'react';
 import { Sizing } from 'masterfabric-expo-core';
-import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
@@ -67,16 +66,6 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
     <GestureDetector gesture={gestureHandler}>
       <Animated.View style={animatedStyle}>
         <Animated.View style={containerAnimatedStyle}>
-          <Pressable
-            style={({ pressed }) => [
-              notificationItemStyles.container,
-              {
-                backgroundColor: pressed ? colors.surfaceBackground : colors.background,
-                opacity: pressed ? 0.9 : 1,
-              },
-              !notification.isRead && notificationItemStyles.unreadContainer,
-            ]}
-            onPress={handlePress}
         <Pressable
           style={({ pressed }) => [
             notificationItemStyles.container,
@@ -86,7 +75,7 @@ export function NotificationItemComponent({ notification, onPress, onDelete }: N
             },
             !notification.isRead && notificationItemStyles.unreadContainer,
           ]}
-          onPress={() => onPress(notification)}
+          onPress={handlePress}
           accessibilityRole="button"
           accessibilityState={{ selected: !notification.isRead }}
           accessibilityHint={t('notifications.swipeToDelete')}

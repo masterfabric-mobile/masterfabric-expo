@@ -182,7 +182,7 @@ export function NotificationScreen() {
                 onDelete={handleNotificationDelete}
               />
             )}
-          </>
+          />
         )}
       </SafeAreaView>
 

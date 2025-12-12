@@ -104,7 +104,7 @@ export const Sizing = {
   // ============================================
   borderWidth: {
     none: 0,
-    hairline: StyleSheet.hairlineWidth,
+    hairline: 1,
     xs: 0.5,
     s: 1,
     m: 1.5,
@@ -649,7 +649,7 @@ export const Sizing = {
   // ============================================
   divider: {
     height: {
-      hairline: StyleSheet.hairlineWidth,
+      hairline: 1,
       thin: 1,
       medium: 2,
       thick: 4,
@@ -1158,7 +1158,7 @@ export const Sizing = {
   // ============================================
   borderWidthTop: {
     none: 0,
-    hairline: StyleSheet.hairlineWidth,
+    hairline: 1,
     s: 1,
     m: 1.5,
     l: 2,
@@ -1167,7 +1167,7 @@ export const Sizing = {
 
   borderWidthBottom: {
     none: 0,
-    hairline: StyleSheet.hairlineWidth,
+    hairline: 1,
     s: 1,
     m: 1.5,
     l: 2,
@@ -1176,7 +1176,7 @@ export const Sizing = {
 
   borderWidthLeft: {
     none: 0,
-    hairline: StyleSheet.hairlineWidth,
+    hairline: 1,
     s: 1,
     m: 1.5,
     l: 2,
@@ -1185,7 +1185,7 @@ export const Sizing = {
 
   borderWidthRight: {
     none: 0,
-    hairline: StyleSheet.hairlineWidth,
+    hairline: 1,
     s: 1,
     m: 1.5,
     l: 2,
@@ -1352,7 +1352,7 @@ export const Sizing = {
   list: {
     itemSeparatorHeight: {
       none: 0,
-      hairline: StyleSheet.hairlineWidth,
+      hairline: 1,
       xs: 1,
       s: 2,
       m: 4,
