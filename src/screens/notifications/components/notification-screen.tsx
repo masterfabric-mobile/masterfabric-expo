@@ -1,11 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ScaffoldMessage } from '@/src/shared/components';
 import { ScreenHeader } from '@/src/shared/components/ScreenHeader';
+import { ThemedText } from '@/src/shared/components/ThemedText';
 import { t } from '@/src/shared/i18n';
 import { Sizing, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import { useNotificationViewModel } from '../hooks/use-notification-view-model';
@@ -13,7 +15,9 @@ import { useNotificationViewModel } from '../hooks/use-notification-view-model';
 import { NotificationTab } from '../models/notification-models';
 import { notificationScreenStyles } from '../styles/notification-screen.styles';
 import { NotificationItemComponent } from './notification-item';
+import { NotificationSkeleton } from './notification-skeleton';
 import { NotificationTabs } from './notification-tabs';
+import { SupabaseBadge } from './supabase-badge';
 
 export function NotificationScreen() {
   const { currentTheme } = useTheme();
@@ -31,7 +35,10 @@ export function NotificationScreen() {
   const {
     notifications: filteredNotifications,
     isLoading,
+    isRefreshing,
     unreadCount,
+    isAuthenticated,
+    isInitialLoad,
     markAsRead,
     markAllAsRead,
     clearAll,
@@ -39,10 +46,31 @@ export function NotificationScreen() {
     removeNotification,
   } = useNotificationViewModel(activeTab);
 
+  // Track if we've already loaded notifications on this mount
+  const hasLoadedRef = React.useRef(false);
+  
+  // Only refresh on initial focus, not on every focus
+  useFocusEffect(
+    React.useCallback(() => {
+      // Only refresh on the first focus if we haven't loaded yet
+      if (!hasLoadedRef.current && !isInitialLoad && !isLoading && !isRefreshing) {
+        hasLoadedRef.current = true;
+        // Don't auto-refresh, let the initial load handle it
+      }
+      
+      return () => {
+        // Keep the flag when screen loses focus so we don't refresh again
+      };
+    }, [isInitialLoad, isLoading, isRefreshing])
+  );
+
   const handleNotificationPress = (notification: any) => {
+    // Mark as read if unread, otherwise just handle the press
     if (!notification.isRead) {
       markAsRead(notification.id);
     }
+    // TODO: Add navigation or action handling here if needed
+    // For example: if (notification.actionUrl) { router.push(notification.actionUrl); }
   };
 
   const handleNotificationDelete = (notification: any) => {
@@ -76,6 +104,9 @@ export function NotificationScreen() {
           showStageBadge={true}
           variant="minimal"
         />
+
+        {/* Supabase badge */}
+        <SupabaseBadge additionalText="Real-time instant notification sync" />
 
         <NotificationTabs
           activeTab={activeTab}
@@ -151,14 +182,7 @@ export function NotificationScreen() {
                 onDelete={handleNotificationDelete}
               />
             )}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={notificationScreenStyles.listContentContainer}
-            refreshing={isLoading}
-            onRefresh={refreshNotifications}
-            scrollEnabled={true}
-            bounces={true}
-            alwaysBounceVertical={true}
-          />
+          </>
         )}
       </SafeAreaView>
 

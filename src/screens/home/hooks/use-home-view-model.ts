@@ -5,10 +5,10 @@ import { useAppStore } from '@/src/shared/store';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { getDeviceInfoForLogging } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Clipboard } from 'react-native';
 import { ActivityActionType, ActivityItem, ActivityType, useHomeStore } from '../store/home-store';
-import { createDefaultQuickActions, formatGreeting, getDeveloperActions } from '../utils';
+import { createDefaultQuickActions, createSupabaseActions, formatGreeting, getDeveloperActions } from '../utils';
 
 export function useHomeViewModel() {
   const { user } = useAppStore();
@@ -20,9 +20,32 @@ export function useHomeViewModel() {
   // const { isDark } = useMasterView();
   const initialDeviceInfoAdded = useRef(false);
 
+  // Track current hour to update greeting when time changes
+  const [currentHour, setCurrentHour] = useState(() => new Date().getHours());
+
+  // Update hour every minute to ensure greeting updates when hour changes
+  useEffect(() => {
+    const updateHour = () => {
+      const now = new Date();
+      const hour = now.getHours();
+      setCurrentHour(prevHour => {
+        // Only update if hour actually changed to avoid unnecessary re-renders
+        return hour !== prevHour ? hour : prevHour;
+      });
+    };
+
+    // Update immediately
+    updateHour();
+
+    // Set up interval to check every minute
+    const interval = setInterval(updateHour, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval);
+  }, []);
+
   const greeting = useMemo(() => {
-    return formatGreeting(user);
-  }, [user, locale]);
+    return formatGreeting(user, currentHour);
+  }, [user, locale, currentHour]);
 
   const defaultQuickActions = useMemo(() => {
     return createDefaultQuickActions();
@@ -30,6 +53,85 @@ export function useHomeViewModel() {
 
   const developerActions = useMemo(() => {
     return getDeveloperActions();
+  }, []);
+
+  const supabaseActions = useMemo(() => {
+    return createSupabaseActions();
+  }, [locale]);
+
+  // Supabase auth state
+  const [supabaseUser, setSupabaseUser] = useState<any | null>(null);
+  const [supabaseConnected, setSupabaseConnected] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const checkSupabaseStatus = async () => {
+      setIsInitialLoad(true);
+      try {
+        // Import supabaseIntegration directly using named import
+        const masterfabricCore = await import('masterfabric-expo-core');
+        const supabase = (masterfabricCore as any).supabaseIntegration;
+        
+        if (!supabase) {
+          setSupabaseConnected(false);
+          setSupabaseUser(null);
+          return;
+        }
+
+        const isAvailable = supabase.isAvailable();
+        setSupabaseConnected(isAvailable);
+        
+        if (isAvailable) {
+          try {
+            const user = await supabase.getCurrentUser();
+            setSupabaseUser(user);
+          } catch (err) {
+            setSupabaseUser(null);
+          }
+          
+          // Subscribe to auth changes
+          try {
+            const { data } = supabase.onAuthStateChange(async (event: any, session: any) => {
+              if (session?.user) {
+                setSupabaseUser(session.user);
+              } else {
+                setSupabaseUser(null);
+              }
+            });
+            
+            if (data?.subscription) {
+              unsubscribe = () => {
+                data.subscription.unsubscribe();
+              };
+            }
+          } catch (authErr) {
+            console.warn('[Home] Error subscribing to auth changes:', authErr);
+          }
+        } else {
+          setSupabaseUser(null);
+        }
+      } catch (error) {
+        console.error('[Home] Error checking Supabase status:', error);
+        setSupabaseConnected(false);
+        setSupabaseUser(null);
+      } finally {
+        // Mark initial load as complete after a short delay to show skeleton
+        setTimeout(() => {
+          setIsInitialLoad(false);
+        }, 500);
+      }
+    };
+
+    checkSupabaseStatus();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Add device info activity when component mounts only once
@@ -264,6 +366,26 @@ export function useHomeViewModel() {
           activityDescription = t('home.developer.deviceInfo.description');
           activityType = 'dev_tool';
           break;
+        case 'supabase-auth':
+          activityDescription = t('home.supabase.actions.auth.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
+        case 'supabase-database':
+          activityDescription = t('home.supabase.actions.database.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
+        case 'supabase-cases':
+          activityDescription = 'Cases section opened';
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
+        case 'supabase-storage':
+          activityDescription = t('home.supabase.actions.storage.description');
+          activityType = 'settings';
+          actionType = 'settings';
+          break;
         default:
           activityDescription = `${actionTitle} ${t('home.activity.opened')}`;
           activityType = 'project';
@@ -361,6 +483,28 @@ export function useHomeViewModel() {
         case 'dev-device-info':
           handleDeviceInfoPress(isDark);
           break;
+        case 'supabase-auth':
+          console.log('🔐 Navigating to Supabase Auth...');
+          router.push('/supabase-auth');
+          break;
+        case 'supabase-database':
+          console.log('🗄️ Navigating to Supabase Database...');
+          router.push('/supabase-database');
+          break;
+        case 'supabase-cases':
+          console.log('📋 Navigating to Supabase Cases...');
+          router.push('/supabase-cases');
+          break;
+        case 'supabase-storage':
+          console.log('📦 Navigating to Supabase Storage...');
+          // TODO: Create storage screen
+          Alert.alert(
+            'Coming Soon',
+            'Storage management screen will be available soon.',
+            [{ text: 'OK' }],
+            { userInterfaceStyle: isDark ? 'dark' : 'light' }
+          );
+          break;
         default:
           console.log(`Unknown action: ${actionId}`);
           break;
@@ -393,10 +537,14 @@ export function useHomeViewModel() {
     greeting: greeting,
     quickActions: quickActions.length > 0 ? quickActions : defaultQuickActions,
     developerActions,
+    supabaseActions,
+    supabaseUser,
+    supabaseConnected,
     recentActivity,
     deviceInfo,
     compatibility,
     compatibilityLoading,
+    isInitialLoad,
     // Actions
     handleQuickActionPress,
     handleNotificationPress,

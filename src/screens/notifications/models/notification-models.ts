@@ -64,3 +64,41 @@ export interface NotificationItemProps {
 export interface GestureContext extends Record<string, unknown> {
   startX: number;
 }
+
+// Database schema interfaces
+export interface NotificationRow {
+  id: number;
+  title: string;
+  message: string;
+  type: 'info' | 'warning' | 'success' | 'error';
+  category: string;
+  icon: string | null;
+  language: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface NotificationReadRow {
+  id: number;
+  user_id: string;
+  notification_id: number;
+  read_at: string;
+}
+
+// Helper function to convert database row to NotificationItem
+export function notificationRowToItem(
+  row: NotificationRow,
+  isRead: boolean = false
+): NotificationItem {
+  return {
+    id: row.id.toString(),
+    title: row.title,
+    message: row.message,
+    timestamp: new Date(row.created_at),
+    isRead,
+    type: row.type,
+    category: row.category,
+    icon: row.icon || undefined,
+    language: row.language,
+  };
+}

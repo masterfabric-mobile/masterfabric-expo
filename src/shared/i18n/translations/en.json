@@ -159,6 +159,28 @@
         "title": "Device Information",
         "description": "Show detailed device and system information"
       }
+    },
+    "supabase": {
+      "title": "Supabase",
+      "description": "Backend services and database management",
+      "actions": {
+        "auth": {
+          "title": "Authentication",
+          "description": "User authentication and authorization"
+        },
+        "database": {
+          "title": "Database",
+          "description": "PostgreSQL database management"
+        },
+        "storage": {
+          "title": "Storage",
+          "description": "File storage and management"
+        }
+      },
+      "footer": {
+        "paragraph": "Build faster with Supabase's open source Firebase alternative. Get instant APIs, authentication, and real-time subscriptions.",
+        "slogan": "Build in a weekend, scale to millions."
+      }
     }
   },
   "explore": {

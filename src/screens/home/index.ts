@@ -7,6 +7,7 @@ export { DeveloperSection } from './components/sections/developer-section';
 export { DeviceInfoSection } from './components/sections/device-info-section';
 export { QuickActionsSection } from './components/sections/quick-actions-section';
 export { WelcomeSection } from './components/sections/welcome-section';
+export * from './components/skeletons';
 export { useHomeViewModel } from './hooks/use-home-view-model';
 export { useHomeStore, type ActivityItem } from './store/home-store';
 export * from './utils';

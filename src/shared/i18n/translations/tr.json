@@ -115,6 +115,28 @@
         "title": "Cihaz Bilgileri",
         "description": "Detaylı cihaz ve sistem bilgilerini göster"
       }
+    },
+    "supabase": {
+      "title": "Supabase",
+      "description": "Backend servisleri ve veritabanı yönetimi",
+      "actions": {
+        "auth": {
+          "title": "Kimlik Doğrulama",
+          "description": "Kullanıcı kimlik doğrulama ve yetkilendirme"
+        },
+        "database": {
+          "title": "Veritabanı",
+          "description": "PostgreSQL veritabanı yönetimi"
+        },
+        "storage": {
+          "title": "Depolama",
+          "description": "Dosya depolama ve yönetimi"
+        }
+      },
+      "footer": {
+        "paragraph": "Supabase'in açık kaynak Firebase alternatifi ile daha hızlı geliştirin. Anında API'ler, kimlik doğrulama ve gerçek zamanlı abonelikler alın.",
+        "slogan": "Bir hafta sonunda geliştirin, milyonlara ölçeklendirin."
+      }
     }
   },
   "explore": {

@@ -1,9 +1,10 @@
 import { getCurrentLocale, t } from '@/src/shared/i18n';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useMemo } from 'react';
+import { getThemeColors, supabaseIntegration, useTheme } from 'masterfabric-expo-core';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { NotificationItem, NotificationTab, TabItem } from '../models/notification-models';
+import { notificationService } from '../services/notification-service';
 import { useNotificationStore } from '../store/notification-store';
 
 export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
@@ -21,138 +22,72 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
     updateLastUpdated,
   } = useNotificationStore();
 
+  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const isLoadingRef = useRef(false);
+  const isRefreshingRef = useRef(false);
+  const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+
   const loadNotifications = useCallback(async () => {
+    // Prevent multiple simultaneous loads
+    if (isLoadingRef.current) {
+      return;
+    }
+    
+    isLoadingRef.current = true;
     setLoading(true);
     
-    // Simulate API call - replace with actual API
     try {
-      const allNotifications: NotificationItem[] = [
-        {
-          id: '1',
-          title: 'Welcome to MasterFabric',
-          message: 'Your account has been successfully created. Start exploring our features and build amazing mobile apps!',
-          timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-          isRead: false,
-          type: 'success',
-          category: 'app',
-          icon: 'checkmark-circle',
-          language: 'en',
-        },
-        {
-          id: '2',
-          title: 'Welcome to MasterFabric',
-          message: 'Your account has been successfully created. Start exploring our features and build amazing mobile apps!',
-          timestamp: new Date(Date.now() - 1000 * 60 * 45), // 45 minutes ago
-          isRead: false,
-          type: 'success',
-          category: 'app',
-          icon: 'checkmark-circle',
-          language: 'en',
-        },
-        {
-          id: '3',
-          title: 'System Update Available',
-          message: 'New features and improvements are available. Update your app to get the latest experience with enhanced performance.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-          isRead: false,
-          type: 'info',
-          category: 'system',
-          icon: 'download',
-          language: 'en',
-        },
-        {
-          id: '4',
-          title: 'System Update Available',
-          message: 'New features and improvements are available. Update your app to get the latest experience with enhanced performance.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
-          isRead: true,
-          type: 'info',
-          category: 'system',
-          icon: 'download',
-          language: 'en',
-        },
-        {
-          id: '5',
-          title: 'Maintenance Notice',
-          message: 'Scheduled maintenance will occur tonight from 12 AM to 2 AM EST. Some features may be temporarily unavailable.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-          isRead: true,
-          type: 'warning',
-          category: 'system',
-          icon: 'warning',
-          language: 'en',
-        },
-        {
-          id: '6',
-          title: 'Maintenance Notice',
-          message: 'Scheduled maintenance will occur tonight from 12 AM to 2 AM EST. Some features may be temporarily unavailable.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 26), // 1 day 2 hours ago
-          isRead: true,
-          type: 'warning',
-          category: 'system',
-          icon: 'warning',
-          language: 'en',
-        },
-        {
-          id: '7',
-          title: 'New Template Available',
-          message: 'Check out our latest React Native template with advanced navigation and state management features.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48), // 2 days ago
-          isRead: false,
-          type: 'info',
-          category: 'app',
-          icon: 'code-slash',
-          language: 'en',
-        },
-        {
-          id: '8',
-          title: 'New Template Available',
-          message: 'Check out our latest React Native template with advanced navigation and state management features.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 50), // 2 days 2 hours ago
-          isRead: true,
-          type: 'info',
-          category: 'app',
-          icon: 'code-slash',
-          language: 'en',
-        },
-        {
-          id: '9',
-          title: 'Security Alert',
-          message: 'We detected unusual activity on your account. Please review your recent login sessions for security.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72), // 3 days ago
-          isRead: true,
-          type: 'error',
-          category: 'system',
-          icon: 'shield-checkmark',
-          language: 'en',
-        },
-        {
-          id: '10',
-          title: 'Security Alert',
-          message: 'We detected unusual activity on your account. Please review your recent login sessions for security.',
-          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 74), // 3 days 2 hours ago
-          isRead: false,
-          type: 'error',
-          category: 'system',
-          icon: 'shield-checkmark',
-          language: 'en',
-        },
-      ];
+      // Get current user ID
+      let userId: string | null = null;
+      let authenticated = false;
+      if (supabaseIntegration.isAvailable()) {
+        try {
+          const user = await supabaseIntegration.getCurrentUser();
+          userId = user?.id || null;
+          authenticated = !!userId;
+        } catch (err) {
+          // User not authenticated or error getting user
+          userId = null;
+          authenticated = false;
+        }
+      }
+      setIsAuthenticated(authenticated);
+
+      // Fetch notifications with read status from Supabase
+      const allNotifications = await notificationService.fetchNotificationsWithReadStatus(userId);
 
       // Filter notifications by current language
       const currentLanguage = getCurrentLocale();
       const languageNotifications = allNotifications.filter(
-        notification => notification.language === currentLanguage
+        notification => !notification.language || notification.language === currentLanguage
       );
 
-      setTimeout(() => {
-        setNotifications(languageNotifications);
-        setLoading(false);
-        updateLastUpdated();
-      }, 1000);
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
+      setNotifications(languageNotifications);
       setLoading(false);
+      setIsInitialLoad(false);
+      updateLastUpdated();
+      isLoadingRef.current = false;
+    } catch (error: any) {
+      console.error('[NotificationViewModel] Failed to load notifications:', error);
+      // On error, set empty array but don't show error to user
+      // The UI will show empty state
+      setNotifications([]);
+      setLoading(false);
+      setIsInitialLoad(false);
+      isLoadingRef.current = false;
+      // Try to determine auth status even on error
+      if (supabaseIntegration.isAvailable()) {
+        try {
+          const user = await supabaseIntegration.getCurrentUser();
+          setIsAuthenticated(!!user?.id);
+        } catch (err) {
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
     }
   }, [setLoading, setNotifications, updateLastUpdated]);
 
@@ -176,13 +111,156 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
     });
   }, [notifications, activeTab]);
 
+  // Handle mark as read with database sync
+  const handleMarkAsRead = useCallback(async (id: string) => {
+    // Optimistically update UI
+    markAsRead(id);
+
+    // Sync with database if user is authenticated
+    try {
+      if (supabaseIntegration.isAvailable()) {
+        try {
+          const user = await supabaseIntegration.getCurrentUser();
+          if (user?.id) {
+            await notificationService.markAsRead(parseInt(id, 10), user.id);
+          }
+        } catch (err) {
+          // User not authenticated, skip database sync
+        }
+      }
+    } catch (error: any) {
+      console.error('[NotificationViewModel] Error marking notification as read:', error);
+      // Revert optimistic update on error
+      // Note: In a production app, you might want to queue this for retry
+    }
+  }, [markAsRead]);
+
+  // Handle mark all as read with database sync
+  const handleMarkAllAsRead = useCallback(async () => {
+    // Optimistically update UI
+    markAllAsRead();
+
+    // Sync with database if user is authenticated
+    try {
+      if (supabaseIntegration.isAvailable()) {
+        try {
+          const user = await supabaseIntegration.getCurrentUser();
+          if (user?.id) {
+            await notificationService.markAllAsRead(user.id);
+          }
+        } catch (err) {
+          // User not authenticated, skip database sync
+        }
+      }
+    } catch (error: any) {
+      console.error('[NotificationViewModel] Error marking all notifications as read:', error);
+      // Revert optimistic update on error
+      // Note: In a production app, you might want to queue this for retry
+    }
+  }, [markAllAsRead]);
+
   useEffect(() => {
     loadNotifications();
-  }, [loadNotifications]);
 
-  const refreshNotifications = () => {
-    loadNotifications();
-  };
+    // Set up real-time subscription for new notifications
+    const setupRealtimeSubscription = async () => {
+      if (!supabaseIntegration.isAvailable()) {
+        return;
+      }
+
+      try {
+        const user = await supabaseIntegration.getCurrentUser();
+        const userId = user?.id || null;
+
+        // Clean up existing subscription
+        if (unsubscribeRef.current) {
+          unsubscribeRef.current();
+        }
+
+        // Subscribe to new notifications
+        unsubscribeRef.current = notificationService.subscribeToNotifications(
+          (newNotification) => {
+            // Add new notification to the list
+            addNotification(newNotification);
+          },
+          userId
+        );
+      } catch (error: any) {
+        console.error('[NotificationViewModel] Error setting up real-time subscription:', error);
+      }
+    };
+
+    setupRealtimeSubscription();
+
+    // Cleanup on unmount
+    return () => {
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
+      }
+      notificationService.cleanup();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
+
+  const refreshNotifications = useCallback(async () => {
+    // Prevent multiple simultaneous refreshes using ref instead of state
+    if (isRefreshingRef.current) {
+      return;
+    }
+    
+    isRefreshingRef.current = true;
+    setIsRefreshing(true);
+    
+    try {
+      // Create a dedicated refresh function that bypasses the loading check
+      const performRefresh = async () => {
+        setLoading(true);
+        
+        try {
+          // Get current user ID
+          let userId: string | null = null;
+          let authenticated = false;
+          if (supabaseIntegration.isAvailable()) {
+            try {
+              const user = await supabaseIntegration.getCurrentUser();
+              userId = user?.id || null;
+              authenticated = !!userId;
+            } catch (err) {
+              userId = null;
+              authenticated = false;
+            }
+          }
+          setIsAuthenticated(authenticated);
+
+          // Fetch notifications with read status from Supabase
+          const allNotifications = await notificationService.fetchNotificationsWithReadStatus(userId);
+
+          // Filter notifications by current language
+          const currentLanguage = getCurrentLocale();
+          const languageNotifications = allNotifications.filter(
+            notification => !notification.language || notification.language === currentLanguage
+          );
+
+          setNotifications(languageNotifications);
+          updateLastUpdated();
+        } catch (error: any) {
+          console.error('[NotificationViewModel] Failed to refresh notifications:', error);
+          // Don't clear notifications on refresh error, just keep existing ones
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      await performRefresh();
+    } catch (error) {
+      console.error('[NotificationViewModel] Error refreshing notifications:', error);
+    } finally {
+      // Always reset refreshing state
+      isRefreshingRef.current = false;
+      setIsRefreshing(false);
+    }
+  }, [setLoading, setNotifications, updateLastUpdated, setIsAuthenticated]);
 
   // Tabs configuration
   const tabs: TabItem[] = [
@@ -195,8 +273,11 @@ export function useNotificationViewModel(activeTab: NotificationTab = 'all') {
     notifications: filteredNotifications,
     unreadCount,
     isLoading,
-    markAsRead,
-    markAllAsRead,
+    isRefreshing,
+    isAuthenticated,
+    isInitialLoad,
+    markAsRead: handleMarkAsRead,
+    markAllAsRead: handleMarkAllAsRead,
     removeNotification,
     clearAll,
     refreshNotifications,

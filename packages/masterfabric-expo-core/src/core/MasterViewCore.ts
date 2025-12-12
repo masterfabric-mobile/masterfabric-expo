@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { FirebaseConfig, FirebaseIntegration } from '../integrations/FirebaseIntegration';
 import { SentryConfig, SentryIntegration } from '../integrations/SentryIntegration';
+import { SupabaseConfig, SupabaseIntegration } from '../integrations/SupabaseIntegration';
 
 /**
  * MasterView Core Configuration Interface
@@ -48,6 +49,9 @@ export interface MasterViewConfig {
   firebaseAnalyticsConfig?: {
     measurementId?: string;
   };
+  enableSupabase?: boolean;
+  supabaseConfig?: Partial<SupabaseConfig>;
+  enableSupabaseAuth?: boolean;
 }
 
 /**
@@ -76,6 +80,7 @@ class MasterViewCore {
   private storagePrefix: string = 'masterview_';
   private sentryIntegration: SentryIntegration;
   private firebaseIntegration: FirebaseIntegration;
+  private supabaseIntegration: SupabaseIntegration;
 
   // Default configuration
   private defaultConfig: MasterViewConfig = {
@@ -104,6 +109,9 @@ class MasterViewCore {
     enableFirebaseAuth: false,
     enableFirebaseAnalytics: false,
     firebaseAnalyticsConfig: undefined,
+    enableSupabase: false,
+    supabaseConfig: undefined,
+    enableSupabaseAuth: false,
   };
 
   private constructor() {
@@ -111,6 +119,7 @@ class MasterViewCore {
     this.options = {};
     this.sentryIntegration = SentryIntegration.getInstance();
     this.firebaseIntegration = FirebaseIntegration.getInstance();
+    this.supabaseIntegration = SupabaseIntegration.getInstance();
   }
 
   /**
@@ -189,6 +198,14 @@ class MasterViewCore {
         }
       }
 
+      // Initialize Supabase
+      if (this.config.enableSupabase) {
+        await this.initializeSupabase();
+        if (this.config.enableSupabaseAuth) {
+          this.log('info', 'Supabase Auth enabled');
+        }
+      }
+
       this.isInitialized = true;
       
       this.log('info', 'MasterView initialized successfully', {
@@ -262,6 +279,34 @@ class MasterViewCore {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       this.log('warn', 'Failed to initialize Firebase', { error: errorMessage });
+    }
+  }
+
+  /**
+   * Initialize Supabase
+   */
+  private async initializeSupabase(): Promise<void> {
+    try {
+      await this.supabaseIntegration.initialize(this.config.supabaseConfig);
+
+      if (__DEV__) {
+        // eslint-disable-next-line no-console
+        console.log('[MasterView] Supabase initialized at app side');
+      }
+
+      this.log('info', 'Supabase initialized');
+      // Pre-initialize Auth client
+      if (this.config.enableSupabaseAuth) {
+        const client = this.supabaseIntegration.getClient();
+        if (client) {
+          this.log('info', 'Supabase Auth pre-initialized');
+        } else {
+          this.log('warn', 'Supabase Auth could not be initialized');
+        }
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.log('warn', 'Failed to initialize Supabase', { error: errorMessage });
     }
   }
 

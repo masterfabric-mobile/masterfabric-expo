@@ -24,6 +24,17 @@ export interface DeveloperTools {
   route?: string; // Add optional route property
 }
 
+export interface SupabaseAction {
+  id: string;
+  title: string;
+  description: string;
+  iconName?: string; // Ionicons name for icon
+  iconType?: 'image' | 'text' | 'icon';
+  icon?: any; // For image assets
+  iconText?: string; // For text/emoji icons
+  route?: string;
+}
+
 export const validateHomeAction = (action: QuickAction): boolean => {
   if (!action) return false;
   if (!action.id || typeof action.id !== 'string') return false;
@@ -34,11 +45,17 @@ export const validateHomeAction = (action: QuickAction): boolean => {
   return true;
 };
 
-export const formatGreeting = (user: User | null): string => {
-  const hour = new Date().getHours();
+export const formatGreeting = (user: User | null, hour?: number): string => {
+  // Use provided hour or get current hour
+  const currentHour = hour !== undefined ? hour : new Date().getHours();
+  
+  // Determine greeting based on time of day
+  // Morning: 5:00 - 11:59
+  // Afternoon: 12:00 - 17:59
+  // Evening: 18:00 - 4:59
   const timeKey = 
-    hour < 12 ? 'greetings.goodMorning' :
-    hour < 18 ? 'greetings.goodAfternoon' :
+    currentHour >= 5 && currentHour < 12 ? 'greetings.goodMorning' :
+    currentHour >= 12 && currentHour < 18 ? 'greetings.goodAfternoon' :
     'greetings.goodEvening';
   
   const timeGreeting = t(timeKey);
@@ -155,6 +172,42 @@ export const getDeveloperActions = (): DeveloperTools[] => [
     description: 'home.developer.deviceInfo.description',
     icon: 'phone-portrait',
     color: QUICK_ACTION_COLORS['dev-device-info'],
+  },
+];
+
+// Supabase section utilities
+export const createSupabaseActions = (): SupabaseAction[] => [
+  {
+    id: 'supabase-auth',
+    title: t('home.supabase.actions.auth.title'),
+    description: t('home.supabase.actions.auth.description'),
+    iconType: 'icon',
+    iconName: 'lock-closed',
+    route: '/supabase/auth',
+  },
+  {
+    id: 'supabase-database',
+    title: t('home.supabase.actions.database.title'),
+    description: t('home.supabase.actions.database.description'),
+    iconType: 'icon',
+    iconName: 'server',
+    route: '/supabase/database',
+  },
+  {
+    id: 'supabase-cases',
+    title: 'Cases',
+    description: 'Example use cases and implementations',
+    iconType: 'icon',
+    iconName: 'briefcase',
+    route: '/supabase-cases',
+  },
+  {
+    id: 'supabase-storage',
+    title: t('home.supabase.actions.storage.title'),
+    description: t('home.supabase.actions.storage.description'),
+    iconType: 'icon',
+    iconName: 'folder',
+    route: '/supabase/storage',
   },
 ];
 
