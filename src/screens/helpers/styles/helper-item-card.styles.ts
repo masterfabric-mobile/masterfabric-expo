@@ -1,57 +1,59 @@
 import { StyleSheet } from 'react-native';
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const helperItemCardStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 6,
+    padding: Sizing.padding.s,
+    borderRadius: Sizing.card.borderRadius.m,
+    marginHorizontal: Sizing.padding.m,
+    marginVertical: Sizing.spacing.xxs,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: Sizing.borderWidth.s },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: Sizing.spacing.xxs,
     elevation: 2,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
+    width: Sizing.icon.l,
+    height: Sizing.icon.l,
+    borderRadius: Sizing.borderRadius.small,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: Sizing.padding.s,
   },
   content: {
     flex: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
+    ...getTypographyStyle('m', 'semibold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   description: {
-    fontSize: 14,
+    ...getTypographyStyle('s', 'normal', 'normal'),
     opacity: 0.7,
   },
   comingSoonContainer: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(255, 149, 0, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    borderWidth: 0.6,
+    paddingHorizontal: Sizing.padding.s,
+    paddingVertical: Sizing.spacing.xxs,
+    borderRadius: Sizing.borderRadius.small,
+    borderWidth: Sizing.borderWidth.hairline,
     borderColor: 'rgba(255, 149, 0, 0.2)',
-    marginTop: 4,
+    marginTop: Sizing.spacing.xxs,
   },
   comingSoonText: {
-    fontSize: 11,
-    fontWeight: '600',
+    ...getTypographyStyle('xxs', 'semibold', 'normal'),
     color: '#FF9500',
   },
   arrowContainer: {
-    width: 32,
-    height: 32,
+    width: Sizing.icon.m,
+    height: Sizing.icon.m,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,4 +1,4 @@
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ProjectTab } from '../store/projects-store';
@@ -46,14 +46,17 @@ export function ProjectsTabBar({ activeTab, onTabChange }: ProjectsTabBarProps) 
                   : { backgroundColor: '#f5f5f5' } // Gri renk
               ]}
               onPress={() => onTabChange(tab.key)}
-              activeOpacity={0.8}
+              activeOpacity={Sizing.opacity.xl}
             >
               <Text
                 style={[
                   projectsTabBarStyles.tabText,
                   { 
                     color: isActive ? '#FFFFFF' : '#666666', // Active: beyaz, Inactive: koyu gri
-                    fontWeight: isActive ? '600' : '500'
+                    ...(isActive 
+                      ? typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal')
+                      : typographyHelper.fromSizing.createStyle(Sizing, 's', 'medium', 'normal')
+                    )
                   }
                 ]}
               >

@@ -1,30 +1,28 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const welcomeSectionStyles = StyleSheet.create({
   container: {
-    paddingVertical: 24,
-    paddingHorizontal: 4,
-    marginBottom: 16,
+    paddingVertical: Sizing.padding.xl,
+    paddingHorizontal: Sizing.spacing.xxs,
+    marginBottom: Sizing.padding.m,
   },
   greeting: {
-    fontSize: 32,
-    fontWeight: '800',
-    marginBottom: 8,
-    lineHeight: 38,
+    ...getTypographyStyle('xxxl', 'extrabold', 'normal'),
+    marginBottom: Sizing.gap.s,
     letterSpacing: -0.5,
   },
   developerText: {
-    fontSize: 18,
-    fontWeight: '600',
-    opacity: 0.8,
-    marginBottom: 12,
-    lineHeight: 22,
+    ...getTypographyStyle('l', 'semibold', 'normal'),
+    opacity: Sizing.opacity.xl,
+    marginBottom: Sizing.padding.s,
     letterSpacing: 0.2,
   },
   userName: {
-    fontSize: 16,
-    opacity: 0.7,
-    fontWeight: '500',
-    lineHeight: 20,
+    ...getTypographyStyle('m', 'medium', 'normal'),
+    opacity: Sizing.opacity.l,
   },
 });

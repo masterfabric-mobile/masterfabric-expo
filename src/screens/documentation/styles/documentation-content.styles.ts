@@ -1,43 +1,45 @@
 import { StyleSheet } from 'react-native';
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const documentationContentStyles = StyleSheet.create({
   container: {
-    paddingTop: 8,
+    paddingTop: Sizing.spacing.s,
   },
   section: {
-    marginBottom: 32,
+    marginBottom: Sizing.spacing.xl,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: Sizing.spacing.m,
   },
   sectionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
+    width: Sizing.icon.m,
+    height: Sizing.icon.m,
+    borderRadius: Sizing.card.borderRadius.m,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    marginRight: Sizing.spacing.m,
   },
   sectionTitleContainer: {
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 4,
+    ...getTypographyStyle('xl', 'bold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   sectionDescription: {
-    fontSize: 15,
-    lineHeight: 20,
+    ...getTypographyStyle('s', 'normal', 'normal'),
   },
   itemsContainer: {
-    gap: 12,
+    gap: Sizing.gap.s,
   },
   itemCard: {
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.m,
   },
   itemContent: {
     flex: 1,
@@ -46,15 +48,13 @@ export const documentationContentStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: Sizing.spacing.s,
   },
   itemTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...getTypographyStyle('m', 'semibold', 'normal'),
     flex: 1,
   },
   itemDescription: {
-    fontSize: 14,
-    lineHeight: 18,
+    ...getTypographyStyle('s', 'normal', 'normal'),
   },
 });

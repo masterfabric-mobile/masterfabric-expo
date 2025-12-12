@@ -1,7 +1,7 @@
 import { Button } from '@/src/shared/components/button';
 import { Dropdown } from '@/src/shared/components/Dropdown';
 import { t } from '@/src/shared/i18n';
-import { ScreenHeader, ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, ScreenHeader, ThemedText, ThemedView, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -89,7 +89,7 @@ export function SnackbarHelperScreen() {
               selectedValue={scenarioInput.duration.toString()}
               onSelect={(value) => updateScenarioInput({ duration: parseInt(value) })}
             />
-            <ThemedText style={[{ color: colors.text, fontSize: 11, opacity: 0.6, marginTop: 4 }]}>
+            <ThemedText style={[{ color: colors.text, marginTop: Sizing.spacing.xxs }, typographyHelper.fromSizing.createStyle(Sizing, 'xxs', 'normal', 'normal'), { opacity: Sizing.opacity.s }]}>
             {scenarioInput.duration / 1000}s = {scenarioInput.duration}ms
             </ThemedText>
           </View>
@@ -189,7 +189,7 @@ export function SnackbarHelperScreen() {
                     <ThemedText style={[snackbarHelperScreenStyles.colorHexText, { color: colors.text }]}>
                       {scenarioInput.customColor || colors.snackbarCustomDefault}
                     </ThemedText>
-                    <ThemedText style={[{ color: colors.text, fontSize: 12, opacity: 0.6 }]}>
+                    <ThemedText style={[{ color: colors.text }, typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'normal', 'normal'), { opacity: Sizing.opacity.s }]}>
                       {t('helpers.snackbarHelper.tapToChangeColor')}
                     </ThemedText>
                   </View>

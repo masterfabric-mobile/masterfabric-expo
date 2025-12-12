@@ -1,45 +1,43 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const typographyHelperScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollView: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: Sizing.padding.l,
+    paddingBottom: Sizing.padding.xxl,
   },
   resultsTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: 24,
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xl', 'semibold', 'normal'),
+    marginTop: Sizing.padding.xl,
+    marginBottom: Sizing.padding.m,
   },
   showcaseContainer: {
-    marginVertical: 16,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
+    marginVertical: Sizing.padding.m,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.s,
   },
   showcaseTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-    textAlign: 'center',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.m,
+    textAlign: Sizing.layout.textAlign.center,
   },
   showcaseSection: {
-    marginBottom: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    marginBottom: Sizing.padding.l,
+    paddingVertical: Sizing.padding.s,
+    borderBottomWidth: Sizing.borderWidth.s,
     borderBottomColor: '#E5E5E5',
   },
   sectionLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 8,
-    opacity: 0.7,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'medium', 'normal'),
+    marginBottom: Sizing.gap.s,
+    opacity: Sizing.opacity.l,
   },
 });
 

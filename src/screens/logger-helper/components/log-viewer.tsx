@@ -1,6 +1,6 @@
 import { loggerService } from '@/src/shared/services/logger-service';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
 import type { LogLevel } from 'masterfabric-expo-core/src/helpers/logger_helper';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -32,29 +32,29 @@ export function LogViewer() {
   };
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: Sizing.gap.s }}>
       {filtered.map((item) => {
         const icon = iconByLevel[item.level];
         return (
-          <View key={item.id} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8, paddingVertical: 6 }}>
-            <Ionicons name={icon.name} size={18} color={icon.color} />
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: colors.titleText, fontWeight: '600' }}>
+          <View key={item.id} style={{ flexDirection: Sizing.layout.flexDirection.row, alignItems: Sizing.layout.alignItems.flexStart, gap: Sizing.gap.s, paddingVertical: Sizing.padding.xxs }}>
+            <Ionicons name={icon.name} size={Sizing.icon.s} color={icon.color} />
+            <View style={{ flex: Sizing.flexNumber.full }}>
+              <Text style={[{ color: colors.titleText }, typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal')]}>
                 {' '}{item.level.toUpperCase()} {item.showTimestamp ? `${item.timestamp.toLocaleTimeString()} ` : ''}{item.component ? `[${item.component}]` : ''}
               </Text>
-              <Text style={{ color: colors.bodyText }}>{item.message}</Text>
+              <Text style={[{ color: colors.bodyText }, typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal')]}>{item.message}</Text>
               {item.metadata ? (
-                <Text style={{ color: colors.labelText, fontSize: 12 }}>{JSON.stringify(item.metadata)}</Text>
+                <Text style={[{ color: colors.labelText }, typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'normal', 'normal')]}>{JSON.stringify(item.metadata)}</Text>
               ) : null}
               {item.stackTrace ? (
-                <Text style={{ color: colors.labelText, fontSize: 12 }}>{item.stackTrace}</Text>
+                <Text style={[{ color: colors.labelText }, typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'normal', 'normal')]}>{item.stackTrace}</Text>
               ) : null}
             </View>
           </View>
         );
       })}
       {filtered.length === 0 ? (
-        <Text style={{ color: colors.labelText }}>No logs</Text>
+        <Text style={[{ color: colors.labelText }, typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal')]}>No logs</Text>
       ) : null}
     </View>
   );

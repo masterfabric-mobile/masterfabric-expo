@@ -1,33 +1,33 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const projectsHeaderStyles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    gap: 16,
+    flexDirection: Sizing.layout.flexDirection.row,
+    alignItems: Sizing.layout.alignItems.center,
+    paddingHorizontal: Sizing.padding.l,
+    paddingVertical: Sizing.padding.m,
+    gap: Sizing.padding.m,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: Sizing.icon.xl,
+    height: Sizing.icon.xl,
+    borderRadius: Sizing.icon.xl / 2,
+    justifyContent: Sizing.layout.justifyContent.center,
+    alignItems: Sizing.layout.alignItems.center,
   },
   headerContent: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 2,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xxl', 'bold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   headerSubtitle: {
-    fontSize: 14,
-    opacity: 0.7,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
   },
   headerSpacer: {
-    width: 40,
+    width: Sizing.icon.xl,
   },
 });

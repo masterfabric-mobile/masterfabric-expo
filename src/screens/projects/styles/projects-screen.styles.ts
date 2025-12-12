@@ -1,29 +1,29 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const projectsScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   topSection: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: Sizing.padding.m,
+    paddingBottom: Sizing.padding.m,
   },
   bodySection: {
-    flex: 1,
-    paddingHorizontal: 16,
+    flex: Sizing.flexNumber.full,
+    paddingHorizontal: Sizing.padding.m,
   },
   bottomSection: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingHorizontal: Sizing.padding.l,
+    paddingBottom: Sizing.padding.l,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xxl', 'bold', 'normal'),
+    marginBottom: Sizing.gap.s,
   },
   subtitle: {
-    fontSize: 16,
-    opacity: 0.7,
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+    opacity: Sizing.opacity.l,
+    marginBottom: Sizing.padding.m,
   },
 });

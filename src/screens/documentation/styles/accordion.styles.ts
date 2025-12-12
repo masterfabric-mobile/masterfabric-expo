@@ -1,60 +1,60 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
+
+const getTypographyStyle = (fontSize: string, fontWeight: string, lineHeight: string = 'normal') => 
+  (typographyHelper as any).fromSizing?.createStyle(Sizing, fontSize, fontWeight, lineHeight) || {};
 
 export const accordionStyles = StyleSheet.create({
   container: {
-    paddingTop: 8,
+    paddingTop: Sizing.spacing.s,
   },
   section: {
-    marginBottom: 16,
+    marginBottom: Sizing.spacing.m,
   },
   sectionHeader: {
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.m,
   },
   sectionHeaderContent: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   sectionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
+    width: Sizing.icon.m,
+    height: Sizing.icon.m,
+    borderRadius: Sizing.card.borderRadius.m,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    marginRight: Sizing.spacing.m,
   },
   sectionTitleContainer: {
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 4,
+    ...getTypographyStyle('l', 'bold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   sectionDescription: {
-    fontSize: 14,
-    lineHeight: 18,
+    ...getTypographyStyle('s', 'normal', 'normal'),
   },
   sectionContent: {
-    paddingLeft: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingLeft: Sizing.padding.m,
+    paddingTop: Sizing.spacing.s,
+    paddingBottom: Sizing.spacing.s,
   },
   itemCard: {
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
+    borderRadius: Sizing.borderRadius.small,
+    padding: Sizing.padding.s,
+    marginBottom: Sizing.spacing.s,
   },
   itemContent: {
     flex: 1,
   },
   itemTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 4,
+    ...getTypographyStyle('m', 'semibold', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   itemDescription: {
-    fontSize: 13,
-    lineHeight: 16,
+    ...getTypographyStyle('xs', 'normal', 'normal'),
   },
 });

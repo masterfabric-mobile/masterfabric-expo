@@ -1,22 +1,22 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const validatorHelperScreenStyles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollView: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-    gap: 0,
+    padding: Sizing.padding.l,
+    paddingBottom: Sizing.padding.xxl,
+    gap: Sizing.gap.none,
   },
   resultsTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginTop: 24,
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginTop: Sizing.padding.xl,
+    marginBottom: Sizing.padding.m,
   },
 });
 

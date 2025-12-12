@@ -1,28 +1,28 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const snackbarResultCardStyles = StyleSheet.create({
   container: {
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
-    borderWidth: 1,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.l,
+    marginBottom: Sizing.padding.m,
+    borderWidth: Sizing.borderWidth.s,
   },
   header: {
-    marginBottom: 16,
+    marginBottom: Sizing.padding.m,
   },
   functionName: {
-    fontSize: 17,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'normal', 'normal'),
   },
   section: {
-    marginBottom: 12,
+    marginBottom: Sizing.padding.s,
   },
   sectionLabel: {
-    fontSize: 13,
-    marginBottom: 4,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'xs', 'normal', 'normal'),
+    marginBottom: Sizing.spacing.xxs,
   },
   sectionValue: {
-    fontSize: 14,
-    lineHeight: 22,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'normal', 'normal'),
   },
 });
 

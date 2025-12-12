@@ -1,56 +1,55 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const stepControlsStyles = StyleSheet.create({
   container: {
     width: '100%',
-    alignItems: 'center',
+    alignItems: Sizing.layout.alignItems.center,
   },
   progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 32,
-    gap: 8,
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.center,
+    alignItems: Sizing.layout.alignItems.center,
+    marginBottom: Sizing.padding.xxl,
+    gap: Sizing.gap.s,
   },
   progressDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: Sizing.icon.xs,
+    height: Sizing.icon.xs,
+    borderRadius: Sizing.icon.xs / 2,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    alignItems: Sizing.layout.alignItems.center,
     width: '100%',
-    paddingHorizontal: 20,
+    paddingHorizontal: Sizing.padding.l,
   },
   leftButtonContainer: {
-    flex: 1,
-    alignItems: 'flex-start',
+    flex: Sizing.flexNumber.full,
+    alignItems: Sizing.layout.alignItems.flexStart,
   },
   rightButtonContainer: {
-    flex: 1,
-    alignItems: 'flex-end',
+    flex: Sizing.flexNumber.full,
+    alignItems: Sizing.layout.alignItems.flexEnd,
   },
   backButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: Sizing.padding.s,
+    paddingHorizontal: Sizing.padding.l,
   },
   backButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'medium', 'normal'),
   },
   nextButton: {
     backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 24,
-    minWidth: 100,
-    alignItems: 'center',
+    paddingVertical: Sizing.padding.s,
+    paddingHorizontal: Sizing.padding.xl,
+    borderRadius: Sizing.padding.xl,
+    minWidth: Sizing.button.width.medium,
+    alignItems: Sizing.layout.alignItems.center,
   },
   nextButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal'),
   },
 });

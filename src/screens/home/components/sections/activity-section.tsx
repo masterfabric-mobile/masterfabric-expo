@@ -2,7 +2,7 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { useLocale } from '@/src/shared/hooks/use-locale';
 import { getCurrentLocale, getTranslatedTitle, t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { ActivityItem, useHomeStore } from '../../store/home-store';
@@ -51,7 +51,7 @@ export function ActivitySection() {
           ]}>
             <Ionicons
               name={iconInfo.icon}
-              size={20}
+              size={Sizing.icon.s}
               color={iconInfo.color}
             />
           </View>
@@ -126,7 +126,7 @@ export function ActivitySection() {
         { 
           backgroundColor: colors.surfaceBackground,
           borderColor: colors.surfaceBorder + '40',
-          borderWidth: 1,
+                  borderWidth: Sizing.borderWidth.s,
           shadowColor: colors.surfaceShadow,
         }
       ]}>
@@ -136,7 +136,7 @@ export function ActivitySection() {
           <View style={activitySectionStyles.emptyStateContainer}>
             <Ionicons 
               name="time-outline"
-              size={32} 
+              size={Sizing.icon.xxl} 
               color={colors.labelText} 
               style={activitySectionStyles.emptyStateIcon}
             />

@@ -1,9 +1,10 @@
-import { BatteryHelperView, ThemeProvider } from 'masterfabric-expo-core';
+import { BatteryHelperScreen } from '../src/screens/battery-helper';
+import { ThemeProvider } from '../src/shared/contexts/theme-context';
 
 export default function BatteryHelperPage() {
   return (
     <ThemeProvider>
-      <BatteryHelperView />
+      <BatteryHelperScreen />
     </ThemeProvider>
   );
 }

@@ -1,42 +1,40 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const typographyPreviewCardStyles = StyleSheet.create({
   container: {
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    marginBottom: 20,
+    padding: Sizing.padding.l,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.m,
+    marginBottom: Sizing.padding.l,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'l', 'semibold', 'normal'),
+    marginBottom: Sizing.padding.m,
   },
   previewContainer: {
-    padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    marginBottom: 16,
-    minHeight: 100,
+    padding: Sizing.padding.m,
+    borderRadius: Sizing.gap.s,
+    borderWidth: Sizing.borderWidth.s,
+    marginBottom: Sizing.padding.m,
+    minHeight: Sizing.height.xxl,
   },
   previewText: {
-    fontSize: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
   },
   infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    paddingVertical: Sizing.gap.s,
+    borderBottomWidth: Sizing.borderWidth.s,
     borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   infoLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    opacity: 0.7,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'medium', 'normal'),
+    opacity: Sizing.opacity.l,
   },
   infoValue: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal'),
     fontFamily: 'monospace',
   },
 });

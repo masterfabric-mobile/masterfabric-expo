@@ -1,62 +1,62 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const timeHelperCustomPickerStyles = StyleSheet.create({
   // Picker button
   pickerButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    alignItems: Sizing.layout.alignItems.center,
+    padding: Sizing.padding.s,
+    borderRadius: Sizing.card.borderRadius.m,
+    borderWidth: Sizing.borderWidth.s,
   },
   
   // Modal overlay
   modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    flex: Sizing.flexNumber.full,
+    justifyContent: Sizing.layout.justifyContent.flexEnd,
   },
   
   // Modal content
   modalContent: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: Sizing.padding.l,
+    borderTopRightRadius: Sizing.padding.l,
     maxHeight: '85%',
-    paddingBottom: 20,
+    paddingBottom: Sizing.padding.l,
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    alignItems: Sizing.layout.alignItems.center,
+    padding: Sizing.padding.l,
+    borderBottomWidth: Sizing.borderWidth.s,
   },
   headerButtons: {
-    flexDirection: 'row',
-    gap: 16,
+    flexDirection: Sizing.layout.flexDirection.row,
+    gap: Sizing.padding.m,
   },
   cancelButton: {
-    fontSize: 16,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
   },
   confirmButton: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'semibold', 'normal'),
   },
   
   // Item list
   itemList: {
-    maxHeight: 400,
+    maxHeight: Sizing.height.xxxl + Sizing.height.xl,
   },
   item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
+    flexDirection: Sizing.layout.flexDirection.row,
+    justifyContent: Sizing.layout.justifyContent.spaceBetween,
+    alignItems: Sizing.layout.alignItems.center,
+    padding: Sizing.padding.m,
+    borderBottomWidth: Sizing.borderWidth.s,
   },
   itemText: {
-    fontSize: 16,
-    flex: 1,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+    flex: Sizing.flexNumber.full,
   },
 });
 

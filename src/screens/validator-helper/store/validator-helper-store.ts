@@ -16,7 +16,7 @@ interface ValidatorHelperStore {
   testResults: ValidatorTestResult[];
   currentResult: ValidatorTestResult | null;
   isLoading: boolean;
-  setTestInput: (input: ValidatorTestInput) => void;
+  setTestInput: (input: ValidatorTestInput | ((prev: ValidatorTestInput) => ValidatorTestInput)) => void;
   setTestResults: (results: ValidatorTestResult[]) => void;
   setCurrentResult: (result: ValidatorTestResult | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -35,7 +35,9 @@ export const useValidatorHelperStore = create<ValidatorHelperStore>((set) => ({
   testResults: [],
   currentResult: null,
   isLoading: false,
-  setTestInput: (input) => set({ testInput: input }),
+  setTestInput: (input) => set((state) => ({ 
+    testInput: typeof input === 'function' ? input(state.testInput) : input 
+  })),
   setTestResults: (results) => set({ testResults: results }),
   setCurrentResult: (result) => set({ currentResult: result }),
   setIsLoading: (loading) => set({ isLoading: loading }),

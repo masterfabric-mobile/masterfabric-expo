@@ -78,6 +78,7 @@ export const navigationConfig = {
         'toast-helper': '/toast-helper',
         'battery-helper': '/battery-helper',
         'validator-helper': '/validator-helper',
+        'url-launcher-helper': '/url-launcher-helper',
         documentation: '/documentation',
         '(tabs)': {
           screens: {

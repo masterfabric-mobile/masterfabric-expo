@@ -1,6 +1,5 @@
 // Device Information Helpers
 export * from './connectivity';
-export * from './device-info';
 
 // Platform Helpers
 export * from './platform';
@@ -31,6 +30,12 @@ export * from './validator_helper';
 
 // Onboarding Helper
 export * from './onboarding_helper';
+
+// Device Info Helpers
+export * from './device-info';
+
+// UI Size Helper
+export * from './ui_size_helper';
 
 // Re-export types with different names to avoid conflicts
 export type { DeviceInfo as DeviceInfoHelper, DeviceInfoOptions } from './device-info';

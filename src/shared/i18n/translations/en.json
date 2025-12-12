@@ -286,7 +286,7 @@
     "registrationSuccess": "Registration successful!",
     "fixErrors": "Please fix the errors before submitting.",
     "passwordsNoMatchAlert": "Passwords do not match!",
-    "socialLoginDemo": "Login with {{provider}} (Demo)",
+    "socialLoginDemo": "Login with {{provider}}",
     "rememberMe": "Remember me",
     "continue": "Continue"
   },
@@ -561,9 +561,7 @@
           "cancel": "Cancel",
           "select": "Select"
         }
-      },
-      "sendToast": "Send Toast",
-      "messageRequired": "Please enter a message"
+      }
     },
     "typographyHelper": {
       "title": "Typography Helper",
@@ -661,6 +659,126 @@
         }
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Size Helper",
+      "description": "Sizing system, spacing, and responsive design utilities",
+      "testSuite": "UI Size Helper Test Suite",
+      "testInput": "Test Input",
+      "runTests": "Run All Tests",
+      "runningTests": "Running Tests...",
+      "testResults": "Test Results",
+      "functions": "functions",
+      "input": "Input:",
+      "output": "Output:",
+      "getSpacing": "Gets spacing value by size key",
+      "getPadding": "Gets padding value by size key",
+      "getMargin": "Gets margin value by size key",
+      "calculateSpacing": "Calculates spacing using base unit multiplier",
+      "getBaseUnit": "Gets the base unit (8pt grid)",
+      "getScreenWidth": "Gets current screen width",
+      "getDeviceTypeAuto": "Gets device type automatically",
+      "getGridColumnsAuto": "Gets grid columns based on device",
+      "getResponsiveSpacing": "Gets responsive spacing based on screen width",
+      "getButtonHeight": "Gets button height by size",
+      "getInputHeight": "Gets input height by size",
+      "getCardPadding": "Gets card padding by size",
+      "spacing": "Spacing",
+      "padding": "Padding",
+      "margin": "Margin",
+      "gap": "Gap",
+      "borderRadius": "Border Radius",
+      "borderWidth": "Border Width",
+      "buttonHeight": "Button Height",
+      "inputHeight": "Input Height",
+      "cardPadding": "Card Padding",
+      "scrollPadding": "Scroll Padding",
+      "scrollMargin": "Scroll Margin",
+      "preview": "Live Preview",
+      "showcase": "Sizing Showcase",
+      "showcaseDescription": "All available sizing values and examples",
+      "selected": "Selected",
+      "responsiveInfo": "Responsive Info",
+      "device": "Device",
+      "width": "Width",
+      "columns": "Columns",
+      "baseUnit": "Base Unit",
+      "responsivePadding": "Responsive Padding",
+      "sizeLabels": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
+      "examples": {
+        "spacing": {
+          "title": "Spacing",
+          "description": "Spacing determines the space between elements",
+          "selectSize": "Select Spacing Size"
+        },
+        "padding": {
+          "title": "Padding",
+          "description": "Padding determines the space between content and border",
+          "selectSize": "Select Padding Size"
+        },
+        "margin": {
+          "title": "Margin",
+          "description": "Margin determines the space outside the element",
+          "selectSize": "Select Margin Size"
+        },
+        "gap": {
+          "title": "Gap",
+          "description": "Gap determines the space between elements in a flex container",
+          "selectSize": "Select Gap Size"
+        },
+        "borderRadius": {
+          "title": "Border Radius",
+          "description": "Border radius determines the roundness of corners",
+          "selectSize": "Select Border Radius"
+        },
+        "borderWidth": {
+          "title": "Border Width",
+          "description": "Border width determines the thickness of borders",
+          "selectSize": "Select Border Width"
+        },
+        "buttonHeight": {
+          "title": "Button Height",
+          "description": "Button height determines the height of buttons",
+          "selectSize": "Select Button Height"
+        },
+        "inputHeight": {
+          "title": "Input Height",
+          "description": "Input height determines the height of input fields",
+          "selectSize": "Select Input Height"
+        },
+        "cardPadding": {
+          "title": "Card Padding",
+          "description": "Card padding determines the space between card content and edges",
+          "selectSize": "Select Card Padding"
+        },
+        "scrollPadding": {
+          "title": "Scroll Padding",
+          "description": "Scroll padding determines the space between scroll content and edges",
+          "selectSize": "Select Scroll Padding"
+        },
+        "scrollMargin": {
+          "title": "Scroll Margin",
+          "description": "Scroll margin determines the space between scroll items",
+          "selectSize": "Select Scroll Margin"
+        }
+      },
+      "deviceType": {
+        "title": "Device Type",
+        "phone": "📱 Phone",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Desktop"
+      }
+    },
     "dateHelper": {
       "title": "Date Helper",
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
@@ -735,6 +853,160 @@
         "fullNameConsecutiveSpaces": "Full name must not contain consecutive spaces.",
         "minLength": "{fieldName} must be at least {min} characters long.",
         "maxLength": "{fieldName} cannot exceed {max} characters."
+      }
+    },
+    "urlLauncherHelper": {
+      "title": "URL Launcher Helper",
+      "description": "Open external URLs, emails, phone, SMS, maps, and deep links with unified API",
+      "testSuite": "URL Launcher Helper Test Suite",
+      "testInput": "Test Input",
+      "testResults": "Test Results",
+      "runningTests": "Running Tests...",
+      "runTests": "Run All Tests",
+      "operations": "operations",
+      "history": "Launch History",
+      "input": "Input:",
+      "output": "Output:",
+      "urlInput": "URL:",
+      "urlPlaceholder": "Enter URL to test...",
+      "openUrl": "Open URL",
+      "emailSection": "Email",
+      "emailInput": "Email Address:",
+      "emailPlaceholder": "support@example.com",
+      "optional": "Optional",
+      "emailSubject": "Subject:",
+      "emailSubjectPlaceholder": "Support Request",
+      "emailBody": "Body:",
+      "emailBodyPlaceholder": "Hello, I need help with...",
+      "emailCc": "CC:",
+      "emailCcPlaceholder": "cc@example.com, cc2@example.com",
+      "emailBcc": "BCC:",
+      "emailBccPlaceholder": "bcc@example.com, bcc2@example.com",
+      "openEmail": "Open Email",
+      "phoneSection": "Phone",
+      "phoneInput": "Phone Number:",
+      "phonePlaceholder": "+1-800-123-4567",
+      "openPhone": "Open Phone",
+      "smsSection": "SMS",
+      "smsRecipients": "Recipients:",
+      "smsRecipientsPlaceholder": "+1234567890",
+      "smsBody": "Message:",
+      "smsBodyPlaceholder": "Hello!",
+      "openSMS": "Open SMS",
+      "mapSection": "Map",
+      "mapAddress": "Address:",
+      "mapAddressPlaceholder": "1600 Amphitheatre Parkway, Mountain View, CA",
+      "mapLatitude": "Latitude:",
+      "mapLatitudePlaceholder": "37.4220",
+      "mapLongitude": "Longitude:",
+      "mapLongitudePlaceholder": "-122.0841",
+      "mapLabel": "Label:",
+      "mapLabelPlaceholder": "Google Headquarters",
+      "openMap": "Open Map",
+      "validateUrl": "Validates if string is a valid URL",
+      "normalizeUrl": "Normalizes URL by adding protocol if missing",
+      "parseUrl": "Parses URL into components (protocol, hostname, etc.)",
+      "canOpenUrl": "Checks if URL can be opened on device",
+      "getSupportedSchemes": "Returns list of supported URL schemes",
+      "buildUrl": "Builds URL with query parameters",
+      "openEmailDescription": "Opens email client with recipient and optional subject/body",
+      "openPhoneDescription": "Opens phone dialer with number",
+      "openSMSDescription": "Opens SMS app with recipient(s) and optional message",
+      "openMapDescription": "Opens map app with address or coordinates",
+      "openDeepLink": "Opens deep link with fallback URL support",
+      "openInBrowser": "Opens URL in in-app browser",
+      "openAppStore": "Opens App Store (iOS) or Play Store (Android)",
+      "openSettings": "Opens device settings",
+      "appStoreSection": "App Store",
+      "appStoreId": "App ID / Package Name:",
+      "appStoreIdPlaceholder": "123456789 or com.example.app",
+      "appStoreReview": "Show Review Prompt",
+      "openAppStoreButton": "Open App Store",
+      "settingsSection": "Settings",
+      "settingsSectionType": "Section:",
+      "settingsGeneral": "General",
+      "settingsApp": "App",
+      "settingsPrivacy": "Privacy",
+      "settingsWifi": "WiFi",
+      "settingsBluetooth": "Bluetooth",
+      "settingsCellular": "Cellular",
+      "openSettingsButton": "Open Settings",
+      "deepLinkSection": "Deep Link",
+      "deepLinkUrl": "Deep Link URL:",
+      "deepLinkUrlPlaceholder": "myapp://screen/123",
+      "deepLinkFallback": "Fallback URL:",
+      "deepLinkFallbackPlaceholder": "https://example.com",
+      "openDeepLinkButton": "Open Deep Link",
+      "openInBrowserButton": "Open in Browser",
+      "queryBuilderSection": "URL Builder",
+      "queryBuilder": "Query Parameters:",
+      "queryBuilderAdd": "Add Parameter",
+      "queryBuilderKey": "Key",
+      "queryBuilderValue": "Value",
+      "queryBuilderRemove": "Remove",
+      "queryBuilderBuild": "Build URL",
+      "historyReLaunch": "Re-launch",
+      "historyCopy": "Copy",
+      "historyCopied": "Copied to clipboard!",
+      "quickActions": "Quick Actions",
+      "functionNames": {
+        "validateUrl": "validateUrl",
+        "normalizeUrl": "normalizeUrl",
+        "parseUrl": "parseUrl",
+        "canOpenUrl": "canOpenUrl",
+        "getSupportedSchemes": "getSupportedSchemes",
+        "buildUrl": "buildUrl",
+        "openUrl": "openUrl",
+        "openEmail": "openEmail",
+        "openPhone": "openPhone",
+        "openSMS": "openSMS",
+        "openMap": "openMap",
+        "openDeepLink": "openDeepLink",
+        "openInBrowser": "openInBrowser",
+        "openAppStore": "openAppStore",
+        "openSettings": "openSettings"
+      },
+      "messages": {
+        "empty": "(empty)",
+        "notProvided": "(not provided)",
+        "naUrlRequired": "N/A - URL is required",
+        "naEmailRequired": "N/A - Email address, subject, or body is required",
+        "naPhoneRequired": "N/A - Phone number is required",
+        "naSmsRequired": "N/A - SMS recipient is required",
+        "naMapRequired": "N/A - Map address or coordinates are required",
+        "naDeepLinkRequired": "N/A - Deep link URL is required",
+        "naAppStoreRequired": "N/A - App Store ID is required",
+        "success": "Success",
+        "failure": "Failure",
+        "true": "true",
+        "false": "false",
+        "error": "Error",
+        "unknownError": "Unknown error",
+        "noApplicationFound": "No application found to handle",
+        "fallbackAlsoFailed": "fallback also failed",
+        "url": "URL",
+        "copyError": "Failed to copy to clipboard"
+      },
+      "copyText": {
+        "type": "Type",
+        "input": "INPUT",
+        "output": "OUTPUT",
+        "time": "Time",
+        "status": "Status"
+      },
+      "defaultValues": {
+        "url": "https://example.com",
+        "email": "support@example.com",
+        "phone": "+1-800-123-4567",
+        "smsRecipients": "+1234567890",
+        "smsBody": "Hello!",
+        "mapAddress": "1600 Amphitheatre Parkway, Mountain View, CA",
+        "mapLabel": "Google Headquarters",
+        "emailSubject": "Support Request",
+        "emailBody": "Hello, I need help with...",
+        "deepLinkUrl": "myapp://screen/123",
+        "fallbackUrl": "https://example.com",
+        "appStoreId": "123456789"
       }
     },
     "timeHelper": {
@@ -1135,23 +1407,47 @@
         "description": "Utility functions for common development tasks",
         "stringHelper": {
           "title": "String Helper",
-          "description": "String manipulation utilities including formatting, validation, and case conversion. Functions like capitalize, truncate, email validation, URL validation, currency formatting, case conversion (camelCase, snake_case, kebab-case), HTML escaping, and more."
+          "description": "Text manipulation and validation utilities"
+        },
+        "loggerHelper": {
+          "title": "Logger Helper",
+          "description": "Development and production logging utilities"
+        },
+        "snackbarHelper": {
+          "title": "Snackbar Helper",
+          "description": "Snackbar notification utilities with action buttons and positioning"
+        },
+        "firebaseHelper": {
+          "title": "Firebase Helper",
+          "description": "Auth, Analytics (web), and Firestore utilities"
+        },
+        "toastHelper": {
+          "title": "Toast Helper",
+          "description": "UI feedback and notification utilities"
+        },
+        "timeHelper": {
+          "title": "Time Helper",
+          "description": "Date and time manipulation utilities"
+        },
+        "batteryHelper": {
+          "title": "Battery Helper",
+          "description": "Battery level, charging status, low power mode, and device information"
         },
         "richTextHelper": {
           "title": "Rich Text Helper",
-          "description": "HTML, Markdown, and text formatting utilities for React Native. Parse HTML to React Native text components, convert Markdown to formatted text, extract URLs/mentions/hashtags, sanitize content for XSS prevention, create formatted text with multiple styles, and process rich text content interactively."
+          "description": "HTML, Markdown, and text formatting utilities"
         },
-        "deviceInfo": {
-          "title": "Device Info Helper",
-          "description": "Get comprehensive device information including platform details, OS version, screen dimensions, device capabilities, and compatibility checks. Essential for responsive design and feature detection."
+        "typographyHelper": {
+          "title": "Typography Helper",
+          "description": "Typography utilities, font scaling, and text styling with Flutter-style copyWith pattern"
         },
-        "validation": {
-          "title": "Validation Helper",
-          "description": "Input validation utilities for forms and data processing. Includes email validation, URL validation, phone number validation, and custom validation rules for secure data handling."
+        "validatorHelper": {
+          "title": "Validator Helper",
+          "description": "Form validation utilities"
         },
-        "formatting": {
-          "title": "Formatting Helper",
-          "description": "Data formatting utilities for dates, numbers, currency, and text. Includes date formatting, number formatting with decimals, currency formatting, and text transformation functions."
+        "uiSizeHelper": {
+          "title": "UI Size Helper",
+          "description": "Sizing system, spacing, typography, and responsive design utilities"
         }
       },
       "core": {

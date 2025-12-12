@@ -47,6 +47,10 @@ export const getHelperIcon = (helperId: string): string => {
       return 'school-outline';
     case 'validator-helper':
       return 'checkmark-circle-outline';
+    case 'url-launcher-helper':
+      return 'link-outline';
+    case 'ui-size-helper':
+      return 'resize-outline';
     default:
       return 'help-outline';
   }

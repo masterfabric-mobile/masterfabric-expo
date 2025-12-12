@@ -1,6 +1,6 @@
 import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, Sizing, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import { headerActionsStyles as styles } from '../styles/header-actions.styles';
@@ -26,7 +26,7 @@ export function HeaderActions({
       >
         <Ionicons
           name={getHeaderIconName('notification') as any}
-          size={24}
+          size={Sizing.icon.m}
           color={colors.headerIcon}
         />
       </Pressable>

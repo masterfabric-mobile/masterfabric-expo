@@ -242,7 +242,7 @@
     "registrationSuccess": "Kayıt başarılı!",
     "fixErrors": "Lütfen göndermeden önce hataları düzeltin.",
     "passwordsNoMatchAlert": "Şifreler eşleşmiyor!",
-    "socialLoginDemo": "{{provider}} ile giriş (Demo)",
+    "socialLoginDemo": "{{provider}} ile giriş",
     "rememberMe": "Beni hatırla",
     "continue": "Devam Et"
   },
@@ -501,7 +501,6 @@
         "warning": "Uyarı toast mesajı örneği",
         "info": "Bilgi toast mesajı örneği"
       },
-      "input": "Giriş:",
       "output": "Çıkış:",
       "controls": {
         "position": "Pozisyon",
@@ -562,9 +561,7 @@
           "cancel": "İptal",
           "select": "Seç"
         }
-      },
-      "sendToast": "Toast Gönder",
-      "messageRequired": "Lütfen bir mesaj girin"
+      }
     },
     "typographyHelper": {
       "title": "Tipografi Yardımcısı",
@@ -662,6 +659,126 @@
         }
       }
     },
+    "uiSizeHelper": {
+      "title": "UI Boyut Yardımcısı",
+      "description": "Boyutlandırma sistemi, boşluk ve duyarlı tasarım yardımcıları",
+      "testSuite": "UI Boyut Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "runTests": "Tüm Testleri Çalıştır",
+      "runningTests": "Testler Çalışıyor...",
+      "testResults": "Test Sonuçları",
+      "functions": "fonksiyon",
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "getSpacing": "Boyut anahtarına göre boşluk değerini alır",
+      "getPadding": "Boyut anahtarına göre dolgu değerini alır",
+      "getMargin": "Boyut anahtarına göre kenar boşluğu değerini alır",
+      "calculateSpacing": "Temel birim çarpanı kullanarak boşluk hesaplar",
+      "getBaseUnit": "Temel birimi alır (8pt grid)",
+      "getScreenWidth": "Mevcut ekran genişliğini alır",
+      "getDeviceTypeAuto": "Cihaz tipini otomatik olarak alır",
+      "getGridColumnsAuto": "Cihaza göre grid kolonlarını alır",
+      "getResponsiveSpacing": "Ekran genişliğine göre duyarlı boşluk alır",
+      "getButtonHeight": "Boyuta göre buton yüksekliğini alır",
+      "getInputHeight": "Boyuta göre giriş yüksekliğini alır",
+      "getCardPadding": "Boyuta göre kart dolgusunu alır",
+      "spacing": "Boşluk",
+      "padding": "Dolgu",
+      "margin": "Kenar Boşluğu",
+      "gap": "Aralık",
+      "borderRadius": "Kenar Yuvarlaklığı",
+      "borderWidth": "Kenar Kalınlığı",
+      "buttonHeight": "Buton Yüksekliği",
+      "inputHeight": "Giriş Yüksekliği",
+      "cardPadding": "Kart Dolgusu",
+      "scrollPadding": "Kaydırma Dolgusu",
+      "scrollMargin": "Kaydırma Kenar Boşluğu",
+      "preview": "Canlı Önizleme",
+      "showcase": "Boyutlandırma Vitrin",
+      "showcaseDescription": "Tüm mevcut boyutlandırma değerleri ve örnekleri",
+      "selected": "Seçili",
+      "responsiveInfo": "Duyarlı Bilgi",
+      "device": "Cihaz",
+      "width": "Genişlik",
+      "columns": "Kolonlar",
+      "baseUnit": "Temel Birim",
+      "responsivePadding": "Duyarlı Dolgu",
+      "sizeLabels": {
+        "small": "Küçük",
+        "medium": "Orta",
+        "large": "Büyük",
+        "xs": "XS",
+        "s": "S",
+        "m": "M",
+        "l": "L",
+        "xl": "XL",
+        "xxl": "XXL",
+        "xxxl": "XXXL"
+      },
+      "examples": {
+        "spacing": {
+          "title": "Boşluk",
+          "description": "Boşluk, elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Boşluk Boyutu Seç"
+        },
+        "padding": {
+          "title": "Dolgu",
+          "description": "Dolgu, içerik ile kenarlık arasındaki mesafeyi belirler",
+          "selectSize": "Dolgu Boyutu Seç"
+        },
+        "margin": {
+          "title": "Kenar Boşluğu",
+          "description": "Kenar boşluğu, elemanın dışındaki mesafeyi belirler",
+          "selectSize": "Kenar Boşluğu Boyutu Seç"
+        },
+        "gap": {
+          "title": "Aralık",
+          "description": "Aralık, flex container içindeki elemanlar arasındaki mesafeyi belirler",
+          "selectSize": "Aralık Boyutu Seç"
+        },
+        "borderRadius": {
+          "title": "Kenar Yuvarlaklığı",
+          "description": "Kenar yuvarlaklığı, köşelerin yuvarlaklığını belirler",
+          "selectSize": "Kenar Yuvarlaklığı Seç"
+        },
+        "borderWidth": {
+          "title": "Kenar Kalınlığı",
+          "description": "Kenar kalınlığı, kenarlıkların kalınlığını belirler",
+          "selectSize": "Kenar Kalınlığı Seç"
+        },
+        "buttonHeight": {
+          "title": "Buton Yüksekliği",
+          "description": "Buton yüksekliği, butonların yüksekliğini belirler",
+          "selectSize": "Buton Yüksekliği Seç"
+        },
+        "inputHeight": {
+          "title": "Giriş Yüksekliği",
+          "description": "Giriş yüksekliği, giriş alanlarının yüksekliğini belirler",
+          "selectSize": "Giriş Yüksekliği Seç"
+        },
+        "cardPadding": {
+          "title": "Kart Dolgusu",
+          "description": "Kart dolgusu, kart içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kart Dolgusu Seç"
+        },
+        "scrollPadding": {
+          "title": "Kaydırma Dolgusu",
+          "description": "Kaydırma dolgusu, kaydırma içeriği ile kenarlar arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Dolgusu Seç"
+        },
+        "scrollMargin": {
+          "title": "Kaydırma Kenar Boşluğu",
+          "description": "Kaydırma kenar boşluğu, kaydırma öğeleri arasındaki mesafeyi belirler",
+          "selectSize": "Kaydırma Kenar Boşluğu Seç"
+        }
+      },
+      "deviceType": {
+        "title": "Cihaz Tipi",
+        "phone": "📱 Telefon",
+        "tablet": "📱 Tablet",
+        "desktop": "🖥️ Masaüstü"
+      }
+    },
     "dateHelper": {
       "title": "Tarih Yardımcısı",
       "description": "Formatlama, ayrıştırma ve hesaplamalar için tarih ve zaman manipülasyon yardımcıları"
@@ -736,6 +853,159 @@
         "fullNameConsecutiveSpaces": "Tam ad ardışık boşluklar içermemelidir.",
         "minLength": "{fieldName} en az {min} karakter uzunluğunda olmalıdır.",
         "maxLength": "{fieldName} {max} karakteri aşamaz."
+      }
+    },
+    "urlLauncherHelper": {
+      "title": "URL Başlatıcı Yardımcısı",
+      "description": "Harici URL'ler, e-postalar, telefon, SMS, haritalar ve derin bağlantıları birleşik API ile açın",
+      "testSuite": "URL Başlatıcı Yardımcısı Test Paketi",
+      "testInput": "Test Girişi",
+      "testResults": "Test Sonuçları",
+      "runningTests": "Testler Çalışıyor...",
+      "runTests": "Tüm Testleri Çalıştır",
+      "operations": "işlem",
+      "history": "Başlatma Geçmişi",
+      "input": "Giriş:",
+      "output": "Çıkış:",
+      "urlInput": "URL:",
+      "urlPlaceholder": "Test edilecek URL'yi girin...",
+      "openUrl": "URL Aç",
+      "emailSection": "E-posta",
+      "emailInput": "E-posta Adresi:",
+      "emailPlaceholder": "destek@ornek.com",
+      "optional": "İsteğe Bağlı",
+      "emailSubject": "Konu:",
+      "emailSubjectPlaceholder": "Destek Talebi",
+      "emailBody": "İçerik:",
+      "emailBodyPlaceholder": "Merhaba, yardıma ihtiyacım var...",
+      "emailCc": "CC:",
+      "emailCcPlaceholder": "cc@ornek.com, cc2@ornek.com",
+      "emailBcc": "BCC:",
+      "emailBccPlaceholder": "bcc@ornek.com, bcc2@ornek.com",
+      "openEmail": "E-posta Aç",
+      "phoneSection": "Telefon",
+      "phoneInput": "Telefon Numarası:",
+      "phonePlaceholder": "+90-555-123-4567",
+      "openPhone": "Telefon Aç",
+      "smsSection": "SMS",
+      "smsRecipients": "Alıcılar:",
+      "smsRecipientsPlaceholder": "+905551234567",
+      "smsBody": "Mesaj:",
+      "smsBodyPlaceholder": "Merhaba!",
+      "openSMS": "SMS Aç",
+      "mapSection": "Harita",
+      "mapAddress": "Adres:",
+      "mapAddressPlaceholder": "1600 Amphitheatre Parkway, Mountain View, CA",
+      "mapLatitude": "Enlem:",
+      "mapLatitudePlaceholder": "37.4220",
+      "mapLongitude": "Boylam:",
+      "mapLongitudePlaceholder": "-122.0841",
+      "mapLabel": "Etiket:",
+      "mapLabelPlaceholder": "Google Merkez Ofisi",
+      "openMap": "Harita Aç",
+      "validateUrl": "String'in geçerli bir URL olup olmadığını doğrular",
+      "normalizeUrl": "Eksikse protokol ekleyerek URL'yi normalize eder",
+      "parseUrl": "URL'yi bileşenlere ayırır (protokol, hostname, vb.)",
+      "canOpenUrl": "URL'nin cihazda açılıp açılamayacağını kontrol eder",
+      "getSupportedSchemes": "Desteklenen URL şemalarının listesini döndürür",
+      "buildUrl": "Sorgu parametreleriyle URL oluşturur",
+      "openEmailDescription": "Alıcı ve isteğe bağlı konu/içerik ile e-posta istemcisini açar",
+      "openPhoneDescription": "Numara ile telefon arama ekranını açar",
+      "openSMSDescription": "Alıcı(lar) ve isteğe bağlı mesaj ile SMS uygulamasını açar",
+      "openMapDescription": "Adres veya koordinatlarla harita uygulamasını açar",
+      "openDeepLink": "Yedek URL desteği ile derin bağlantı açar",
+      "openInBrowser": "Uygulama içi tarayıcıda URL açar",
+      "openAppStore": "App Store (iOS) veya Play Store (Android) açar",
+      "openSettings": "Cihaz ayarlarını açar",
+      "appStoreSection": "Uygulama Mağazası",
+      "appStoreId": "Uygulama ID / Paket Adı:",
+      "appStoreIdPlaceholder": "123456789 veya com.example.app",
+      "appStoreReview": "İnceleme İsteği Göster",
+      "openAppStoreButton": "Uygulama Mağazasını Aç",
+      "settingsSection": "Ayarlar",
+      "settingsSectionType": "Bölüm:",
+      "settingsGeneral": "Genel",
+      "settingsApp": "Uygulama",
+      "settingsPrivacy": "Gizlilik",
+      "settingsWifi": "WiFi",
+      "settingsBluetooth": "Bluetooth",
+      "settingsCellular": "Hücresel",
+      "openSettingsButton": "Ayarları Aç",
+      "deepLinkSection": "Derin Bağlantı",
+      "deepLinkUrl": "Derin Bağlantı URL:",
+      "deepLinkUrlPlaceholder": "myapp://ekran/123",
+      "deepLinkFallback": "Yedek URL:",
+      "deepLinkFallbackPlaceholder": "https://ornek.com",
+      "openDeepLinkButton": "Derin Bağlantıyı Aç",
+      "openInBrowserButton": "Tarayıcıda Aç",
+      "queryBuilderSection": "URL Oluşturucu",
+      "queryBuilder": "Sorgu Parametreleri:",
+      "queryBuilderAdd": "Parametre Ekle",
+      "queryBuilderKey": "Anahtar",
+      "queryBuilderValue": "Değer",
+      "queryBuilderRemove": "Kaldır",
+      "queryBuilderBuild": "URL Oluştur",
+      "historyReLaunch": "Yeniden Başlat",
+      "historyCopy": "Kopyala",
+      "historyCopied": "Panoya kopyalandı!",
+      "quickActions": "Hızlı İşlemler",
+      "functionNames": {
+        "validateUrl": "URL Doğrula",
+        "normalizeUrl": "URL Normalize Et",
+        "parseUrl": "URL Ayrıştır",
+        "canOpenUrl": "URL Açılabilir Mi",
+        "getSupportedSchemes": "Desteklenen Şemalar",
+        "buildUrl": "URL Oluştur",
+        "openUrl": "URL Aç",
+        "openEmail": "E-posta Aç",
+        "openPhone": "Telefon Aç",
+        "openSMS": "SMS Aç",
+        "openMap": "Harita Aç",
+        "openDeepLink": "Derin Bağlantı Aç",
+        "openInBrowser": "Tarayıcıda Aç",
+        "openAppStore": "Uygulama Mağazası Aç",
+        "openSettings": "Ayarları Aç"
+      },
+      "messages": {
+        "empty": "(boş)",
+        "notProvided": "(sağlanmadı)",
+        "naUrlRequired": "U/A - URL gerekli",
+        "naEmailRequired": "U/A - E-posta adresi, konu veya içerik gerekli",
+        "naPhoneRequired": "U/A - Telefon numarası gerekli",
+        "naSmsRequired": "U/A - SMS alıcısı gerekli",
+        "naMapRequired": "U/A - Harita adresi veya koordinatlar gerekli",
+        "naDeepLinkRequired": "U/A - Derin bağlantı URL'si gerekli",
+        "naAppStoreRequired": "U/A - Uygulama mağazası ID'si gerekli",
+        "success": "Başarılı",
+        "failure": "Başarısız",
+        "true": "doğru",
+        "false": "yanlış",
+        "error": "Hata",
+        "unknownError": "Bilinmeyen hata",
+        "noApplicationFound": "İşlem için uygulama bulunamadı",
+        "fallbackAlsoFailed": "yedek bağlantı da başarısız oldu",
+        "copyError": "Panoya kopyalama başarısız"
+      },
+      "copyText": {
+        "type": "Tür",
+        "input": "GİRİŞ",
+        "output": "ÇIKIŞ",
+        "time": "Zaman",
+        "status": "Durum"
+      },
+      "defaultValues": {
+        "url": "https://ornek.com",
+        "email": "destek@ornek.com",
+        "phone": "+90-555-123-4567",
+        "smsRecipients": "+905551234567",
+        "smsBody": "Merhaba!",
+        "mapAddress": "İstanbul, Türkiye",
+        "mapLabel": "Google Merkez Ofisi",
+        "emailSubject": "Destek Talebi",
+        "emailBody": "Merhaba, yardıma ihtiyacım var...",
+        "deepLinkUrl": "myapp://ekran/123",
+        "fallbackUrl": "https://ornek.com",
+        "appStoreId": "123456789"
       }
     },
     "timeHelper": {
@@ -1085,23 +1355,47 @@
         "description": "Yaygın geliştirme görevleri için yardımcı fonksiyonlar",
         "stringHelper": {
           "title": "String Yardımcısı",
-          "description": "Formatlama, doğrulama ve durum dönüştürme dahil string manipülasyon yardımcıları. capitalize, truncate, email doğrulama, URL doğrulama, para birimi formatlama, durum dönüştürme (camelCase, snake_case, kebab-case), HTML kaçırma ve daha fazlası gibi fonksiyonlar."
+          "description": "Metin manipülasyonu ve doğrulama yardımcıları"
+        },
+        "loggerHelper": {
+          "title": "Logger Yardımcısı",
+          "description": "Geliştirme ve üretim loglama yardımcıları"
+        },
+        "snackbarHelper": {
+          "title": "Snackbar Yardımcısı",
+          "description": "Aksiyon butonları ve konumlandırma ile snackbar bildirim yardımcıları"
+        },
+        "firebaseHelper": {
+          "title": "Firebase Yardımcısı",
+          "description": "Auth, Analytics (web) ve Firestore yardımcıları"
+        },
+        "toastHelper": {
+          "title": "Toast Yardımcısı",
+          "description": "UI geri bildirim ve bildirim yardımcıları"
+        },
+        "timeHelper": {
+          "title": "Zaman Yardımcısı",
+          "description": "Tarih ve zaman manipülasyon yardımcıları"
+        },
+        "batteryHelper": {
+          "title": "Batarya Yardımcısı",
+          "description": "Batarya seviyesi, şarj durumu, düşük güç modu ve cihaz bilgileri"
         },
         "richTextHelper": {
           "title": "Zengin Metin Yardımcısı",
-          "description": "React Native için HTML, Markdown ve metin formatlama araçları. HTML'i React Native metin bileşenlerine ayrıştır, Markdown'ı formatlanmış metne dönüştür, URL/mention/hashtag çıkar, XSS önleme için içeriği temizle, çoklu stillerle formatlanmış metin oluştur ve zengin metin içeriğini interaktif olarak işle."
+          "description": "HTML, Markdown ve metin formatlama yardımcıları"
         },
-        "deviceInfo": {
-          "title": "Cihaz Bilgisi Yardımcısı",
-          "description": "Platform detayları, OS sürümü, ekran boyutları, cihaz yetenekleri ve uyumluluk kontrolleri dahil kapsamlı cihaz bilgilerini alın. Responsive tasarım ve özellik tespiti için gerekli."
+        "typographyHelper": {
+          "title": "Tipografi Yardımcısı",
+          "description": "Tipografi yardımcıları, font ölçeklendirme ve Flutter tarzı copyWith deseni ile metin stillendirme"
         },
-        "validation": {
-          "title": "Doğrulama Yardımcısı",
-          "description": "Formlar ve veri işleme için giriş doğrulama yardımcıları. Email doğrulama, URL doğrulama, telefon numarası doğrulama ve güvenli veri işleme için özel doğrulama kuralları içerir."
+        "validatorHelper": {
+          "title": "Doğrulayıcı Yardımcısı",
+          "description": "Form doğrulama yardımcıları"
         },
-        "formatting": {
-          "title": "Formatlama Yardımcısı",
-          "description": "Tarihler, sayılar, para birimi ve metin için veri formatlama yardımcıları. Tarih formatlama, ondalık basamaklı sayı formatlama, para birimi formatlama ve metin dönüştürme fonksiyonları içerir."
+        "uiSizeHelper": {
+          "title": "UI Boyut Yardımcısı",
+          "description": "Boyutlandırma sistemi, boşluk, tipografi ve responsive tasarım yardımcıları"
         }
       },
       "core": {

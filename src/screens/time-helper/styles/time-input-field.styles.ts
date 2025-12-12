@@ -1,74 +1,74 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const timeInputFieldStyles = StyleSheet.create({
   // Container
   container: {
-    marginBottom: 24,
+    marginBottom: Sizing.padding.xl,
   },
   
   // Input card
   inputCard: {
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
+    borderRadius: Sizing.card.borderRadius.m,
+    padding: Sizing.padding.m,
+    marginBottom: Sizing.padding.m,
+    borderWidth: Sizing.borderWidth.s,
   },
   
       // Labels
       label: {
-        fontSize: 14,
-        fontWeight: '600',
-        marginBottom: 4,
+        ...typographyHelper.fromSizing.createStyle(Sizing, 's', 'semibold', 'normal'),
+        marginBottom: Sizing.spacing.xxs,
       },
       description: {
-        fontSize: 11,
-        marginBottom: 8,
-        opacity: 0.7,
+        ...typographyHelper.fromSizing.createStyle(Sizing, 'xxs', 'normal', 'normal'),
+        marginBottom: Sizing.gap.s,
+        opacity: Sizing.opacity.l,
       },
   
   // Input fields
   input: {
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 16,
-    minHeight: 44,
-    borderWidth: 1,
+    borderRadius: Sizing.gap.s,
+    padding: Sizing.padding.s,
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'normal', 'normal'),
+    marginBottom: Sizing.padding.m,
+    minHeight: Sizing.button.height.medium,
+    borderWidth: Sizing.borderWidth.s,
   },
   
   // Layout
   row: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
+    flexDirection: Sizing.layout.flexDirection.row,
+    gap: Sizing.padding.s,
+    marginBottom: Sizing.padding.m,
   },
   dateTimeRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
+    flexDirection: Sizing.layout.flexDirection.row,
+    gap: Sizing.padding.s,
+    marginBottom: Sizing.padding.m,
   },
   halfWidth: {
-    flex: 1,
+    flex: Sizing.flexNumber.full,
   },
   
       // Buttons
       buttonRow: {
-        flexDirection: 'row',
-        gap: 12,
-        marginTop: 8,
+        flexDirection: Sizing.layout.flexDirection.row,
+        gap: Sizing.padding.s,
+        marginTop: Sizing.gap.s,
       },
       button: {
-        flex: 1,
-        borderRadius: 12,
-        padding: 16,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flex: Sizing.flexNumber.full,
+        borderRadius: Sizing.card.borderRadius.m,
+        padding: Sizing.padding.m,
+        alignItems: Sizing.layout.alignItems.center,
+        justifyContent: Sizing.layout.justifyContent.center,
       },
   
   // Picker container
   pickerContainer: {
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 16,
+    borderRadius: Sizing.gap.s,
+    overflow: Sizing.layout.overflow.hidden,
+    marginBottom: Sizing.padding.m,
   },
 });

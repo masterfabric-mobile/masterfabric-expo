@@ -1,18 +1,18 @@
+import { Sizing, typographyHelper } from 'masterfabric-expo-core';
 import { StyleSheet } from 'react-native';
 
 export const notificationTabsStyles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    flexDirection: Sizing.layout.flexDirection.row,
+    borderBottomWidth: Sizing.divider.height.hairline,
   },
   tab: {
-    flex: 1,
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: Sizing.flexNumber.full,
+    paddingVertical: Sizing.padding.m,
+    alignItems: Sizing.layout.alignItems.center,
+    justifyContent: Sizing.layout.justifyContent.center,
   },
   tabText: {
-    fontSize: 16,
-    fontWeight: '500',
+    ...typographyHelper.fromSizing.createStyle(Sizing, 'm', 'medium', 'normal'),
   },
 });

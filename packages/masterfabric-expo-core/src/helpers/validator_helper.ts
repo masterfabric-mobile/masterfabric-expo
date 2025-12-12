@@ -194,6 +194,7 @@ class ValidatorHelper {
   private processValue(value: string, options?: ValidatorOptions): string {
     let processed = value || '';
     if (options?.trim !== false) {
+      // Trim removes leading and trailing whitespace only
       processed = processed.trim();
     }
     if (options?.convertTurkishChars) {
@@ -262,7 +263,9 @@ class ValidatorHelper {
   private validatePassword(value: string, options?: ValidatorOptions): string | null {
     if (!value) return ErrorMessages.nonEmpty;
     
-    // Check for spaces
+    // Passwords should not contain spaces (regardless of trim setting)
+    // Note: value here is already processed by processValue (trimmed if trim is enabled)
+    // Trim only removes leading/trailing spaces, so we still need to check for internal spaces
     if (value.includes(' ')) {
       return ErrorMessages.passwordSpaces;
     }
