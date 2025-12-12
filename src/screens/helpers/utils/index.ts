@@ -48,7 +48,7 @@ export const getHelperIcon = (helperId: string): string => {
     case 'validator-helper':
       return 'checkmark-circle-outline';
     case 'url-launcher-helper':
-      return 'link-outline';
+      return 'open-outline';
     case 'ui-size-helper':
       return 'resize-outline';
     default:
@@ -89,6 +89,10 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for typography helpers
     case 'validator-helper':
       return '#FF3B30'; // Red for validation helpers
+    case 'url-launcher-helper':
+      return '#007AFF'; // Blue for URL/launcher helpers
+    case 'ui-size-helper':
+      return '#5856D6'; // Purple for UI sizing helpers
     default:
       return '#8E8E93';
   }
@@ -194,6 +198,26 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/validator-helper',
     available: true,
     category: 'validation-helpers'
+  },
+  {
+    id: 'url-launcher-helper',
+    name: 'URL Launcher Helper',
+    description: 'Open URLs, emails, phone numbers, and external apps',
+    icon: 'open-outline',
+    color: '#007AFF',
+    route: '/url-launcher-helper',
+    available: true,
+    category: 'device-helpers'
+  },
+  {
+    id: 'ui-size-helper',
+    name: 'UI Size Helper',
+    description: 'Responsive sizing utilities, spacing, padding, margins, and layout helpers',
+    icon: 'resize-outline',
+    color: '#5856D6',
+    route: '/ui-size-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 
