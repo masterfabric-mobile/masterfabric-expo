@@ -46,3 +46,5 @@ export interface AppConfig {
     pushNotifications: boolean;
   };
 }
+
+export * from './battery';

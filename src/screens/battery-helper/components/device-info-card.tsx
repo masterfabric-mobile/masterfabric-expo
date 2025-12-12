@@ -1,11 +1,11 @@
-import { getThemeColors } from '../../constants/Colors';
-import { useTheme } from '../../contexts/ThemeContext';
-import { DeviceInfo as DeviceInfoHelper } from '../../helpers/device-info';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
-import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { deviceInfoCardStyles } from '../../styles/DeviceInfoCard.styles';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { ThemedText } from '../../../shared/components/ThemedText';
+import { ThemedView } from '../../../shared/components/ThemedView';
+import { getThemeColors } from '../../../shared/constants/Colors';
+import { useTheme } from '../../../shared/contexts/theme-context';
+import { DeviceInfo as DeviceInfoHelper } from '../../../shared/helpers/device-info';
+import { deviceInfoCardStyles } from '../styles/device-info-card.styles';
 
 interface DeviceInfoCardProps {
   getDeviceInformation: () => Promise<DeviceInfoHelper | null>;
@@ -48,7 +48,7 @@ export function DeviceInfoCard({ getDeviceInformation }: DeviceInfoCardProps) {
             Device Information
           </ThemedText>
         </View>
-        <ActivityIndicator size="small" color={colors.primary} />
+        <ActivityIndicator size="small" color={colors.tint} />
       </ThemedView>
     );
   }

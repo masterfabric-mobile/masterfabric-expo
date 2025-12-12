@@ -1,12 +1,11 @@
-import { getThemeColors } from '../../constants/Colors';
-import { useTheme } from '../../contexts/ThemeContext';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
-import React from 'react';
-import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { batteryStatusCardStyles } from '../../styles/BatteryStatusCard.styles';
-import { getBatteryColor } from '../../helpers/batteryHelper';
+import { View } from 'react-native';
+import { ThemedText } from '../../../shared/components/ThemedText';
+import { ThemedView } from '../../../shared/components/ThemedView';
+import { getThemeColors } from '../../../shared/constants/Colors';
+import { useTheme } from '../../../shared/contexts/theme-context';
+import { getBatteryColor } from '../../../shared/helpers/battery_helper';
+import { batteryStatusCardStyles } from '../styles/battery-status-card.styles';
 
 interface BatteryStatusCardProps {
   batteryLevel: number;
@@ -121,4 +120,3 @@ export function BatteryStatusCard({
     </ThemedView>
   );
 }
-

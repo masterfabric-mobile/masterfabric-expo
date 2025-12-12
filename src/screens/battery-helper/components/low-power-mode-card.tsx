@@ -1,10 +1,9 @@
-import { getThemeColors } from '../../constants/Colors';
-import { useTheme } from '../../contexts/ThemeContext';
-import { ThemedText } from '../ThemedText';
-import { ThemedView } from '../ThemedView';
-import React from 'react';
-import { View, Platform, Button } from 'react-native';
-import { lowPowerModeCardStyles } from '../../styles/LowPowerModeCard.styles';
+import { Button, Platform, View } from 'react-native';
+import { ThemedText } from '../../../shared/components/ThemedText';
+import { ThemedView } from '../../../shared/components/ThemedView';
+import { getThemeColors } from '../../../shared/constants/Colors';
+import { useTheme } from '../../../shared/contexts/theme-context';
+import { lowPowerModeCardStyles } from '../styles/low-power-mode-card.styles';
 
 interface LowPowerModeCardProps {
   lowPowerMode: boolean | null;
@@ -51,8 +50,8 @@ export function LowPowerModeCard({
                 lowPowerMode === true
                   ? colors.errorColor
                   : lowPowerMode === false
-                  ? colors.successColor
-                  : colors.surfaceBorder,
+                    ? colors.successColor
+                    : colors.surfaceBorder,
             },
           ]}
         />
@@ -75,7 +74,7 @@ export function LowPowerModeCard({
         <Button
           title="Open Settings"
           onPress={onOpenSettings}
-          color={colors.primary}
+          color={colors.tint}
         />
       )}
     </ThemedView>
