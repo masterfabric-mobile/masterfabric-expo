@@ -73,6 +73,16 @@ export function AuthCaseView({ user, isConnected, onBack }: AuthCaseViewProps) {
         >
           Connection Status
         </ThemedText>
+        <ThemedText
+          style={{
+            color: colors.actionDescription,
+            fontSize: 14,
+            lineHeight: 20,
+            marginBottom: 12,
+          }}
+        >
+          This indicator shows whether your application has successfully established a connection to the Supabase backend service. A successful connection means that all authentication operations, including sign-in, sign-up, and session management, are fully operational and ready to use.
+        </ThemedText>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View
             style={{

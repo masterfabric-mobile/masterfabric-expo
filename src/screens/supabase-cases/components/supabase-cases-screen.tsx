@@ -361,6 +361,16 @@ export function SupabaseCasesScreen() {
               Status
             </ThemedText>
             <ThemedText
+              style={{
+                color: colors.actionDescription,
+                fontSize: 14,
+                lineHeight: 20,
+                marginBottom: 12,
+              }}
+            >
+              This status indicator confirms that your application has successfully established a connection to the Supabase backend infrastructure. When connected, you can access all Supabase services including authentication, database operations, real-time subscriptions, storage, and edge functions.
+            </ThemedText>
+            <ThemedText
               style={[
                 supabaseCasesScreenStyles.statusText,
                 {
