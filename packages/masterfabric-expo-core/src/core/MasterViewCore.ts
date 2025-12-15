@@ -255,15 +255,19 @@ class MasterViewCore {
    * Initialize Firebase
    */
   private async initializeFirebase(): Promise<void> {
+    // Check if Firebase is enabled but no config provided
+    if (this.config.enableFirebase && !this.config.firebaseConfig && !process.env.EXPO_PUBLIC_FIREBASE_API_KEY) {
+      this.log('warn', 'Firebase enabled but no config found. Set EXPO_PUBLIC_FIREBASE_API_KEY or provide firebaseConfig. Firebase will be disabled.');
+      this.config.enableFirebase = false;
+      return;
+    }
+
     try {
       await this.firebaseIntegration.initialize(this.config.firebaseConfig);
 
-      // Console log if we're initializing at the app side (for explicit dev debugging)
-      // (You might define what "app side" is more clearly if desired;
-      //  for now, a generic message)
       if (__DEV__) {
         // eslint-disable-next-line no-console
-        console.log('[MasterView] Firebase initialized at app side');
+        console.log('[MasterView] Firebase initialized successfully');
       }
 
       this.log('info', 'Firebase initialized');
@@ -278,7 +282,12 @@ class MasterViewCore {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.log('warn', 'Failed to initialize Firebase', { error: errorMessage });
+      this.log('warn', 'Failed to initialize Firebase. Continuing without Firebase integration.', { 
+        error: errorMessage,
+        hint: 'Check your Firebase configuration or set EXPO_PUBLIC_FIREBASE_API_KEY environment variable.'
+      });
+      // Disable Firebase to prevent further errors
+      this.config.enableFirebase = false;
     }
   }
 
@@ -286,12 +295,19 @@ class MasterViewCore {
    * Initialize Supabase
    */
   private async initializeSupabase(): Promise<void> {
+    // Check if Supabase is enabled but no config provided
+    if (this.config.enableSupabase && !this.config.supabaseConfig && !process.env.EXPO_PUBLIC_SUPABASE_URL) {
+      this.log('warn', 'Supabase enabled but no config found. Set EXPO_PUBLIC_SUPABASE_URL or provide supabaseConfig. Supabase will be disabled.');
+      this.config.enableSupabase = false;
+      return;
+    }
+
     try {
       await this.supabaseIntegration.initialize(this.config.supabaseConfig);
 
       if (__DEV__) {
         // eslint-disable-next-line no-console
-        console.log('[MasterView] Supabase initialized at app side');
+        console.log('[MasterView] Supabase initialized successfully');
       }
 
       this.log('info', 'Supabase initialized');
@@ -306,7 +322,12 @@ class MasterViewCore {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.log('warn', 'Failed to initialize Supabase', { error: errorMessage });
+      this.log('warn', 'Failed to initialize Supabase. Continuing without Supabase integration.', { 
+        error: errorMessage,
+        hint: 'Check your Supabase configuration or set EXPO_PUBLIC_SUPABASE_URL environment variable.'
+      });
+      // Disable Supabase to prevent further errors
+      this.config.enableSupabase = false;
     }
   }
 
@@ -358,6 +379,13 @@ class MasterViewCore {
    * Initialize Sentry
    */
   private async initializeSentry(): Promise<void> {
+    // Check if Sentry is enabled but no DSN provided
+    if (this.config.enableSentry && !this.config.sentryConfig?.dsn && !process.env.EXPO_PUBLIC_SENTRY_DSN) {
+      this.log('warn', 'Sentry enabled but no DSN found. Set EXPO_PUBLIC_SENTRY_DSN or provide sentryConfig.dsn. Sentry will be disabled.');
+      this.config.enableSentry = false;
+      return;
+    }
+
     try {
       await this.sentryIntegration.initialize(this.config.sentryConfig!);
       
@@ -369,11 +397,16 @@ class MasterViewCore {
       
       this.log('info', 'Sentry initialized successfully');
     } catch (error) {
-      this.log('error', 'Failed to initialize Sentry', { error });
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.log('warn', 'Failed to initialize Sentry. Continuing without Sentry integration.', { 
+        error: errorMessage,
+        hint: 'Check your Sentry DSN or set EXPO_PUBLIC_SENTRY_DSN environment variable.'
+      });
       if (this.options.onSentryError) {
         this.options.onSentryError(error as Error);
       }
-      throw error;
+      // Disable Sentry to prevent further errors
+      this.config.enableSentry = false;
     }
   }
 

@@ -69,3 +69,13 @@ export * from './components/onboarding-helper/OnboardingHelperView';
 export * from './hooks/useOnboardingHelperViewModel';
 export * from './stores/onboardingStore';
 
+// Auto-Initialization
+export { autoInitMasterView, resetAutoInit } from './auto-init';
+export { useAutoInitMasterView } from './hooks/useAutoInitMasterView';
+export { setupMasterView } from './setup';
+
+// Auto-Detection Utilities (for advanced users)
+export { getAppName, getAppVersion, getEnvironment, isDevelopment, isProduction } from './utils/auto-detect';
+export { detectIntegrations, hasIntegration } from './utils/integration-detector';
+export { buildMasterViewConfig } from './utils/config-builder';
+

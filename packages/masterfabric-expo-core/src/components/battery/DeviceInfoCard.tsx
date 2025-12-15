@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import { getThemeColors, useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { getThemeColors } from '../../constants/Colors';
 import { DeviceInfo } from '../../helpers/device-info';
 import { deviceInfoCardStyles } from '../../styles/device_info_card.styles';
 

@@ -18,9 +18,69 @@ npm start
 npm install masterfabric-expo-core
 ```
 
+## ✨ Effortless Setup
+
+### Zero-Config Initialization
+
+The easiest way to use MasterFabric Expo Core is with zero configuration:
+
+```typescript
+import { useAutoInitMasterView } from 'masterfabric-expo-core';
+
+export default function RootLayout() {
+  // That's it! Auto-initializes with sensible defaults
+  useAutoInitMasterView();
+  
+  return <YourApp />;
+}
+```
+
+MasterView will automatically:
+- ✅ Detect app name and version from Expo Constants
+- ✅ Detect environment (development/production)
+- ✅ Detect available integrations from environment variables
+- ✅ Use sensible defaults for all configuration
+- ✅ Handle errors gracefully
+
+### Three Levels of Usage
+
+#### 1. Zero Config (Recommended)
+Just use the hook - everything is auto-detected:
+
+```typescript
+import { useAutoInitMasterView } from 'masterfabric-expo-core';
+
+useAutoInitMasterView();
+```
+
+#### 2. Minimal Config
+Customize app name or version:
+
+```typescript
+useAutoInitMasterView({
+  appName: 'My Custom App',
+  appVersion: '2.0.0'
+});
+```
+
+#### 3. Full Config
+Advanced customization:
+
+```typescript
+useAutoInitMasterView({
+  appName: 'My App',
+  config: {
+    enableSentry: true,
+    sentryConfig: { dsn: 'your-dsn' },
+    enableFirebase: true,
+    // ... other config
+  }
+});
+```
+
 ## 📖 Usage
 
-### Initialize MasterView
+### Manual Initialization (Advanced)
 
 ```typescript
 import { initMasterView } from 'masterfabric-expo-core';
@@ -192,6 +252,18 @@ function MyScreen() {
 - **Platform** - Platform detection and utilities
 - **Permissions** - Permission management
 - **Accessibility** - Accessibility utilities
+- **String Helper** - Text manipulation and validation utilities
+- **Logger Helper** - Development and production logging utilities
+- **Snackbar Helper** - Snackbar notification utilities with action buttons and positioning
+- **Toast Helper** - UI feedback and notification utilities
+- **Time Helper** - Date and time manipulation utilities
+- **Battery Helper** - Battery level, charging status, low power mode, and device information
+- **Rich Text Helper** - HTML, Markdown, and text formatting utilities
+- **Typography Helper** - Typography utilities, font scaling, and text styling
+- **Validator Helper** - Form validation utilities
+- **URL Launcher Helper** - Open URLs, emails, phone numbers, and external apps
+- **UI Size Helper** - Responsive sizing utilities, spacing, padding, margins, and layout helpers
+- **Onboarding Helper** - Onboarding flow management utilities
 
 ## ⚙️ Configuration
 
@@ -379,6 +451,113 @@ masterView.captureException(new Error('Global error'));
 masterView.captureMessage('Global message', 'info');
 ```
 
+## 🔍 Available Helpers
+
+The package includes a comprehensive set of helper utilities:
+
+### Core Helpers
+- **connectivity** - Network connectivity detection
+- **platform** - Platform detection and utilities
+- **permissions** - Permission management
+- **accessibility** - Accessibility utilities
+- **device-info** - Device information and compatibility checks
+
+### Utility Helpers
+- **string_helper** - String manipulation, validation, and formatting
+- **logger_helper** - Logging utilities for development and production
+- **time_helper** - Date/time formatting, parsing, and manipulation
+- **validator_helper** - Form and data validation utilities
+- **typography_helper** - Typography and text styling utilities
+- **ui_size_helper** - Responsive sizing and layout utilities
+
+### UI Helpers
+- **snackbar_helper** - Snackbar notifications with actions
+- **toast_helper** - Toast notification utilities
+- **rich_text_helper** - HTML/Markdown parsing and formatting
+
+### Integration Helpers
+- **batteryHelper** - Battery status and device power information
+- **url_launcher_helper** - Open URLs, emails, phone numbers, and apps
+- **onboarding_helper** - Onboarding flow management
+
+### Usage Example
+
+```typescript
+import { 
+  formatDate, 
+  fromNow,
+  urlLauncherHelper,
+  formatBatteryPercentage 
+} from 'masterfabric-expo-core';
+
+// Time helper
+const formatted = formatDate(new Date(), 'long', 'en-US');
+const relative = fromNow(new Date(Date.now() - 3600000)); // "1 hour ago"
+
+// URL launcher helper
+await urlLauncherHelper.openUrl('https://example.com');
+await urlLauncherHelper.openEmail('user@example.com', { subject: 'Hello' });
+
+// Battery helper
+const percentage = formatBatteryPercentage(0.75); // "75%"
+```
+
+## 🐛 Troubleshooting
+
+### Missing Exports Errors
+
+If you encounter errors like "Cannot find module" or "export not found":
+
+1. **Rebuild the package**: Ensure the package is built with latest exports
+   ```bash
+   cd packages/masterfabric-expo-core
+   npm run build
+   ```
+
+2. **Check import paths**: Verify you're importing from the main package:
+   ```typescript
+   import { time_helper, urlLauncherHelper } from 'masterfabric-expo-core';
+   ```
+
+3. **Verify package version**: Ensure you're using the latest version that includes all helpers
+
+### Peer Dependency Warnings
+
+If you see peer dependency warnings:
+
+1. **Install missing dependencies**: The package requires several peer dependencies:
+   ```bash
+   npm install @react-native-async-storage/async-storage expo-constants expo-device react-native-safe-area-context react-native-screens zustand @expo/vector-icons react-native-get-random-values
+   ```
+
+2. **Check versions**: Ensure peer dependencies meet minimum version requirements listed in `package.json`
+
+### Initialization Errors
+
+If `initMasterView` fails:
+
+1. **Check configuration**: Verify all required config values are provided
+2. **Environment variables**: Ensure `.env` file is set up correctly for Firebase/Supabase if using those integrations
+3. **Async initialization**: Make sure `initMasterView` is awaited:
+   ```typescript
+   useEffect(() => {
+     initMasterView({ /* config */ }).catch(console.error);
+   }, []);
+   ```
+
+### Build Issues
+
+If TypeScript compilation fails:
+
+1. **Clean and rebuild**: 
+   ```bash
+   npm run clean
+   npm run build
+   ```
+
+2. **Check TypeScript version**: Ensure TypeScript >= 5.0.0
+3. **Verify exports**: Check that `dist/index.d.ts` contains all expected exports
+
 ## 🔧 Development
 
 ### Building the Package
@@ -401,6 +580,36 @@ npm run create-app MyApp
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.
+
+## 🔄 Migration from Manual Setup
+
+If you're currently using `initMasterView()` manually, you can easily migrate to the effortless setup:
+
+### Before (Manual)
+```typescript
+useEffect(() => {
+  initMasterView({
+    appName: 'My App',
+    appVersion: '1.0.0',
+    environment: __DEV__ ? 'development' : 'production',
+    config: { /* complex config */ }
+  }).catch(console.error);
+}, []);
+```
+
+### After (Effortless)
+```typescript
+useAutoInitMasterView();
+```
+
+That's it! The hook automatically detects everything. You can still provide custom options if needed:
+
+```typescript
+useAutoInitMasterView({
+  appName: 'My App', // Optional override
+  config: { /* your custom config */ }
+});
+```
 
 ## 📞 Support
 

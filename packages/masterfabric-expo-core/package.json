@@ -4,6 +4,24 @@
   "description": "Core view architecture and utilities for MasterFabric Expo applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./auto-init": {
+      "import": "./dist/auto-init.js",
+      "types": "./dist/auto-init.d.ts"
+    },
+    "./setup": {
+      "import": "./dist/setup.js",
+      "types": "./dist/setup.d.ts"
+    },
+    "./polyfills": {
+      "import": "./dist/polyfills.js",
+      "types": "./dist/polyfills.d.ts"
+    }
+  },
   "bin": {
     "create-masterfabric-app": "./bin/create-masterfabric-app"
   },
