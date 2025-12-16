@@ -447,6 +447,10 @@
       "title": "Firebase Helper",
       "description": "Auth, analytics (web only), and Firestore utilities"
     },
+    "appIconHelper": {
+      "title": "App Icon Helper",
+      "description": "Change your app icon dynamically on iOS devices"
+    },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {
@@ -1445,10 +1449,14 @@
           "title": "Validator Helper",
           "description": "Form validation utilities"
         },
-        "uiSizeHelper": {
-          "title": "UI Size Helper",
-          "description": "Sizing system, spacing, typography, and responsive design utilities"
-        }
+    "uiSizeHelper": {
+      "title": "UI Size Helper",
+      "description": "Sizing system, spacing, typography, and responsive design utilities"
+    },
+    "appIconHelper": {
+      "title": "App Icon Helper",
+      "description": "Change your app icon dynamically on iOS devices"
+    }
       },
       "core": {
         "title": "Core System",
