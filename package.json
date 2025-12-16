@@ -34,6 +34,8 @@
     "build:ios:manual": "./scripts/build-ipa.sh manual",
     "build:ios:pipeline": "./scripts/build-ipa-pipeline.sh",
     "build:ios:check": "./scripts/check-build-setup.sh",
+    "build:android": "./scripts/build-aab-pipeline.sh",
+    "build:android:check": "./scripts/check-android-setup.sh",
     "simulator:install": "./scripts/install-simulator.sh",
     "lint": "expo lint",
     "test": "jest",

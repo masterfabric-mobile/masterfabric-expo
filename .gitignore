@@ -48,3 +48,21 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Build artifacts
+*.ipa
+*.aab
+*.apk
+*.appbundle
+*.xcuserstate

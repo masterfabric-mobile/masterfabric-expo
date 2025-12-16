@@ -207,6 +207,7 @@ update_version_info() {
         
         appJson.expo.version = '$new_version';
         appJson.expo.ios.buildNumber = '$new_build_number';
+        appJson.expo.android.versionCode = parseInt('$new_build_number');
         
         fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2) + '\n');
         console.log('✅ Updated app.json');
