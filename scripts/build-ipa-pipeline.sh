@@ -33,6 +33,15 @@ TEAM_ID="4GW994398K"
 # Derived data path (Xcode's build cache)
 DERIVED_DATA_PATH="$HOME/Library/Developer/Xcode/DerivedData"
 
+# App information (will be extracted from app.json)
+APP_NAME=""
+BUNDLE_ID=""
+APP_VERSION=""
+BUILD_NUMBER=""
+
+# Timing
+SCRIPT_START_TIME=$(date +%s)
+
 # Logging functions
 log_info() {
     echo -e "${BLUE}ℹ️  $1${NC}"
@@ -61,6 +70,192 @@ log_step() {
 # Check if command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
+}
+
+# Extract app information from app.json
+extract_app_info() {
+    if [ -f "app.json" ]; then
+        APP_NAME=$(node -e "console.log(require('./app.json').expo.name)" 2>/dev/null || echo "MasterFabric")
+        BUNDLE_ID=$(node -e "console.log(require('./app.json').expo.ios.bundleIdentifier)" 2>/dev/null || echo "com.masterfabric.expo.ios")
+        APP_VERSION=$(node -e "console.log(require('./app.json').expo.version)" 2>/dev/null || echo "1.0.0")
+        BUILD_NUMBER=$(node -e "console.log(require('./app.json').expo.ios.buildNumber)" 2>/dev/null || echo "1")
+    else
+        # Fallback values
+        APP_NAME="MasterFabric"
+        BUNDLE_ID="com.masterfabric.expo.ios"
+        APP_VERSION="1.0.0"
+        BUILD_NUMBER="1"
+    fi
+}
+
+# Calculate elapsed time
+get_elapsed_time() {
+    local end_time=$(date +%s)
+    local elapsed=$((end_time - SCRIPT_START_TIME))
+    local hours=$((elapsed / 3600))
+    local minutes=$(((elapsed % 3600) / 60))
+    local seconds=$((elapsed % 60))
+    
+    if [ $hours -gt 0 ]; then
+        echo "${hours}h ${minutes}m ${seconds}s"
+    elif [ $minutes -gt 0 ]; then
+        echo "${minutes}m ${seconds}s"
+    else
+        echo "${seconds}s"
+    fi
+}
+
+# Format file size
+format_file_size() {
+    local size=$1
+    if [ -f "$(which numfmt)" ]; then
+        numfmt --to=iec-i --suffix=B "$size" 2>/dev/null || du -h "$size" | cut -f1
+    else
+        du -h "$size" | cut -f1
+    fi
+}
+
+# Open IPA in Finder
+open_ipa_in_finder() {
+    local ipa_path=$1
+    if [ -f "$ipa_path" ]; then
+        log_info "Opening IPA location in Finder..."
+        open -R "$ipa_path"
+    else
+        log_warning "IPA file not found, opening build directory instead..."
+        open "$BUILD_DIR"
+    fi
+}
+
+# Update version and build number in app.json
+update_version_info() {
+    log_step "Version & Build Number Configuration"
+    
+    # Extract current values
+    extract_app_info
+    
+    echo -e "${BLUE}Current Version Information:${NC}"
+    echo -e "  ${BLUE}Version:${NC} $APP_VERSION"
+    echo -e "  ${BLUE}Build Number:${NC} $BUILD_NUMBER"
+    echo ""
+    
+    # Ask if user wants to update
+    echo -ne "${YELLOW}Do you want to update version/build number? [y/N]: ${NC}"
+    read -n 1 -r
+    echo ""
+    
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Keeping current version: $APP_VERSION (Build $BUILD_NUMBER)"
+        return
+    fi
+    
+    # Clear any leftover input from stdin (read -n 1 doesn't consume newline)
+    # Read and discard any remaining characters including newline
+    while IFS= read -t 0.1 -r -n 1; do :; done 2>/dev/null || true
+    
+    # Step 1: Get new version (simple - any text, press Enter to skip)
+    echo ""
+    log_info "Enter new values or press Enter to keep current."
+    echo ""
+    
+    printf "${BLUE}Enter new version [Press Enter to skip] [$APP_VERSION]: ${NC}"
+    IFS= read -r new_version </dev/tty
+    
+    # Trim whitespace and use current if empty
+    new_version=$(echo "$new_version" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    if [ -z "$new_version" ]; then
+        new_version="$APP_VERSION"
+    fi
+    
+    # Step 2: Get new build number
+    while true; do
+        printf "${BLUE}Enter new build number (1-999) [Press Enter to skip] [$BUILD_NUMBER]: ${NC}"
+        IFS= read -r new_build_number </dev/tty
+        
+        # Trim whitespace
+        new_build_number=$(echo "$new_build_number" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        
+        # If empty, use current build number
+        if [ -z "$new_build_number" ]; then
+            new_build_number="$BUILD_NUMBER"
+            break
+        fi
+        
+        # Validate build number: must be numeric, range 1-999
+        if [[ "$new_build_number" =~ ^[0-9]+$ ]]; then
+            if (( new_build_number >= 1 && new_build_number <= 999 )); then
+                break
+            else
+                log_error "Build number must be between 1 and 999."
+                echo ""
+            fi
+        else
+            log_error "Build number must be numeric (1-999)."
+            echo ""
+        fi
+    done
+    
+    # Update app.json and iOS files if values changed
+    if [ "$new_version" != "$APP_VERSION" ] || [ "$new_build_number" != "$BUILD_NUMBER" ]; then
+        log_info "Updating version and build number..."
+        
+        # Step 1: Update app.json
+        node -e "
+        const fs = require('fs');
+        const appJsonPath = './app.json';
+        const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
+        
+        appJson.expo.version = '$new_version';
+        appJson.expo.ios.buildNumber = '$new_build_number';
+        
+        fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2) + '\n');
+        console.log('✅ Updated app.json');
+        " || {
+            log_error "Failed to update app.json"
+            exit 1
+        }
+        
+        # Step 2: Update iOS Info.plist
+        if [ -f "ios/MasterFabric/Info.plist" ]; then
+            # Try PlistBuddy first (most reliable)
+            if command_exists /usr/libexec/PlistBuddy; then
+                /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $new_version" "ios/MasterFabric/Info.plist" 2>/dev/null
+                /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $new_build_number" "ios/MasterFabric/Info.plist" 2>/dev/null
+                log_success "Updated Info.plist (using PlistBuddy)"
+            else
+                # Fallback: use sed for XML plist
+                # Escape special characters for sed
+                escaped_version=$(echo "$new_version" | sed 's/\./\\./g')
+                sed -i '' "s/<key>CFBundleShortVersionString<\/key>\([^<]*\)<string>[^<]*<\/string>/<key>CFBundleShortVersionString<\/key>\1<string>$escaped_version<\/string>/" "ios/MasterFabric/Info.plist"
+                sed -i '' "s/<key>CFBundleVersion<\/key>\([^<]*\)<string>[^<]*<\/string>/<key>CFBundleVersion<\/key>\1<string>$new_build_number<\/string>/" "ios/MasterFabric/Info.plist"
+                log_success "Updated Info.plist (using sed)"
+            fi
+        else
+            log_warning "Info.plist not found, skipping"
+        fi
+        
+        # Step 3: Update Xcode project.pbxproj
+        if [ -f "ios/MasterFabric.xcodeproj/project.pbxproj" ]; then
+            # Update MARKETING_VERSION and CURRENT_PROJECT_VERSION in project.pbxproj
+            sed -i '' "s/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = $new_version;/g" "ios/MasterFabric.xcodeproj/project.pbxproj"
+            sed -i '' "s/CURRENT_PROJECT_VERSION = [^;]*;/CURRENT_PROJECT_VERSION = $new_build_number;/g" "ios/MasterFabric.xcodeproj/project.pbxproj"
+            log_success "Updated project.pbxproj"
+        else
+            log_warning "project.pbxproj not found, skipping"
+        fi
+        
+        # Update local variables
+        APP_VERSION="$new_version"
+        BUILD_NUMBER="$new_build_number"
+        
+        log_success "Version and build number updated in all files"
+        echo -e "  ${BLUE}Version:${NC} $new_version"
+        echo -e "  ${BLUE}Build Number:${NC} $new_build_number"
+    else
+        log_info "No changes made"
+    fi
+    
+    echo ""
 }
 
 # Step 1: Clean all build artifacts
@@ -366,14 +561,9 @@ EOF
         cp "$IPA_FILE" "$IPA_PATH"
         local ipa_size=$(du -h "$IPA_PATH" | cut -f1)
         log_success "IPA file ready"
-        echo ""
-        echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo -e "${GREEN}🎉 Build Pipeline Completed Successfully!${NC}"
-        echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-        echo ""
-        echo -e "${GREEN}📍 IPA Location:${NC} $IPA_PATH"
-        echo -e "${GREEN}📦 IPA Size:${NC} $ipa_size"
-        echo ""
+        
+        # Show final summary
+        show_final_summary "$IPA_PATH" "$ipa_size"
     else
         log_error "IPA file not found in export directory"
         log_info "Check: $EXPORT_PATH"
@@ -381,13 +571,73 @@ EOF
     fi
 }
 
+# Show final summary
+show_final_summary() {
+    local ipa_path=$1
+    local ipa_size=$2
+    local elapsed_time=$(get_elapsed_time)
+    
+    # Extract app info if not already done
+    if [ -z "$APP_NAME" ]; then
+        extract_app_info
+    fi
+    
+    echo ""
+    echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}║           🎉 Build Pipeline Completed Successfully! 🎉     ║${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}╠════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}║  📱 App Information:                                        ║${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    printf "${GREEN}║  ${NC}  App Name:        ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$APP_NAME"
+    printf "${GREEN}║  ${NC}  Bundle ID:       ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$BUNDLE_ID"
+    printf "${GREEN}║  ${NC}  Version:         ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$APP_VERSION"
+    printf "${GREEN}║  ${NC}  Build Number:    ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$BUILD_NUMBER"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}╠════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}║  📦 Build Results:                                         ║${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    printf "${GREEN}║  ${NC}  IPA Location:    ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$ipa_path"
+    printf "${GREEN}║  ${NC}  IPA Size:        ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$ipa_size"
+    printf "${GREEN}║  ${NC}  Total Time:      ${BLUE}%-45s${NC}${GREEN}║${NC}\n" "$elapsed_time"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}╠════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}║  ${YELLOW}💡 Opening IPA location in Finder...${NC}${GREEN}                              ║${NC}"
+    echo -e "${GREEN}║                                                            ║${NC}"
+    echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Automatically open IPA location in Finder
+    sleep 1
+    open_ipa_in_finder "$ipa_path"
+}
+
 # Main execution
 main() {
+    # Extract app information at the start
+    extract_app_info
+    
     echo ""
     echo -e "${BLUE}╔════════════════════════════════════════════╗${NC}"
     echo -e "${BLUE}║   Clean IPA Build Pipeline                 ║${NC}"
     echo -e "${BLUE}║   MasterFabric iOS Build                  ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
+    echo ""
+    
+    # Ask user to update version/build number
+    update_version_info
+    
+    # Re-extract app info in case it was updated
+    extract_app_info
+    
+    echo ""
+    echo -e "${BLUE}📱 App:${NC} $APP_NAME"
+    echo -e "${BLUE}📦 Bundle ID:${NC} $BUNDLE_ID"
+    echo -e "${BLUE}🔢 Version:${NC} $APP_VERSION (Build $BUILD_NUMBER)"
     echo ""
     
     # Check for skip flags

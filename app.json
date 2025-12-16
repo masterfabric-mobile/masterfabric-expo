@@ -3,7 +3,7 @@
     "name": "MasterFabric",
     "slug": "masterfabric-expo",
     "description": "Modern mobile platform for fabric design and management applications",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./src/assets/images/app-icon.png",
     "scheme": "masterfabricexpo",
@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "icon": "./src/assets/images/app-icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "1"
+      "buildNumber": "15"
     },
     "android": {
       "adaptiveIcon": {
