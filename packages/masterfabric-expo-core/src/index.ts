@@ -69,6 +69,17 @@ export * from './components/onboarding-helper/OnboardingHelperView';
 export * from './hooks/useOnboardingHelperViewModel';
 export * from './stores/onboardingStore';
 
+// Video Player & Haptic Helper
+export * from './components/video-player-haptic-helper/VideoPlayerHapticHelperView';
+export * from './components/video-player-haptic-helper/VideoPlayerCard';
+export * from './components/video-player-haptic-helper/VideoPlayerStatusCard';
+export * from './components/video-player-haptic-helper/HapticFeedbackCard';
+export * from './components/video-player-haptic-helper/CombinedDemoCard';
+export * from './helpers/videoPlayerHapticHelper';
+export * from './hooks/useVideoPlayerHapticHelper';
+export * from './stores/videoPlayerHapticStore';
+export * from './types/videoPlayerHaptic';
+
 // Auto-Initialization
 export { autoInitMasterView, resetAutoInit } from './auto-init';
 export { useAutoInitMasterView } from './hooks/useAutoInitMasterView';
