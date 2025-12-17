@@ -71,6 +71,7 @@ export * from './stores/onboardingStore';
 
 // Video Player & Haptic Helper
 export * from './components/video-player-haptic-helper/VideoPlayerHapticHelperView';
+export * from './components/video-player-haptic-helper/VideoDisplayCard';
 export * from './components/video-player-haptic-helper/VideoPlayerCard';
 export * from './components/video-player-haptic-helper/VideoPlayerStatusCard';
 export * from './components/video-player-haptic-helper/HapticFeedbackCard';

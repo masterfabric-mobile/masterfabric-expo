@@ -53,6 +53,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'resize-outline';
     case 'app-icon-helper':
       return 'apps-outline';
+    case 'video-player-haptic-helper':
+      return 'play-circle-outline';
     default:
       return 'help-outline';
   }
@@ -97,6 +99,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for UI sizing helpers
     case 'app-icon-helper':
       return '#007AFF'; // Blue for app icon helpers
+    case 'video-player-haptic-helper':
+      return '#FF2D55'; // Pink for video player & haptic helpers
     default:
       return '#8E8E93';
   }
@@ -232,6 +236,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/app-icon-helper',
     available: true,
     category: 'device-helpers'
+  },
+  {
+    id: 'video-player-haptic-helper',
+    name: 'Video Player & Haptic Helper',
+    description: 'Video playback controls and haptic feedback integration',
+    icon: 'play-circle-outline',
+    color: '#FF2D55',
+    route: '/video-player-haptic-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 

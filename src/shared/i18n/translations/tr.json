@@ -1344,6 +1344,10 @@
     "onboardingHelper": {
       "title": "Onboarding Yardımcısı",
       "description": "Uygulamanın başlangıçtaki tanıtım deneyimini yönetme ve test etme aracı."
+    },
+    "videoPlayerHapticHelper": {
+      "title": "Video Oynatıcı & Dokunsal Yardımcı",
+      "description": "Video oynatma kontrolleri ve dokunsal geri bildirim entegrasyonu"
     }
   },
   "documentation": {

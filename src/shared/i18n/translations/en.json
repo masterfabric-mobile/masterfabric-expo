@@ -1400,6 +1400,10 @@
     "onboardingHelper": {
       "title": "Onboarding Helper",
       "description": "Tool for managing and testing the app's initial onboarding experience."
+    },
+    "videoPlayerHapticHelper": {
+      "title": "Video Player & Haptic Helper",
+      "description": "Video playback controls and haptic feedback integration"
     }
   },
   "documentation": {

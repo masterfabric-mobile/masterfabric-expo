@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Button, Pressable, Slider, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import Slider from '@react-native-community/slider';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { useTheme } from '../../contexts/ThemeContext';

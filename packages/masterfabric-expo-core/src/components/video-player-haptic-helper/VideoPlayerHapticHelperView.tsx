@@ -6,6 +6,7 @@ import { ThemedView } from '../ThemedView';
 import { useTheme } from '../../contexts/ThemeContext';
 import { getThemeColors } from '../../constants/Colors';
 import { useVideoPlayerHapticHelper } from '../../hooks/useVideoPlayerHapticHelper';
+import { VideoDisplayCard } from './VideoDisplayCard';
 import { VideoPlayerCard } from './VideoPlayerCard';
 import { HapticFeedbackCard } from './HapticFeedbackCard';
 import { CombinedDemoCard } from './CombinedDemoCard';
@@ -31,6 +32,7 @@ export function VideoPlayerHapticHelperView() {
     triggerHaptic,
     testAllHaptics,
     toggleHapticOnVideoEvents,
+    handlePlaybackStatusUpdate,
   } = useVideoPlayerHapticHelper();
 
   return (
@@ -87,6 +89,18 @@ export function VideoPlayerHapticHelperView() {
             />
           </ThemedView>
         )}
+
+        {/* Video Player Display */}
+        <View style={{ marginBottom: 16 }}>
+          <VideoDisplayCard
+            isPlaying={videoState.isPlaying}
+            volume={videoState.volume}
+            playbackRate={videoState.playbackRate}
+            onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
+            onPlay={playVideo}
+            onPause={pauseVideo}
+          />
+        </View>
 
         <View style={{ marginBottom: 16 }}>
           <VideoPlayerStatusCard

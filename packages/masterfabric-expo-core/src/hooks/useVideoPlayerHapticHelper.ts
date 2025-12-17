@@ -153,6 +153,26 @@ export const useVideoPlayerHapticHelper = () => {
     await refresh();
   }, [refresh]);
 
+  // Handle playback status update from real video player
+  const handlePlaybackStatusUpdate = useCallback(
+    (status: {
+      isPlaying: boolean;
+      positionMillis: number;
+      durationMillis: number;
+      isBuffering: boolean;
+    }) => {
+      // Update position in seconds
+      setVideoPosition(status.positionMillis / 1000);
+      // Update duration in seconds
+      if (status.durationMillis > 0) {
+        setVideoDuration(status.durationMillis / 1000);
+      }
+      // Update loading/buffering state
+      setVideoLoading(status.isBuffering);
+    },
+    [setVideoPosition, setVideoDuration, setVideoLoading]
+  );
+
   return {
     videoState,
     hapticState,
@@ -168,5 +188,6 @@ export const useVideoPlayerHapticHelper = () => {
     triggerHaptic,
     testAllHaptics,
     toggleHapticOnVideoEvents,
+    handlePlaybackStatusUpdate,
   };
 };
