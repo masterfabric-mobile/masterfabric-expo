@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { View, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { ThemedText } from '../ThemedText';
@@ -55,9 +55,9 @@ export function VideoDisplayCard({
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   const videoRef = useRef<Video>(null);
-  const [selectedVideoIndex, setSelectedVideoIndex] = React.useState(0);
-  const [isBuffering, setIsBuffering] = React.useState(false);
-  const [hasError, setHasError] = React.useState(false);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const selectedVideo = SAMPLE_VIDEOS[selectedVideoIndex];
 
@@ -244,9 +244,6 @@ export function VideoDisplayCard({
     </ThemedView>
   );
 }
-
-// Need to import React for useState
-import React from 'react';
 
 const styles = StyleSheet.create({
   container: {

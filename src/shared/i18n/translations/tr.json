@@ -1345,9 +1345,13 @@
       "title": "Onboarding Yardımcısı",
       "description": "Uygulamanın başlangıçtaki tanıtım deneyimini yönetme ve test etme aracı."
     },
-    "videoPlayerHapticHelper": {
-      "title": "Video Oynatıcı & Dokunsal Yardımcı",
-      "description": "Video oynatma kontrolleri ve dokunsal geri bildirim entegrasyonu"
+    "videoPlayerHelper": {
+      "title": "Video Oynatıcı Yardımcısı",
+      "description": "Video oynatma kontrolleri ve işlevsellik"
+    },
+    "hapticHelper": {
+      "title": "Dokunsal Yardımcı",
+      "description": "Dokunsal geri bildirim testi ve kontrolleri (yalnızca iOS/Android)"
     }
   },
   "documentation": {

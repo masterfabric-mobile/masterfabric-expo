@@ -1401,9 +1401,13 @@
       "title": "Onboarding Helper",
       "description": "Tool for managing and testing the app's initial onboarding experience."
     },
-    "videoPlayerHapticHelper": {
-      "title": "Video Player & Haptic Helper",
-      "description": "Video playback controls and haptic feedback integration"
+    "videoPlayerHelper": {
+      "title": "Video Player Helper",
+      "description": "Video playback controls and functionality"
+    },
+    "hapticHelper": {
+      "title": "Haptic Helper",
+      "description": "Haptic feedback testing and controls (iOS/Android only)"
     }
   },
   "documentation": {

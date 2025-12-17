@@ -3,7 +3,7 @@ import { ThemedText } from '@/src/shared/components/ThemedText';
 import { Image } from 'expo-image';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSupabaseCasesViewModel } from '../hooks/use-supabase-cases-view-model';
 import { supabaseCasesScreenStyles } from '../styles/supabase-cases-screen.styles';
@@ -360,7 +360,7 @@ export function SupabaseCasesScreen() {
             >
               Status
             </ThemedText>
-            <ThemedText
+            <Text
               style={{
                 color: colors.actionDescription,
                 fontSize: 14,
@@ -368,8 +368,18 @@ export function SupabaseCasesScreen() {
                 marginBottom: 12,
               }}
             >
-              This status indicator confirms that your application has successfully established a connection to the Supabase backend infrastructure. When connected, you can access all Supabase services including authentication, database operations, real-time subscriptions, storage, and edge functions.
-            </ThemedText>
+              This status indicator confirms that your application has successfully established a connection to the{' '}
+              <Text style={{ color: supabaseGreen, fontWeight: '700', textDecorationLine: 'underline' }}>
+                Supabase
+              </Text>{' '}
+              backend infrastructure. When connected, you can access all{' '}
+              <Text style={{ color: supabaseGreen, fontWeight: '700' }}>Supabase</Text> services including{' '}
+              <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>authentication</Text>,{' '}
+              <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>database operations</Text>,{' '}
+              <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>real-time subscriptions</Text>,{' '}
+              <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>storage</Text>, and{' '}
+              <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>edge functions</Text>.
+            </Text>
             <ThemedText
               style={[
                 supabaseCasesScreenStyles.statusText,

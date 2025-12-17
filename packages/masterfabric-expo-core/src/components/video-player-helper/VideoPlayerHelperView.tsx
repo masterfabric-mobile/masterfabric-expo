@@ -5,21 +5,18 @@ import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { useTheme } from '../../contexts/ThemeContext';
 import { getThemeColors } from '../../constants/Colors';
-import { useVideoPlayerHapticHelper } from '../../hooks/useVideoPlayerHapticHelper';
-import { VideoDisplayCard } from './VideoDisplayCard';
-import { VideoPlayerCard } from './VideoPlayerCard';
-import { HapticFeedbackCard } from './HapticFeedbackCard';
-import { CombinedDemoCard } from './CombinedDemoCard';
-import { VideoPlayerStatusCard } from './VideoPlayerStatusCard';
+import { useVideoPlayerHelper } from '../../hooks/useVideoPlayerHelper';
+import { VideoDisplayCard } from '../video-player-haptic-helper/VideoDisplayCard';
+import { VideoPlayerCard } from '../video-player-haptic-helper/VideoPlayerCard';
+import { VideoPlayerStatusCard } from '../video-player-haptic-helper/VideoPlayerStatusCard';
 
-export function VideoPlayerHapticHelperView() {
+export function VideoPlayerHelperView() {
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
 
   const {
     videoState,
-    hapticState,
     isLoading,
     error,
     handleRefresh,
@@ -29,11 +26,8 @@ export function VideoPlayerHapticHelperView() {
     seekVideo,
     setVolume,
     setPlaybackRate,
-    triggerHaptic,
-    testAllHaptics,
-    toggleHapticOnVideoEvents,
     handlePlaybackStatusUpdate,
-  } = useVideoPlayerHapticHelper();
+  } = useVideoPlayerHelper();
 
   return (
     <SafeAreaView
@@ -41,8 +35,8 @@ export function VideoPlayerHapticHelperView() {
       edges={['top']}
     >
       <ScreenHeader
-        title="Video Player & Haptic Helper"
-        subtitle="Test video playback controls and haptic feedback integration"
+        title="Video Player Helper"
+        subtitle="Test video playback controls and functionality"
       />
 
       <ScrollView
@@ -127,27 +121,8 @@ export function VideoPlayerHapticHelperView() {
             currentPlaybackRate={videoState.playbackRate}
           />
         </View>
-
-        <View style={{ marginBottom: 16 }}>
-          <HapticFeedbackCard
-            hapticState={hapticState}
-            onTriggerHaptic={triggerHaptic}
-            onTestAll={testAllHaptics}
-            onToggleVideoEvents={toggleHapticOnVideoEvents}
-            hapticOnVideoEvents={hapticState.hapticOnVideoEvents}
-          />
-        </View>
-
-        <View style={{ marginBottom: 16 }}>
-          <CombinedDemoCard
-            videoState={videoState}
-            hapticState={hapticState}
-            onPlayWithHaptic={playVideo}
-            onPauseWithHaptic={pauseVideo}
-            onSeekWithHaptic={seekVideo}
-          />
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
