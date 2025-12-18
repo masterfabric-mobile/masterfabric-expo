@@ -53,6 +53,10 @@ export const getHelperIcon = (helperId: string): string => {
       return 'resize-outline';
     case 'app-icon-helper':
       return 'apps-outline';
+    case 'video-player-helper':
+      return 'play-circle-outline';
+    case 'haptic-helper':
+      return 'phone-portrait-outline';
     default:
       return 'help-outline';
   }
@@ -97,6 +101,10 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for UI sizing helpers
     case 'app-icon-helper':
       return '#007AFF'; // Blue for app icon helpers
+    case 'video-player-helper':
+      return '#FF2D55'; // Pink for video player helpers
+    case 'haptic-helper':
+      return '#FF6B9D'; // Light pink for haptic helpers
     default:
       return '#8E8E93';
   }
@@ -230,6 +238,26 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     icon: 'apps-outline',
     color: '#007AFF',
     route: '/app-icon-helper',
+    available: true,
+    category: 'device-helpers'
+  },
+  {
+    id: 'video-player-helper',
+    name: 'Video Player Helper',
+    description: 'Video playback controls and functionality',
+    icon: 'play-circle-outline',
+    color: '#FF2D55',
+    route: '/video-player-helper',
+    available: true,
+    category: 'ui-helpers'
+  },
+  {
+    id: 'haptic-helper',
+    name: 'Haptic Helper',
+    description: 'Haptic feedback testing and controls (iOS/Android only)',
+    icon: 'phone-portrait-outline',
+    color: '#FF6B9D',
+    route: '/haptic-helper',
     available: true,
     category: 'device-helpers'
   }

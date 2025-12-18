@@ -257,3 +257,6 @@ export interface LoadingState {
 
 // Sizing Types
 export * from './sizing';
+
+// Video Player & Haptic Types
+export * from './videoPlayerHaptic';

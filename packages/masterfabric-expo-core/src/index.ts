@@ -69,6 +69,24 @@ export * from './components/onboarding-helper/OnboardingHelperView';
 export * from './hooks/useOnboardingHelperViewModel';
 export * from './stores/onboardingStore';
 
+// Video Player Helper (Works on all platforms)
+export * from './components/video-player-helper/VideoPlayerHelperView';
+export * from './hooks/useVideoPlayerHelper';
+export * from './stores/videoPlayerStore';
+
+// Haptic Helper (iOS/Android only, hides on web)
+export * from './components/haptic-helper/HapticHelperView';
+export * from './hooks/useHapticHelper';
+export * from './stores/hapticStore';
+
+// Shared Video Player & Haptic Components
+export * from './components/video-player-haptic-helper/VideoDisplayCard';
+export * from './components/video-player-haptic-helper/VideoPlayerCard';
+export * from './components/video-player-haptic-helper/VideoPlayerStatusCard';
+export * from './components/video-player-haptic-helper/HapticFeedbackCard';
+export * from './helpers/videoPlayerHapticHelper';
+export * from './types/videoPlayerHaptic';
+
 // Auto-Initialization
 export { autoInitMasterView, resetAutoInit } from './auto-init';
 export { useAutoInitMasterView } from './hooks/useAutoInitMasterView';
