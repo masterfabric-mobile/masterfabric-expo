@@ -11,7 +11,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import 'firebase/auth';
-import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
+import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme, networkHelper } from 'masterfabric-expo-core';
 import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -54,6 +54,9 @@ export default function RootLayout() {
     if (loaded) {
       // Start connectivity monitoring while app is active
       connectivityHelper.start(5000);
+      // Start network helper for comprehensive monitoring with automatic popup on internet loss
+      // This will monitor network status, speed, DNS, VPN, location and show popup when internet is lost
+      networkHelper.start(30000); // Check every 30 seconds
       // Initialize MasterView
       initMasterView({
         appName: 'MasterFabric Expo',
@@ -109,6 +112,12 @@ export default function RootLayout() {
         SplashScreen.hideAsync();
       });
     }
+    
+    // Cleanup on unmount
+    return () => {
+      connectivityHelper.stop();
+      networkHelper.stop();
+    };
   }, [loaded, setAppReady]);
 
   if (!loaded || !isAppReady) {
