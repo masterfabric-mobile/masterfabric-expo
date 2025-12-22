@@ -192,6 +192,7 @@ function MyScreen() {
 - **Platform** - Platform detection and utilities
 - **Permissions** - Permission management
 - **Accessibility** - Accessibility utilities
+- **Network** - Network monitoring, speed testing, DNS, VPN detection, and connectivity management
 
 ## ⚙️ Configuration
 
@@ -323,6 +324,43 @@ function MyComponent() {
   
   const animationDuration = getAnimationDuration(300); // Respects reduce motion
   const announceMessage = () => announce('Button pressed');
+}
+```
+
+### Network Helper
+
+```typescript
+import { networkHelper } from 'masterfabric-expo-core';
+import { useEffect } from 'react';
+
+function MyComponent() {
+  useEffect(() => {
+    // Start monitoring with 30 second intervals
+    networkHelper.start(30000);
+    
+    // Listen to network changes
+    const unsubscribe = networkHelper.onChange((isOnline, networkInfo) => {
+      console.log('Network status:', isOnline);
+      console.log('IP:', networkInfo.ip);
+      console.log('Location:', networkInfo.location);
+      console.log('Speed:', networkInfo.speedTest?.downloadSpeed, 'Mbps');
+      console.log('VPN:', networkInfo.vpn);
+    });
+    
+    // Manual check
+    const checkNetwork = async () => {
+      const isOnline = await networkHelper.checkNow();
+      const info = networkHelper.getNetworkInfo();
+      console.log('Network info:', info);
+    };
+    
+    checkNetwork();
+    
+    return () => {
+      unsubscribe();
+      networkHelper.stop();
+    };
+  }, []);
 }
 ```
 
