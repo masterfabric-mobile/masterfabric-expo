@@ -51,6 +51,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'open-outline';
     case 'ui-size-helper':
       return 'resize-outline';
+    case 'network-helper':
+      return 'wifi-outline';
     default:
       return 'help-outline';
   }
@@ -93,6 +95,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for URL/launcher helpers
     case 'ui-size-helper':
       return '#5856D6'; // Purple for UI sizing helpers
+    case 'network-helper':
+      return '#007AFF'; // Blue for network helpers
     default:
       return '#8E8E93';
   }
@@ -218,6 +222,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/ui-size-helper',
     available: true,
     category: 'ui-helpers'
+  },
+  {
+    id: 'network-helper',
+    name: 'Network Helper',
+    description: 'Network monitoring, speed testing, DNS, VPN detection, and connectivity management',
+    icon: 'wifi-outline',
+    color: '#007AFF',
+    route: '/network-helper',
+    available: true,
+    category: 'device-helpers'
   }
 ];
 
