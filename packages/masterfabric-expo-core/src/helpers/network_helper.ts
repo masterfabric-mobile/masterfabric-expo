@@ -190,18 +190,44 @@ class NetworkHelper {
     }
 
     // Perform speed test and gather network info in parallel
-    const [speedTest, networkDetails] = await Promise.allSettled([
+    // Add timeout to speed test (60 seconds max)
+    const speedTestPromise = Promise.race([
       this.performSpeedTest(),
+      new Promise<null>((resolve) => setTimeout(() => {
+        console.warn('Speed test timeout after 60 seconds');
+        resolve(null);
+      }, 60000)),
+    ]);
+
+    const [speedTest, networkDetails] = await Promise.allSettled([
+      speedTestPromise,
       this.gatherNetworkDetails(),
     ]);
 
     const speedTestResult = speedTest.status === 'fulfilled' ? speedTest.value : null;
     const details = networkDetails.status === 'fulfilled' ? networkDetails.value : {};
+    
+    // If speed test failed, try simple test as fallback
+    let finalSpeedTest = speedTestResult;
+    if (!finalSpeedTest) {
+      console.log('Comprehensive speed test failed, trying simple fallback...');
+      try {
+        finalSpeedTest = await Promise.race([
+          this.performSimpleSpeedTest(),
+          new Promise<null>((resolve) => setTimeout(() => {
+            console.warn('Simple speed test timeout after 30 seconds');
+            resolve(null);
+          }, 30000)),
+        ]);
+      } catch (error) {
+        console.error('Simple speed test fallback also failed:', error);
+      }
+    }
 
     return {
       isOnline: true,
       lastChecked: checkDate,
-      speedTest: speedTestResult,
+      speedTest: finalSpeedTest,
       dns: details.dns ?? null,
       ip: details.ip ?? null,
       location: details.location ?? null,
