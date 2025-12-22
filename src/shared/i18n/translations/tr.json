@@ -1344,6 +1344,10 @@
     "onboardingHelper": {
       "title": "Onboarding Yardımcısı",
       "description": "Uygulamanın başlangıçtaki tanıtım deneyimini yönetme ve test etme aracı."
+    },
+    "networkHelper": {
+      "title": "Network Yardımcısı",
+      "description": "Ağ izleme, hız testi, DNS, VPN tespiti ve bağlantı yönetimi"
     }
   },
   "documentation": {

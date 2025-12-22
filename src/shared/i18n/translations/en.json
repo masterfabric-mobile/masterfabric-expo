@@ -1396,6 +1396,10 @@
     "onboardingHelper": {
       "title": "Onboarding Helper",
       "description": "Tool for managing and testing the app's initial onboarding experience."
+    },
+    "networkHelper": {
+      "title": "Network Helper",
+      "description": "Network monitoring, speed testing, DNS, VPN detection, and connectivity management"
     }
   },
   "documentation": {
