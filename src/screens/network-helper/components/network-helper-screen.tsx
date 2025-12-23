@@ -102,7 +102,7 @@ export function NetworkHelperScreen() {
         </NetworkInfoCard>
 
         {/* Speed Test Card */}
-        {networkInfo?.speedTest && (
+        {networkInfo?.speedTest ? (
           <>
             {/* Download Speed */}
             <NetworkInfoCard title="Download Speed" icon="download">
@@ -222,7 +222,15 @@ export function NetworkHelperScreen() {
               )}
             </NetworkInfoCard>
           </>
-        )}
+        ) : networkInfo?.isOnline === true ? (
+          <NetworkInfoCard title="Speed Test" icon="speedometer">
+            <View style={{ alignItems: 'center', padding: 16 }}>
+              <Text style={{ color: colors.bodyText, fontSize: 14, textAlign: 'center' }}>
+                Speed test is running or failed. Please try again.
+              </Text>
+            </View>
+          </NetworkInfoCard>
+        ) : null}
 
         {/* Network Details Card */}
         <NetworkInfoCard title="Network Details" icon="information-circle">
