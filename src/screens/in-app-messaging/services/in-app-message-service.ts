@@ -143,26 +143,18 @@ class InAppMessageService {
     }
 
     try {
-      // First, check if dismissal already exists
-      let query = client
-        .from('in_app_message_dismissals')
-        .select('id')
-        .eq('message_id', messageId);
-
-      if (userId) {
-        query = query.eq('user_id', userId);
-      } else {
-        query = query.eq('device_id', deviceId);
-      }
-
-      const { data: existing } = await query;
-
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'in-app-message-service.ts:markAsDismissed',message:'Mark as dismissed start',data:{messageId,userId,deviceId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      
       const dismissalData: {
         message_id: number;
         user_id?: string;
         device_id?: string;
+        dismissed_at: string;
       } = {
         message_id: messageId,
+        dismissed_at: new Date().toISOString(),
       };
 
       if (userId) {
@@ -171,28 +163,46 @@ class InAppMessageService {
         dismissalData.device_id = deviceId;
       }
 
-      // If exists, update dismissed_at; otherwise insert
-      if (existing && existing.length > 0) {
-        const { error } = await client
-          .from('in_app_message_dismissals')
-          .update({ dismissed_at: new Date().toISOString() })
-          .eq('id', existing[0].id);
+      // Use upsert to atomically insert or update - prevents race conditions
+      // This will insert if not exists, or update dismissed_at if exists
+      // The unique constraint is on (message_id, user_id) or (message_id, device_id)
+      const { error } = await client
+        .from('in_app_message_dismissals')
+        .upsert(dismissalData, {
+          onConflict: userId 
+            ? 'message_id,user_id' 
+            : 'message_id,device_id',
+        });
 
-        if (error) {
-          console.error('[InAppMessageService] Error updating dismissal:', error);
-          throw error;
+      if (error) {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'in-app-message-service.ts:markAsDismissed',message:'Upsert error',data:{messageId,errorCode:error.code,errorMessage:error.message,isUniqueConstraint:error.code === '23505'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        
+        // Handle unique constraint violation (23505) - should not happen with upsert, but just in case
+        if (error.code === '23505') {
+          console.log('[InAppMessageService] Message already dismissed (race condition), ignoring duplicate');
+          // Message is already dismissed, which is the desired state - no need to throw
+          return;
         }
-      } else {
-        const { error } = await client
-          .from('in_app_message_dismissals')
-          .insert(dismissalData);
-
-        if (error) {
-          console.error('[InAppMessageService] Error inserting dismissal:', error);
-          throw error;
-        }
+        console.error('[InAppMessageService] Error upserting dismissal:', error);
+        throw error;
       }
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'in-app-message-service.ts:markAsDismissed',message:'Mark as dismissed success',data:{messageId},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
     } catch (error: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'in-app-message-service.ts:markAsDismissed',message:'Catch error',data:{messageId,errorCode:error?.code,errorMessage:error?.message,isUniqueConstraint:error?.code === '23505'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      
+      // Handle unique constraint violation at catch level too (in case check above didn't catch it)
+      if (error?.code === '23505') {
+        console.log('[InAppMessageService] Message already dismissed (race condition), ignoring duplicate insert');
+        // Message is already dismissed, which is the desired state - no need to throw
+        return;
+      }
       console.error('[InAppMessageService] Error marking message as dismissed:', error);
       throw error;
     }
