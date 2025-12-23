@@ -330,9 +330,6 @@ class NetworkHelper {
     
     for (let i = 0; i < count; i++) {
       try {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency measurement start',data:{iteration:i+1,total:count},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         const startTime = getHighPrecisionTime();
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -360,34 +357,17 @@ class NetworkHelper {
           const latency = endTime - startTime;
           if (latency > 0 && latency < 10000) { // Valid latency between 0-10s
             latencies.push(latency);
-            // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency measurement success',data:{iteration:i+1,latency:latency,responseOk:response.ok,status:response.status},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-            // #endregion
-          } else {
-            // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency out of range',data:{iteration:i+1,latency:latency,responseOk:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-            // #endregion
           }
-        } else {
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency response not ok',data:{iteration:i+1,status:response.status,statusText:response.statusText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-          // #endregion
         }
         
         // Small delay between measurements
         await new Promise(resolve => setTimeout(resolve, 100));
       } catch (error) {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency measurement error',data:{iteration:i+1,errorName:error instanceof Error ? error.name : 'Unknown',errorMessage:error instanceof Error ? error.message : String(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         // Skip failed measurements
         continue;
       }
     }
     
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureLatency',message:'Latency measurement complete',data:{totalAttempted:count,successful:latencies.length,latencies:latencies},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     return latencies;
   }
 
@@ -456,22 +436,12 @@ class NetworkHelper {
         // Log detailed calculation for debugging
         console.log(`Download calculation: size=${sizeInBytes} bytes (${(sizeInBytes / 1024 / 1024).toFixed(2)} MB), duration=${duration.toFixed(3)}s, bits=${bitsTransferred}, bps=${bitsPerSecond.toFixed(0)}, speed=${speedMbps.toFixed(2)} Mbps`);
         
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureDownloadSpeed',message:'Download speed calculated',data:{size:size,run:i+1,sizeInBytes,expectedSize,duration,bitsTransferred,bitsPerSecond,speedMbps,blobSize:blob.size},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
-        
         // Validate speed result (reasonable range: 0.01 Mbps to 10,000 Mbps)
         if (speedMbps > 0.01 && speedMbps < 10000 && !isNaN(speedMbps) && isFinite(speedMbps)) {
           speeds.push(speedMbps);
           console.log(`Download speed test success: ${speedMbps.toFixed(2)} Mbps for size ${size}, run ${i + 1}`);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureDownloadSpeed',message:'Download test success',data:{size:size,run:i+1,speedMbps},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-          // #endregion
         } else {
           console.warn(`Invalid speed calculation: ${speedMbps} Mbps, duration: ${duration}s, size: ${sizeInBytes} bytes`);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureDownloadSpeed',message:'Download test invalid result',data:{size:size,run:i+1,speedMbps,duration,sizeInBytes},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-          // #endregion
         }
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
@@ -497,9 +467,6 @@ class NetworkHelper {
     
     for (let i = 0; i < runs; i++) {
       try {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload test start',data:{size:size,run:i+1,totalRuns:runs},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
         // Create test data for each run
         // Try different methods for React Native compatibility
         let body: Blob | ArrayBuffer | string;
@@ -526,17 +493,10 @@ class NetworkHelper {
           console.log(`Upload test: Using ArrayBuffer method for size ${size}, run ${i + 1}`);
         }
         
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Body created',data:{size:size,run:i+1,bodyType:bodyType},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
-        
         const controller = new AbortController();
         const timeoutId = setTimeout(() => {
           controller.abort();
           console.warn(`Upload speed test timeout for size ${size}, run ${i + 1}`);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload timeout',data:{size:size,run:i+1,timeoutMs:timeoutMs},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-          // #endregion
         }, timeoutMs);
         
         // Start timing right before fetch (includes network overhead)
@@ -559,15 +519,9 @@ class NetworkHelper {
             body: body as any,
             signal: controller.signal,
           });
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Fetch completed',data:{size:size,run:i+1,status:response.status,ok:response.ok,method:'POST'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
         } catch (fetchError) {
           clearTimeout(timeoutId);
           console.error(`Upload POST failed for size ${size}, run ${i + 1}:`, fetchError);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'POST fetch error',data:{size:size,run:i+1,errorName:fetchError instanceof Error ? fetchError.name : 'Unknown',errorMessage:fetchError instanceof Error ? fetchError.message : String(fetchError)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
           // POST failed, skip this run
           continue;
         }
@@ -580,9 +534,6 @@ class NetworkHelper {
         } catch (textError) {
           clearTimeout(timeoutId);
           console.error(`Upload response read failed for size ${size}, run ${i + 1}:`, textError);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Response read error',data:{size:size,run:i+1,errorName:textError instanceof Error ? textError.name : 'Unknown'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
           continue;
         }
         
@@ -613,20 +564,11 @@ class NetworkHelper {
           if (speedMbps > 0.01 && speedMbps < 10000 && !isNaN(speedMbps) && isFinite(speedMbps)) {
             speeds.push(speedMbps);
             console.log(`Upload speed test success: ${speedMbps.toFixed(2)} Mbps for size ${size}, run ${i + 1}`);
-            // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload success',data:{size:size,run:i+1,speedMbps:speedMbps,duration:duration},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-            // #endregion
           } else {
             console.warn(`Invalid speed calculation: ${speedMbps} Mbps, duration: ${duration}s, size: ${size} bytes`);
-            // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Invalid speed',data:{size:size,run:i+1,speedMbps:speedMbps,duration:duration},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-            // #endregion
           }
         } else {
           console.warn(`Upload speed test failed: HTTP ${response.status} for size ${size}, run ${i + 1}`);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Response not ok',data:{size:size,run:i+1,status:response.status,ok:response.ok},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
         }
         
         // Small delay between upload tests
@@ -636,22 +578,12 @@ class NetworkHelper {
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           console.error(`Upload speed test error for size ${size}, run ${i + 1}:`, error);
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload exception',data:{size:size,run:i+1,errorName:error.name,errorMessage:error.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
-        } else {
-          // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload aborted',data:{size:size,run:i+1},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-          // #endregion
         }
         continue;
       }
     }
     
     console.log(`Upload speed test completed: ${speeds.length}/${runs} successful for size ${size}`);
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:measureUploadSpeed',message:'Upload test complete',data:{size:size,totalRuns:runs,successful:speeds.length,speeds:speeds},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-    // #endregion
     return speeds;
   }
 
@@ -915,9 +847,6 @@ class NetworkHelper {
       // Calculate jitter (Cloudflare style - variation in latency)
       const jitter = this.calculateJitter(unloadedLatencies);
       console.log(`Jitter: ${jitter.average.toFixed(2)} ms (min: ${jitter.min.toFixed(2)} ms, max: ${jitter.max.toFixed(2)} ms) from ${jitter.measurements.length} measurements`);
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSpeedTest',message:'Jitter calculated',data:{latencyCount:unloadedLatencies.length,jitterAverage:jitter.average,jitterMin:jitter.min,jitterMax:jitter.max,jitterMeasurements:jitter.measurements.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       
       // Calculate packet loss (simplified estimation)
       // In a real implementation, this would use ICMP ping, but React Native doesn't support that
@@ -936,10 +865,6 @@ class NetworkHelper {
         ? ((totalRequests - successfulRequests) / totalRequests) * 100 
         : 0;
       
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSpeedTest',message:'Packet loss calculation',data:{totalLatencyRequests,totalDownloadRequests,totalUploadRequests,successfulLatency,successfulDownload,successfulUpload,totalRequests,successfulRequests,packetLoss},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
-      
       // Calculate network quality score
       const networkQualityScore = this.calculateNetworkQualityScore(
         downloadOverall.speed,
@@ -948,10 +873,6 @@ class NetworkHelper {
         jitter.average,
         packetLoss
       );
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSpeedTest',message:'Final results',data:{downloadSpeed:downloadOverall.speed,uploadSpeed:uploadOverall.speed,latency:unloadedLatency.average,jitter:jitter.average,packetLoss,networkQualityScore},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       
       return {
         download: {
@@ -1137,29 +1058,17 @@ class NetworkHelper {
       // Jitter is the variation in latency between consecutive measurements
       // Only calculate if we have real latency measurements
       let jitter;
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSimpleSpeedTest',message:'Jitter calculation start',data:{latencyCount:unloadedLatencies.length,latencies:unloadedLatencies},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       if (unloadedLatencies.length >= 2) {
         jitter = this.calculateJitter(unloadedLatencies);
         console.log(`performSimpleSpeedTest: Jitter calculated from ${unloadedLatencies.length} latencies: ${jitter.average.toFixed(2)} ms (min: ${jitter.min.toFixed(2)} ms, max: ${jitter.max.toFixed(2)} ms)`);
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSimpleSpeedTest',message:'Jitter calculated',data:{latencyCount:unloadedLatencies.length,jitterAverage:jitter.average,jitterMin:jitter.min,jitterMax:jitter.max},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
       } else if (unloadedLatencies.length === 1) {
         // Single latency measurement - jitter is 0
         jitter = { average: 0, min: 0, max: 0, measurements: [] };
         console.log(`performSimpleSpeedTest: Only 1 latency measurement, jitter is 0`);
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSimpleSpeedTest',message:'Jitter zero - single latency',data:{latencyCount:1},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
       } else {
         // No latency measurements - jitter is 0 (but this is not ideal)
         jitter = { average: 0, min: 0, max: 0, measurements: [] };
         console.warn(`performSimpleSpeedTest: No latency measurements for jitter calculation`);
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSimpleSpeedTest',message:'Jitter zero - no latencies',data:{latencyCount:0},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
       }
       
       // Calculate packet loss correctly
@@ -1195,9 +1104,6 @@ class NetworkHelper {
       console.log(`  - Upload: ${successfulUpload}/${totalUploadAttempted} successful`);
       console.log(`  - Total: ${successfulRequests}/${totalRequests} successful, ${failedRequests} failed`);
       console.log(`  - Packet Loss: ${packetLoss.toFixed(2)}%`);
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:performSimpleSpeedTest',message:'Packet loss calculation',data:{totalLatencyAttempted,totalDownloadAttempted,totalUploadAttempted,successfulLatency,successfulDownload,successfulUpload,totalRequests,successfulRequests,failedRequests,packetLoss},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
       
       const networkQualityScore = this.calculateNetworkQualityScore(
         downloadOverall.speed,
