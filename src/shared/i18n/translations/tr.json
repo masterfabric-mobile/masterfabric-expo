@@ -1348,6 +1348,14 @@
     "networkHelper": {
       "title": "Network Yardımcısı",
       "description": "Ağ izleme, hız testi, DNS, VPN tespiti ve bağlantı yönetimi"
+    },
+    "videoPlayerHelper": {
+      "title": "Video Oynatıcı Yardımcısı",
+      "description": "Video oynatma kontrolleri ve işlevsellik"
+    },
+    "hapticHelper": {
+      "title": "Dokunsal Yardımcı",
+      "description": "Dokunsal geri bildirim testi ve kontrolleri (yalnızca iOS/Android)"
     }
   },
   "documentation": {

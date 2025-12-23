@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { supabaseCasesScreenStyles } from '../styles/supabase-cases-screen.styles';
 
 const supabaseGreen = '#3ECF8E';
@@ -73,6 +73,24 @@ export function AuthCaseView({ user, isConnected, onBack }: AuthCaseViewProps) {
         >
           Connection Status
         </ThemedText>
+        <Text
+          style={{
+            color: colors.actionDescription,
+            fontSize: 14,
+            lineHeight: 20,
+            marginBottom: 12,
+          }}
+        >
+          This indicator shows whether your application has successfully established a connection to the{' '}
+          <Text style={{ color: supabaseGreen, fontWeight: '700', textDecorationLine: 'underline' }}>
+            Supabase
+          </Text>{' '}
+          backend service. A successful connection means that all{' '}
+          <Text style={{ fontWeight: '600', textDecorationLine: 'underline' }}>authentication operations</Text>, including{' '}
+          <Text style={{ fontWeight: '600' }}>sign-in</Text>,{' '}
+          <Text style={{ fontWeight: '600' }}>sign-up</Text>, and{' '}
+          <Text style={{ fontWeight: '600' }}>session management</Text>, are fully operational and ready to use.
+        </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <View
             style={{

@@ -447,6 +447,10 @@
       "title": "Firebase Helper",
       "description": "Auth, analytics (web only), and Firestore utilities"
     },
+    "appIconHelper": {
+      "title": "App Icon Helper",
+      "description": "Change your app icon dynamically on iOS devices"
+    },
     "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {
@@ -1400,6 +1404,14 @@
     "networkHelper": {
       "title": "Network Helper",
       "description": "Network monitoring, speed testing, DNS, VPN detection, and connectivity management"
+    },
+    "videoPlayerHelper": {
+      "title": "Video Player Helper",
+      "description": "Video playback controls and functionality"
+    },
+    "hapticHelper": {
+      "title": "Haptic Helper",
+      "description": "Haptic feedback testing and controls (iOS/Android only)"
     }
   },
   "documentation": {
@@ -1449,10 +1461,14 @@
           "title": "Validator Helper",
           "description": "Form validation utilities"
         },
-        "uiSizeHelper": {
-          "title": "UI Size Helper",
-          "description": "Sizing system, spacing, typography, and responsive design utilities"
-        }
+    "uiSizeHelper": {
+      "title": "UI Size Helper",
+      "description": "Sizing system, spacing, typography, and responsive design utilities"
+    },
+    "appIconHelper": {
+      "title": "App Icon Helper",
+      "description": "Change your app icon dynamically on iOS devices"
+    }
       },
       "core": {
         "title": "Core System",

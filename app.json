@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "icon": "./src/assets/images/app-icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "1"
+      "buildNumber": "18"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.masterfabric.expo.android",
-      "versionCode": 1
+      "versionCode": 18
     },
     "web": {
       "bundler": "metro",

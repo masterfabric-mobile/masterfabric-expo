@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
-import { getThemeColors, useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { getThemeColors } from '../../constants/Colors';
 import { getBatteryColor } from '../../helpers/batteryHelper';
 import { batteryStatusCardStyles } from '../../styles/battery_status_card.styles';
 
