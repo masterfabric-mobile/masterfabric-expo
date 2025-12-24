@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Recipio",
+    "slug": "recipio",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.recipio.app"
+    },
+    "android": {
+      "package": "com.recipio.app"
+    }
+  }
+}
