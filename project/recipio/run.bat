@@ -45,7 +45,7 @@ echo.
 REM node_modules kontrolü
 if not exist "node_modules" (
     echo 📦 node_modules bulunamadı, bağımlılıklar yükleniyor...
-    call npm install --legacy-peer-deps
+    call npm install
     echo.
 ) else (
     echo ✅ node_modules mevcut

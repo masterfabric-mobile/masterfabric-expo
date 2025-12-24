@@ -43,7 +43,7 @@ echo ""
 
 if [ ! -d "node_modules" ]; then
     echo -e "${YELLOW}📦 node_modules not found, installing dependencies...${NC}"
-    npm install --legacy-peer-deps
+    npm install
     echo ""
 else
     echo -e "${GREEN}✅ node_modules exists${NC}"

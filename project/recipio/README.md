@@ -50,7 +50,7 @@ recipio/
 
 ```bash
 cd project/recipio
-npm install --legacy-peer-deps
+npm install
 ```
 
 ### Running the Application
