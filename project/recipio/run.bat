@@ -1,92 +1,91 @@
 @echo off
 REM Recipio Test Script (Windows)
-REM Bu script Recipio uygulamasını test etmek için kullanılır
+REM Simple script to test Recipio app
 
 echo.
 echo 🚀 Recipio Test Script
 echo.
 
-REM Script'in bulunduğu dizine git
+REM Navigate to script directory
 cd /d "%~dp0"
 
-echo 📁 Dizin: %CD%
+echo 📁 Directory: %CD%
 echo.
 
-REM Node.js kontrolü
+REM Check Node.js
 where node >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo ❌ Node.js bulunamadı! Lütfen Node.js yükleyin.
+    echo ❌ Node.js not found! Please install Node.js.
     exit /b 1
 )
 
 for /f "tokens=*" %%i in ('node --version') do set NODE_VERSION=%%i
 echo ✅ Node.js: %NODE_VERSION%
 
-REM npm kontrolü
+REM Check npm
 where npm >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo ❌ npm bulunamadı! Lütfen npm yükleyin.
+    echo ❌ npm not found! Please install npm.
     exit /b 1
 )
 
 for /f "tokens=*" %%i in ('npm --version') do set NPM_VERSION=%%i
 echo ✅ npm: %NPM_VERSION%
 
-REM npx kontrolü
+REM Check npx
 where npx >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo ❌ npx bulunamadı! Lütfen npm ile birlikte yüklenmiş olmalı.
+    echo ❌ npx not found! It should be installed with npm.
     exit /b 1
 )
 
-echo ✅ Expo CLI mevcut
+echo ✅ Expo CLI available
 echo.
 
-REM node_modules kontrolü
+REM Check node_modules
 if not exist "node_modules" (
-    echo 📦 node_modules bulunamadı, bağımlılıklar yükleniyor...
+    echo 📦 node_modules not found, installing dependencies...
     call npm install
     echo.
 ) else (
-    echo ✅ node_modules mevcut
+    echo ✅ node_modules exists
     echo.
 )
 
-REM package.json kontrolü
+REM Check package.json
 if not exist "package.json" (
-    echo ❌ package.json bulunamadı!
+    echo ❌ package.json not found!
     exit /b 1
 )
 
-REM App.tsx kontrolü
+REM Check App.tsx
 if not exist "App.tsx" (
-    echo ❌ App.tsx bulunamadı!
+    echo ❌ App.tsx not found!
     exit /b 1
 )
 
-echo ✅ Tüm dosyalar mevcut
+echo ✅ All files exist
 echo.
 
-REM Cache temizle
-echo 🧹 Cache temizleniyor...
+REM Clean cache
+echo 🧹 Cleaning cache...
 if exist .expo (
-    echo   - .expo klasörü siliniyor...
+    echo   - Removing .expo folder...
     rmdir /s /q .expo
 )
 if exist node_modules\.cache (
-    echo   - node_modules\.cache klasörü siliniyor...
+    echo   - Removing node_modules\.cache folder...
     rmdir /s /q node_modules\.cache
 )
-echo ✅ Cache temizlendi!
+echo ✅ Cache cleaned!
 echo.
 
-echo 🎯 Expo başlatılıyor...
-echo    iOS için: 'i' tuşuna basın
-echo    Android için: 'a' tuşuna basın
-echo    Web için: 'w' tuşuna basın
-echo    QR kod ile: Expo Go uygulaması ile tarayın
+echo 🎯 Starting Expo...
+echo    Press 'i' for iOS
+echo    Press 'a' for Android
+echo    Press 'w' for Web
+echo    Scan QR code with Expo Go app
 echo.
 
-REM Expo'yu başlat (cache temizleyerek)
+REM Start Expo (with cache clear)
 call npx expo start --clear
-
