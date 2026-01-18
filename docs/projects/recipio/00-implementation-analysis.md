@@ -550,6 +550,235 @@ module.exports = {
 - ✅ Firebase ve Sentry stub edilir (kullanılmıyor)
 - ✅ Optional Expo paketleri stub edilir
 
+### 8. Stub'dan Pakete Geçiş (Genel Kural - Tüm Stub'lar İçin)
+
+**Durum:** İleride stub edilmiş herhangi bir paketi kullanmak istediğinizde, stub'u kaldırıp gerçek paketi yükleyebilirsiniz. Bu kural **tüm stub'larda bulunan paketler** için geçerlidir.
+
+**Stub'da Bulunan Paketler:**
+- `firebase` / `firebase/*` (Firebase SDK)
+- `@sentry/react-native` (Sentry error tracking)
+- `@react-native-community/slider` (Slider component)
+- `expo-haptics` (Haptic feedback)
+- `expo-battery` (Battery information)
+- `expo-av` (Audio/Video)
+- `expo-web-browser` (Web browser)
+
+**Genel Geçiş Süreci (Tüm Paketler İçin):**
+
+#### Adım 1: Paketi Yükleyin
+
+```bash
+# Örnek: Firebase için
+npm install firebase
+
+# Örnek: Sentry için
+npm install @sentry/react-native
+
+# Örnek: expo-haptics için
+npm install expo-haptics
+
+# Örnek: expo-av için
+npm install expo-av
+
+# Genel format: npm install <package-name>
+```
+
+#### Adım 2: Metro Config'den Stub'u Kaldırın
+
+`metro.config.js` dosyasında 3 yerde değişiklik yapmanız gerekir:
+
+**2.1. Stub Path Tanımını Kaldırın veya Comment Edin:**
+
+```javascript
+// metro.config.js
+const { getDefaultConfig } = require('expo/metro-config');
+const path = require('path');
+
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, '../..');
+const config = getDefaultConfig(projectRoot);
+
+// Stub paths - Kullanmak istediğiniz paketin stub'unu kaldırın
+// const firebaseStub = path.resolve(projectRoot, 'metro-stubs/firebase-stub.js'); // ← Kaldırıldı
+const sentryStub = path.resolve(projectRoot, 'metro-stubs/sentry-stub.js');
+const sliderStub = path.resolve(projectRoot, 'metro-stubs/slider-stub.js');
+// ... diğer stub'lar
+```
+
+**2.2. resolveRequest Fonksiyonundan Stub Kontrolünü Kaldırın:**
+
+```javascript
+// Custom resolver
+const originalResolveRequest = config.resolver.resolveRequest;
+config.resolver.resolveRequest = (context, moduleName, platform) => {
+  // Kullanmak istediğiniz paketin stub kontrolünü kaldırın veya comment edin
+  
+  // Örnek: Firebase için
+  // if (moduleName.startsWith('firebase/') || moduleName === 'firebase') {
+  //   return { filePath: firebaseStub, type: 'sourceFile' };
+  // } // ← Bu satırları kaldırın veya comment edin
+
+  // Örnek: Sentry için
+  // if (moduleName === '@sentry/react-native') {
+  //   return { filePath: sentryStub, type: 'sourceFile' };
+  // } // ← Kullanmak istiyorsanız bu satırları kaldırın
+
+  // Örnek: expo-haptics için
+  // if (moduleName === 'expo-haptics') {
+  //   return { filePath: expoHapticsStub, type: 'sourceFile' };
+  // } // ← Kullanmak istiyorsanız bu satırları kaldırın
+
+  // Diğer stub kontrolleri (kullanılmayan paketler için)
+  if (moduleName === '@sentry/react-native') {
+    return { filePath: sentryStub, type: 'sourceFile' };
+  }
+  // ... diğer stub kontrolleri
+
+  // Use default resolver for everything else
+  if (originalResolveRequest) {
+    return originalResolveRequest(context, moduleName, platform);
+  }
+  return context.resolveRequest(context, moduleName, platform);
+};
+```
+
+**2.3. extraNodeModules'dan Stub Referansını Kaldırın:**
+
+```javascript
+config.resolver.extraNodeModules = {
+  '@masterfabric-expo/core': path.resolve(workspaceRoot, 'packages/masterfabric-expo-core'),
+  // 'firebase': firebaseStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
+  // '@sentry/react-native': sentryStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
+  // 'expo-haptics': expoHapticsStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
+  // ... diğer stub referansları
+};
+```
+
+#### Adım 3: Stub Dosyasını Silin (Opsiyonel)
+
+```bash
+# Stub dosyasını silebilirsiniz (artık gerekli değil)
+# Örnek: Firebase için
+rm metro-stubs/firebase-stub.js
+
+# Örnek: Sentry için
+rm metro-stubs/sentry-stub.js
+
+# Örnek: expo-haptics için
+rm metro-stubs/expo-haptics-stub.js
+
+# Not: Silmek zorunlu değildir, sadece kullanılmaz
+```
+
+#### Adım 4: Paketi Import Edip Kullanın
+
+```typescript
+// Artık paketi normal şekilde import edebilirsiniz
+
+// Örnek: Firebase
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+
+// Örnek: Sentry
+import * as Sentry from '@sentry/react-native';
+Sentry.init({ dsn: 'your-sentry-dsn' });
+
+// Örnek: expo-haptics
+import * as Haptics from 'expo-haptics';
+Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+// Örnek: expo-av
+import { Audio } from 'expo-av';
+const sound = new Audio.Sound();
+
+// Örnek: expo-web-browser
+import * as WebBrowser from 'expo-web-browser';
+await WebBrowser.openBrowserAsync('https://example.com');
+
+// Örnek: @react-native-community/slider
+import Slider from '@react-native-community/slider';
+<Slider value={50} minimumValue={0} maximumValue={100} />
+```
+
+#### Adım 5: Native Modül Kurulumu (Gerekirse)
+
+Bazı paketler native modül gerektirir (özellikle Expo paketleri):
+
+```bash
+# iOS için CocoaPods
+cd ios
+pod install
+cd ..
+
+# Android için
+# Gradle sync otomatik olarak yapılır (Expo paketleri için)
+# Native modül gerektiren paketler için manuel kurulum gerekebilir
+```
+
+**Native Modül Gerektiren Paketler:**
+- ✅ `expo-haptics` - Native modül gerektirir
+- ✅ `expo-battery` - Native modül gerektirir
+- ✅ `expo-av` - Native modül gerektirir
+- ✅ `expo-web-browser` - Native modül gerektirir
+- ✅ `@sentry/react-native` - Native modül gerektirir
+- ⚠️ `firebase` - Bazı modüller native gerektirebilir
+- ⚠️ `@react-native-community/slider` - Native modül gerektirir
+
+#### Adım 6: Metro Bundler'ı Yeniden Başlatın
+
+```bash
+# Cache'i temizleyip yeniden başlatın (ÖNEMLİ!)
+npx expo start --clear
+
+# Veya
+npm start -- --clear
+```
+
+**Önemli:** Metro config değişikliklerinden sonra mutlaka `--clear` flag'i ile yeniden başlatın, aksi halde stub hala kullanılabilir.
+
+#### Genel Geçiş Checklist (Tüm Paketler İçin)
+
+Herhangi bir stub edilmiş paketi kullanmak için:
+
+- [ ] **Paketi yükleyin**: `npm install <package-name>`
+- [ ] **Metro config'den stub path tanımını kaldırın** (veya comment edin)
+- [ ] **resolveRequest fonksiyonundan stub kontrolünü kaldırın**
+- [ ] **extraNodeModules'dan stub referansını kaldırın**
+- [ ] **Stub dosyasını silin** (opsiyonel, zorunlu değil)
+- [ ] **Paketi import edip kullanın**
+- [ ] **Native modül kurulumu yapın** (gerekirse: `cd ios && pod install`)
+- [ ] **Metro bundler'ı `--clear` ile yeniden başlatın**: `npx expo start --clear`
+
+#### Paket-Specific Notlar
+
+**Firebase:**
+- Tüm Firebase modülleri için (`firebase/app`, `firebase/auth`, `firebase/firestore`, vb.) tek stub kontrolü yeterli
+- Native modül gerektirebilir (özellikle Auth ve Analytics için)
+
+**Sentry:**
+- `@sentry/react-native` paketi native modül gerektirir
+- iOS için CocoaPods kurulumu gerekli
+- Android için Gradle sync gerekli
+
+**Expo Paketleri (expo-haptics, expo-battery, expo-av, expo-web-browser):**
+- Hepsi native modül gerektirir
+- `pod install` gerekli (iOS)
+- Expo SDK versiyonu ile uyumlu olmalı
+
+**Slider:**
+- `@react-native-community/slider` native modül gerektirir
+- iOS ve Android için native kurulum gerekli
+
+**Önemli Genel Notlar:**
+- ✅ **Stub'dan pakete geçiş her zaman mümkündür** - Tüm stub'larda bulunan paketler için geçerlidir
+- ✅ **Stub dosyasını silmek zorunlu değildir** - Sadece kullanılmaz, ama silmek daha temizdir
+- ✅ **Metro config'i güncelledikten sonra mutlaka `--clear` ile yeniden başlatın** - Aksi halde stub hala kullanılabilir
+- ✅ **Native modül gerektiren paketler için iOS/Android kurulumu gerekebilir** - `pod install` veya Gradle sync
+- ✅ **Paketi kullanmaya başladıktan sonra stub artık çalışmaz** - Çünkü gerçek paket yüklü ve Metro onu bulur
+- ✅ **Birden fazla paketi aynı anda geçirebilirsiniz** - Her paket için aynı adımları tekrarlayın
+- ✅ **Stub'u kaldırmadan paketi yüklerseniz hata alabilirsiniz** - Metro stub'u kullanmaya devam eder
+
 ---
 
 ## 📁 Dosya Yapısı ve İsimlendirme
