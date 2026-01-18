@@ -1013,6 +1013,82 @@
         "appStoreId": "123456789"
       }
     },
+    "webViewerHelper": {
+      "title": "Web Viewer Helper",
+      "description": "Display HTML content and web URLs within the app using WebView",
+      "testSuite": "Web Viewer Helper Test Suite",
+      "testInput": "Test Input",
+      "testResults": "Test Results",
+      "runningTests": "Running Tests...",
+      "runTests": "Run All Tests",
+      "functions": "functions",
+      "contentType": "Content Type",
+      "htmlContent": "HTML Content",
+      "urlContent": "URL",
+      "autoDetect": "Auto-detect",
+      "htmlInput": "HTML Content:",
+      "htmlPlaceholder": "<html><body><h1>Hello World!</h1></body></html>",
+      "urlInput": "URL:",
+      "urlPlaceholder": "https://example.com",
+      "contentInput": "Content (HTML or URL):",
+      "contentPlaceholder": "Enter HTML content or URL...",
+      "baseUrlInput": "Base URL (optional):",
+      "baseUrlPlaceholder": "https://example.com",
+      "headersInput": "Headers (optional):",
+      "headersPlaceholder": "Authorization: Bearer token",
+      "methodInput": "Method:",
+      "methodGet": "GET",
+      "methodPost": "POST",
+      "bodyInput": "Body (for POST):",
+      "bodyPlaceholder": "JSON or form data",
+      "preview": "Preview",
+      "loadContent": "Load Content",
+      "html": "Creates WebView source from HTML string",
+      "url": "Creates WebView source from URL",
+      "open": "Auto-detects HTML vs URL and creates WebView source",
+      "isValidUrl": "Validates if string is a valid URL",
+      "isHtmlContent": "Detects if content is HTML",
+      "validation": {
+        "emptyHtml": "Please enter HTML content",
+        "emptyUrl": "Please enter a URL",
+        "emptyContent": "Please enter HTML content or URL",
+        "invalidUrl": "Invalid URL format. Please check and try again",
+        "invalidContent": "Invalid content. Please enter valid HTML or URL",
+        "loadError": "Failed to load content"
+      },
+      "input": "Input:",
+      "output": "Output:",
+      "sourceType": "Source Type:",
+      "sourceHtml": "HTML",
+      "sourceUri": "URL",
+      "functionNames": {
+        "html": "html",
+        "url": "url",
+        "open": "open",
+        "isValidUrl": "isValidUrl",
+        "isHtmlContent": "isHtmlContent"
+      },
+      "messages": {
+        "empty": "(empty)",
+        "notProvided": "(not provided)",
+        "success": "Success",
+        "failure": "Failure",
+        "error": "Error",
+        "invalidUrl": "Invalid URL",
+        "emptyContent": "Empty content",
+        "htmlDetected": "HTML content detected",
+        "urlDetected": "URL detected"
+      },
+      "examples": {
+        "title": "Examples",
+        "htmlExample": "HTML Example",
+        "urlExample": "URL Example",
+        "autoDetectExample": "Auto-detect Example",
+        "termsOfService": "Terms of Service",
+        "privacyPolicy": "Privacy Policy",
+        "aboutPage": "About Page"
+      }
+    },
     "timeHelper": {
       "title": "Time Helper",
       "description": "Date and time manipulation utilities",
@@ -1456,6 +1532,10 @@
         "validatorHelper": {
           "title": "Validator Helper",
           "description": "Form validation utilities"
+        },
+        "webViewerHelper": {
+          "title": "Web Viewer Helper",
+          "description": "Display HTML content and web URLs within the app using WebView"
         },
     "uiSizeHelper": {
       "title": "UI Size Helper",
