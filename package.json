@@ -74,7 +74,7 @@
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",
     "expo-web-browser": "~15.0.10",
-    "firebase": "^12.6.0",
+    "firebase": "^12.8.0",
     "i18n-js": "^4.5.1",
     "masterfabric-expo-core": "file:packages/masterfabric-expo-core",
     "react": "19.1.0",
