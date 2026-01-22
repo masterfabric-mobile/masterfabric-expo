@@ -5,32 +5,18 @@
  */
 
 import { create } from 'zustand';
-import { WebViewTestInput, WebViewTestResult } from '../models/models';
+import { WebViewSource, WebViewTestInput, WebViewTestResult } from '../models/models';
 
 interface WebViewerHelperStore {
   testInput: WebViewTestInput;
   testResults: WebViewTestResult[];
   isLoading: boolean;
-  currentSource?: {
-    uri?: string;
-    html?: string;
-    baseUrl?: string;
-    headers?: Record<string, string>;
-    method?: 'GET' | 'POST';
-    body?: string;
-  };
+  currentSource?: WebViewSource;
   setTestInput: (input: WebViewTestInput) => void;
   updateTestInput: (updates: Partial<WebViewTestInput>) => void;
   setTestResults: (results: WebViewTestResult[]) => void;
   setIsLoading: (loading: boolean) => void;
-  setCurrentSource: (source?: {
-    uri?: string;
-    html?: string;
-    baseUrl?: string;
-    headers?: Record<string, string>;
-    method?: 'GET' | 'POST';
-    body?: string;
-  }) => void;
+  setCurrentSource: (source?: WebViewSource) => void;
   clearResults: () => void;
 }
 
