@@ -30,7 +30,8 @@ export type HttpMethod = typeof HTTP_METHODS[number];
 export const WEB_VIEW_PREVIEW = {
   // Initial height
   INITIAL_HEIGHT: 100,
-  MIN_HEIGHT: 50,
+  MIN_HEIGHT: 200,
+  MAX_HEIGHT: 800, // Maximum height before scrolling
   
   // Height measurement
   MAX_ATTEMPTS_DARK_THEME: 10,
@@ -46,10 +47,10 @@ export const WEB_VIEW_PREVIEW = {
   FONT_STYLE_MEASURE_DELAY: 300,
   URL_CONTENT_MEASURE_DELAY: 200,
   
-  // Padding calculation
+  // Padding calculation - exactly 3 lines of padding (96px font * 2 line-height * 3 = 576px)
   SMALL_CONTENT_THRESHOLD: 50,
   MEDIUM_CONTENT_THRESHOLD: 200,
-  SMALL_CONTENT_PADDING: 10,
-  MEDIUM_CONTENT_PADDING: 20,
-  LARGE_CONTENT_PADDING: 30,
+  SMALL_CONTENT_PADDING: 96, // 1 line padding for small content
+  MEDIUM_CONTENT_PADDING: 192, // 2 lines padding for medium content
+  LARGE_CONTENT_PADDING: 288, // 3 lines padding for large content
 } as const;
