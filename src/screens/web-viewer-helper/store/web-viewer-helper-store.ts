@@ -20,11 +20,12 @@ interface WebViewerHelperStore {
   clearResults: () => void;
 }
 
+// Default values will be set with i18n in component
 export const useWebViewerHelperStore = create<WebViewerHelperStore>((set) => ({
   testInput: {
     contentType: 'auto',
-    htmlContent: '<html><body><h1>Hello World!</h1></body></html>',
-    urlContent: 'https://example.com',
+    htmlContent: '',
+    urlContent: '',
     baseUrl: '',
     headers: '',
     method: 'GET',
