@@ -53,11 +53,12 @@ export const webViewTestCardStyles = StyleSheet.create({
     borderRadius: Sizing.borderRadius.small,
     borderWidth: Sizing.borderWidth.s,
     minHeight: 60,
+    maxHeight: 400,
   },
   inputOutputText: {
-    fontSize: Sizing.typography.fontSize.m,
+    fontSize: Sizing.typography.fontSize.s,
     fontWeight: Sizing.typography.fontWeight.normal,
-    lineHeight: Sizing.typography.fontSize.m * Sizing.typography.lineHeight.normal,
+    lineHeight: Sizing.typography.fontSize.s * 1.4,
     fontFamily: 'monospace',
   },
 });

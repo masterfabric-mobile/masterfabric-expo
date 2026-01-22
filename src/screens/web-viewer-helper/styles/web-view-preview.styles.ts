@@ -6,11 +6,16 @@ export const webViewPreviewStyles = StyleSheet.create({
     borderRadius: Sizing.borderRadius.large,
     borderWidth: Sizing.borderWidth.s,
     overflow: 'hidden',
+    width: '100%',
+    alignSelf: 'stretch',
   },
   webView: {
     backgroundColor: 'transparent',
+    flex: 1,
+    width: '100%',
+    alignSelf: 'stretch',
   },
-  loadingContainer: {
+  loadingContainer: {  
     position: 'absolute',
     top: 0,
     left: 0,
@@ -21,19 +26,17 @@ export const webViewPreviewStyles = StyleSheet.create({
     zIndex: 1,
   },
   errorContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    width: '100%',
+    minHeight: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 2,
     padding: Sizing.padding.l,
   },
   errorBox: {
     padding: Sizing.padding.l,
     borderRadius: Sizing.borderRadius.small,
     borderWidth: Sizing.borderWidth.s,
+    width: '100%',
+    maxWidth: '90%',
   },
 });
