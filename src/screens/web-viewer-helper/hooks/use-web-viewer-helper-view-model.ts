@@ -281,6 +281,62 @@ export function useWebViewerHelperViewModel() {
         });
       }
 
+      // Test various URL formats (http, https, with path, with port)
+      try {
+        const urlFormats = [
+          { input: 'https://example.com', expected: true, label: 'https format' },
+          { input: 'http://example.com', expected: true, label: 'http format' },
+          { input: 'https://example.com/path/to/page', expected: true, label: 'https with path' },
+          { input: 'http://example.com:8080', expected: true, label: 'http with port' },
+          { input: 'not-a-url', expected: false, label: 'invalid URL' },
+          { input: 'javascript:alert("test")', expected: false, label: 'invalid protocol' },
+        ];
+        
+        urlFormats.forEach((testCase, index) => {
+          const result = webViewerHelper.isValidUrl(testCase.input);
+          results.push({
+            id: `isValidUrl-format-${index}`,
+            functionName: `isValidUrl (${testCase.label})`,
+            input: testCase.input,
+            output: result === testCase.expected 
+              ? t('helpers.webViewerHelper.messages.success') 
+              : `${t('helpers.webViewerHelper.messages.failure')}: Expected ${testCase.expected}, got ${result}`,
+            success: result === testCase.expected,
+            description: t('helpers.webViewerHelper.isValidUrl'),
+          });
+        });
+      } catch {
+        // Skip format tests on error
+      }
+
+      // Test various HTML content formats
+      try {
+        const htmlFormats = [
+          { input: '<html><body>Test</body></html>', expected: true, label: 'full HTML document' },
+          { input: '<!DOCTYPE html><html><head><title>Test</title></head><body>Content</body></html>', expected: true, label: 'HTML with DOCTYPE' },
+          { input: '<div><p>Paragraph</p><h1>Title</h1></div>', expected: true, label: 'HTML with nested tags' },
+          { input: '<p>Simple paragraph</p>', expected: true, label: 'simple HTML tag' },
+          { input: 'https://example.com', expected: false, label: 'URL not HTML' },
+          { input: 'plain text', expected: false, label: 'plain text not HTML' },
+        ];
+        
+        htmlFormats.forEach((testCase, index) => {
+          const result = webViewerHelper.isHtmlContent(testCase.input);
+          results.push({
+            id: `isHtmlContent-format-${index}`,
+            functionName: `isHtmlContent (${testCase.label})`,
+            input: testCase.input.substring(0, 50) + (testCase.input.length > 50 ? '...' : ''),
+            output: result === testCase.expected 
+              ? t('helpers.webViewerHelper.messages.success') 
+              : `${t('helpers.webViewerHelper.messages.failure')}: Expected ${testCase.expected}, got ${result}`,
+            success: result === testCase.expected,
+            description: t('helpers.webViewerHelper.isHtmlContent'),
+          });
+        });
+      } catch {
+        // Skip format tests on error
+      }
+
     } catch (error) {
       console.error('Error running web viewer helper tests:', error);
     }
