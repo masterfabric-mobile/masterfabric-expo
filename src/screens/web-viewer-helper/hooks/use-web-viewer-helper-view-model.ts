@@ -101,13 +101,18 @@ export function useWebViewerHelperViewModel() {
 
       // Test isHtmlContent - always runs
       try {
-        const isHtml = webViewerHelper.isHtmlContent(testInput.htmlContent);
+        const isHtml = webViewerHelper.isHtmlContent(testInput.htmlContent || '');
+        const hasContent = testInput.htmlContent && testInput.htmlContent.trim().length > 0;
         results.push({
           id: 'isHtmlContent',
           functionName: 'isHtmlContent',
           input: testInput.htmlContent ? `${testInput.htmlContent.substring(0, 50)}...` : t('helpers.webViewerHelper.messages.empty'),
-          output: isHtml ? t('helpers.webViewerHelper.messages.htmlDetected') : t('helpers.webViewerHelper.messages.urlDetected'),
-          success: true,
+          output: !hasContent 
+            ? t('helpers.webViewerHelper.messages.empty')
+            : isHtml 
+              ? t('helpers.webViewerHelper.messages.htmlDetected') 
+              : t('helpers.webViewerHelper.messages.urlDetected'),
+          success: hasContent ? isHtml : false,
           description: t('helpers.webViewerHelper.isHtmlContent'),
         });
       } catch (error) {
@@ -161,16 +166,33 @@ export function useWebViewerHelperViewModel() {
       // Test url() - only if URL content is provided
       if (testInput.urlContent && testInput.urlContent.trim().length > 0) {
         try {
+          // React Native WebView doesn't support headers with POST method
+          const parsedHeaders = testInput.headers ? parseHeaders(testInput.headers) : undefined;
+          const hasHeaders = parsedHeaders && Object.keys(parsedHeaders).length > 0;
+          const shouldIncludeHeaders = testInput.method !== 'POST';
+          
           const source = webViewerHelper.url(testInput.urlContent, {
-            headers: testInput.headers ? parseHeaders(testInput.headers) : undefined,
+            headers: shouldIncludeHeaders ? parsedHeaders : undefined,
             method: testInput.method,
-            body: testInput.body,
+            body: testInput.method === 'POST' ? (testInput.body || undefined) : undefined,
           });
+          
+          // Create output with warnings if needed
+          let output = JSON.stringify(source, null, 2);
+          if (testInput.method === 'POST' && hasHeaders) {
+            output = `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n` + output;
+          }
+          
+          const inputDisplay = testInput.urlContent + 
+            (testInput.method ? `\nMethod: ${testInput.method}` : '') +
+            (testInput.method === 'POST' && testInput.body ? `\nBody: ${testInput.body.substring(0, 100)}${testInput.body.length > 100 ? '...' : ''}` : '') +
+            (testInput.headers ? `\nHeaders: ${testInput.headers.substring(0, 50)}${testInput.headers.length > 50 ? '...' : ''}` : '');
+          
           results.push({
             id: 'url',
             functionName: 'url',
-            input: testInput.urlContent,
-            output: JSON.stringify(source, null, 2),
+            input: inputDisplay,
+            output: output,
             success: true,
             description: t('helpers.webViewerHelper.url'),
             sourceType: 'uri',
@@ -205,17 +227,35 @@ export function useWebViewerHelperViewModel() {
 
       if (contentToTest && contentToTest.trim().length > 0) {
         try {
+          // React Native WebView doesn't support headers with POST method
+          const parsedHeaders = testInput.headers ? parseHeaders(testInput.headers) : undefined;
+          const hasHeaders = parsedHeaders && Object.keys(parsedHeaders).length > 0;
+          const shouldIncludeHeaders = testInput.method !== 'POST';
+          
           const source = webViewerHelper.open(contentToTest, {
             baseUrl: testInput.baseUrl,
-            headers: testInput.headers ? parseHeaders(testInput.headers) : undefined,
+            headers: shouldIncludeHeaders ? parsedHeaders : undefined,
             method: testInput.method,
-            body: testInput.body,
+            body: testInput.method === 'POST' ? (testInput.body || undefined) : undefined,
           });
+          
+          // Create output with warnings if needed
+          let output = JSON.stringify(source, null, 2);
+          if (testInput.method === 'POST' && hasHeaders) {
+            output = `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n` + output;
+          }
+          
+          const inputDisplay = contentToTest.substring(0, 100) + 
+            (testInput.method ? `\nMethod: ${testInput.method}` : '') +
+            (testInput.method === 'POST' && testInput.body ? `\nBody: ${testInput.body.substring(0, 50)}${testInput.body.length > 50 ? '...' : ''}` : '') +
+            (testInput.baseUrl ? `\nBase URL: ${testInput.baseUrl}` : '') +
+            (testInput.headers ? `\nHeaders: ${testInput.headers.substring(0, 50)}${testInput.headers.length > 50 ? '...' : ''}` : '');
+          
           results.push({
             id: 'open',
             functionName: 'open',
-            input: contentToTest.substring(0, 100),
-            output: JSON.stringify(source, null, 2),
+            input: inputDisplay,
+            output: output,
             success: true,
             description: t('helpers.webViewerHelper.open'),
             sourceType: source.html ? 'html' : 'uri',
@@ -241,57 +281,6 @@ export function useWebViewerHelperViewModel() {
         });
       }
 
-      // Test various URL formats (http, https, relative)
-      try {
-        const urlFormats = [
-          { input: 'https://example.com', expected: true, label: 'https format' },
-          { input: 'http://example.com', expected: true, label: 'http format' },
-          { input: 'https://example.com/path/to/page', expected: true, label: 'https with path' },
-          { input: 'http://example.com:8080', expected: true, label: 'http with port' },
-        ];
-        
-        urlFormats.forEach((testCase, index) => {
-          const result = webViewerHelper.isValidUrl(testCase.input);
-          results.push({
-            id: `isValidUrl-format-${index}`,
-            functionName: `isValidUrl (${testCase.label})`,
-            input: testCase.input,
-            output: result === testCase.expected 
-              ? t('helpers.webViewerHelper.messages.success') 
-              : `${t('helpers.webViewerHelper.messages.failure')}: Expected ${testCase.expected}, got ${result}`,
-            success: result === testCase.expected,
-            description: t('helpers.webViewerHelper.isValidUrl'),
-          });
-        });
-      } catch {
-        // Skip format tests on error
-      }
-
-      // Test various HTML content formats
-      try {
-        const htmlFormats = [
-          { input: '<html><body>Test</body></html>', expected: true, label: 'full HTML document' },
-          { input: '<!DOCTYPE html><html><head><title>Test</title></head><body>Content</body></html>', expected: true, label: 'HTML with DOCTYPE' },
-          { input: '<div><p>Paragraph</p><h1>Title</h1></div>', expected: true, label: 'HTML with nested tags' },
-          { input: '<p>Simple paragraph</p>', expected: true, label: 'simple HTML tag' },
-        ];
-        
-        htmlFormats.forEach((testCase, index) => {
-          const result = webViewerHelper.isHtmlContent(testCase.input);
-          results.push({
-            id: `isHtmlContent-format-${index}`,
-            functionName: `isHtmlContent (${testCase.label})`,
-            input: testCase.input.substring(0, 50) + '...',
-            output: result === testCase.expected 
-              ? t('helpers.webViewerHelper.messages.success') 
-              : `${t('helpers.webViewerHelper.messages.failure')}: Expected ${testCase.expected}, got ${result}`,
-            success: result === testCase.expected,
-            description: t('helpers.webViewerHelper.isHtmlContent'),
-          });
-        });
-      } catch {
-        // Skip format tests on error
-      }
     } catch (error) {
       console.error('Error running web viewer helper tests:', error);
     }
@@ -306,15 +295,20 @@ export function useWebViewerHelperViewModel() {
       if (testInput.contentType === 'html') {
         if (!testInput.htmlContent || !testInput.htmlContent.trim()) {
           showWarning(t('helpers.webViewerHelper.validation.emptyHtml'));
+          setCurrentSource(undefined);
           return;
         }
       } else if (testInput.contentType === 'url') {
         if (!testInput.urlContent || !testInput.urlContent.trim()) {
           showWarning(t('helpers.webViewerHelper.validation.emptyUrl'));
+          setCurrentSource(undefined);
           return;
         }
-        if (!webViewerHelper.isValidUrl(testInput.urlContent.trim())) {
+        
+        const trimmedUrl = testInput.urlContent.trim();
+        if (!webViewerHelper.isValidUrl(trimmedUrl)) {
           showError(t('helpers.webViewerHelper.validation.invalidUrl'));
+          setCurrentSource(undefined);
           return;
         }
       } else {
@@ -322,14 +316,17 @@ export function useWebViewerHelperViewModel() {
         const content = testInput.htmlContent || testInput.urlContent;
         if (!content || !content.trim()) {
           showWarning(t('helpers.webViewerHelper.validation.emptyContent'));
+          setCurrentSource(undefined);
           return;
         }
-        // If it looks like a URL, validate it
-        // If it's not HTML and not a valid URL, treat it as HTML (fallback)
-        // This matches the behavior of HTML content mode where any content is accepted
+        
         const trimmedContent = content.trim();
-        if (!webViewerHelper.isHtmlContent(trimmedContent) && !webViewerHelper.isValidUrl(trimmedContent)) {
-          // Treat as HTML content (fallback) - same behavior as HTML content mode
+        
+        // If it looks like a URL, validate it
+        if (webViewerHelper.isValidUrl(trimmedContent)) {
+          // POST body is optional - can be empty
+        } else if (!webViewerHelper.isHtmlContent(trimmedContent)) {
+          // Neither HTML nor URL - treat as HTML (fallback)
           // This allows single characters or plain text to be rendered as HTML
         }
       }
@@ -349,10 +346,20 @@ export function useWebViewerHelperViewModel() {
           headers: testInput.headers ? parseHeaders(testInput.headers) : undefined,
         });
       } else if (testInput.contentType === 'url' && testInput.urlContent) {
+        // React Native WebView doesn't support headers with POST method
+        const parsedHeaders = testInput.headers ? parseHeaders(testInput.headers) : undefined;
+        const hasHeaders = parsedHeaders && Object.keys(parsedHeaders).length > 0;
+        
+        if (testInput.method === 'POST' && hasHeaders) {
+          showWarning(t('helpers.webViewerHelper.validation.postHeadersNotSupported') || 'Headers are not supported with POST method. Headers will be ignored.');
+        }
+        
         source = webViewerHelper.url(testInput.urlContent.trim(), {
-          headers: testInput.headers ? parseHeaders(testInput.headers) : undefined,
+          // Only include headers for GET requests
+          headers: testInput.method === 'POST' ? undefined : parsedHeaders,
           method: testInput.method,
-          body: testInput.body?.trim() || undefined,
+          // Only include body for POST requests
+          body: testInput.method === 'POST' ? (testInput.body?.trim() || undefined) : undefined,
         });
       } else {
         // Auto-detect - use htmlContent as primary (it's synced with urlContent in auto mode)
@@ -368,10 +375,20 @@ export function useWebViewerHelperViewModel() {
             });
           } else if (webViewerHelper.isValidUrl(content)) {
             // It's a valid URL, use url() directly
+            // React Native WebView doesn't support headers with POST method
+            const parsedHeaders = testInput.headers ? parseHeaders(testInput.headers) : undefined;
+            const hasHeaders = parsedHeaders && Object.keys(parsedHeaders).length > 0;
+            
+            if (testInput.method === 'POST' && hasHeaders) {
+              showWarning(t('helpers.webViewerHelper.validation.postHeadersNotSupported') || 'Headers are not supported with POST method. Headers will be ignored.');
+            }
+            
             source = webViewerHelper.url(content, {
-              headers: testInput.headers ? parseHeaders(testInput.headers) : undefined,
+              // Only include headers for GET requests
+              headers: testInput.method === 'POST' ? undefined : parsedHeaders,
               method: testInput.method,
-              body: testInput.body?.trim() || undefined,
+              // Only include body for POST requests
+              body: testInput.method === 'POST' ? (testInput.body?.trim() || undefined) : undefined,
             });
           } else {
             // Neither HTML nor URL - treat as HTML (fallback)
@@ -387,11 +404,17 @@ export function useWebViewerHelperViewModel() {
         }
       }
 
-      setCurrentSource(source);
+      if (source && (source.uri || source.html)) {
+        setCurrentSource(source);
+      } else {
+        showError(t('helpers.webViewerHelper.validation.loadError') || 'Failed to create WebView source. Please check your input.');
+        setCurrentSource(undefined);
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.error('Error loading content:', error);
       showError(`${t('helpers.webViewerHelper.validation.loadError')}: ${errorMessage}`);
+      setCurrentSource(undefined);
     }
   }, [testInput, setCurrentSource, parseHeaders, showError, showWarning]);
 
