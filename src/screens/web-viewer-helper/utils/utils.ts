@@ -152,6 +152,17 @@ export function getPlatformWebViewProps(config: {
 export const generateDarkThemeScript = (colors: ThemeColors): string => {
   return `
     (function() {
+      // Add viewport meta tag if not exists
+      var viewport = document.querySelector('meta[name="viewport"]');
+      if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+        document.head.appendChild(viewport);
+      } else {
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+      }
+      
       var style = document.getElementById('dark-theme-style');
       if (!style) {
         style = document.createElement('style');
@@ -159,43 +170,79 @@ export const generateDarkThemeScript = (colors: ThemeColors): string => {
         document.head.appendChild(style);
       }
       style.innerHTML = \`
+        html {
+          font-size: 16px !important;
+          -webkit-text-size-adjust: 100% !important;
+          text-size-adjust: 100% !important;
+        }
+        * {
+          font-size: 16px !important;
+          color: ${colors.bodyText} !important;
+          box-sizing: border-box !important;
+        }
         body {
           background-color: ${colors.surfaceBackground} !important;
           color: ${colors.bodyText} !important;
           font-size: 16px !important;
           line-height: 1.5 !important;
-          padding: 16px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
         }
-        * {
-          color: ${colors.bodyText} !important;
-        }
-        p, div, span, li, td, th {
+        p, div, span, li, td, th, pre, code, textarea, input {
           font-size: 16px !important;
           line-height: 1.5 !important;
+          margin: 0 !important;
+          max-width: 100% !important;
+        }
+        pre {
+          font-size: 16px !important;
+          white-space: pre-wrap !important;
+          word-wrap: break-word !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          max-width: 100% !important;
+          overflow-x: auto !important;
+        }
+        code {
+          font-size: 16px !important;
+          font-family: monospace !important;
+        }
+        img {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+        table {
+          width: 100% !important;
+          max-width: 100% !important;
+          table-layout: auto !important;
         }
         h1 {
-          font-size: 32px !important;
+          font-size: 24px !important;
           color: ${colors.titleText} !important;
           margin: 16px 0 !important;
         }
         h2 {
-          font-size: 28px !important;
+          font-size: 22px !important;
           color: ${colors.titleText} !important;
           margin: 14px 0 !important;
         }
         h3 {
-          font-size: 24px !important;
+          font-size: 20px !important;
           color: ${colors.titleText} !important;
           margin: 12px 0 !important;
         }
         h4, h5, h6 {
-          font-size: 20px !important;
+          font-size: 18px !important;
           color: ${colors.titleText} !important;
           margin: 10px 0 !important;
         }
         a {
           color: ${colors.primary} !important;
           font-size: 16px !important;
+          word-wrap: break-word !important;
         }
       \`;
     })();
@@ -211,6 +258,17 @@ export const generateDarkThemeScript = (colors: ThemeColors): string => {
 export const generateFontStylesScript = (): string => {
   return `
     (function() {
+      // Add viewport meta tag if not exists
+      var viewport = document.querySelector('meta[name="viewport"]');
+      if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+        document.head.appendChild(viewport);
+      } else {
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+      }
+      
       var style = document.getElementById('font-style');
       if (!style) {
         style = document.createElement('style');
@@ -218,19 +276,56 @@ export const generateFontStylesScript = (): string => {
         document.head.appendChild(style);
       }
       style.innerHTML = \`
+        html {
+          font-size: 16px !important;
+          -webkit-text-size-adjust: 100% !important;
+          text-size-adjust: 100% !important;
+        }
+        * {
+          font-size: 16px !important;
+          box-sizing: border-box !important;
+        }
         body {
           font-size: 16px !important;
           line-height: 1.5 !important;
-          padding: 16px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          overflow-x: hidden !important;
         }
-        p, div, span, li, td, th {
+        p, div, span, li, td, th, pre, code, textarea, input {
           font-size: 16px !important;
           line-height: 1.5 !important;
+          margin: 0 !important;
+          max-width: 100% !important;
         }
-        h1 { font-size: 32px !important; margin: 16px 0 !important; }
-        h2 { font-size: 28px !important; margin: 14px 0 !important; }
-        h3 { font-size: 24px !important; margin: 12px 0 !important; }
-        h4, h5, h6 { font-size: 20px !important; margin: 10px 0 !important; }
+        pre {
+          font-size: 16px !important;
+          white-space: pre-wrap !important;
+          word-wrap: break-word !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          max-width: 100% !important;
+          overflow-x: auto !important;
+        }
+        code {
+          font-size: 16px !important;
+          font-family: monospace !important;
+        }
+        img {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+        table {
+          width: 100% !important;
+          max-width: 100% !important;
+          table-layout: auto !important;
+        }
+        h1 { font-size: 24px !important; margin: 16px 0 !important; }
+        h2 { font-size: 22px !important; margin: 14px 0 !important; }
+        h3 { font-size: 20px !important; margin: 12px 0 !important; }
+        h4, h5, h6 { font-size: 18px !important; margin: 10px 0 !important; }
       \`;
     })();
     true;
@@ -273,8 +368,21 @@ export const getInjectedJavaScript = (
   `;
   
   if (!isDark) {
+    const viewportScript = `
+      // Add viewport meta tag if not exists
+      var viewport = document.querySelector('meta[name="viewport"]');
+      if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+        document.head.appendChild(viewport);
+      } else {
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+      }
+    `;
     return `
       (function() {
+        ${viewportScript}
         ${heightMeasurementScript}
       })();
       true;
@@ -285,6 +393,17 @@ export const getInjectedJavaScript = (
   const darkThemeScript = generateDarkThemeScript(colors);
   // Also add font styles for light theme HTML content
   const fontStylesScript = `
+    // Add viewport meta tag if not exists
+    var viewport = document.querySelector('meta[name="viewport"]');
+    if (!viewport) {
+      viewport = document.createElement('meta');
+      viewport.name = 'viewport';
+      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+      document.head.appendChild(viewport);
+    } else {
+      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
+    }
+    
     var fontStyle = document.getElementById('font-style');
     if (!fontStyle) {
       fontStyle = document.createElement('style');
@@ -292,19 +411,55 @@ export const getInjectedJavaScript = (
       document.head.appendChild(fontStyle);
     }
     fontStyle.innerHTML = \`
+      html {
+        -webkit-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+      }
+      * {
+        font-size: 16px !important;
+        box-sizing: border-box !important;
+      }
       body {
         font-size: 16px !important;
         line-height: 1.5 !important;
-        padding: 16px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
       }
-      p, div, span, li, td, th {
+      p, div, span, li, td, th, pre, code, textarea, input {
         font-size: 16px !important;
         line-height: 1.5 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
       }
-      h1 { font-size: 32px !important; margin: 16px 0 !important; }
-      h2 { font-size: 28px !important; margin: 14px 0 !important; }
-      h3 { font-size: 24px !important; margin: 12px 0 !important; }
-      h4, h5, h6 { font-size: 20px !important; margin: 10px 0 !important; }
+      pre {
+        font-size: 16px !important;
+        white-space: pre-wrap !important;
+        word-wrap: break-word !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+      }
+      code {
+        font-size: 16px !important;
+        font-family: monospace !important;
+      }
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      table {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: auto !important;
+      }
+      h1 { font-size: 24px !important; margin: 16px 0 !important; }
+      h2 { font-size: 22px !important; margin: 14px 0 !important; }
+      h3 { font-size: 20px !important; margin: 12px 0 !important; }
+      h4, h5, h6 { font-size: 18px !important; margin: 10px 0 !important; }
     \`;
   `;
   return `
@@ -335,13 +490,17 @@ export const generateDarkThemeWithHeightScript = (
     setTimeout(function() {
       var attempts = 0;
       function measureHeight() {
-        var height = Math.max(
-          document.body.scrollHeight,
-          document.body.offsetHeight,
-          document.documentElement.clientHeight,
-          document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight
-        );
+        // Get the actual content height without extra padding
+        var bodyHeight = document.body.scrollHeight || document.body.offsetHeight;
+        var htmlHeight = document.documentElement.scrollHeight || document.documentElement.offsetHeight;
+        var height = Math.max(bodyHeight, htmlHeight);
+        
+        // Subtract body padding if exists (8px top + 8px bottom = 16px, but we use 4px so 8px total)
+        var bodyStyle = window.getComputedStyle(document.body);
+        var paddingTop = parseInt(bodyStyle.paddingTop) || 0;
+        var paddingBottom = parseInt(bodyStyle.paddingBottom) || 0;
+        height = height - paddingTop - paddingBottom;
+        
         if (height > 0 && window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'height', height: height }));
         } else if (attempts < ${maxAttempts}) {
@@ -371,13 +530,17 @@ export const generateHeightMeasurementScript = (
     (function() {
       var attempts = 0;
       function measureHeight() {
-        var height = Math.max(
-          document.body.scrollHeight,
-          document.body.offsetHeight,
-          document.documentElement.clientHeight,
-          document.documentElement.scrollHeight,
-          document.documentElement.offsetHeight
-        );
+        // Get the actual content height without extra padding
+        var bodyHeight = document.body.scrollHeight || document.body.offsetHeight;
+        var htmlHeight = document.documentElement.scrollHeight || document.documentElement.offsetHeight;
+        var height = Math.max(bodyHeight, htmlHeight);
+        
+        // Subtract body padding if exists (8px top + 8px bottom = 16px, but we use 4px so 8px total)
+        var bodyStyle = window.getComputedStyle(document.body);
+        var paddingTop = parseInt(bodyStyle.paddingTop) || 0;
+        var paddingBottom = parseInt(bodyStyle.paddingBottom) || 0;
+        height = height - paddingTop - paddingBottom;
+        
         if (height > 0 && window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'height', height: height }));
         } else if (attempts < ${maxAttempts}) {
@@ -402,7 +565,7 @@ export const generateHeightMeasurementScript = (
 export const calculateContentPadding = (
   contentHeight: number,
   thresholds: { small: number; medium: number } = { small: 50, medium: 200 },
-  paddings: { small: number; medium: number; large: number } = { small: 10, medium: 20, large: 30 }
+  paddings: { small: number; medium: number; large: number } = { small: 576, medium: 576, large: 576 }
 ): number => {
   if (contentHeight < thresholds.small) {
     return paddings.small;
@@ -418,16 +581,34 @@ export const calculateContentPadding = (
  * 
  * @param contentHeight - Height of the content
  * @param minHeight - Minimum height
+ * @param maxHeight - Maximum height (for scrolling)
  * @param thresholds - Thresholds for padding calculation
  * @param paddings - Padding values
- * @returns Final height with padding
+ * @returns Final height with padding (capped at maxHeight)
  */
 export const calculateWebViewHeight = (
   contentHeight: number,
-  minHeight: number = 50,
+  minHeight: number = 200,
+  maxHeight: number = 800,
   thresholds?: { small: number; medium: number },
   paddings?: { small: number; medium: number; large: number }
 ): number => {
-  const padding = calculateContentPadding(contentHeight, thresholds, paddings);
-  return Math.max(minHeight, Math.ceil(contentHeight) + padding);
+  // Calculate padding based on content size
+  let padding = 288; // Default: 3 lines padding
+  
+  if (thresholds && paddings) {
+    if (contentHeight < thresholds.small) {
+      padding = paddings.small;
+    } else if (contentHeight < thresholds.medium) {
+      padding = paddings.medium;
+    } else {
+      padding = paddings.large;
+    }
+  }
+  
+  // Calculate height with padding
+  const calculatedHeight = Math.ceil(contentHeight) + padding;
+  
+  // Return height between min and max, allowing scroll for larger content
+  return Math.max(minHeight, Math.min(maxHeight, calculatedHeight));
 };
