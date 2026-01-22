@@ -7,7 +7,7 @@
 import { Button } from '@/src/shared/components/button';
 import { t } from '@/src/shared/i18n';
 import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextInput, TouchableOpacity, View } from 'react-native';
 import { CONTENT_TYPES, HTTP_METHODS } from '../constants/web-viewer-helper.constants';
 import { WebViewInputFieldProps } from '../models/models';
@@ -24,6 +24,17 @@ export function WebViewInputField({
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
   const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Initialize default values on mount if empty
+  useEffect(() => {
+    if (!testInput.htmlContent && !testInput.urlContent) {
+      onInputChange({
+        htmlContent: t('helpers.webViewerHelper.htmlPlaceholder'),
+        urlContent: t('helpers.webViewerHelper.urlPlaceholder'),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ThemedView
@@ -70,19 +81,19 @@ export function WebViewInputField({
                 if (type === 'html') {
                   onInputChange({ 
                     contentType: type,
-                    htmlContent: '<html><body><h1>Hello World!</h1></body></html>',
+                    htmlContent: t('helpers.webViewerHelper.htmlPlaceholder'),
                   });
                 } else if (type === 'url') {
                   onInputChange({ 
                     contentType: type,
-                    urlContent: 'https://example.com',
+                    urlContent: t('helpers.webViewerHelper.urlPlaceholder'),
                   });
                 } else {
                   // Auto-detect - keep existing values or use defaults
                   onInputChange({ 
                     contentType: type,
-                    htmlContent: testInput.htmlContent || '<html><body><h1>Hello World!</h1></body></html>',
-                    urlContent: testInput.urlContent || 'https://example.com',
+                    htmlContent: testInput.htmlContent || t('helpers.webViewerHelper.htmlPlaceholder'),
+                    urlContent: testInput.urlContent || t('helpers.webViewerHelper.urlPlaceholder'),
                   });
                 }
               }}
@@ -301,7 +312,7 @@ export function WebViewInputField({
             </View>
           )}
 
-          {/* Body (for POST requests) */}
+          {/* Body */}
           {testInput.method === 'POST' && (
             <View style={webViewInputFieldStyles.inputGroup}>
               <ThemedText style={[webViewInputFieldStyles.label, { color: colors.bodyText }]}>
@@ -344,7 +355,7 @@ export function WebViewInputField({
           disabled={isLoading}
           variant="secondary"
           style={webViewInputFieldStyles.button}
-          textStyle={{ color: colors.text }}
+          textStyle={{ color: isDark ? colors.text : '#FFFFFF' }}
         />
       </View>
     </ThemedView>
