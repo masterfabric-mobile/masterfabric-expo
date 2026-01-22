@@ -1094,7 +1094,23 @@
         "invalidUrl": "Invalid URL",
         "emptyContent": "Empty content",
         "htmlDetected": "HTML content detected",
-        "urlDetected": "URL detected"
+        "urlDetected": "URL detected",
+        "expected": "Expected",
+        "got": "got"
+      },
+      "testLabels": {
+        "urlFormatHttps": "https format",
+        "urlFormatHttp": "http format",
+        "urlFormatHttpsPath": "https with path",
+        "urlFormatHttpPort": "http with port",
+        "urlFormatInvalid": "invalid URL",
+        "urlFormatInvalidProtocol": "invalid protocol",
+        "htmlFormatFull": "full HTML document",
+        "htmlFormatDoctype": "HTML with DOCTYPE",
+        "htmlFormatNested": "HTML with nested tags",
+        "htmlFormatSimple": "simple HTML tag",
+        "htmlFormatUrlNotHtml": "URL not HTML",
+        "htmlFormatPlainText": "plain text not HTML"
       },
       "examples": {
         "title": "Examples",
