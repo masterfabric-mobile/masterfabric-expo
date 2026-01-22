@@ -7,7 +7,7 @@
 import { t } from '@/src/shared/i18n';
 import { ThemedText, ThemedView, getThemeColors, useTheme } from 'masterfabric-expo-core';
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { WebViewTestCardProps } from '../models/models';
 import { webViewTestCardStyles } from '../styles/web-view-test-card.styles';
 
@@ -89,12 +89,18 @@ export function WebViewTestCard({ result }: WebViewTestCardProps) {
               },
             ]}
           >
-            <ThemedText
-              style={[webViewTestCardStyles.inputOutputText, { color: colors.bodyText }]}
-              numberOfLines={3}
+            <ScrollView 
+              nestedScrollEnabled={true}
+              showsVerticalScrollIndicator={true}
+              style={{ maxHeight: 200 }}
             >
-              {result.input}
-            </ThemedText>
+              <ThemedText
+                style={[webViewTestCardStyles.inputOutputText, { color: colors.bodyText }]}
+                selectable={true}
+              >
+                {result.input}
+              </ThemedText>
+            </ScrollView>
           </ThemedView>
         </View>
 
@@ -118,19 +124,25 @@ export function WebViewTestCard({ result }: WebViewTestCardProps) {
               },
             ]}
           >
-            <ThemedText
-              style={[
-                webViewTestCardStyles.inputOutputText,
-                {
-                  color: result.success
-                    ? colors.successText || colors.bodyText
-                    : colors.errorColor || colors.bodyText,
-                },
-              ]}
-              numberOfLines={10}
+            <ScrollView 
+              nestedScrollEnabled={true}
+              showsVerticalScrollIndicator={true}
+              style={{ maxHeight: 300 }}
             >
-              {result.output}
-            </ThemedText>
+              <ThemedText
+                style={[
+                  webViewTestCardStyles.inputOutputText,
+                  {
+                    color: result.success
+                      ? colors.successText || colors.bodyText
+                      : colors.errorColor || colors.bodyText,
+                  },
+                ]}
+                selectable={true}
+              >
+                {result.output}
+              </ThemedText>
+            </ScrollView>
           </ThemedView>
         </View>
       </View>

@@ -6,6 +6,7 @@
 
 import { ActivityIndicator, View } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { ThemedText } from 'masterfabric-expo-core';
 import { useWebViewPreview } from '../hooks/use-web-view-preview';
 import { WebViewPreviewProps } from '../models/models';
 import { webViewPreviewStyles } from '../styles/web-view-preview.styles';
@@ -22,6 +23,7 @@ export function WebViewPreview({ source }: WebViewPreviewProps) {
     handleLoadStart,
     handleLoadEnd,
     handleError,
+    handleHttpError,
   } = useWebViewPreview(source);
 
   return (
@@ -31,10 +33,11 @@ export function WebViewPreview({ source }: WebViewPreviewProps) {
         {
           backgroundColor: colors.surfaceBackground,
           borderColor: colors.surfaceBorder + '30',
+          minHeight: 200, // Minimum height for error messages
         },
       ]}
     >
-      {loading && (
+      {loading && !error && (
         <View style={[webViewPreviewStyles.loadingContainer, { backgroundColor: colors.surfaceBackground }]}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -50,30 +53,46 @@ export function WebViewPreview({ source }: WebViewPreviewProps) {
               },
             ]}
           >
-            {/* Error message would go here if needed */}
+            <ThemedText style={{ color: colors.errorColor || colors.bodyText, fontSize: 16, textAlign: 'center' }}>
+              {error}
+            </ThemedText>
           </View>
         </View>
       )}
-      <WebView
-        ref={webViewRef}
-        source={source as any}
-        style={[
-          webViewPreviewStyles.webView,
-          { 
-            backgroundColor: colors.surfaceBackground,
-            height: webViewHeight,
-          },
-        ]}
-        injectedJavaScript={injectedJavaScript}
-        onMessage={handleMessage}
-        onLoadStart={handleLoadStart}
-        onLoadEnd={handleLoadEnd}
-        onError={handleError}
-        startInLoadingState={true}
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        scalesPageToFit={true}
-      />
+      {!error && (
+        <WebView
+          ref={webViewRef}
+          source={source as any}
+          style={[
+            webViewPreviewStyles.webView,
+            { 
+              backgroundColor: colors.surfaceBackground,
+              height: webViewHeight,
+            },
+          ]}
+          injectedJavaScript={injectedJavaScript}
+          onMessage={handleMessage}
+          onLoadStart={handleLoadStart}
+          onLoadEnd={handleLoadEnd}
+          onError={handleError}
+          onHttpError={handleHttpError}
+          startInLoadingState={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+          scalesPageToFit={true}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
+          nestedScrollEnabled={true}
+          scrollEnabled={true}
+          bounces={false}
+          overScrollMode="never"
+          setSupportMultipleWindows={false}
+          allowsBackForwardNavigationGestures={false}
+          allowsLinkPreview={false}
+          cacheEnabled={true}
+          cacheMode="LOAD_DEFAULT"
+        />
+      )}
     </View>
   );
 }
