@@ -472,6 +472,24 @@ validate_pods() {
     log_success "Pod installation validated"
 }
 
+# Step 5b: Ensure Xcode uses current Node (fixes "node: No such file or directory" when Node was upgraded)
+ensure_node_for_xcode() {
+    log_step "Step 5b: Configuring Node for Xcode"
+    
+    local node_path
+    node_path=$(command -v node)
+    if [ -z "$node_path" ] || [ ! -x "$node_path" ]; then
+        log_error "Node not found or not executable. Ensure Node.js is installed and in PATH."
+        exit 1
+    fi
+    
+    log_info "Using Node: $node_path"
+    echo "export NODE_BINARY=$node_path" > ios/.xcode.env.local
+    export NODE_BINARY="$node_path"
+    export PATH="$(dirname "$node_path"):$PATH"
+    log_success "Wrote ios/.xcode.env.local with NODE_BINARY=$node_path"
+}
+
 # Step 6: Clean Xcode build
 clean_xcode_build() {
     log_step "Step 6: Cleaning Xcode Build"
@@ -680,6 +698,7 @@ main() {
         log_warning "Skipping pod installation"
     fi
     
+    ensure_node_for_xcode
     clean_xcode_build
     build_archive
     export_ipa

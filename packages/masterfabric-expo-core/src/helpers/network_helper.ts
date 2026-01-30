@@ -52,6 +52,8 @@ class NetworkHelper {
   private appState: AppStateStatus = AppState.currentState;
   private listeners: Set<NetworkListener> = new Set();
   private alertVisible = false;
+  private vpnAlertVisible = false;
+  private lastVpnStatus: boolean | null = null;
   
   private networkInfo: NetworkInfo = {
     isOnline: null,
@@ -98,6 +100,7 @@ class NetworkHelper {
     }
     this.endPolling();
     this.alertVisible = false;
+    this.vpnAlertVisible = false;
   }
 
   /**
@@ -132,11 +135,12 @@ class NetworkHelper {
 
   /**
    * Perform immediate network check
+   * @param includeSpeedTest - Whether to perform speed test (default: false for background checks)
    * @returns Promise resolving to true if online, false otherwise
    */
-  async checkNow(): Promise<boolean> {
+  async checkNow(includeSpeedTest: boolean = false): Promise<boolean> {
     try {
-      const result = await this.performNetworkCheck();
+      const result = await this.performNetworkCheck(includeSpeedTest);
       this.updateNetworkInfo(result);
       
       if (!result.isOnline) {
@@ -164,20 +168,74 @@ class NetworkHelper {
     }
   }
 
+  /**
+   * Perform speed test manually (for UI)
+   * @returns Promise resolving to SpeedTestResult or null
+   */
+  async performSpeedTestNow(): Promise<SpeedTestResult | null> {
+    try {
+      console.log('[NetworkHelper] Manual speed test started...');
+      // Try comprehensive test first
+      let speedTest = await Promise.race([
+        this.performSpeedTest(),
+        new Promise<null>((resolve) => setTimeout(() => {
+          console.warn('Comprehensive speed test timeout after 60 seconds');
+          resolve(null);
+        }, 60000)),
+      ]);
+      
+      if (!speedTest) {
+        // Fallback to simple test
+        speedTest = await Promise.race([
+          this.performSimpleSpeedTest(),
+          new Promise<null>((resolve) => setTimeout(() => {
+            console.warn('Simple speed test timeout after 20 seconds');
+            resolve(null);
+          }, 20000)),
+        ]);
+      }
+
+      if (speedTest) {
+        // Update network info with speed test result
+        const currentInfo = this.getNetworkInfo();
+        this.updateNetworkInfo({
+          ...currentInfo,
+          speedTest,
+        });
+        console.log('[NetworkHelper] Speed test completed:', {
+          downloadSpeed: speedTest.download.overall.speed.toFixed(2) + ' Mbps',
+          uploadSpeed: speedTest.upload.overall.speed.toFixed(2) + ' Mbps',
+        });
+      }
+
+      return speedTest;
+    } catch (error) {
+      console.error('[NetworkHelper] Speed test error:', error);
+      return null;
+    }
+  }
+
   private beginPolling(pollIntervalMs: number): void {
     if (this.intervalId) return;
-    this.checkNow();
-    this.intervalId = setInterval(() => this.checkNow(), pollIntervalMs);
+    console.log(`[NetworkHelper] Starting network monitoring with interval: ${pollIntervalMs}ms`);
+    // Initial check without speed test (background check)
+    this.checkNow(false);
+    // Set up periodic checks without speed test (background checks)
+    this.intervalId = setInterval(() => {
+      console.log(`[NetworkHelper] Periodic network check triggered (connectivity + VPN only)`);
+      this.checkNow(false); // Background check: no speed test
+    }, pollIntervalMs);
   }
 
   private endPolling(): void {
     if (this.intervalId) {
+      console.log(`[NetworkHelper] Stopping network monitoring`);
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
   }
 
-  private async performNetworkCheck(): Promise<NetworkInfo> {
+  private async performNetworkCheck(includeSpeedTest: boolean = false): Promise<NetworkInfo> {
     const startTime = Date.now();
     const checkDate = new Date();
     
@@ -197,61 +255,62 @@ class NetworkHelper {
       };
     }
 
-    // Perform speed test and gather network info in parallel
-    // Try comprehensive test first (Cloudflare style), fallback to simple if it fails
-    console.log('Starting network check: performing speed test and gathering network details...');
-    
-    let finalSpeedTest: SpeedTestResult | null = null;
-    try {
-      // Try comprehensive test first (60 seconds timeout for full Cloudflare test)
-      console.log('Trying comprehensive speed test first (Cloudflare style)...');
-      finalSpeedTest = await Promise.race([
-        this.performSpeedTest(),
-        new Promise<null>((resolve) => setTimeout(() => {
-          console.warn('Comprehensive speed test timeout after 60 seconds');
-          resolve(null);
-        }, 60000)), // 60 seconds for comprehensive test
-      ]);
-      
-      if (finalSpeedTest) {
-        console.log('Comprehensive speed test completed successfully:', {
-          downloadSpeed: finalSpeedTest.download.overall.speed.toFixed(2) + ' Mbps',
-          uploadSpeed: finalSpeedTest.upload.overall.speed.toFixed(2) + ' Mbps',
-          latency: finalSpeedTest.latency.unloaded.average.toFixed(2) + ' ms',
-        });
-      } else {
-        console.warn('Comprehensive speed test returned null, trying simple test as fallback...');
-        // If comprehensive test fails, try simple test (20 seconds timeout)
-        finalSpeedTest = await Promise.race([
-          this.performSimpleSpeedTest(),
-          new Promise<null>((resolve) => setTimeout(() => {
-            console.warn('Simple speed test timeout after 20 seconds');
-            resolve(null);
-          }, 20000)),
-        ]);
-        
-        if (finalSpeedTest) {
-          console.log('Simple speed test completed successfully:', {
-            downloadSpeed: finalSpeedTest.download.overall.speed.toFixed(2) + ' Mbps',
-            uploadSpeed: finalSpeedTest.upload.overall.speed.toFixed(2) + ' Mbps',
-            latency: finalSpeedTest.latency.unloaded.average.toFixed(2) + ' ms',
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Speed test error:', error);
-      finalSpeedTest = null;
-    }
-    
-    // Gather network details in parallel
+    // Gather network details (IP, DNS, VPN, Location, Connection Type)
+    // This is always done for background checks
+    console.log('[NetworkHelper] Gathering network details (IP, DNS, VPN, Location)...');
     const [networkDetails] = await Promise.allSettled([
       this.gatherNetworkDetails(),
     ]);
     
     const details = networkDetails.status === 'fulfilled' ? networkDetails.value : {};
     
-    if (!finalSpeedTest) {
-      console.warn('All speed tests failed, network info will be shown without speed test results');
+    // Only perform speed test if explicitly requested (for UI)
+    let finalSpeedTest: SpeedTestResult | null = null;
+    if (includeSpeedTest) {
+      console.log('[NetworkHelper] Performing speed test (requested)...');
+      try {
+        // Try comprehensive test first (60 seconds timeout for full Cloudflare test)
+        console.log('Trying comprehensive speed test first (Cloudflare style)...');
+        finalSpeedTest = await Promise.race([
+          this.performSpeedTest(),
+          new Promise<null>((resolve) => setTimeout(() => {
+            console.warn('Comprehensive speed test timeout after 60 seconds');
+            resolve(null);
+          }, 60000)), // 60 seconds for comprehensive test
+        ]);
+        
+        if (finalSpeedTest) {
+          console.log('Comprehensive speed test completed successfully:', {
+            downloadSpeed: finalSpeedTest.download.overall.speed.toFixed(2) + ' Mbps',
+            uploadSpeed: finalSpeedTest.upload.overall.speed.toFixed(2) + ' Mbps',
+            latency: finalSpeedTest.latency.unloaded.average.toFixed(2) + ' ms',
+          });
+        } else {
+          console.warn('Comprehensive speed test returned null, trying simple test as fallback...');
+          // If comprehensive test fails, try simple test (20 seconds timeout)
+          finalSpeedTest = await Promise.race([
+            this.performSimpleSpeedTest(),
+            new Promise<null>((resolve) => setTimeout(() => {
+              console.warn('Simple speed test timeout after 20 seconds');
+              resolve(null);
+            }, 20000)),
+          ]);
+          
+          if (finalSpeedTest) {
+            console.log('Simple speed test completed successfully:', {
+              downloadSpeed: finalSpeedTest.download.overall.speed.toFixed(2) + ' Mbps',
+              uploadSpeed: finalSpeedTest.upload.overall.speed.toFixed(2) + ' Mbps',
+              latency: finalSpeedTest.latency.unloaded.average.toFixed(2) + ' ms',
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Speed test error:', error);
+        finalSpeedTest = null;
+      }
+    } else {
+      // Keep existing speed test result if available, don't overwrite with null
+      finalSpeedTest = this.networkInfo?.speedTest ?? null;
     }
 
     return {
@@ -929,6 +988,9 @@ class NetworkHelper {
    */
   private async performSimpleSpeedTest(): Promise<SpeedTestResult | null> {
     try {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:989',message:'performSimpleSpeedTest: Entry',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       console.log('performSimpleSpeedTest: Starting simple speed test...');
       
       // Try latency measurement (must succeed for valid test)
@@ -968,6 +1030,12 @@ class NetworkHelper {
       // Single download test (500KB - smaller for faster completion)
       console.log('performSimpleSpeedTest: Measuring download speed (500KB, 2 runs)...');
       let download500kB: number[] = [];
+      // Initialize upload100kB early to avoid undefined reference
+      let upload100kB: number[] = [];
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1029',message:'performSimpleSpeedTest: Variables initialized',data:{download500kBLength:download500kB.length,upload100kBLength:upload100kB.length,upload100kBDefined:typeof upload100kB!=='undefined'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
+      
       try {
         download500kB = await Promise.race([
           this.measureDownloadSpeed(500000, 2),
@@ -977,23 +1045,28 @@ class NetworkHelper {
           }, 15000)),
         ]);
         console.log(`performSimpleSpeedTest: Download speed measurements: ${download500kB.length}/2`);
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1038',message:'performSimpleSpeedTest: Download test completed',data:{download500kBLength:download500kB.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
       } catch (error) {
         console.error('performSimpleSpeedTest: Download speed measurement failed:', error);
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1043',message:'performSimpleSpeedTest: Download test error',data:{error:String(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
       }
       
       if (download500kB.length === 0) {
         console.warn('performSimpleSpeedTest: No download speed measurements');
-        // Still try to return something if we have upload or latency data
-        if (upload100kB.length === 0 && unloadedLatencies.length === 0) {
-          console.error('performSimpleSpeedTest: No measurements at all, returning null');
-          return null;
-        }
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1046',message:'performSimpleSpeedTest: No download measurements, checking upload100kB',data:{download500kBLength:download500kB.length,upload100kBLength:upload100kB.length,upload100kBDefined:typeof upload100kB!=='undefined',unloadedLatenciesLength:unloadedLatencies.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         // Continue with upload test even if download failed
+        // We'll check all measurements after upload test completes
       }
       
       // Single upload test (100kB) - ensure we get results
       console.log('performSimpleSpeedTest: Measuring upload speed (100kB, 3 runs)...');
-      let upload100kB: number[] = [];
+      // upload100kB already initialized above
       try {
         upload100kB = await Promise.race([
           this.measureUploadSpeed(100000, 3), // 3 runs for better accuracy
@@ -1003,6 +1076,9 @@ class NetworkHelper {
           }, 30000)), // Increased timeout for upload (30 seconds)
         ]);
         console.log(`performSimpleSpeedTest: Upload speed measurements: ${upload100kB.length}/3`);
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1077',message:'performSimpleSpeedTest: Upload test completed',data:{upload100kBLength:upload100kB.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
         
         if (upload100kB.length === 0) {
           console.warn('performSimpleSpeedTest: Upload test returned no results, trying again with smaller size...');
@@ -1039,6 +1115,9 @@ class NetworkHelper {
       } : { speed: 0, max: 0, min: 0 };
       
       // If we have no measurements at all, return null
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1262326c-4a52-497e-b35a-0ce16a89b752',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'network_helper.ts:1104',message:'performSimpleSpeedTest: Final check before return',data:{download500kBLength:download500kB.length,upload100kBLength:upload100kB.length,upload100kBDefined:typeof upload100kB!=='undefined',unloadedLatenciesLength:unloadedLatencies.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       if (download500kB.length === 0 && upload100kB.length === 0 && unloadedLatencies.length === 0) {
         console.error('performSimpleSpeedTest: No measurements at all, returning null');
         return null;
@@ -1212,19 +1291,18 @@ class NetworkHelper {
             };
           }
 
-          // DNS detection from Cloudflare trace
-          if (data.h) {
-            dns = data.h;
-          }
+          // DNS detection - Cloudflare trace 'h' field is hostname, not DNS server
+          // We'll indicate Cloudflare connection, actual DNS server detection requires native modules
+          dns = 'Cloudflare (1.1.1.1)'; // Indicating connection through Cloudflare
 
           // VPN detection - check if IP is from known VPN/proxy providers
           vpn = this.detectVPN(ip, data);
 
-          // Try to get more detailed location info from ipinfo.io as fallback
-          if (ip && !location?.city) {
+          // Try to get more detailed location info and VPN detection from ipinfo.io
+          if (ip) {
             try {
               const locationController = new AbortController();
-              const locationTimeout = setTimeout(() => locationController.abort(), 5000);
+              const locationTimeout = setTimeout(() => locationController.abort(), 8000);
               
               const locationResponse = await fetch(`https://ipinfo.io/${ip}/json`, {
                 method: 'GET',
@@ -1235,16 +1313,33 @@ class NetworkHelper {
               
               if (locationResponse.ok) {
                 const locationData = await locationResponse.json();
-                location = {
-                  country: locationData.country || location?.country || 'Unknown',
-                  city: locationData.city,
-                  region: locationData.region,
-                  timezone: locationData.timezone,
-                };
+                
+                // Update location with detailed info
+                if (!location?.city || locationData.city) {
+                  location = {
+                    country: locationData.country || location?.country || 'Unknown',
+                    city: locationData.city,
+                    region: locationData.region,
+                    timezone: locationData.timezone,
+                  };
+                }
+
+                // Enhanced VPN detection using ipinfo.io
+                // ipinfo.io provides 'privacy' field that indicates VPN/proxy
+                if (locationData.privacy) {
+                  const privacy = locationData.privacy;
+                  if (privacy.vpn === true || privacy.proxy === true || privacy.tor === true) {
+                    console.log('[NetworkHelper] VPN/Proxy detected via ipinfo.io:', privacy);
+                    vpn = true;
+                  } else if (privacy.vpn === false && privacy.proxy === false && privacy.tor === false && vpn === null) {
+                    vpn = false;
+                  }
+                }
               }
             } catch (error) {
+              console.warn('[NetworkHelper] ipinfo.io request failed:', error);
               // Fallback failed, use basic location from Cloudflare
-              // Silently continue with Cloudflare location data
+              // VPN detection will use Cloudflare trace data only
             }
           }
         }
@@ -1298,27 +1393,46 @@ class NetworkHelper {
   private detectVPN(ip: string | null, traceData: Record<string, string>): boolean | null {
     if (!ip) return null;
 
-    // Basic VPN detection heuristics
-    // 1. Check if IP is from known datacenter ranges (simplified)
-    // 2. Check Cloudflare trace data for proxy indicators
-    
-    // Check for proxy indicators in Cloudflare trace
-    if (traceData.flags) {
-      // Cloudflare may indicate proxy/VPN in flags
-      const flags = traceData.flags.toLowerCase();
-      if (flags.includes('proxy') || flags.includes('vpn')) {
-        return true;
+    try {
+      // Basic VPN detection heuristics
+      // 1. Check Cloudflare trace data for proxy indicators
+      if (traceData.flags) {
+        // Cloudflare may indicate proxy/VPN in flags
+        const flags = traceData.flags.toLowerCase();
+        if (flags.includes('proxy') || flags.includes('vpn')) {
+          console.log('[NetworkHelper] VPN detected via Cloudflare flags');
+          return true;
+        }
       }
-    }
 
-    // Additional checks can be added here
-    // For production, consider using a dedicated VPN detection service
-    
-    return null; // Unknown
+      // 2. Check for common VPN/proxy indicators in Cloudflare trace
+      // Cloudflare's 'colo' field can indicate datacenter/VPN
+      if (traceData.colo) {
+        // Some VPN providers use specific Cloudflare colos
+        // This is a simplified check
+      }
+
+      // 3. Try to detect VPN using IP geolocation mismatch
+      // If IP location doesn't match expected location, might be VPN
+      // For now, we'll use a simple heuristic: check if IP is from known datacenter ranges
+      
+      // 4. Use ipinfo.io to get more detailed VPN detection
+      // Note: This requires an additional API call, so we'll do it asynchronously
+      // For now, return null if no clear indicators
+      
+      // Additional checks can be added here
+      // For production, consider using a dedicated VPN detection service like ipinfo.io/vpn
+      
+      return null; // Unknown - will be checked separately if needed
+    } catch (error) {
+      console.error('[NetworkHelper] VPN detection error:', error);
+      return null;
+    }
   }
 
   private updateNetworkInfo(info: NetworkInfo): void {
     const wasOnline = this.networkInfo.isOnline;
+    const wasVpnDetected = this.networkInfo.vpn === true;
     this.networkInfo = info;
     
     // Notify listeners if status changed
@@ -1330,6 +1444,26 @@ class NetworkHelper {
           console.error('Network listener error:', error);
         }
       });
+    }
+    
+    // Check VPN status and show alert if VPN is detected
+    // Only show alert when VPN is first detected (transition from false/null to true)
+    if (info.isOnline && info.vpn === true && !wasVpnDetected && this.lastVpnStatus !== true) {
+      // VPN just detected - show alert
+      console.log('[NetworkHelper] VPN detected, showing alert');
+      this.showVpnAlert();
+      this.lastVpnStatus = true;
+    } else if (info.vpn === false && wasVpnDetected) {
+      // VPN was detected but now it's gone - reset flag so we can show alert again if VPN comes back
+      console.log('[NetworkHelper] VPN disconnected');
+      this.vpnAlertVisible = false;
+      this.lastVpnStatus = false;
+    } else if (info.vpn === null) {
+      // VPN status unknown - don't change lastVpnStatus
+      // This allows us to show alert when VPN is detected later
+    } else if (info.vpn === true && this.lastVpnStatus !== true) {
+      // Update lastVpnStatus if VPN is detected but we haven't tracked it yet
+      this.lastVpnStatus = true;
     }
   }
 
@@ -1385,6 +1519,28 @@ class NetworkHelper {
     );
   }
 
+  private showVpnAlert(): void {
+    // Only show VPN alert once per VPN detection session
+    // Don't show if already shown or if VPN status hasn't changed
+    if (this.vpnAlertVisible || this.lastVpnStatus === true) return;
+    this.vpnAlertVisible = true;
+    
+    Alert.alert(
+      'VPN Tespit Edildi',
+      'VPN bağlantısı tespit edildi. Bazı servisler VPN kullanımı sırasında düzgün çalışmayabilir. Güvenlik ve gizlilik açısından VPN kullanımı önerilir, ancak bazı özellikler kısıtlanabilir.',
+      [
+        {
+          text: 'Anladım',
+          style: 'cancel',
+          onPress: () => {
+            this.vpnAlertVisible = false;
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  }
+
   private handleAppStateChange(nextState: AppStateStatus): void {
     const prev = this.appState;
     this.appState = nextState;
@@ -1396,6 +1552,7 @@ class NetworkHelper {
       // Pause polling when app goes to background
       this.endPolling();
       this.alertVisible = false;
+      // Don't reset VPN alert - keep it so we can show it again if VPN is still active when app comes back
     }
   }
 }

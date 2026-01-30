@@ -157,9 +157,9 @@ export function useInAppMessageViewModel() {
         deviceId
       );
     } catch (error: any) {
-      // Handle unique constraint violation (23505) - message already dismissed
+      // Handle unique constraint violation (23505) or conflict (42P10) - message already dismissed
       // This is not a critical error, just a race condition
-      if (error?.code === '23505') {
+      if (error?.code === '23505' || error?.code === '42P10') {
         console.log('[InAppMessageViewModel] Message already dismissed (race condition), continuing');
       } else {
         console.error('[InAppMessageViewModel] Error marking message as dismissed:', error);

@@ -54,9 +54,9 @@ export default function RootLayout() {
     if (loaded) {
       // Start connectivity monitoring while app is active
       connectivityHelper.start(5000);
-      // Start network helper for comprehensive monitoring with automatic popup on internet loss
-      // This will monitor network status, speed, DNS, VPN, location and show popup when internet is lost
-      networkHelper.start(30000); // Check every 30 seconds
+      // Note: Network helper is now started from splash screen for earlier initialization
+      // It monitors network status, speed, DNS, VPN, location throughout app lifecycle
+      // networkHelper.start(30000); // Moved to splash screen
       // Initialize MasterView
       initMasterView({
         appName: 'MasterFabric Expo',
@@ -116,7 +116,8 @@ export default function RootLayout() {
     // Cleanup on unmount
     return () => {
       connectivityHelper.stop();
-      networkHelper.stop();
+      // Don't stop network helper here - it should run throughout app lifecycle
+      // networkHelper.stop();
     };
   }, [loaded, setAppReady]);
 

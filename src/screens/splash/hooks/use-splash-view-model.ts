@@ -1,10 +1,11 @@
 import { navigationUtils } from '@/src/navigation/utils';
 import { t } from '@/src/shared/i18n';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
-import { shouldShowOnboarding } from 'masterfabric-expo-core';
+import { shouldShowOnboarding, networkHelper } from 'masterfabric-expo-core';
+import { useNetworkHelperStore } from '@/src/screens/network-helper/store/network-helper-store';
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
@@ -19,9 +20,62 @@ export function useSplashViewModel() {
     addCompletedStep 
   } = useSplashStore();
 
+  // Network Helper store actions
+  const {
+    setNetworkInfo,
+    setLastCheckTime,
+    setIsMonitoring,
+  } = useNetworkHelperStore();
+
+  const networkUnsubscribeRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
+    // Start network helper immediately when splash screen loads
+    // This will monitor network status, VPN, and connectivity throughout the app lifecycle
+    console.log('[Splash] Starting network helper monitoring...');
+    
+    // Subscribe to network changes and save to store
+    networkUnsubscribeRef.current = networkHelper.onChange((isOnline, info) => {
+      console.log('[Splash] Network status changed:', isOnline, 'Info:', info);
+      setNetworkInfo(info);
+      setLastCheckTime(new Date());
+    });
+    
+    // Start monitoring
+    networkHelper.start(30000); // Check every 30 seconds
+    setIsMonitoring(true);
+    
+    // Initial network check and save to store immediately
+    networkHelper.checkNow()
+      .then(() => {
+        // Get initial network info and save to store
+        const initialInfo = networkHelper.getNetworkInfo();
+        console.log('[Splash] Initial network info:', initialInfo);
+        setNetworkInfo(initialInfo);
+        setLastCheckTime(new Date());
+      })
+      .catch((error) => {
+        console.warn('[Splash] Initial network check failed:', error);
+        // Still try to get whatever info is available
+        const info = networkHelper.getNetworkInfo();
+        if (info) {
+          setNetworkInfo(info);
+          setLastCheckTime(new Date());
+        }
+      });
+    
     initializeApp();
-  }, []);
+    
+    // Cleanup on unmount (should not happen in normal flow, but just in case)
+    return () => {
+      // Don't stop network helper here - it should run throughout app lifecycle
+      // But cleanup the listener if component unmounts
+      if (networkUnsubscribeRef.current) {
+        networkUnsubscribeRef.current();
+        networkUnsubscribeRef.current = null;
+      }
+    };
+  }, [setNetworkInfo, setLastCheckTime, setIsMonitoring]);
 
   const initializeApp = async () => {
     setLoading(true);

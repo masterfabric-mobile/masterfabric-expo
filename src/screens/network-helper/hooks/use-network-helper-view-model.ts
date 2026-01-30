@@ -19,6 +19,21 @@ export function useNetworkHelperViewModel() {
 
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
+  // Load initial values from networkHelper if store is empty
+  useEffect(() => {
+    // If we don't have network info in store but networkHelper is already running, load it
+    if (!networkInfo && !isLoading) {
+      const currentInfo = networkHelper.getNetworkInfo();
+      if (currentInfo && currentInfo.isOnline !== null) {
+        console.log('[NetworkHelperViewModel] Loading initial values from networkHelper:', currentInfo);
+        setNetworkInfo(currentInfo);
+        if (currentInfo.lastChecked) {
+          setLastCheckTime(currentInfo.lastChecked);
+        }
+      }
+    }
+  }, [networkInfo, isLoading, setNetworkInfo, setLastCheckTime]);
+
   // Start monitoring
   const startMonitoring = useCallback(() => {
     if (isMonitoring) return;
@@ -48,11 +63,11 @@ export function useNetworkHelperViewModel() {
     setIsMonitoring(false);
   }, [isMonitoring, setIsMonitoring]);
 
-  // Manual network check
+  // Manual network check (without speed test - background check)
   const checkNetwork = useCallback(async () => {
     setIsLoading(true);
     try {
-      const isOnline = await networkHelper.checkNow();
+      const isOnline = await networkHelper.checkNow(false); // Background check: no speed test
       const info = networkHelper.getNetworkInfo();
       setNetworkInfo(info);
       setLastCheckTime(new Date());
@@ -60,6 +75,24 @@ export function useNetworkHelperViewModel() {
     } catch (error) {
       console.error('Network check error:', error);
       return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [setIsLoading, setNetworkInfo, setLastCheckTime]);
+
+  // Manual speed test (for UI - only when user requests it)
+  const performSpeedTest = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      console.log('[NetworkHelperViewModel] Starting manual speed test...');
+      const speedTestResult = await networkHelper.performSpeedTestNow();
+      const info = networkHelper.getNetworkInfo();
+      setNetworkInfo(info);
+      setLastCheckTime(new Date());
+      return speedTestResult;
+    } catch (error) {
+      console.error('[NetworkHelperViewModel] Speed test error:', error);
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -95,6 +128,7 @@ export function useNetworkHelperViewModel() {
     startMonitoring,
     stopMonitoring,
     checkNetwork,
+    performSpeedTest,
     updateInterval,
   };
 }
