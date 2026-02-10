@@ -175,11 +175,6 @@ export const generateDarkThemeScript = (colors: ThemeColors): string => {
           -webkit-text-size-adjust: 100% !important;
           text-size-adjust: 100% !important;
         }
-        * {
-          font-size: 16px !important;
-          color: ${colors.bodyText} !important;
-          box-sizing: border-box !important;
-        }
         body {
           background-color: ${colors.surfaceBackground} !important;
           color: ${colors.bodyText} !important;
@@ -191,24 +186,21 @@ export const generateDarkThemeScript = (colors: ThemeColors): string => {
           max-width: 100% !important;
           overflow-x: hidden !important;
         }
-        p, div, span, li, td, th, pre, code, textarea, input {
+        /* Only normalize common text containers so we don't
+           break "Raw" / code viewers inside WebView content. */
+        body, p, div, span, li, td, th {
           font-size: 16px !important;
           line-height: 1.5 !important;
           margin: 0 !important;
           max-width: 100% !important;
+          box-sizing: border-box !important;
         }
-        pre {
-          font-size: 16px !important;
-          white-space: pre-wrap !important;
-          word-wrap: break-word !important;
-          margin: 0 !important;
-          padding: 0 !important;
+        /* Keep monospace blocks but don't force colors or spacing,
+           so sites can control how RAW / code panes look. */
+        pre, code {
+          font-family: monospace !important;
           max-width: 100% !important;
           overflow-x: auto !important;
-        }
-        code {
-          font-size: 16px !important;
-          font-family: monospace !important;
         }
         img {
           max-width: 100% !important;
