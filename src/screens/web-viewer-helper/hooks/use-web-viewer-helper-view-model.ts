@@ -137,7 +137,8 @@ export function useWebViewerHelperViewModel() {
             id: 'html',
             functionName: 'html',
             input: `${testInput.htmlContent.substring(0, 50)}...`,
-            output: JSON.stringify(source, null, 2),
+            // Show a human‑readable status instead of raw WebViewSource JSON
+            output: t('helpers.webViewerHelper.messages.success'),
             success: true,
             description: t('helpers.webViewerHelper.html'),
             sourceType: 'html',
@@ -177,12 +178,6 @@ export function useWebViewerHelperViewModel() {
             body: testInput.method === 'POST' ? (testInput.body || undefined) : undefined,
           });
           
-          // Create output with warnings if needed
-          let output = JSON.stringify(source, null, 2);
-          if (testInput.method === 'POST' && hasHeaders) {
-            output = `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n` + output;
-          }
-          
           const inputDisplay = testInput.urlContent + 
             (testInput.method ? `\nMethod: ${testInput.method}` : '') +
             (testInput.method === 'POST' && testInput.body ? `\nBody: ${testInput.body.substring(0, 100)}${testInput.body.length > 100 ? '...' : ''}` : '') +
@@ -192,7 +187,11 @@ export function useWebViewerHelperViewModel() {
             id: 'url',
             functionName: 'url',
             input: inputDisplay,
-            output: output,
+            // Keep output consistent with other helpers – just status text
+            output:
+              testInput.method === 'POST' && hasHeaders
+                ? `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n${t('helpers.webViewerHelper.messages.success')}`
+                : t('helpers.webViewerHelper.messages.success'),
             success: true,
             description: t('helpers.webViewerHelper.url'),
             sourceType: 'uri',
@@ -239,12 +238,6 @@ export function useWebViewerHelperViewModel() {
             body: testInput.method === 'POST' ? (testInput.body || undefined) : undefined,
           });
           
-          // Create output with warnings if needed
-          let output = JSON.stringify(source, null, 2);
-          if (testInput.method === 'POST' && hasHeaders) {
-            output = `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n` + output;
-          }
-          
           const inputDisplay = contentToTest.substring(0, 100) + 
             (testInput.method ? `\nMethod: ${testInput.method}` : '') +
             (testInput.method === 'POST' && testInput.body ? `\nBody: ${testInput.body.substring(0, 50)}${testInput.body.length > 50 ? '...' : ''}` : '') +
@@ -255,7 +248,11 @@ export function useWebViewerHelperViewModel() {
             id: 'open',
             functionName: 'open',
             input: inputDisplay,
-            output: output,
+            // Again, only show a friendly status text in output
+            output:
+              testInput.method === 'POST' && hasHeaders
+                ? `⚠️ ${t('helpers.webViewerHelper.validation.postHeadersNotSupported')}\n\n${t('helpers.webViewerHelper.messages.success')}`
+                : t('helpers.webViewerHelper.messages.success'),
             success: true,
             description: t('helpers.webViewerHelper.open'),
             sourceType: source.html ? 'html' : 'uri',
