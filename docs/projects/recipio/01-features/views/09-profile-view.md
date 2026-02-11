@@ -1,29 +1,29 @@
 # 9. Profile View
 
-Kullanıcı profil ekranı, kullanıcı bilgileri ve ayarları gösterir.
+The user profile screen shows user info and settings.
 
 ### Core Logic & Functionality
 
-- **Kullanıcı Bilgileri**: İsim, e-posta, profil fotoğrafı
-- **İstatistikler**: Toplam tarif sayısı, favori sayısı
-- **Ayarlar**: Dil, tema, bildirimler
-- **Çıkış Yap**: Oturum kapatma
+- **User info**: Name, email, profile photo
+- **Stats**: Total recipes, favorites count
+- **Settings**: Language, theme, notifications
+- **Sign out**: Log out
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/profile/` klasörü altında yer alacaktır.
+This view will live under `src/screens/profile/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/profile/
 ├── components/
 │   ├── profile-screen.tsx
 │   ├── sections/
-│   │   ├── user-info-section.tsx    # Kullanıcı bilgileri
-│   │   ├── stats-section.tsx        # İstatistikler
-│   │   └── settings-section.tsx     # Ayarlar
-│   └── stat-card.tsx                # İstatistik kartı
+│   │   ├── user-info-section.tsx    # User info
+│   │   ├── stats-section.tsx        # Stats
+│   │   └── settings-section.tsx     # Settings
+│   └── stat-card.tsx                # Stat card
 ├── hooks/
 │   └── use-profile-view-model.ts
 ├── models/
@@ -38,18 +38,18 @@ src/screens/profile/
 ```json
 {
   "profile": {
-    "title": "Profil",
+    "title": "Profile",
     "stats": {
-      "totalRecipes": "Toplam Tarif",
-      "favorites": "Favoriler",
-      "cooked": "Yapılanlar"
+      "totalRecipes": "Total Recipes",
+      "favorites": "Favorites",
+      "cooked": "Cooked"
     },
     "settings": {
-      "language": "Dil",
-      "theme": "Tema",
-      "notifications": "Bildirimler"
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications"
     },
-    "signOut": "Çıkış Yap"
+    "signOut": "Sign Out"
   }
 }
 ```

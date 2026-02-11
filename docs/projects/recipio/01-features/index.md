@@ -1,106 +1,106 @@
 # Features Overview
 
-Recipio uygulamasının temel ve gelişmiş özelliklerinin genel bakışı.
+Overview of Recipio app core and advanced features.
 
-## 📱 İçindekiler
+## Contents
 
-### ✅ İlk Aşama Ekranları (Tamamlandı)
+### Phase 1 Screens (Completed)
 
-- **[Splash View](./views/00-splash-view.md)** - Uygulama başlangıç ekranı
-- **[Onboarding View](./views/01-onboarding-view.md)** - İlk kullanım tanıtım ekranları
-- **[Home View](./views/02-home-view.md)** - Ana sayfa (Dashboard)
+- **[Splash View](./views/00-splash-view.md)** — App launch screen
+- **[Onboarding View](./views/01-onboarding-view.md)** — First-time intro screens
+- **[Home View](./views/02-home-view.md)** — Main screen (Dashboard)
 
-### ⏳ Sonraki Aşama Ekranları
+### Later Phase Screens
 
-- **[Ingredient Input View](./views/03-ingredient-input-view.md)** - Malzeme giriş ekranı
-- **[Recipe List View](./views/04-recipe-list-view.md)** - Tarif listesi
-- **[Recipe Detail View](./views/05-recipe-detail-view.md)** - Tarif detayı
-- **[Cooking Guide View](./views/06-cooking-guide-view.md)** - Adım adım yemek yapma rehberi
-- **[Favorites View](./views/07-favorites-view.md)** - Favori tarifler
-- **[History View](./views/08-history-view.md)** - Tarif geçmişi
-- **[Profile View](./views/09-profile-view.md)** - Kullanıcı profili
+- **[Ingredient Input View](./views/03-ingredient-input-view.md)** — Ingredient input screen
+- **[Recipe List View](./views/04-recipe-list-view.md)** — Recipe list
+- **[Recipe Detail View](./views/05-recipe-detail-view.md)** — Recipe detail
+- **[Cooking Guide View](./views/06-cooking-guide-view.md)** — Step-by-step cooking guide
+- **[Favorites View](./views/07-favorites-view.md)** — Favorite recipes
+- **[History View](./views/08-history-view.md)** — Recipe history
+- **[Profile View](./views/09-profile-view.md)** — User profile
 
-## 🎯 Temel Özellikler
+## Core Features
 
-### 1. Akıllı Tarif Önerisi (Sonraki Aşama)
+### 1. Smart Recipe Suggestions (Later Phase)
 
-- Kullanıcının girdiği malzemelere göre otomatik tarif önerisi
-- Uyumluluk skoruna göre sıralama (%100 uyuşandan uyuşmayana)
-- Hız ve pratiklik filtreleri
-- Eksik malzeme durumuna göre öneriler
+- Automatic recipe suggestions from entered ingredients
+- Sorting by match score (100% down)
+- Speed and practicality filters
+- Suggestions based on missing ingredients
 - AI-powered ingredient matching
 
-### 2. Malzeme Yönetimi (Sonraki Aşama)
+### 2. Ingredient Management (Later Phase)
 
-- Malzeme ve ölçü girişi
-- Malzeme arama ve otomatik tamamlama
-- Malzeme kategorileri (sebze, et, baharat, vb.)
+- Ingredient and quantity input
+- Ingredient search and autocomplete
+- Ingredient categories (vegetables, meat, spices, etc.)
 
-### 3. Tarif Yönetimi
+### 3. Recipe Management
 
-- ✅ **Cook Tonight**: Supabase'den random tarifler
-- ✅ **Recent Activity**: Kullanıcı aktiviteleri
-- ⏳ Detaylı tarif görüntüleme (sonraki aşama)
-- ⏳ Favorilere ekleme/çıkarma (sonraki aşama)
-- ⏳ Tarif geçmişi (sonraki aşama)
-- ⏳ Tarif arama ve filtreleme (sonraki aşama)
+- **Cook Tonight**: Random recipes from Supabase
+- **Recent Activity**: User activities
+- Detailed recipe view (later phase)
+- Add/remove favorites (later phase)
+- Recipe history (later phase)
+- Recipe search and filters (later phase)
 
-### 4. Adım Adım Yemek Yapma Rehberi (Sonraki Aşama)
+### 4. Step-by-Step Cooking Guide (Later Phase)
 
-- Görsel adım adım rehber
-- Zamanlayıcı desteği
-- İlerleme takibi
-- Not alma özelliği
+- Visual step-by-step guide
+- Timer support
+- Progress tracking
+- Note-taking
 
-### 5. Kullanıcı Profili
+### 5. User Profile
 
-- ✅ **Dashboard**: Kullanıcı karşılama ve plan bilgileri
-- ✅ **Current Plan**: Plan durumu ve ilerleme
-- ⏳ Profil bilgileri (sonraki aşama)
-- ⏳ Favori tarifler (sonraki aşama)
-- ⏳ Yemek geçmişi (sonraki aşama)
-- ⏳ Ayarlar (sonraki aşama)
+- **Dashboard**: User greeting and plan info
+- **Current Plan**: Plan status and progress
+- Profile info (later phase)
+- Favorite recipes (later phase)
+- Cooking history (later phase)
+- Settings (later phase)
 
-## 🏗️ Mimari Özellikler
+## Architecture Notes
 
 ### MasterFabric Core Integration
 
-- **ThemedView**: Tema desteği olan View component
-- **ThemedText**: Tema desteği olan Text component
+- **ThemedView**: Theme-aware View component
+- **ThemedText**: Theme-aware Text component
 - **Colors**: MasterFabric color palette
 - **ThemeProvider**: Theme context provider
 
 ### Supabase Integration
 
-- **Recipe Service**: Tarif işlemleri
-- **User Service**: Kullanıcı işlemleri
-- **Recipe Search Service**: AI-powered search (sonraki aşama)
+- **Recipe Service**: Recipe operations
+- **User Service**: User operations
+- **Recipe Search Service**: AI-powered search (later phase)
 
 ### State Management
 
 - **Zustand**: Global state management
-- **AsyncStorage**: Kalıcı veri depolama
+- **AsyncStorage**: Persistent storage
 - **Local State**: Component-specific state
 
-## 📊 Mevcut Durum
+## Current Status
 
-**Tamamlanan:**
-- ✅ Splash Screen
-- ✅ Onboarding Screen (multi-step)
-- ✅ Home Screen (Dashboard)
-- ✅ Supabase Integration
-- ✅ Dark Theme Design
+**Completed:**
+- Splash Screen
+- Onboarding Screen (multi-step)
+- Home Screen (Dashboard)
+- Supabase Integration
+- Dark Theme Design
 
-**Sonraki Aşamalar:**
-- ⏳ Enter Ingredients Screen
-- ⏳ Recipe Results Screen
-- ⏳ Recipe Detail Screen
-- ⏳ Cooking Guide Screen
-- ⏳ Favorites Screen
-- ⏳ History Screen
-- ⏳ Profile Screen
+**Next phases:**
+- Enter Ingredients Screen
+- Recipe Results Screen
+- Recipe Detail Screen
+- Cooking Guide Screen
+- Favorites Screen
+- History Screen
+- Profile Screen
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0

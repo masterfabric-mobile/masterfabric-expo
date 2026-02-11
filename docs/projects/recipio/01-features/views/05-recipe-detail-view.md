@@ -1,33 +1,52 @@
 # 5. Recipe Detail View
 
-Tarif detay ekranı, seçilen tarifin tüm bilgilerini gösterir.
+The recipe detail screen shows all information for the selected recipe. **Opens when user taps a recipe** (e.g. from Cook Tonight or Recipe List). Uses **unified dark theme** (black + orange).
+
+## Design (Reference Image)
+
+### Layout Schematic
+
+| Section | Content |
+|---------|---------|
+| **Header** | "Recipe Detail" title; overlay: back (←), heart (♡ favorite) buttons |
+| **Hero image** | Full-width recipe photo |
+| **Title** | Recipe name (large, bold, white) |
+| **Meta row** | ⭐ rating (e.g. 4.8 (120)) • 🕐 time (e.g. 25 Mins) • 🍴 difficulty (Easy/Medium/Hard) |
+| **Description** | Paragraph text (white) |
+| **Nutrition cards** | 4 horizontal: Kcal, Prot, Carb, Fat (value white, label `#FF5722` primary-accent) |
+| **Ingredients** | "Ingredients" + item count; list: ✅ Available (grey bg) / ❌ Missing (reddish-brown bg) |
+| **Chef's Tip** | 💡 icon, "Chef's Tip", suggestion text (optional) |
+
+### Ingredient Card Styles
+
+- **Available:** Dark grey bg (`#1C1C1E`), green checkmark, white text, "Available" grey
+- **Missing:** Reddish-brown bg, red X, white text, "Missing" red
 
 ### Core Logic & Functionality
 
-- **Tarif Bilgileri**: Başlık, açıklama, görsel
-- **Malzemeler Listesi**: Gerekli malzemeler ve ölçüleri
-- **Hazırlık Süresi**: Hazırlık, pişirme, toplam süre
-- **Porsiyon**: Kaç kişilik
-- **Zorluk Seviyesi**: Kolay, orta, zor
-- **Favoriye Ekle/Çıkar**: Favori butonu
-- **Yemek Yapmaya Başla**: Adım adım rehbere geçiş butonu
+- **Recipe info**: Title, description, image (from `v_recipe_detail`)
+- **Ingredients list**: Required ingredients with Available/Missing state
+- **Rating, time, difficulty**: From recipe stats
+- **Nutrition**: Kcal, protein, carbs, fat
+- **Add/remove favorite**: Heart button
+- **Start cooking**: Button to open step-by-step guide (Cooking Guide screen)
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/recipe-detail/` klasörü altında yer alacaktır.
+This view will live under `src/screens/recipe-detail/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/recipe-detail/
 ├── components/
 │   ├── recipe-detail-screen.tsx
 │   ├── sections/
-│   │   ├── header-section.tsx        # Başlık ve görsel
-│   │   ├── info-section.tsx          # Süre, porsiyon, zorluk
-│   │   ├── ingredients-section.tsx    # Malzemeler
-│   │   └── actions-section.tsx       # Butonlar
-│   └── ingredient-row.tsx             # Malzeme satırı
+│   │   ├── header-section.tsx        # Title and image
+│   │   ├── info-section.tsx          # Time, servings, difficulty
+│   │   ├── ingredients-section.tsx   # Ingredients
+│   │   └── actions-section.tsx       # Buttons
+│   └── ingredient-row.tsx            # Ingredient row
 ├── hooks/
 │   └── use-recipe-detail-view-model.ts
 ├── models/
@@ -42,15 +61,15 @@ src/screens/recipe-detail/
 ```json
 {
   "recipeDetail": {
-    "prepTime": "Hazırlık",
-    "cookTime": "Pişirme",
-    "totalTime": "Toplam",
-    "servings": "Porsiyon",
-    "difficulty": "Zorluk",
-    "ingredients": "Malzemeler",
-    "startCooking": "Yemek Yapmaya Başla",
-    "addToFavorites": "Favorilere Ekle",
-    "removeFromFavorites": "Favorilerden Çıkar"
+    "prepTime": "Prep",
+    "cookTime": "Cook",
+    "totalTime": "Total",
+    "servings": "Servings",
+    "difficulty": "Difficulty",
+    "ingredients": "Ingredients",
+    "startCooking": "Start Cooking",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites"
   }
 }
 ```

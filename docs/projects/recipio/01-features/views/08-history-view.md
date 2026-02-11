@@ -1,19 +1,19 @@
 # 8. History View
 
-Tarif geçmişi ekranı, kullanıcının daha önce görüntülediği veya yaptığı tarifleri gösterir.
+The history screen shows recipes the user has viewed or cooked before.
 
 ### Core Logic & Functionality
 
-- **Görüntüleme Geçmişi**: Son görüntülenen tarifler
-- **Yapılan Tarifler**: Kullanıcının yaptığı tarifler
-- **Tarih Filtreleme**: Bugün, bu hafta, bu ay
-- **Temizle**: Geçmişi temizleme
+- **View history**: Recently viewed recipes
+- **Cooked recipes**: Recipes the user has cooked
+- **Date filter**: Today, this week, this month
+- **Clear**: Clear history
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/history/` klasörü altında yer alacaktır.
+This view will live under `src/screens/history/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/history/
@@ -37,14 +37,14 @@ src/screens/history/
 ```json
 {
   "history": {
-    "title": "Geçmiş",
-    "viewed": "Görüntülenenler",
-    "cooked": "Yapılanlar",
-    "today": "Bugün",
-    "thisWeek": "Bu Hafta",
-    "thisMonth": "Bu Ay",
-    "clear": "Temizle",
-    "empty": "Geçmiş yok"
+    "title": "History",
+    "viewed": "Viewed",
+    "cooked": "Cooked",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "clear": "Clear",
+    "empty": "No history"
   }
 }
 ```

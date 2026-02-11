@@ -1,6 +1,6 @@
 # 0. Splash View
 
-Splash ekranı, kullanıcının uygulamayı açtığında gördüğü ilk ekrandır. Ana amacı, uygulamanın arka planda başlatılması sırasında sorunsuz bir giriş noktası sağlamaktır.
+The splash screen is the first screen the user sees when opening the app. Its main purpose is to provide a smooth entry point while the app initializes in the background.
 
 ## 🎨 Design
 
@@ -19,14 +19,14 @@ Splash ekranı, kullanıcının uygulamayı açtığında gördüğü ilk ekrand
 |         "Find recipes based on your ingredients"   |
 |                                                     |
 |                                                     |
-|              (Spinner: Yükleniyor...)              |
+|              (Spinner: Loading...)                 |
 |                                                     |
 +-----------------------------------------------------+
 ```
 
 ### Styling
 
-**MasterFabric Colors Kullanımı:**
+**Using MasterFabric Colors:**
 ```typescript
 import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
 
@@ -52,16 +52,16 @@ export const splashScreenStyles = StyleSheet.create({
 
 ## 🏗️ Architecture & Components
 
-Bu görünüm `src/screens/splash/` klasörü altında yer alır.
+This view lives under `src/screens/splash/`.
 
-### Dosya Yapısı
+### File structure
 
 ```
 src/screens/splash/
 ├── components/
-│   └── splash-screen.tsx          # Ana splash ekranı bileşeni
+│   └── splash-screen.tsx          # Main splash screen component
 ├── hooks/
-│   └── use-splash-navigation.ts   # Navigation hook (opsiyonel)
+│   └── use-splash-navigation.ts   # Navigation hook (optional)
 ├── models/
 │   └── splash-models.ts           # Type definitions
 ├── styles/
@@ -102,7 +102,7 @@ export function SplashScreen() {
 
 ### Initialization Flow
 
-Splash ekranı `app/index.tsx` içinde yönetilir:
+The splash screen is controlled from `app/index.tsx`:
 
 ```typescript
 // app/index.tsx
@@ -147,18 +147,18 @@ export default function Index() {
 ### Initialization Steps
 
 1. **Splash Display**: Minimum delay (DEFAULT_SPLASH_CONFIG.navigationDelay)
-2. **Onboarding Check**: AsyncStorage'dan onboarding durumu kontrol edilir
-3. **Navigation**: Onboarding durumuna göre yönlendirme yapılır
+2. **Onboarding check**: Read onboarding status from AsyncStorage
+3. **Navigation**: Redirect based on onboarding status
 
 ## 📦 Core Packages & Helpers
 
 - **`@masterfabric-expo/core`**:
-  - `ThemedView`: Tema desteği olan View component
-  - `ThemedText`: Tema desteği olan Text component
+  - `ThemedView`: Theme-aware View component
+  - `ThemedText`: Theme-aware Text component
   - `Colors`: MasterFabric color palette
-- **`@react-native-async-storage/async-storage`**: Onboarding durumu kontrolü için
+- **`@react-native-async-storage/async-storage`**: For onboarding status check
 - **`react-native-safe-area-context`**: Safe area handling
-- **`expo-router`**: Navigation için
+- **`expo-router`**: Navigation
 
 ## 🧭 Navigation Flow
 
@@ -187,21 +187,21 @@ Splash Screen (minimum delay)
 
 ## 🎯 Implementation Details
 
-### Minimal Approach
+### Minimal approach
 
-- ✅ Basit component yapısı
-- ✅ MasterFabric Core bileşenleri kullanımı
-- ✅ Navigation logic `app/index.tsx`'te merkezi
-- ✅ AsyncStorage ile onboarding kontrolü
+- Simple component structure
+- Use MasterFabric Core components
+- Navigation logic centralized in `app/index.tsx`
+- Onboarding check via AsyncStorage
 
 ### Styling
 
-- ✅ MasterFabric Colors kullanımı
-- ✅ StyleSheet API
-- ✅ SafeAreaView ile safe area handling
+- MasterFabric Colors
+- StyleSheet API
+- SafeAreaView for safe area handling
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0  
-**Durum:** ✅ Tamamlandı
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0  
+**Status:** Complete

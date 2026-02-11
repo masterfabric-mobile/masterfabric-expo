@@ -1,67 +1,82 @@
 # 1. Onboarding View
 
-Onboarding ekranı, kullanıcının uygulamayı ilk kez açtığında karşılaştığı tanıtım ekranlarıdır. Kullanıcıya uygulamanın temel özelliklerini ve nasıl kullanılacağını gösterir.
+The onboarding screen is the intro flow shown when the user opens the app for the first time. **3 slides** only. Uses the **unified dark theme** (black background, white text, orange accents).
 
 ## 🎨 Design
+
+### Theme (All Screens)
+
+**Dark theme:** `#000000` background, `#FFFFFF` text, orange accents: `#FF5722` (primary), `#FF9800`, `#FFB74D`. Same as Home, Recipe Detail, Splash.
+
+### 3 Slides (Reference Image)
+
+| Slide | Title | Description | Button |
+|-------|-------|-------------|--------|
+| 1 | Enter Your Ingredients | Don't know what to cook? Just type in the ingredients you have, and discover delicious recipes instantly. | Next |
+| 2 | Get Perfect Recipe Matches | Tell us what you love, and our AI will find recipes tailored specifically to your taste buds and dietary needs. | Next → |
+| 3 | Cook with Confidence | Never miss a step. Our interactive cooking mode keeps your screen on and guides you from prep to plate. | Get Started |
 
 ### Layout
 
 ```
 +-----------------------------------------------------+
+|                                    [Skip]           |
 |                                                     |
-|              [Illustration/Image]                   |
+|              [Central Illustration]                 |
 |                                                     |
-|              "Hoş Geldiniz!"                        |
+|              "Slide Title"                          |
 |                                                     |
-|    Recipio ile elinizdeki malzemelere göre         |
-|    akıllı tarif önerileri alın                     |
+|    Description text paragraph.                      |
 |                                                     |
+|              [●] [○] [○]  (3 dots, orange filled)   |
 |                                                     |
-|    [●] [○] [○]  (Step indicators)                  |
-|                                                     |
-|    [Geri]              [İleri] / [Başla]           |
-|                                                     |
+|              [    Next / Get Started    ]           |
+|                     (orange button)                 |
 +-----------------------------------------------------+
 ```
 
-### Styling
+### Styling (Dark Theme)
 
-**MasterFabric Colors Kullanımı:**
 ```typescript
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
+const colors = {
+  background: '#000000',
+  text: '#FFFFFF',
+  textSecondary: '#8E8E93',
+  primary: '#FF5722',
+};
 
 export const onboardingScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: Colors.light.text,
+    color: colors.text,
   },
   description: {
     fontSize: 16,
-    color: Colors.light.actionDescription,
+    color: colors.textSecondary,
   },
 });
 ```
 
 ## 🏗️ Architecture & Components
 
-Bu görünüm `src/screens/onboarding/` klasörü altında yer alır.
+This view lives under `src/screens/onboarding/`.
 
-### Dosya Yapısı
+### File structure
 
 ```
 src/screens/onboarding/
 ├── components/
-│   ├── onboarding-screen.tsx      # Ana onboarding ekranı bileşeni
-│   ├── step-content.tsx            # Her adımın içeriğini gösteren bileşen
-│   ├── step-controls.tsx           # İleri/Geri butonları
-│   └── step-indicator.tsx          # Adım göstergesi
+│   ├── onboarding-screen.tsx      # Main onboarding screen component
+│   ├── step-content.tsx            # Content for each step
+│   ├── step-controls.tsx           # Next/Back buttons
+│   └── step-indicator.tsx          # Step indicator
 ├── hooks/
-│   └── use-onboarding-view-model.ts # Onboarding view model hook'u
+│   └── use-onboarding-view-model.ts # Onboarding view model hook
 ├── models/
 │   └── onboarding-models.ts        # Type definitions
 ├── store/
@@ -74,7 +89,7 @@ src/screens/onboarding/
 ### Core Components
 
 #### OnboardingScreen
-Ana container component. Multi-step flow'u yönetir.
+Main container. Manages the multi-step flow.
 
 ```typescript
 export function OnboardingScreen() {
@@ -101,7 +116,7 @@ export function OnboardingScreen() {
 ```
 
 #### StepIndicator
-Adım göstergesi component'i.
+Step indicator component.
 
 ```typescript
 export function StepIndicator({ currentStep, totalSteps }: Props) {
@@ -123,7 +138,7 @@ export function StepIndicator({ currentStep, totalSteps }: Props) {
 ```
 
 #### StepContent
-Her adımın içeriğini gösterir.
+Shows the content for each step.
 
 ```typescript
 export function StepContent({ step }: { step: OnboardingStep }) {
@@ -144,7 +159,7 @@ export function StepContent({ step }: { step: OnboardingStep }) {
 ```
 
 #### StepControls
-İleri/Geri/Skip butonları.
+Next/Back/Skip buttons.
 
 ```typescript
 export function StepControls({
@@ -161,7 +176,7 @@ export function StepControls({
     <View style={stepControlsStyles.container}>
       {currentStep > 0 && (
         <TouchableOpacity style={stepControlsStyles.backButton} onPress={onBack}>
-          <Text style={stepControlsStyles.backButtonText}>Geri</Text>
+          <Text style={stepControlsStyles.backButtonText}>Back</Text>
         </TouchableOpacity>
       )}
       
@@ -170,13 +185,13 @@ export function StepControls({
         onPress={isLastStep ? onComplete : onNext}
       >
         <Text style={stepControlsStyles.nextButtonText}>
-          {isLastStep ? 'Başla' : 'İleri'}
+          {isLastStep ? 'Get Started' : 'Next'}
         </Text>
       </TouchableOpacity>
       
       {!isLastStep && (
         <TouchableOpacity style={stepControlsStyles.skipButton} onPress={onSkip}>
-          <Text style={stepControlsStyles.skipButtonText}>Atla</Text>
+          <Text style={stepControlsStyles.skipButtonText}>Skip</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -237,20 +252,20 @@ export function useOnboardingViewModel() {
 
   const steps: OnboardingStep[] = [
     {
-      title: 'Hoş Geldiniz!',
-      description: ['Recipio ile elinizdeki malzemelere göre', 'akıllı tarif önerileri alın'],
+      title: 'Welcome!',
+      description: ['Get smart recipe suggestions', 'based on the ingredients you have'],
     },
     {
-      title: 'Malzeme Girişi',
-      description: ['Elinizdeki malzemeleri ve ölçülerini girin'],
+      title: 'Ingredient Input',
+      description: ['Enter your ingredients and quantities'],
     },
     {
-      title: 'Akıllı Öneriler',
-      description: ['Uyumluluk skoruna göre size en uygun', 'tarifleri bulun'],
+      title: 'Smart Suggestions',
+      description: ['Find the best matching', 'recipes by match score'],
     },
     {
-      title: 'Adım Adım Rehber',
-      description: ['Yemek yapma sürecini kolayca takip edin'],
+      title: 'Step-by-Step Guide',
+      description: ['Follow the cooking process easily'],
     },
   ];
 
@@ -326,32 +341,32 @@ Onboarding Screen
 {
   "onboarding": {
     "welcome": {
-      "title": "Hoş Geldiniz!",
+      "title": "Welcome!",
       "description": [
-        "Recipio ile elinizdeki malzemelere göre",
-        "akıllı tarif önerileri alın"
+        "Get smart recipe suggestions",
+        "based on the ingredients you have"
       ]
     },
     "step1": {
-      "title": "Malzeme Girişi",
-      "description": ["Elinizdeki malzemeleri ve ölçülerini girin"]
+      "title": "Ingredient Input",
+      "description": ["Enter your ingredients and quantities"]
     },
     "step2": {
-      "title": "Akıllı Öneriler",
+      "title": "Smart Suggestions",
       "description": [
-        "Uyumluluk skoruna göre size en uygun",
-        "tarifleri bulun"
+        "Find the best matching",
+        "recipes by match score"
       ]
     },
     "step3": {
-      "title": "Adım Adım Rehber",
-      "description": ["Yemek yapma sürecini kolayca takip edin"]
+      "title": "Step-by-Step Guide",
+      "description": ["Follow the cooking process easily"]
     },
     "controls": {
-      "back": "Geri",
-      "next": "İleri",
-      "skip": "Atla",
-      "getStarted": "Başla"
+      "back": "Back",
+      "next": "Next",
+      "skip": "Skip",
+      "getStarted": "Get Started"
     }
   }
 }
@@ -359,27 +374,27 @@ Onboarding Screen
 
 ## 🎯 Implementation Details
 
-### Onboarding Steps
+### Onboarding steps
 
-1. **Hoş Geldiniz**: Uygulamanın tanıtımı
-2. **Malzeme Girişi**: Nasıl malzeme girileceği
-3. **Akıllı Öneriler**: Akıllı öneri sistemi
-4. **Adım Adım Rehber**: Yemek yapma rehberi özelliği
+1. **Welcome**: App introduction
+2. **Ingredient Input**: How to enter ingredients
+3. **Smart Suggestions**: Suggestion system
+4. **Step-by-Step Guide**: Cooking guide feature
 
-### State Management
+### State management
 
-- ✅ **Zustand Store**: Onboarding durumu için
-- ✅ **AsyncStorage**: Kalıcı veri depolama
-- ✅ **Local State**: Current step için
+- **Zustand store**: For onboarding status
+- **AsyncStorage**: Persistent storage
+- **Local state**: For current step
 
 ### MasterFabric Core
 
-- ✅ **ThemedView**: Container component
-- ✅ **ThemedText**: Text component
-- ✅ **Colors**: Color palette
+- **ThemedView**: Container component
+- **ThemedText**: Text component
+- **Colors**: Color palette
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0  
-**Durum:** ✅ Tamamlandı
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0  
+**Status:** Complete

@@ -1,31 +1,31 @@
 # 4. Recipe List View
 
-Tarif listesi ekranı, kullanıcıya önerilen tarifleri gösterir. Uyumluluk skoruna göre sıralanır.
+The recipe list screen shows suggested recipes to the user, ordered by match score.
 
 ### Core Logic & Functionality
 
-- **Tarif Listesi**: Uyumluluk skoruna göre sıralanmış tarifler
-- **Filtreleme**: Hız, pratiklik, zorluk seviyesi filtreleri
-- **Arama**: Tarif adına göre arama
-- **Sıralama**: Uyumluluk, popülerlik, tarih
-- **Tekrar Öner**: Yeni tarif önerileri için buton
-- **Uyumluluk Skoru**: Her tarif için % uyumluluk göstergesi
+- **Recipe list**: Recipes sorted by match score
+- **Filters**: Speed, practicality, difficulty
+- **Search**: Search by recipe name
+- **Sort**: By match, popularity, date
+- **Suggest again**: Button for new suggestions
+- **Match score**: Match percentage per recipe
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/recipe-list/` klasörü altında yer alacaktır.
+This view will live under `src/screens/recipe-list/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/recipe-list/
 ├── components/
 │   ├── recipe-list-screen.tsx
 │   ├── sections/
-│   │   ├── filter-section.tsx        # Filtreler
-│   │   ├── sort-section.tsx          # Sıralama
-│   │   └── recipe-grid.tsx           # Tarif grid'i
-│   └── recipe-card.tsx               # Tarif kartı
+│   │   ├── filter-section.tsx        # Filters
+│   │   ├── sort-section.tsx         # Sort options
+│   │   └── recipe-grid.tsx           # Recipe grid
+│   └── recipe-card.tsx               # Recipe card
 ├── hooks/
 │   └── use-recipe-list-view-model.ts
 ├── models/
@@ -40,19 +40,19 @@ src/screens/recipe-list/
 ```json
 {
   "recipeList": {
-    "title": "Tarif Önerileri",
-    "suggestAgain": "Tekrar Öner",
+    "title": "Recipe Suggestions",
+    "suggestAgain": "Suggest Again",
     "filters": {
-      "speed": "Hız",
-      "practicality": "Pratiklik",
-      "difficulty": "Zorluk"
+      "speed": "Speed",
+      "practicality": "Practicality",
+      "difficulty": "Difficulty"
     },
     "sort": {
-      "match": "Uyumluluk",
-      "popularity": "Popülerlik",
-      "date": "Tarih"
+      "match": "Match",
+      "popularity": "Popularity",
+      "date": "Date"
     },
-    "empty": "Tarif bulunamadı"
+    "empty": "No recipes found"
   }
 }
 ```

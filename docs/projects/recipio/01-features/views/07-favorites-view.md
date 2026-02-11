@@ -1,20 +1,20 @@
 # 7. Favorites View
 
-Favori tarifler ekranı, kullanıcının favorilerine eklediği tarifleri gösterir.
+The favorites screen shows recipes the user has added to favorites.
 
 ### Core Logic & Functionality
 
-- **Favori Tarifler Listesi**: Kullanıcının favorilerine eklediği tarifler
-- **Arama**: Favoriler içinde arama
-- **Filtreleme**: Kategori, zorluk seviyesi
-- **Sıralama**: Tarih, alfabetik
-- **Favoriden Çıkar**: Favorilerden kaldırma
+- **Favorites list**: Recipes the user has favorited
+- **Search**: Search within favorites
+- **Filters**: Category, difficulty
+- **Sort**: By date, alphabetical
+- **Remove from favorites**: Unfavorite action
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/favorites/` klasörü altında yer alacaktır.
+This view will live under `src/screens/favorites/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/favorites/
@@ -38,9 +38,9 @@ src/screens/favorites/
 ```json
 {
   "favorites": {
-    "title": "Favoriler",
-    "empty": "Henüz favori tarif yok",
-    "remove": "Favorilerden Çıkar"
+    "title": "Favorites",
+    "empty": "No favorite recipes yet",
+    "remove": "Remove from Favorites"
   }
 }
 ```

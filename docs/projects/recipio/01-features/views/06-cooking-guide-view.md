@@ -1,32 +1,32 @@
 # 6. Cooking Guide View
 
-Adım adım yemek yapma rehberi ekranı. Google Stitch projesindeki gibi görsel ve interaktif bir deneyim sunar.
+Step-by-step cooking guide screen. Provides a visual, interactive experience similar to the Google Stitch project.
 
 ### Core Logic & Functionality
 
-- **Adım Adım Rehber**: Her adım için görsel ve açıklama
-- **İlerleme Takibi**: Hangi adımda olduğunu gösterir
-- **Zamanlayıcı**: Adımlarda zamanlayıcı varsa gösterilir
-- **Not Alma**: Her adım için not eklenebilir
-- **İleri/Geri**: Adımlar arası geçiş
-- **Tamamlandı**: Tüm adımlar tamamlandığında bildirim
+- **Step-by-step guide**: Image and description per step
+- **Progress**: Indicates current step
+- **Timer**: Shown when a step has a timer
+- **Notes**: Add notes per step
+- **Next/Previous**: Move between steps
+- **Complete**: Notification when all steps are done
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/cooking-guide/` klasörü altında yer alacaktır.
+This view will live under `src/screens/cooking-guide/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/cooking-guide/
 ├── components/
 │   ├── cooking-guide-screen.tsx
 │   ├── sections/
-│   │   ├── step-content.tsx          # Adım içeriği
-│   │   ├── step-navigation.tsx       # İleri/geri butonları
-│   │   ├── progress-indicator.tsx    # İlerleme göstergesi
-│   │   └── timer-section.tsx         # Zamanlayıcı
-│   └── step-image.tsx                # Adım görseli
+│   │   ├── step-content.tsx         # Step content
+│   │   ├── step-navigation.tsx       # Next/previous buttons
+│   │   ├── progress-indicator.tsx    # Progress indicator
+│   │   └── timer-section.tsx        # Timer
+│   └── step-image.tsx                # Step image
 ├── hooks/
 │   └── use-cooking-guide-view-model.ts
 ├── models/
@@ -38,22 +38,22 @@ src/screens/cooking-guide/
 
 ### Reference Design
 
-Bu ekran, [Google Stitch projesi](https://stitch.withgoogle.com/projects/16264947854290603127) referans alınarak tasarlanmıştır. Görsel ve interaktif bir yemek yapma deneyimi sunar.
+This screen is designed with reference to the [Google Stitch project](https://stitch.withgoogle.com/projects/16264947854290603127). It offers a visual, interactive cooking experience.
 
 ### Translation Keys
 
 ```json
 {
   "cookingGuide": {
-    "title": "Yemek Yapma Rehberi",
-    "step": "Adım",
+    "title": "Cooking Guide",
+    "step": "Step",
     "of": "/",
-    "next": "İleri",
-    "previous": "Geri",
-    "complete": "Tamamlandı",
-    "timer": "Zamanlayıcı",
-    "addNote": "Not Ekle",
-    "notes": "Notlar"
+    "next": "Next",
+    "previous": "Previous",
+    "complete": "Complete",
+    "timer": "Timer",
+    "addNote": "Add Note",
+    "notes": "Notes"
   }
 }
 ```

@@ -1,31 +1,39 @@
-# 3. Ingredient Input View
+# 3. Ingredient Input View (Enter Ingredients)
 
-Malzeme giriş ekranı, kullanıcının elindeki malzemeleri ve ölçülerini girebileceği ekrandır.
+The ingredient input screen is the **"Find Your Next Meal"** destination. User adds ingredients to their pantry, then taps "Find Recipes with These Ingredients...".
+
+**Phase 1 scope.** Design per reference image. Dark theme.
+
+### Design (Reference Image)
+
+- **Header:** Back, "Enter Ingredients", "Clear All" (primary-accent)
+- **Add items:** "Add items to your pantry", "Start typing to add ingredients for your search."
+- **Input:** Text field "Type ingredient name...", orange "Add" button
+- **Your ingredients:** Tag-style list (dark grey bg, X to remove); "YOUR INGREDIENTS (N)"
+- **CTA:** Full-width orange "Find Recipes with These Ingredients..."
 
 ### Core Logic & Functionality
 
-- **Malzeme Ekleme**: Kullanıcı malzeme adı ve ölçü girebilir
-- **Otomatik Tamamlama**: Malzeme adı yazarken öneriler gösterilir
-- **Kategori Filtreleme**: Malzemeler kategorilere göre filtrelenebilir
-- **Ölçü Birimleri**: Gram, adet, fincan, yemek kaşığı, vb.
-- **Malzeme Listesi**: Eklenen malzemelerin listesi
-- **Tarif Öner**: Malzemelere göre tarif önerisi butonu
+- **Add ingredients**: User types name, taps "Add" to add to list
+- **Remove ingredient**: X on each tag
+- **Clear all**: "Clear All" in header clears the list
+- **Find recipes**: CTA navigates to recipe results (list of matching recipes)
 
 ### Architecture & Components
 
-Bu görünüm `src/screens/ingredient-input/` klasörü altında yer alacaktır.
+This view will live under `src/screens/ingredient-input/`.
 
-#### Dosya Yapısı
+#### File structure
 
 ```
 src/screens/ingredient-input/
 ├── components/
 │   ├── ingredient-input-screen.tsx
 │   ├── sections/
-│   │   ├── search-section.tsx        # Malzeme arama
-│   │   ├── category-filter.tsx       # Kategori filtresi
-│   │   └── ingredient-list.tsx       # Eklenen malzemeler listesi
-│   └── ingredient-item.tsx           # Malzeme öğesi
+│   │   ├── search-section.tsx        # Ingredient search
+│   │   ├── category-filter.tsx       # Category filter
+│   │   └── ingredient-list.tsx       # Added ingredients list
+│   └── ingredient-item.tsx           # Ingredient item
 ├── hooks/
 │   └── use-ingredient-input-view-model.ts
 ├── models/
@@ -42,17 +50,17 @@ src/screens/ingredient-input/
 ```json
 {
   "ingredientInput": {
-    "title": "Malzeme Ekle",
-    "searchPlaceholder": "Malzeme ara...",
-    "addButton": "Ekle",
-    "suggestRecipe": "Tarif Öner",
-    "empty": "Henüz malzeme eklenmedi",
+    "title": "Add Ingredients",
+    "searchPlaceholder": "Search ingredients...",
+    "addButton": "Add",
+    "suggestRecipe": "Suggest Recipes",
+    "empty": "No ingredients added yet",
     "categories": {
-      "all": "Tümü",
-      "vegetable": "Sebze",
-      "meat": "Et",
-      "spice": "Baharat",
-      "dairy": "Süt Ürünleri"
+      "all": "All",
+      "vegetable": "Vegetable",
+      "meat": "Meat",
+      "spice": "Spice",
+      "dairy": "Dairy"
     }
   }
 }

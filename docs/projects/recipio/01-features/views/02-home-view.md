@@ -1,6 +1,6 @@
 # 2. Home View (Dashboard)
 
-Ana sayfa, kullanıcının uygulamayı açtığında gördüğü merkezi ekrandır. Dark theme tasarımı ile modern bir dashboard deneyimi sunar.
+The home screen is the main screen the user sees when opening the app. It provides a modern dashboard experience with a dark theme.
 
 ## 🎨 Design
 
@@ -12,7 +12,7 @@ const colors = {
   cardBackground: '#1C1C1E',    // Dark grey card
   text: '#FFFFFF',              // White text
   textSecondary: '#8E8E93',     // Light grey secondary text
-  primary: '#FF9500',           // Orange accent
+  primary: '#FF5722',           // Primary accent
   success: '#34C759',           // Green for VEGAN tag
   border: '#38383A',            // Border color
 };
@@ -20,9 +20,11 @@ const colors = {
 
 ### Layout Structure
 
+**Design note:** Quick Actions grid is not used. Only "Find Your Next Meal" card is shown. Header uses search icon (not notification/bell). Layout matches the design reference image.
+
 ```
 +-----------------------------------------------------+
-|  Dashboard                    [🔔]                  |
+|  Dashboard                    [🔍]                  |
 |  GOOD MORNING                                        |
 |  Welcome, Alex!                                      |
 +-----------------------------------------------------+
@@ -33,15 +35,11 @@ const colors = {
 |  | [████████████░░░░] 45/50                      |  |
 |  +-----------------------------------------------+  |
 +-----------------------------------------------------+
-|  Quick Actions                                      |
-|  +-----------+  +-----------+                      |
-|  | ➕ Add    |  | 📅 Meal   |                      |
-|  | Recipe    |  | Plan      |                      |
-|  +-----------+  +-----------+                      |
-|  +-----------+  +-----------+                      |
-|  | 🛒 Grocer|  | 🔍 Find   |                      |
-|  | ies      |  | Recipes   |                      |
-|  +-----------+  +-----------+                      |
+|  +-----------------------------------------------+  |
+|  | [🍴]  Find Your Next Meal              [→]   |  |
+|  |       Browse recipes by ingredients           |  |
+|  |       you have on hand                        |  |
+|  +-----------------------------------------------+  |
 +-----------------------------------------------------+
 |  Cook Tonight                          [View All]  |
 |  ┌─────────┐ ┌─────────┐ ┌─────────┐              |
@@ -64,20 +62,19 @@ const colors = {
 
 ## 🏗️ Architecture & Components
 
-Bu görünüm `src/screens/home/` klasörü altında yer alır.
+This view lives under `src/screens/home/`.
 
-### Dosya Yapısı
+### File structure
 
 ```
 src/screens/home/
 ├── components/
-│   ├── home-screen.tsx              # Ana container component
-│   ├── dashboard-header.tsx         # Header bölümü (greeting, user name)
-│   ├── current-plan-card.tsx       # Current plan card
-│   ├── quick-actions.tsx           # Quick actions grid
-│   ├── cook-tonight-section.tsx    # Cook Tonight horizontal scroll
-│   ├── recent-activity-section.tsx # Recent Activity list
-│   └── bottom-tabs.tsx             # Bottom navigation tabs
+│   ├── home-screen.tsx              # Main container component
+│   ├── dashboard-header.tsx         # Header (greeting, search icon — no notification icon)
+│   ├── current-plan-card.tsx        # Current plan card
+│   ├── find-recipes-card.tsx        # Single "Find Your Next Meal" card (only quick action)
+│   ├── cook-tonight-section.tsx     # Cook Tonight horizontal scroll
+│   └── recent-activity-section.tsx  # Recent Activity list
 ├── hooks/
 │   └── use-home-view-model.ts      # View model hook (Supabase integration)
 ├── models/
@@ -91,7 +88,7 @@ src/screens/home/
 ### Core Components
 
 #### HomeScreen
-Ana container component. ScrollView içinde tüm bölümleri organize eder.
+Main container. Organizes all sections inside a ScrollView.
 
 ```typescript
 export function HomeScreen() {
@@ -101,31 +98,31 @@ export function HomeScreen() {
     greeting,
     currentPlan, 
     cookTonightRecipes, 
-    recentActivities 
+    recentActivities,
+    handleFindRecipes,
   } = useHomeViewModel();
 
   return (
     <View style={homeScreenStyles.container}>
       <SafeAreaView style={homeScreenStyles.safeArea}>
         <ScrollView>
-          <DashboardHeader greeting={greeting} userName={userName} />
+          <DashboardHeader greeting={greeting} userName={userName} onSearchPress={handleFindRecipes} />
           <CurrentPlanCard {...currentPlan} />
-          <QuickActions actions={quickActions} />
+          <FindRecipesCard onPress={handleFindRecipes} />
           <CookTonightSection recipes={cookTonightRecipes} />
           <RecentActivitySection activities={recentActivities} />
         </ScrollView>
       </SafeAreaView>
-      <BottomTabs tabs={bottomTabs} />
     </View>
   );
 }
 ```
 
 #### DashboardHeader
-Kullanıcı karşılama bölümü. Greeting ve kullanıcı adını gösterir.
+User greeting section. Shows greeting and user name. **Search icon** in header (no notification/bell icon). Search navigates to ingredient input.
 
 ```typescript
-export function DashboardHeader({ greeting, userName, avatarUrl }: Props) {
+export function DashboardHeader({ greeting, userName, avatarUrl, onSearchPress }: Props) {
   return (
     <View style={dashboardStyles.header}>
       <Text style={dashboardStyles.dashboardLabel}>Dashboard</Text>
@@ -137,8 +134,8 @@ export function DashboardHeader({ greeting, userName, avatarUrl }: Props) {
             <Text style={dashboardStyles.userNameText}>Welcome, {userName}!</Text>
           </View>
         </View>
-        <TouchableOpacity style={dashboardStyles.notificationButton}>
-          <MaterialIcons name="notifications" size={24} color="#FFFFFF" />
+        <TouchableOpacity style={dashboardStyles.searchButton} onPress={onSearchPress}>
+          <Ionicons name="search" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
     </View>
@@ -147,7 +144,7 @@ export function DashboardHeader({ greeting, userName, avatarUrl }: Props) {
 ```
 
 #### CurrentPlanCard
-Kullanıcının mevcut planını ve ilerlemesini gösterir.
+Shows the user's current plan and progress.
 
 ```typescript
 export function CurrentPlanCard({ planName, isActive, recipesSaved, recipesLimit }: Props) {
@@ -175,36 +172,30 @@ export function CurrentPlanCard({ planName, isActive, recipesSaved, recipesLimit
 }
 ```
 
-#### QuickActions
-Hızlı erişim butonları grid'i.
+#### FindRecipesCard
+Single prominent card for "Find Your Next Meal". **Only quick action** — no Quick Actions grid. Matches design reference.
 
 ```typescript
-const quickActions = [
-  { id: '1', label: 'Add Recipe', icon: '➕', onPress: () => {} },
-  { id: '2', label: 'Meal Plan', icon: '📅', onPress: () => {} },
-  { id: '3', label: 'Groceries', icon: '🛒', onPress: () => {} },
-  { id: '4', label: 'Find Recipes', icon: '🔍', onPress: () => router.push('/enter-ingredients') },
-];
-
-export function QuickActions({ actions }: Props) {
+export function FindRecipesCard({ onPress }: { onPress: () => void }) {
   return (
-    <View style={dashboardStyles.quickActionsSection}>
-      <Text style={dashboardStyles.sectionTitle}>Quick Actions</Text>
-      <View style={dashboardStyles.quickActionsGrid}>
-        {actions.map(action => (
-          <TouchableOpacity key={action.id} style={dashboardStyles.quickActionButton}>
-            <Text style={dashboardStyles.quickActionIcon}>{action.icon}</Text>
-            <Text style={dashboardStyles.quickActionLabel}>{action.label}</Text>
-          </TouchableOpacity>
-        ))}
+    <TouchableOpacity style={dashboardStyles.findRecipesCard} onPress={onPress}>
+      <View style={dashboardStyles.findRecipesIconContainer}>
+        <Ionicons name="restaurant" size={32} color="#FF5722" />
       </View>
-    </View>
+      <View style={dashboardStyles.findRecipesContent}>
+        <Text style={dashboardStyles.findRecipesTitle}>Find Your Next Meal</Text>
+        <Text style={dashboardStyles.findRecipesSubtitle}>
+          Browse recipes by ingredients you have on hand
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={24} color="#FF5722" />
+    </TouchableOpacity>
   );
 }
 ```
 
 #### CookTonightSection
-Supabase'den çekilen random tarifleri horizontal scroll ile gösterir.
+Shows random recipes from Supabase in a horizontal scroll.
 
 ```typescript
 export function CookTonightSection({ recipes, onViewAll, onRecipePress }: Props) {
@@ -260,7 +251,7 @@ export function RecentActivitySection({ activities }: Props) {
               <Image source={{ uri: activity.recipeImageUrl }} style={dashboardStyles.activityImage} />
             ) : (
               <View style={dashboardStyles.activityIconContainer}>
-                <MaterialIcons name="check-circle" size={24} color="#FF9500" />
+                <MaterialIcons name="check-circle" size={24} color="#FF5722" />
               </View>
             )}
             <View style={dashboardStyles.activityTextContent}>
@@ -279,7 +270,7 @@ export function RecentActivitySection({ activities }: Props) {
 ```
 
 #### BottomTabs
-Alt tab navigasyonu. Fixed position'da.
+Bottom tab navigation. Fixed position.
 
 ```typescript
 const bottomTabs = [
@@ -297,7 +288,7 @@ export function BottomTabs({ tabs }: Props) {
           <MaterialIcons 
             name={getIconName(tab.icon)} 
             size={24} 
-            color={tab.isActive ? '#FF9500' : '#FFFFFF'} 
+            color={tab.isActive ? '#FF5722' : '#FFFFFF'} 
           />
           <Text style={[dashboardStyles.tabLabel, tab.isActive && dashboardStyles.tabLabelActive]}>
             {tab.label}
@@ -438,13 +429,10 @@ export async function getMonthlyRecipesCount(): Promise<{ saved: number; limit: 
 ```
 Home Screen
     ↓
-    ├─→ [Find Recipes] → Enter Ingredients Screen
-    ├─→ [Add Recipe] → (Future: Add Recipe Screen)
-    ├─→ [Meal Plan] → (Future: Meal Plan Screen)
-    ├─→ [Groceries] → (Future: Groceries Screen)
-    ├─→ [Recipe Card] → Recipe Detail Screen (sonraki aşama)
-    ├─→ [Activity Item] → Recipe Detail Screen (sonraki aşama)
-    └─→ [Bottom Tab] → (Future: Saved, History, Profile screens)
+    ├─→ [Search icon] / [Find Your Next Meal] → Enter Ingredients Screen
+    ├─→ [Recipe Card] → Recipe Detail Screen (later phase)
+    ├─→ [Activity Item] → Recipe Detail Screen (later phase)
+    └─→ [Bottom Tab] → Saved, History, Profile screens
 ```
 
 ## 🎨 Styling
@@ -460,7 +448,7 @@ const colors = {
   cardBackground: '#1C1C1E',
   text: '#FFFFFF',
   textSecondary: '#8E8E93',
-  primary: '#FF9500',
+  primary: '#FF5722',
   success: '#34C759',
   border: '#38383A',
 };
@@ -483,7 +471,7 @@ export const dashboardStyles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 24,
   },
-  // ... diğer stiller
+  // ... other styles
 });
 ```
 
@@ -504,12 +492,9 @@ export const dashboardStyles = StyleSheet.create({
       "active": "Active",
       "monthlyRecipes": "Monthly Recipes Saved"
     },
-    "quickActions": {
-      "title": "Quick Actions",
-      "addRecipe": "Add Recipe",
-      "mealPlan": "Meal Plan",
-      "groceries": "Groceries",
-      "findRecipes": "Find Recipes"
+    "findRecipesCard": {
+      "title": "Find Your Next Meal",
+      "subtitle": "Browse recipes by ingredients you have on hand"
     },
     "cookTonight": {
       "title": "Cook Tonight",
@@ -533,15 +518,14 @@ export const dashboardStyles = StyleSheet.create({
 
 ## 🔗 Related Components
 
-- [DashboardHeader](./components/dashboard-header.tsx) - Header component
+- [DashboardHeader](./components/dashboard-header.tsx) - Header (search icon, no notification)
 - [CurrentPlanCard](./components/current-plan-card.tsx) - Plan card component
-- [QuickActions](./components/quick-actions.tsx) - Quick actions component
+- [FindRecipesCard](./components/find-recipes-card.tsx) - Single "Find Your Next Meal" card
 - [CookTonightSection](./components/cook-tonight-section.tsx) - Cook tonight section
 - [RecentActivitySection](./components/recent-activity-section.tsx) - Recent activity section
-- [BottomTabs](./components/bottom-tabs.tsx) - Bottom tabs component
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0  
-**Durum:** ✅ Tamamlandı
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0  
+**Status:** Complete
