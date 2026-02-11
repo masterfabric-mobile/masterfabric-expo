@@ -1,89 +1,55 @@
 /**
  * Supabase Client Service
- * 
- * This service provides a singleton Supabase client instance
- * for database operations, authentication, and storage.
- * 
- * Configuration:
- * - Set EXPO_PUBLIC_SUPABASE_URL in .env file
- * - Set EXPO_PUBLIC_SUPABASE_ANON_KEY in .env file
+ * Configuration from app.json extra or EXPO_PUBLIC_* env vars
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import Constants from 'expo-constants';
 
-// Supabase configuration from environment variables
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+// .env öncelikli (EXPO_PUBLIC_*), yoksa app.json extra
+const SUPABASE_URL =
+  process.env.EXPO_PUBLIC_SUPABASE_URL ||
+  Constants.expoConfig?.extra?.supabaseUrl;
 
-// Validate environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    '⚠️ Supabase configuration missing!\n' +
-    'Please set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY in your .env file.\n' +
-    'See .env.example for reference.'
-  );
-}
+const SUPABASE_ANON_KEY =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
+  Constants.expoConfig?.extra?.supabaseAnonKey;
 
-/**
- * Supabase client instance
- * Singleton pattern - use this instance throughout the app
- */
-export const supabase: SupabaseClient | null = 
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          autoRefreshToken: true,
-          persistSession: true,
-          detectSessionInUrl: false,
-        },
-      })
-    : null;
+let supabaseClient: SupabaseClient | null = null;
 
-/**
- * Test Supabase connection
- * 
- * @returns Promise<boolean> - true if connection successful, false otherwise
- */
-export async function testSupabaseConnection(): Promise<boolean> {
-  if (!supabase) {
-    console.error('❌ Supabase client not initialized. Check your .env configuration.');
-    return false;
+export function initSupabase(): SupabaseClient {
+  if (supabaseClient) {
+    return supabaseClient;
   }
 
-  try {
-    // Simple connection test - try to get current user or make a simple query
-    const { error } = await supabase.from('_test').select('count').limit(1);
-    
-    // If error is about table not existing, that's okay - connection works
-    // If error is about connection/auth, that's a problem
-    if (error && error.code !== 'PGRST116') {
-      console.error('❌ Supabase connection test failed:', error.message);
-      return false;
-    }
-
-    console.log('✅ Supabase connection successful!');
-    return true;
-  } catch (error) {
-    console.error('❌ Supabase connection test error:', error);
-    return false;
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.warn(
+      '⚠️ Supabase configuration missing! Set supabaseUrl and supabaseAnonKey in app.json extra or .env'
+    );
+    throw new Error('Supabase URL and Anon Key not found!');
   }
+
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: false,
+    },
+  });
+
+  return supabaseClient;
 }
 
-/**
- * Get Supabase client instance
- * 
- * @returns SupabaseClient | null
- */
 export function getSupabaseClient(): SupabaseClient | null {
-  return supabase;
+  try {
+    if (supabaseClient) return supabaseClient;
+    if (SUPABASE_URL && SUPABASE_ANON_KEY) return initSupabase();
+  } catch {
+    // Config missing or invalid
+  }
+  return null;
 }
 
-/**
- * Check if Supabase is configured
- * 
- * @returns boolean
- */
 export function isSupabaseConfigured(): boolean {
-  return supabase !== null;
+  return !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 }
-

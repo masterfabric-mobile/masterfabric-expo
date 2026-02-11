@@ -1,7 +1,3 @@
-/**
- * Shared Services
- * Central export for all shared services
- */
-
 export * from './supabase-service';
-
+export * from './recipe-service';
+export * from './user-service';
