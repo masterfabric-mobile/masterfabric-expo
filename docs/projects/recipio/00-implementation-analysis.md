@@ -1,225 +1,462 @@
-# Recipio - Detaylı Implementation Analizi
+# Recipio — Implementation Analysis (English)
 
-## 📋 Genel Bakış
+## 1. Overview
 
-Bu dokümantasyon, Recipio uygulamasının **ilk aşama** implementasyonu için kapsamlı analiz ve gereklilikleri içerir. İlk aşamada sadece **3 temel ekran** oluşturulacak: **Splash**, **Onboarding** ve **Home**. Sistem MasterFabric Expo ekosistemi üzerine inşa edilmiştir ve `@masterfabric-expo/core` paketini kullanır.
+This document is the **implementation analysis** for **Recipio** in the MasterFabric Expo workspace. Recipio is built as **two clients** sharing the **same Supabase backend**.
 
----
+### 1.1 Project Location (Important)
 
-## 🎯 İlk Aşama Hedefleri
+- The **Recipio project** is opened in the `project/recipio` folder within the workspace and all code is written there.
+- The app is developed **only** under `project/recipio`.
+- **No extra project folders are created.** No new projects are created under `project/`; all Recipio code stays within `project/recipio`.
 
-### ✅ Oluşturulacak Ekranlar (Minimal)
+| Client | Stack | Purpose |
+|--------|--------|---------|
+| **Website** | Next.js | Public and authenticated web experience (reference: [recipio/docs](https://github.com/NurhayatYurtaslan/recipio/tree/main/docs)) |
+| **Mobile App** | Expo (React Native) | Native mobile experience; MasterFabric Expo ecosystem, `@masterfabric-expo/core` |
 
-1. **Splash Screen** - Uygulama başlangıç ekranı
-   - MasterFabric Core bileşenleri kullanılır
-   - Basit loading gösterimi
-   - Onboarding durumunu kontrol eder
-
-2. **Onboarding Screen** - İlk kullanım tanıtım ekranları
-   - Multi-step onboarding flow
-   - Zustand + AsyncStorage ile durum yönetimi
-   - MasterFabric Core bileşenleri ve renkler
-
-3. **Home Screen** - Ana sayfa (Dashboard)
-   - Supabase'den veri çekme
-   - Dark theme tasarım
-   - Cook Tonight, Recent Activity, Quick Actions bölümleri
-
-### ❌ Oluşturulmayacaklar (Sonraki Aşamalar)
-
-- Malzeme giriş ekranı (Enter Ingredients) - ✅ **Şu an mevcut ama ilk aşamada gerekli değil**
-- Tarif listesi (Recipe Results) - ✅ **Şu an mevcut ama ilk aşamada gerekli değil**
-- Tarif detayı (Recipe Detail) - ✅ **Şu an mevcut ama ilk aşamada gerekli değil**
-- Favoriler ekranı
-- Profil ekranı
-- Kullanıcı authentication (opsiyonel, sonraki aşama)
+- **Backend:** Single Supabase project (same schema, views, RLS, auth).  
+- **Data:** Recipes, profiles, engagement (favorites, saved, tried), comments, and admin flows use the same tables and views.  
+- **Data policy:** All data comes **only from Supabase**. **Mock or manual test data is never used.**
+- **UI/Package:** The MasterFabric package structure (`@masterfabric-expo/core`) is used.
+- **Config:** Supabase credentials are defined in the `.env` file (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`).
+- **This doc** focuses on the **Expo app** implementation; product and data model are aligned with the [Next.js analysis](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/ANALYSIS.md) and [DB schema](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/DB_SCHEMA.md).
 
 ---
 
-## 🏗️ Sistem Mimarisi
+## 2. Design System & Color Theme (All Screens)
 
-### 1. MasterFabric Core Package Entegrasyonu
+### 2.1 Unified Color Theme
 
-**Package Yapısı:**
-```json
-{
-  "dependencies": {
-    "@masterfabric-expo/core": "file:../../packages/masterfabric-expo-core"
-  }
-}
+**All screens** (Splash, Onboarding, Home, Recipe Detail, etc.) use the **same color theme**. No screen has a different color scheme.
+
+**Orange palette (CSS variables / tokens):**
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--primary-accent` | `#FF5722` | **Main accent** — use everywhere: tabs (active), icons, CTAs, buttons, badges, progress indicators |
+| `--orange` | `#FF9800` | Use **sparingly** — only when shadows or subtle highlights are needed |
+| `--light-orange` | `#FFB74D` | Use **sparingly** — only when softer shadows or glow effects are needed |
+
+| Mode | Background | Primary Accent | Text | Secondary Text |
+|------|------------|----------------|------|----------------|
+| **Dark** | `#000000` (black) | `#FF5722` (primary-accent) | `#FFFFFF` (white) | `#8E8E93` (grey) |
+| **Light** | `#FFFFFF` (white) | `#FF5722` (primary-accent) | `#000000` (black) | `#8E8E93` (grey) |
+
+**Card/surface (dark):** `#1C1C1E`  
+**Card/surface (light):** `#F2F2F7`  
+**Border:** `#38383A` (dark) / `#E5E5E5` (light)
+
+**Color usage rule:** Use `primaryAccent` (`#FF5722`) for all interactive elements — tabs (active state), icons, buttons, badges, progress indicators. Use `orange` and `lightOrange` only when shadows or highlights are explicitly needed (e.g. glow, soft shadow).
+
+**Development order:** Start with **dark theme only**. Light theme comes later.
+
+**Recipio theme constants:** `src/shared/constants/recipio-colors.ts` — `RecipioColors.primaryAccent`, `RecipioColors.orange`, `RecipioColors.lightOrange`. Prefer `primaryAccent` for all interactive elements (tabs, icons, buttons). Use `orange` and `lightOrange` only for shadows or highlights when needed.
+
+### 2.2 i18n
+
+Bilingual app: **English** and **Turkish**. All UI strings use translation keys.
+
+---
+
+## 3. Product & Feature Breakdown (Shared)
+
+Recipio is a minimalist, bilingual (Turkish / English) recipe platform with **non-linear serving-size variants**.
+
+### 3.1 User Segments
+
+- **Public (anonymous)**
+  - Browse a limited set of free, published recipes.
+  - Search and filter recipes.
+  - Switch between English and Turkish.
+
+- **Authenticated users**
+  - All public features.
+  - Bookmark/save recipes, mark as favorited, mark as tried.
+  - Comment on recipes.
+  - Submit recipes for moderation (UGC).
+  - Manage profile (display name, avatar, locale).
+
+- **Admin**
+  - All user features.
+  - Moderate user-submitted recipes (approve/reject).
+  - Manage content (e.g. hide comments).
+
+### 3.2 Core Differentiator: Recipe Variants
+
+- Recipes are **not** linearly scalable: e.g. “2 servings” has a **different ingredient list** than “4 servings” for the same recipe.
+- UI uses a **servings stepper** (1, 2, 3, 4) and fetches the correct variant; steps can be shared across variants.
+- Backend: `recipe_variants`, `recipe_variant_ingredients`; app and website both use the same **Supabase views** (e.g. `v_recipe_detail`) for variant data.
+
+### 3.3 Platform Mapping
+
+| Feature | Website (Next.js) | App (Expo) |
+|--------|--------------------|------------|
+| Public recipe list | ✅ `RecipeList` + `v_public_recipe_cards` | ✅ Home “Cook Tonight” + later Recipe List screen |
+| Recipe detail + servings | ✅ `RecipeDetail` + `v_recipe_detail` | ⏳ Recipe Detail View (planned) |
+| Auth (login/signup) | ✅ Supabase Auth | ⏳ Optional, later phase |
+| Favorites / saved / tried | ✅ `UserActions` + RLS | ⏳ Favorites / History views (planned) |
+| Comments | ✅ `Comments` component | ⏳ Optional in app |
+| Profile | ✅ `/profile` | ⏳ Profile View (planned) |
+| Submit recipe (UGC) | ✅ `/submit-recipe` | ❌ Typically web-only |
+| Admin moderation | ✅ Admin dashboard | ❌ Typically web-only |
+| i18n (en/tr) | ✅ next-intl | ✅ App i18n keys (see 06-i18n-translation-keys.md) |
+
+---
+
+## 3. Shared Backend: Supabase
+
+Both the **website** and the **Expo app** use the **same** Supabase project.
+
+### 3.1 Schema & Views (Reference)
+
+- **Full schema:** [recipio/docs/DB_SCHEMA.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/DB_SCHEMA.md).
+- **Core tables:** `profiles`, `user_roles`, `categories`, `category_translations`, `recipes`, `recipe_translations`, `recipe_steps`, `recipe_categories`, `recipe_variants`, `ingredients`, `ingredient_translations`, `units`, `recipe_variant_ingredients`, `favorites`, `saved_recipes`, `tried_recipes`, `views`, `comments`, `recipe_stats`, `recipe_events`.
+- **Key views for app:**
+  - **`v_public_recipe_cards`** — List pages (home, recipe list): title, description, stats, category.
+  - **`v_recipe_detail`** — Single recipe: translations, steps, all variants (1–4 servings) with ingredients (TR/EN), stats, categories (one query).
+  - **`v_recipe_stats`** — Aggregated stats.
+- **RLS:** Anonymous can read `published` + `is_free` recipes and insert `views`; authenticated users can read all published recipes and manage their engagement; admin via `user_roles`.
+
+### 3.2 App-Side Supabase Usage
+
+- **Client:** `@supabase/supabase-js`; one shared client (see `supabase-service.ts`).
+- **Config:** `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` are defined in the `.env` file. All data comes from Supabase; **mock/manual data is never used**.
+- **Services:** `supabase-service.ts`, `recipe-service.ts`, `user-service.ts`; later `recipe-search-service.ts` (ingredient-based search).
+- **Queries:** Same **views** as the website: `v_public_recipe_cards`, `v_recipe_detail`; RLS stays consistent.
+
+---
+
+## 4. Expo App: Implementation Scope
+
+### 4.1 Phase 1 (In Progress)
+
+**Core screens (done):**
+- **Splash** — App entry, checks onboarding state.
+- **Onboarding** — 3-slide flow; state with Zustand + AsyncStorage; dark theme.
+- **Home (Dashboard)** — Header with search icon, Current Plan, **Find Your Next Meal** card, Cook Tonight, Recent Activity; dark theme.
+
+**Phase 1 — additional screens (to implement):**
+
+| Screen | Trigger | Purpose |
+|--------|---------|---------|
+| **Enter Ingredients** | "Find Your Next Meal" card tap | Add ingredients to pantry; CTA "Find Recipes with These Ingredients..." → recipe results |
+| **Recipe Search** | Search icon (header) tap | Search by recipe name; recent searches; search results list |
+| **Recipe Detail** | Recipe card tap (Cook Tonight, Recipe Search, etc.) | Full recipe info: hero image, meta, nutrition, ingredients (Available/Missing), Chef's Tip |
+
+**Navigation (Phase 1):**
+- **Find Your Next Meal** card → `/enter-ingredients` (Enter Ingredients screen)
+- **Search icon** (header) → `/recipe-search` (Recipe Search screen)
+- **Recipe card tap** (any list) → `/recipe-detail/[id]` (Recipe Detail screen)
+
+### 4.2 Later Phases
+
+- Recipe results (from Enter Ingredients) — list of matching recipes.
+- Cooking guide (step-by-step).
+- Favorites, History, Profile (tab screens).
+- Optional: Supabase Auth (login/signup) and protected screens.
+
+### 4.3 Figma Design Reference
+
+The Expo app UI/UX is aligned with a **Figma design** (Recipe App Design Prompt). The design was exported as a web code bundle (Vite + React + Tailwind); we use it as the **visual and flow reference** for the mobile app.
+
+- **Figma:** [Recipe App Design Prompt](https://www.figma.com/design/kda8cS427jeLZCQ5NkqmMR/Recipe-App-Design-Prompt)
+- **Local bundle:** `docs/projects/recipio/figma-design-extract/` (from `Recipe App Design Prompt.zip`)
+
+**[07-figma-design-reference.md](./07-figma-design-reference.md)** contains:
+
+- Full **screen list** and **navigation flow** (12 screens: splash, onboarding, dashboard, ingredient-entry, recipe-suggestions, recipe-detail, cooking-mode, favorites, history, recipe-creation, profile, search).
+- **Recipe UI model** (compatibility %, ingredients with available/missing, steps with optional timer/tip, nutrition) and **mapping to Supabase** (`v_public_recipe_cards`, `v_recipe_detail`).
+- **Design tokens** (light/dark): colors (primary-accent, success, error, orange), compatibility/difficulty colors, radii.
+- **Implementation checklist** for Expo (theme, splash, onboarding, dashboard, ingredient entry, recipe list/detail, cooking guide, favorites/history/profile, dark mode).
+
+Implement screens and flows to match this reference where applicable; data comes from Supabase, not mock.
+
+**Home design (reference image):** Header shows **search icon** (navigates to Recipe Search). Single **Find Your Next Meal** card (navigates to Enter Ingredients). Card: primary-accent spoon/fork icon, title "Find Your Next Meal", subtitle "Browse recipes by ingredients you have on hand", chevron arrow. Sections: Current Plan, Find Your Next Meal, Cook Tonight, Recent Activity, bottom tabs. **Recipe cards are tappable** → Recipe Detail.
+
+---
+
+### 4.4 Screen Schematics (Design Reference)
+
+### Splash Screen
+
+*Schematic to be added when image provided.*
+
+- App logo, app name "Recipio", tagline, loader
+- Dark theme: black background, white text, orange accent
+
+### Onboarding — 3 Slides (Reference Image)
+
+**Theme:** Dark (black background, white text, orange accents). **Skip** button top-right. Three-dot pagination (filled orange = current). Orange CTA button at bottom.
+
+| Slide | Title | Description | Visual | Button |
+|-------|-------|-------------|--------|--------|
+| **1** | Enter Your Ingredients | Don't know what to cook? Just type in the ingredients you have, and discover delicious recipes instantly. | Tablet/screen mock with search bar ("Recipe") + basket of vegetables | Next |
+| **2** | Get Perfect Recipe Matches | Tell us what you love, and our AI will find recipes tailored specifically to your taste buds and dietary needs. | Avocado Chicken Bowl with "98% Match" orange badge, heart icon, "HEALTHY CHOICE", time/calories | Next → |
+| **3** | Cook with Confidence | Never miss a step. Our interactive cooking mode keeps your screen on and guides you from prep to plate. | "COOKING MODE" card: chef hat icon, timer "12:45 REMAINING", "STEP 3 OF 8", instruction text | Get Started |
+
+**Layout per slide:**
+```
++-----------------------------------------------------+
+|                                    [Skip]           |
+|                                                     |
+|              [Central Illustration]                 |
+|                                                     |
+|              "Slide Title"                          |
+|                                                     |
+|    Description text paragraph.                      |
+|                                                     |
+|              [●] [○] [○]  (3 dots)                  |
+|                                                     |
+|              [    Next / Get Started    ]           |
+|                     (orange)                        |
++-----------------------------------------------------+
 ```
 
-**Kullanılan Bileşenler:**
+### Home Screen (Current State)
+
+- **Header:** Avatar, "GOOD MORNING/AFTERNOON/EVENING", "Welcome, {name}!", search icon (right)
+- **Current Plan card:** "CURRENT PLAN", "Pro Chef", "Monthly Recipes Saved", progress bar 45/50, "Active" badge
+- **Find Your Next Meal card:** Orange spoon/fork icon, "Find Your Next Meal", "Browse recipes by ingredients you have on hand", chevron
+- **Cook Tonight:** Horizontal scroll of recipe cards (image, title, time, difficulty)
+- **Recent Activity:** List of saved/finished recipes with thumbnails and timestamps
+- **Bottom tabs:** Home, Saved, History, Profile
+
+### Recipe Detail Screen (Reference Image — Opens When Tapping a Recipe)
+
+**Theme:** Dark. Header "Recipe Detail" centered. Back and heart (favorite) buttons over image.
+
+| Section | Content |
+|---------|---------|
+| **Header** | "Recipe Detail" title; overlay: back (←), heart (♡) buttons |
+| **Hero image** | Full-width recipe photo |
+| **Title** | "Spicy Thai Basil Chicken" (large, bold, white) |
+| **Meta row** | ⭐ 4.8 (120) • 🕐 25 Mins • 🍴 Easy |
+| **Description** | Paragraph text (white) |
+| **Nutrition cards** | 4 horizontal: 450 Kcal, 32g Prot, 12g Carb, 18g Fat (value white, label orange) |
+| **Ingredients** | "Ingredients" + "8 items"; list of cards: ✅ Available (grey bg) / ❌ Missing (reddish-brown bg) |
+| **Chef's Tip** | 💡 icon, "Chef's Tip", suggestion text |
+
+**Layout:**
+```
++-----------------------------------------------------+
+|  Recipe Detail                                      |
+|  [←]                                    [♡]        |
+|  +------------------------------------------------+ |
+|  |              [Recipe Hero Image]                | |
+|  +------------------------------------------------+ |
+|  Spicy Thai Basil Chicken                           |
+|  ⭐ 4.8 (120) • 25 Mins • Easy                      |
+|  Description paragraph...                           |
+|  +--------+ +--------+ +--------+ +--------+        |
+|  |450 Kcal| |32g Prot| |12g Carb| |18g Fat |        |
+|  +--------+ +--------+ +--------+ +--------+        |
+|  Ingredients                           8 items      |
+|  +-----------------------------------------------+  |
+|  | ✓ 2 Chicken Breasts              Available    |  |
+|  | ✓ 1 Cup Basil Leaves             Available    |  |
+|  | ✗ 2tbsp Soy Sauce                Missing      |  |
+|  +-----------------------------------------------+  |
+|  +-----------------------------------------------+  |
+|  | 💡 Chef's Tip                                  |  |
+|  | For authentic flavor, use Holy Basil...        |  |
+|  +-----------------------------------------------+  |
++-----------------------------------------------------+
+```
+
+**Available ingredient card:** Dark grey bg, green checkmark, white text, "Available" grey.  
+**Missing ingredient card:** Reddish-brown bg, red X, white text, "Missing" red.
+
+### Enter Ingredients Screen (Reference Image — "Find Your Next Meal" flow)
+
+**Theme:** Dark. Header: back arrow, "Enter Ingredients" title, "Clear All" (primary-accent) right.
+
+| Section | Content |
+|---------|---------|
+| **Header** | Back (←), "Enter Ingredients" (center), "Clear All" (primary-accent, right) |
+| **Add items** | "Add items to your pantry" (bold white), "Start typing to add ingredients for your search." |
+| **Input row** | Text input placeholder "Type ingredient name..."; orange "Add" button |
+| **Your ingredients** | "YOUR INGREDIENTS (N)" — list of tag-style items (dark grey bg, white text, X to remove) |
+| **CTA button** | Full-width orange "Find Recipes with These Ingredients..." at bottom |
+
+**Layout:**
+```
++-----------------------------------------------------+
+|  [←]  Enter Ingredients              Clear All       |
+|                                                     |
+|  Add items to your pantry                           |
+|  Start typing to add ingredients for your search.   |
+|  +------------------------------------------+ [Add]  |
+|  | Type ingredient name...                  |       |
+|  +------------------------------------------+       |
+|                                                     |
+|  YOUR INGREDIENTS (5)                               |
+|  [Tomato ×] [Basil ×] [Garlic ×]                    |
+|  [Olive Oil ×] [Parmesan Cheese ×]                  |
+|                                                     |
+|  +------------------------------------------------+ |
+|  | Find Recipes with These Ingredients...         | |
+|  +------------------------------------------------+ |
++-----------------------------------------------------+
+```
+
+### Recipe Search Screen (Reference Image — Search by recipe name)
+
+**Theme:** Dark. Search icon in bottom tabs is active (primary-accent). Header: back, "Search Recipes".
+
+| Section | Content |
+|---------|---------|
+| **Header** | Back (←), "Search Recipes" (center) |
+| **Search bar** | Magnifying glass icon, placeholder "Search by recipe name..." |
+| **Recent Searches** | "RECENT SEARCHES" + "Clear All" (primary-accent); tag chips (e.g. "Spicy Tacos ×", "Pasta Carbonara ×", "Vegan Burger ×") |
+| **Search Results** | "SEARCH RESULTS" — vertical list of recipe cards: image, title, tags (e.g. "VEGAN", "15 MINS") |
+| **Bottom tabs** | Home, Search (active/orange), Favorites, Profile |
+
+**Layout:**
+```
++-----------------------------------------------------+
+|  [←]  Search Recipes                                |
+|  +------------------------------------------------+ |
+|  | 🔍 Search by recipe name...                    | |
+|  +------------------------------------------------+ |
+|                                                     |
+|  RECENT SEARCHES                      Clear All     |
+|  [Spicy Tacos ×] [Pasta Carbonara ×] [Vegan Burger ×]|
+|                                                     |
+|  SEARCH RESULTS                                     |
+|  +-----------------------------------------------+  |
+|  | [img] Quinoa Avocado Power Bowl                |  |
+|  |       [VEGAN] [15 MINS]                        |  |
+|  +-----------------------------------------------+  |
+|  | [img] Glazed Lemon Atlantic Salmon             |  |
+|  |       [GLUTEN-FREE] [25 MINS]                  |  |
+|  +-----------------------------------------------+  |
++-----------------------------------------------------+
+|  [Home] [Search●] [Favorites] [Profile]             |
++-----------------------------------------------------+
+```
+
+---
+
+## 5. System Architecture (Expo App)
+
+### 5.1 MasterFabric Core
+
+**Package:** `@masterfabric-expo/core` (local workspace package). The Recipio app **must use** the MasterFabric package structure. Use components, helpers, and utilities from `@masterfabric-expo/core` where applicable.
+
+**Core imports:**
 
 ```typescript
 // Components
-import { ThemedView } from '@masterfabric-expo/core/dist/components/ThemedView';
-import { ThemedText } from '@masterfabric-expo/core/dist/components/ThemedText';
+import { ThemedView, ThemedText } from '@masterfabric-expo/core';
+import { ScreenHeader, Spacer } from '@masterfabric-expo/core';
 
-// Constants
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
+// Theme
+import { ThemeProvider, useTheme, useIsDarkMode } from '@masterfabric-expo/core';
+import { Colors } from '@masterfabric-expo/core';
 
-// Contexts
-import { ThemeProvider } from '@masterfabric-expo/core/dist/contexts/ThemeContext';
+// Utils
+import { storage } from '@masterfabric-expo/core';
 ```
 
-**Import Path Yapısı:**
-- ✅ `@masterfabric-expo/core/dist/components/ThemedView` - Direkt path kullanımı
-- ✅ `@masterfabric-expo/core/dist/constants/Colors` - Constants için direkt path
-- ✅ `@masterfabric-expo/core/dist/contexts/ThemeContext` - Context'ler için direkt path
+**Note:** Recipio uses `RecipioColors` for dark theme (black + primary-accent). MasterFabric Colors can be used where theme-agnostic defaults are needed.
 
-**Önemli Notlar:**
-- ❌ Gereksiz import'lar yapılmamalı
-- ✅ Sadece kullanılan bileşenler import edilmeli
-- ✅ Type-safe import'lar kullanılmalı
-- ✅ Metro bundler path resolution için `@ts-ignore` kullanılabilir (gerekirse)
+### 5.1.1 MasterFabric Helpers (Use When Needed)
 
-**Kullanım Örnekleri:**
+Helpers are available from `@masterfabric-expo/core`. Use them when the corresponding functionality is required.
 
-```typescript
-// ✅ DOĞRU: Splash Screen'de kullanım
-import { ThemedText } from '@masterfabric-expo/core/dist/components/ThemedText';
-import { ThemedView } from '@masterfabric-expo/core/dist/components/ThemedView';
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
+| Helper | Import | Use when |
+|--------|--------|----------|
+| **connectivity** | `import { isOnline, ... } from '@masterfabric-expo/core'` | Checking network status before API calls |
+| **platform** | `import { isIOS, isAndroid, ... } from '@masterfabric-expo/core'` | Platform-specific UI or logic |
+| **permissions** | `import { requestCameraPermission, ... } from '@masterfabric-expo/core'` | Camera, location, or other permissions |
+| **accessibility** | `import { ... } from '@masterfabric-expo/core'` | Accessibility labels and hints |
+| **string_helper** | `import { capitalize, truncate, isEmail, ... } from '@masterfabric-expo/core'` | String formatting, validation (e.g. truncate recipe title) |
+| **logger_helper** | `import { logger } from '@masterfabric-expo/core'` | Structured logging |
+| **snackbar_helper** | `import { snackbarHelper } from '@masterfabric-expo/core'` | Showing snackbars (success, error, undo) |
+| **toast_helper** | `import { toastHelper } from '@masterfabric-expo/core'` | Toast notifications |
+| **rich_text_helper** | `import { ... } from '@masterfabric-expo/core'` | Rich text rendering |
+| **validator_helper** | `import { validateEmail, ... } from '@masterfabric-expo/core'` | Form validation |
+| **onboarding_helper** | `import { ... } from '@masterfabric-expo/core'` | App onboarding state (Recipio has its own; use if integrating) |
+| **device-info** | `import { getDeviceInfo } from '@masterfabric-expo/core'` | Device info (model, OS) |
+| **ui_size_helper** | `import { ... } from '@masterfabric-expo/core'` | Responsive sizing |
+| **typography_helper** | `import { getTypographyStyleFromSizing } from '@masterfabric-expo/core'` | Typography styles from sizing tokens |
+| **time_helper** | `import { formatDate, fromNow, formatDuration } from '@masterfabric-expo/core'` | Date/time formatting (e.g. "5 minutes ago", "25 Mins") |
+| **url_launcher_helper** | `import { openUrl } from '@masterfabric-expo/core'` | Opening external links |
+| **batteryHelper** | `import { ... } from '@masterfabric-expo/core'` | Battery status (e.g. cooking mode) |
+| **app_icon_helper** | `import { ... } from '@masterfabric-expo/core'` | App icon utilities |
+| **videoPlayerHapticHelper** | `import { ... } from '@masterfabric-expo/core'` | Video + haptics |
+| **web_viewer_helper** | `import { webViewerHelper } from '@masterfabric-expo/core'` | In-app web views |
 
-export function SplashScreen() {
-  return (
-    <SafeAreaView style={splashScreenStyles.container}>
-      <ThemedView style={splashScreenStyles.content}>
-        <ThemedText style={splashScreenStyles.title}>Recipio</ThemedText>
-        <ActivityIndicator size="large" color={Colors.light.primary} />
-      </ThemedView>
-    </SafeAreaView>
-  );
-}
-```
+**Examples for Recipio:**
+- `time_helper`: `formatDuration` for recipe prep time ("25 Mins"), `fromNow` for Recent Activity timestamps.
+- `string_helper`: `truncate` for long recipe titles or descriptions.
+- `snackbar_helper`: "Ingredient added", "Recipe saved", "Clear all" undo.
+- `validator_helper`: Form validation on profile or auth screens.
 
-### 2. Expo Router Yapılandırması
+### 5.2 Expo Router
 
-**Dosya Yapısı:**
+**Structure (Phase 1):**
+
 ```
 app/
-├── _layout.tsx                    # Root layout (ThemeProvider wrapper)
-├── index.tsx                       # Home screen route
-├── splash.tsx                      # Splash screen route (opsiyonel, app/index.tsx'ten yönetilebilir)
-├── onboarding.tsx                  # Onboarding screen route
-├── enter-ingredients.tsx           # Enter ingredients route (sonraki aşama)
-├── recipe-results.tsx              # Recipe results route (sonraki aşama)
-└── recipe-detail.tsx               # Recipe detail route (sonraki aşama)
+├── _layout.tsx              # Root layout (ThemeProvider + Stack)
+├── index.tsx                # Entry; redirects to onboarding or home
+├── onboarding.tsx
+├── enter-ingredients.tsx    # Enter Ingredients (Find Your Next Meal flow)
+├── recipe-search.tsx        # Recipe Search (by name; Search icon)
+├── recipe-results.tsx       # Recipe list from ingredients (later)
+└── recipe-detail/
+│   └── [id].tsx             # Recipe Detail (opens when tapping a recipe)
+(tabs)/
+├── _layout.tsx
+├── index.tsx                # Home
+├── favorites.tsx
+├── history.tsx
+└── profile.tsx
 ```
 
-**Root Layout Yapısı:**
-
-```typescript
-// app/_layout.tsx
-import { Stack } from 'expo-router';
-import React from 'react';
-import { ThemeProvider } from '@masterfabric-expo/core/dist/contexts/ThemeContext';
-
-export default function RootLayout() {
-  return (
-    <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="splash" />
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="index" />
-        {/* Sonraki aşama için */}
-        <Stack.Screen name="enter-ingredients" />
-        <Stack.Screen name="recipe-results" />
-        <Stack.Screen name="recipe-detail" />
-      </Stack>
-    </ThemeProvider>
-  );
-}
-```
-
-**Routing Mantığı:**
+**Flow:**
 
 ```
-App Start
-  ↓
-app/index.tsx (ilk açılış kontrolü)
-  ↓
-  ├─→ [İlk kullanım] → /onboarding
-  └─→ [Daha önce açıldı] → / (home)
+App start → index.tsx
+  → First launch? → /onboarding
+  → Else → / (home)
+
+Home:
+  → Find Your Next Meal tap → /enter-ingredients
+  → Search icon tap → /recipe-search
+  → Recipe card tap (Cook Tonight, etc.) → /recipe-detail/[id]
 ```
 
-**Navigation Helper:**
+**Navigation types:**
 
 ```typescript
 // src/navigation/types.ts
 export type RootStackParamList = {
-  splash: undefined;
+  index: undefined;
   onboarding: undefined;
-  index: undefined; // Home screen
   'enter-ingredients': undefined;
+  'recipe-search': undefined;
   'recipe-results': { ingredients?: string };
-  'recipe-detail': { recipeId: string };
-};
-
-declare global {
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
-  }
-}
-```
-
-### 3. Import Yapısı ve Path Aliases
-
-**tsconfig.json Yapılandırması:**
-
-```json
-{
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "baseUrl": ".",
-    "moduleResolution": "bundler",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/screens/*": ["./src/screens/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/navigation/*": ["./src/navigation/*"]
-    }
-  }
-}
-```
-
-**Metro Config Path Alias:**
-
-```javascript
-// metro.config.js
-config.resolver = {
-  ...config.resolver,
-  alias: {
-    '@': path.resolve(projectRoot, 'src'),
-  },
-  // ...
+  'recipe-detail': { id: string };
 };
 ```
 
-**Import Örnekleri:**
+### 5.3 Path Aliases
 
-```typescript
-// ✅ DOĞRU: Path alias kullanımı
-import { SplashScreen } from '@/screens/splash/components/splash-screen';
-import { useSplashNavigation } from '@/screens/splash/hooks/use-splash-navigation';
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
-import { getSupabaseClient } from '@/shared/services/supabase-service';
+- **tsconfig:** `@/*` → `./src/*`, plus `@/screens/*`, `@/shared/*`, `@/navigation/*`.
+- **Metro:** `config.resolver.alias['@']` → `src`.
+- Prefer `@/...` over deep relative imports.
 
-// ❌ YANLIŞ: Relative import'lar
-import { SplashScreen } from '../../../screens/splash/components/splash-screen';
-```
+### 5.4 State Management
 
-### 4. State Management
+- **Splash:** Local state only.
+- **Onboarding:** Zustand store with AsyncStorage persistence.
+- **Home:** Local state + Supabase in view-model hook.
+- **Server state:** Direct Supabase client (no react-query in app for now); same RLS as website.
 
-**Yapı:**
-
-- **Splash Screen**: Local state yeterli (`useState`)
-- **Onboarding Screen**: Zustand store + AsyncStorage persistence
-- **Home Screen**: Local state + Supabase data fetching
-
-**Onboarding Store Örneği:**
+**Onboarding store example:**
 
 ```typescript
 // src/screens/onboarding/store/onboarding-store.ts
@@ -227,1046 +464,148 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface OnboardingStore {
-  isCompleted: boolean;
-  setCompleted: (value: boolean) => void;
-}
-
 export const useOnboardingStore = create<OnboardingStore>()(
   persist(
     (set) => ({
       isCompleted: false,
       setCompleted: (value: boolean) => set({ isCompleted: value }),
     }),
-    {
-      name: 'onboarding-storage',
-      storage: createJSONStorage(() => AsyncStorage),
-    }
+    { name: 'onboarding-storage', storage: createJSONStorage(() => AsyncStorage) }
   )
 );
 ```
 
-**Storage Helper:**
-
-```typescript
-// src/shared/utils/storage.ts
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const STORAGE_KEYS = {
-  ONBOARDING_COMPLETED: '@recipio:onboarding_completed',
-} as const;
-
-export const storage = {
-  async setOnboardingCompleted(value: boolean): Promise<void> {
-    try {
-      await AsyncStorage.setItem(STORAGE_KEYS.ONBOARDING_COMPLETED, JSON.stringify(value));
-    } catch (error) {
-      console.error('Error saving onboarding status:', error);
-    }
-  },
-
-  async getOnboardingCompleted(): Promise<boolean> {
-    try {
-      const value = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING_COMPLETED);
-      return value ? JSON.parse(value) : false;
-    } catch (error) {
-      console.error('Error reading onboarding status:', error);
-      return false;
-    }
-  },
-};
-```
-
-### 5. Styling Yapısı
-
-**Yaklaşım:**
-
-- Her ekran için ayrı styles dosyası
-- Dark theme için direkt color tanımları (Home screen)
-- MasterFabric Colors kullanımı (Splash, Onboarding)
-- StyleSheet API kullanımı
-
-**Home Screen Styling (Dark Theme):**
-
-```typescript
-// src/screens/home/styles/dashboard.styles.ts
-import { StyleSheet } from 'react-native';
-
-// Dark theme colors matching the design exactly
-const colors = {
-  background: '#000000', // Pure black
-  cardBackground: '#1C1C1E', // Dark grey card
-  text: '#FFFFFF', // White text
-  textSecondary: '#8E8E93', // Light grey secondary text
-  primary: '#FF9500', // Orange accent
-  success: '#34C759', // Green for VEGAN tag
-  border: '#38383A', // Border color
-};
-
-export const dashboardStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  // ... diğer stiller
-});
-```
-
-**Splash/Onboarding Styling (MasterFabric Colors):**
-
-```typescript
-// src/screens/splash/styles/splash-screen.styles.ts
-import { StyleSheet } from 'react-native';
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
-
-export const splashScreenStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: Colors.light.splashSubtext,
-  },
-});
-```
-
-### 6. Supabase Entegrasyonu
-
-**Servis Yapısı:**
-
-```
-src/shared/services/
-├── supabase-service.ts          # Temel Supabase client (GEREKLİ)
-├── recipe-service.ts            # Tarif işlemleri (GEREKLİ)
-├── user-service.ts              # Kullanıcı işlemleri (GEREKLİ)
-├── recipe-search-service.ts     # Tarif arama (SONRAKI AŞAMA)
-└── index.ts                     # Central export
-```
-
-**Supabase Service:**
-
-```typescript
-// src/shared/services/supabase-service.ts
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import Constants from 'expo-constants';
-
-// Supabase URL ve Anon Key'i al
-// Öncelik sırası: app.json -> .env -> process.env
-const SUPABASE_URL = 
-  Constants.expoConfig?.extra?.supabaseUrl || 
-  Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_URL ||
-  process.env.EXPO_PUBLIC_SUPABASE_URL;
-
-const SUPABASE_ANON_KEY = 
-  Constants.expoConfig?.extra?.supabaseAnonKey || 
-  Constants.expoConfig?.extra?.EXPO_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-let supabaseClient: SupabaseClient | null = null;
-
-export function initSupabase(): SupabaseClient {
-  if (supabaseClient) {
-    return supabaseClient;
-  }
-
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error('Supabase URL ve Anon Key bulunamadı!');
-  }
-
-  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: false,
-    },
-  });
-
-  console.log('✅ Supabase client başlatıldı');
-  return supabaseClient;
-}
-
-export function getSupabaseClient(): SupabaseClient {
-  if (!supabaseClient) {
-    return initSupabase();
-  }
-  return supabaseClient;
-}
-
-export function isSupabaseConfigured(): boolean {
-  return !!(SUPABASE_URL && SUPABASE_ANON_KEY);
-}
-```
-
-**app.json Yapılandırması:**
-
-```json
-{
-  "expo": {
-    "extra": {
-      "supabaseUrl": "https://your-project-id.supabase.co",
-      "supabaseAnonKey": "your-anon-key-here"
-    }
-  }
-}
-```
-
-**Recipe Service Kullanımı:**
-
-```typescript
-// src/shared/services/recipe-service.ts
-import { getSupabaseClient } from './supabase-service';
-
-export async function getCookTonightRecipes(filters?: RecipeFilters): Promise<Recipe[]> {
-  try {
-    const supabase = getSupabaseClient();
-    
-    let query = supabase
-      .from('recipes')
-      .select('*')
-      .limit(filters?.limit || 5);
-
-    const { data, error } = await query;
-    
-    if (error) {
-      console.error('❌ Error fetching recipes:', error);
-      return [];
-    }
-
-    // Mapping logic...
-    return mappedRecipes;
-  } catch (error) {
-    console.error('❌ Error in getCookTonightRecipes:', error);
-    return [];
-  }
-}
-```
-
-### 7. Metro Bundler Yapılandırması ve Stubs
-
-**Metro Config:**
-
-```javascript
-// metro.config.js
-const { getDefaultConfig } = require('expo/metro-config');
-const path = require('path');
-
-const projectRoot = __dirname;
-const workspaceRoot = path.resolve(projectRoot, '../..');
-
-const config = getDefaultConfig(projectRoot);
-
-// Stub paths for optional dependencies
-const firebaseStub = path.resolve(projectRoot, 'metro-stubs/firebase-stub.js');
-const sentryStub = path.resolve(projectRoot, 'metro-stubs/sentry-stub.js');
-const sliderStub = path.resolve(projectRoot, 'metro-stubs/slider-stub.js');
-const expoHapticsStub = path.resolve(projectRoot, 'metro-stubs/expo-haptics-stub.js');
-const expoBatteryStub = path.resolve(projectRoot, 'metro-stubs/expo-battery-stub.js');
-const expoAvStub = path.resolve(projectRoot, 'metro-stubs/expo-av-stub.js');
-const expoWebBrowserStub = path.resolve(projectRoot, 'metro-stubs/expo-web-browser-stub.js');
-
-// Custom resolver to handle optional dependencies
-const originalResolveRequest = config.resolver.resolveRequest;
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Stub Firebase modules
-  if (moduleName.startsWith('firebase/') || moduleName === 'firebase') {
-    return { filePath: firebaseStub, type: 'sourceFile' };
-  }
-
-  // Stub Sentry
-  if (moduleName === '@sentry/react-native') {
-    return { filePath: sentryStub, type: 'sourceFile' };
-  }
-
-  // Stub other optional packages...
-  
-  // Use default resolver for everything else
-  if (originalResolveRequest) {
-    return originalResolveRequest(context, moduleName, platform);
-  }
-  return context.resolveRequest(context, moduleName, platform);
-};
-
-// Path alias support
-config.resolver = {
-  ...config.resolver,
-  alias: {
-    '@': path.resolve(projectRoot, 'src'),
-  },
-  nodeModulesPaths: [
-    path.resolve(projectRoot, 'node_modules'),
-    path.resolve(workspaceRoot, 'node_modules'),
-  ],
-  extraNodeModules: {
-    '@masterfabric-expo/core': path.resolve(workspaceRoot, 'packages/masterfabric-expo-core'),
-    'firebase': firebaseStub,
-    '@sentry/react-native': sentryStub,
-    // ... diğer stubs
-  },
-};
-
-// Watch local packages
-config.watchFolders = [
-  path.resolve(workspaceRoot, 'packages/masterfabric-expo-core'),
-];
-
-module.exports = config;
-```
-
-**Stub Dosyaları:**
-
-```
-metro-stubs/
-├── firebase-stub.js              # Firebase stub (kullanılmıyor)
-├── sentry-stub.js                # Sentry stub (kullanılmıyor)
-├── slider-stub.js                # Slider stub (kullanılmıyor)
-├── expo-haptics-stub.js          # Expo Haptics stub (kullanılmıyor)
-├── expo-battery-stub.js          # Expo Battery stub (kullanılmıyor)
-├── expo-av-stub.js               # Expo AV stub (kullanılmıyor)
-└── expo-web-browser-stub.js      # Expo Web Browser stub (kullanılmıyor)
-```
-
-**Stub Örneği:**
-
-```javascript
-// metro-stubs/firebase-stub.js
-module.exports = {
-  initializeApp: () => ({}),
-  getAuth: () => ({}),
-  // ... diğer mock fonksiyonlar
-};
-```
-
-**Önemli Notlar:**
-- ✅ Supabase **stub edilmez** - gerçek package kullanılır
-- ✅ Firebase ve Sentry stub edilir (kullanılmıyor)
-- ✅ Optional Expo paketleri stub edilir
-
-### 8. Stub'dan Pakete Geçiş (Genel Kural - Tüm Stub'lar İçin)
-
-**Durum:** İleride stub edilmiş herhangi bir paketi kullanmak istediğinizde, stub'u kaldırıp gerçek paketi yükleyebilirsiniz. Bu kural **tüm stub'larda bulunan paketler** için geçerlidir.
-
-**Stub'da Bulunan Paketler:**
-- `firebase` / `firebase/*` (Firebase SDK)
-- `@sentry/react-native` (Sentry error tracking)
-- `@react-native-community/slider` (Slider component)
-- `expo-haptics` (Haptic feedback)
-- `expo-battery` (Battery information)
-- `expo-av` (Audio/Video)
-- `expo-web-browser` (Web browser)
-
-**Genel Geçiş Süreci (Tüm Paketler İçin):**
-
-#### Adım 1: Paketi Yükleyin
-
-```bash
-# Örnek: Firebase için
-npm install firebase
-
-# Örnek: Sentry için
-npm install @sentry/react-native
-
-# Örnek: expo-haptics için
-npm install expo-haptics
-
-# Örnek: expo-av için
-npm install expo-av
-
-# Genel format: npm install <package-name>
-```
-
-#### Adım 2: Metro Config'den Stub'u Kaldırın
-
-`metro.config.js` dosyasında 3 yerde değişiklik yapmanız gerekir:
-
-**2.1. Stub Path Tanımını Kaldırın veya Comment Edin:**
-
-```javascript
-// metro.config.js
-const { getDefaultConfig } = require('expo/metro-config');
-const path = require('path');
-
-const projectRoot = __dirname;
-const workspaceRoot = path.resolve(projectRoot, '../..');
-const config = getDefaultConfig(projectRoot);
-
-// Stub paths - Kullanmak istediğiniz paketin stub'unu kaldırın
-// const firebaseStub = path.resolve(projectRoot, 'metro-stubs/firebase-stub.js'); // ← Kaldırıldı
-const sentryStub = path.resolve(projectRoot, 'metro-stubs/sentry-stub.js');
-const sliderStub = path.resolve(projectRoot, 'metro-stubs/slider-stub.js');
-// ... diğer stub'lar
-```
-
-**2.2. resolveRequest Fonksiyonundan Stub Kontrolünü Kaldırın:**
-
-```javascript
-// Custom resolver
-const originalResolveRequest = config.resolver.resolveRequest;
-config.resolver.resolveRequest = (context, moduleName, platform) => {
-  // Kullanmak istediğiniz paketin stub kontrolünü kaldırın veya comment edin
-  
-  // Örnek: Firebase için
-  // if (moduleName.startsWith('firebase/') || moduleName === 'firebase') {
-  //   return { filePath: firebaseStub, type: 'sourceFile' };
-  // } // ← Bu satırları kaldırın veya comment edin
-
-  // Örnek: Sentry için
-  // if (moduleName === '@sentry/react-native') {
-  //   return { filePath: sentryStub, type: 'sourceFile' };
-  // } // ← Kullanmak istiyorsanız bu satırları kaldırın
-
-  // Örnek: expo-haptics için
-  // if (moduleName === 'expo-haptics') {
-  //   return { filePath: expoHapticsStub, type: 'sourceFile' };
-  // } // ← Kullanmak istiyorsanız bu satırları kaldırın
-
-  // Diğer stub kontrolleri (kullanılmayan paketler için)
-  if (moduleName === '@sentry/react-native') {
-    return { filePath: sentryStub, type: 'sourceFile' };
-  }
-  // ... diğer stub kontrolleri
-
-  // Use default resolver for everything else
-  if (originalResolveRequest) {
-    return originalResolveRequest(context, moduleName, platform);
-  }
-  return context.resolveRequest(context, moduleName, platform);
-};
-```
-
-**2.3. extraNodeModules'dan Stub Referansını Kaldırın:**
-
-```javascript
-config.resolver.extraNodeModules = {
-  '@masterfabric-expo/core': path.resolve(workspaceRoot, 'packages/masterfabric-expo-core'),
-  // 'firebase': firebaseStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
-  // '@sentry/react-native': sentryStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
-  // 'expo-haptics': expoHapticsStub, // ← Kullanmak istiyorsanız bu satırı kaldırın
-  // ... diğer stub referansları
-};
-```
-
-#### Adım 3: Stub Dosyasını Silin (Opsiyonel)
-
-```bash
-# Stub dosyasını silebilirsiniz (artık gerekli değil)
-# Örnek: Firebase için
-rm metro-stubs/firebase-stub.js
-
-# Örnek: Sentry için
-rm metro-stubs/sentry-stub.js
-
-# Örnek: expo-haptics için
-rm metro-stubs/expo-haptics-stub.js
-
-# Not: Silmek zorunlu değildir, sadece kullanılmaz
-```
-
-#### Adım 4: Paketi Import Edip Kullanın
-
-```typescript
-// Artık paketi normal şekilde import edebilirsiniz
-
-// Örnek: Firebase
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-
-// Örnek: Sentry
-import * as Sentry from '@sentry/react-native';
-Sentry.init({ dsn: 'your-sentry-dsn' });
-
-// Örnek: expo-haptics
-import * as Haptics from 'expo-haptics';
-Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-
-// Örnek: expo-av
-import { Audio } from 'expo-av';
-const sound = new Audio.Sound();
-
-// Örnek: expo-web-browser
-import * as WebBrowser from 'expo-web-browser';
-await WebBrowser.openBrowserAsync('https://example.com');
-
-// Örnek: @react-native-community/slider
-import Slider from '@react-native-community/slider';
-<Slider value={50} minimumValue={0} maximumValue={100} />
-```
-
-#### Adım 5: Native Modül Kurulumu (Gerekirse)
-
-Bazı paketler native modül gerektirir (özellikle Expo paketleri):
-
-```bash
-# iOS için CocoaPods
-cd ios
-pod install
-cd ..
-
-# Android için
-# Gradle sync otomatik olarak yapılır (Expo paketleri için)
-# Native modül gerektiren paketler için manuel kurulum gerekebilir
-```
-
-**Native Modül Gerektiren Paketler:**
-- ✅ `expo-haptics` - Native modül gerektirir
-- ✅ `expo-battery` - Native modül gerektirir
-- ✅ `expo-av` - Native modül gerektirir
-- ✅ `expo-web-browser` - Native modül gerektirir
-- ✅ `@sentry/react-native` - Native modül gerektirir
-- ⚠️ `firebase` - Bazı modüller native gerektirebilir
-- ⚠️ `@react-native-community/slider` - Native modül gerektirir
-
-#### Adım 6: Metro Bundler'ı Yeniden Başlatın
-
-```bash
-# Cache'i temizleyip yeniden başlatın (ÖNEMLİ!)
-npx expo start --clear
-
-# Veya
-npm start -- --clear
-```
-
-**Önemli:** Metro config değişikliklerinden sonra mutlaka `--clear` flag'i ile yeniden başlatın, aksi halde stub hala kullanılabilir.
-
-#### Genel Geçiş Checklist (Tüm Paketler İçin)
-
-Herhangi bir stub edilmiş paketi kullanmak için:
-
-- [ ] **Paketi yükleyin**: `npm install <package-name>`
-- [ ] **Metro config'den stub path tanımını kaldırın** (veya comment edin)
-- [ ] **resolveRequest fonksiyonundan stub kontrolünü kaldırın**
-- [ ] **extraNodeModules'dan stub referansını kaldırın**
-- [ ] **Stub dosyasını silin** (opsiyonel, zorunlu değil)
-- [ ] **Paketi import edip kullanın**
-- [ ] **Native modül kurulumu yapın** (gerekirse: `cd ios && pod install`)
-- [ ] **Metro bundler'ı `--clear` ile yeniden başlatın**: `npx expo start --clear`
-
-#### Paket-Specific Notlar
-
-**Firebase:**
-- Tüm Firebase modülleri için (`firebase/app`, `firebase/auth`, `firebase/firestore`, vb.) tek stub kontrolü yeterli
-- Native modül gerektirebilir (özellikle Auth ve Analytics için)
-
-**Sentry:**
-- `@sentry/react-native` paketi native modül gerektirir
-- iOS için CocoaPods kurulumu gerekli
-- Android için Gradle sync gerekli
-
-**Expo Paketleri (expo-haptics, expo-battery, expo-av, expo-web-browser):**
-- Hepsi native modül gerektirir
-- `pod install` gerekli (iOS)
-- Expo SDK versiyonu ile uyumlu olmalı
-
-**Slider:**
-- `@react-native-community/slider` native modül gerektirir
-- iOS ve Android için native kurulum gerekli
-
-**Önemli Genel Notlar:**
-- ✅ **Stub'dan pakete geçiş her zaman mümkündür** - Tüm stub'larda bulunan paketler için geçerlidir
-- ✅ **Stub dosyasını silmek zorunlu değildir** - Sadece kullanılmaz, ama silmek daha temizdir
-- ✅ **Metro config'i güncelledikten sonra mutlaka `--clear` ile yeniden başlatın** - Aksi halde stub hala kullanılabilir
-- ✅ **Native modül gerektiren paketler için iOS/Android kurulumu gerekebilir** - `pod install` veya Gradle sync
-- ✅ **Paketi kullanmaya başladıktan sonra stub artık çalışmaz** - Çünkü gerçek paket yüklü ve Metro onu bulur
-- ✅ **Birden fazla paketi aynı anda geçirebilirsiniz** - Her paket için aynı adımları tekrarlayın
-- ✅ **Stub'u kaldırmadan paketi yüklerseniz hata alabilirsiniz** - Metro stub'u kullanmaya devam eder
+### 5.5 Styling
+
+- **All screens** use the **same color theme** (Section 2.1): dark = black + primary-accent; light = white + primary-accent.
+- **Tabs and interactive elements:** Use `RecipioColors.primaryAccent`; avoid orange/lightOrange unless shadows or highlights are needed.
+- Shared palette: `#000000`, `#1C1C1E`, `#FF5722` (primary-accent), `#FF9800` (orange), `#FFB74D` (light-orange), `#FFFFFF`, `#8E8E93`.
+- One styles file per screen; use StyleSheet.
+
+### 5.6 Supabase Service (App)
+
+- **Init:** Client is created with `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` from the `.env` file; `persistSession: true`, `detectSessionInUrl: false`.
+- **Data source:** All data comes **only from Supabase**. Mock or manual test data is **never used**.
+- **Recipe service:** `getCookTonightRecipes()` — from `v_public_recipe_cards` or `recipes` table; returns empty array on error.
+- **User service:** `getCurrentUserProfile()` — Anonymous state for unauthenticated users (e.g. "Guest"); profile data from Supabase `profiles` table.
+- **Future:** Recipe detail uses `v_recipe_detail` view for variant + steps + translations in a single query.
+
+### 5.7 Metro & Optional Dependencies
+
+- **Stubs** for optional packages: Firebase, Sentry, Slider, expo-haptics, expo-battery, expo-av, expo-web-browser (so the app runs without them).
+- **Supabase is not stubbed** — real `@supabase/supabase-js` is used.
+- Path alias and `@masterfabric-expo/core` resolution in Metro (e.g. `watchFolders`, `extraNodeModules`) as in the existing setup.
+- When you need a stubbed package: install it, remove its stub from Metro config and from `extraNodeModules`, then use the real package; restart with `npx expo start --clear`.
 
 ---
 
-## 📁 Dosya Yapısı ve İsimlendirme
+## 6. File Structure & Naming (Expo App)
 
-### Tam Klasör Yapısı
+### 6.1 Directory Layout
+
+**Project root:** All development is done within `project/recipio`; no extra projects are created.
 
 ```
 project/recipio/
-├── app/                                    # Expo Router routes
-│   ├── _layout.tsx                         # Root layout (ThemeProvider)
-│   ├── index.tsx                           # Home screen route (initial check)
-│   ├── splash.tsx                          # Splash screen route (opsiyonel)
-│   ├── onboarding.tsx                      # Onboarding screen route
-│   ├── enter-ingredients.tsx               # Enter ingredients route (sonraki aşama)
-│   ├── recipe-results.tsx                  # Recipe results route (sonraki aşama)
-│   └── recipe-detail.tsx                   # Recipe detail route (sonraki aşama)
-│
+├── .env                          # Supabase: EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY
+├── .env.example                  # Template (.env is in .gitignore)
+├── app/                          # Expo Router
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   ├── onboarding.tsx
+│   ├── enter-ingredients.tsx     # Enter Ingredients (Find Your Next Meal)
+│   ├── recipe-search.tsx         # Recipe Search (by name)
+│   ├── recipe-results.tsx        # Recipe list from ingredients
+│   ├── recipe-detail/
+│   │   └── [id].tsx              # Recipe Detail
+│   └── (tabs)/                   # Tab screens
 ├── src/
-│   ├── navigation/
-│   │   └── types.ts                        # Navigation type definitions
-│   │
+│   ├── navigation/types.ts
 │   ├── screens/
 │   │   ├── splash/
-│   │   │   ├── components/
-│   │   │   │   └── splash-screen.tsx       # Splash screen component
-│   │   │   ├── hooks/
-│   │   │   │   └── use-splash-navigation.ts # Navigation hook
-│   │   │   ├── models/
-│   │   │   │   └── splash-models.ts         # Type definitions
-│   │   │   ├── styles/
-│   │   │   │   └── splash-screen.styles.ts # Styles
-│   │   │   └── index.ts                    # Export file
-│   │   │
 │   │   ├── onboarding/
-│   │   │   ├── components/
-│   │   │   │   ├── onboarding-screen.tsx   # Main onboarding component
-│   │   │   │   ├── step-content.tsx        # Step content component
-│   │   │   │   ├── step-controls.tsx       # Step controls component
-│   │   │   │   └── step-indicator.tsx      # Step indicator component
-│   │   │   ├── hooks/
-│   │   │   │   └── use-onboarding-view-model.ts # View model hook
-│   │   │   ├── models/
-│   │   │   │   └── onboarding-models.ts     # Type definitions
-│   │   │   ├── store/
-│   │   │   │   └── onboarding-store.ts      # Zustand store
-│   │   │   ├── styles/
-│   │   │   │   └── onboarding-screen.styles.ts # Styles
-│   │   │   └── index.ts                    # Export file
-│   │   │
-│   │   └── home/
-│   │       ├── components/
-│   │       │   ├── home-screen.tsx         # Main home component
-│   │       │   ├── dashboard-header.tsx   # Header component
-│   │       │   ├── current-plan-card.tsx  # Plan card component
-│   │       │   ├── quick-actions.tsx      # Quick actions component
-│   │       │   ├── cook-tonight-section.tsx # Cook tonight section
-│   │       │   ├── recent-activity-section.tsx # Recent activity section
-│   │       │   └── bottom-tabs.tsx         # Bottom tabs component
-│   │       ├── hooks/
-│   │       │   └── use-home-view-model.ts  # View model hook
-│   │       ├── models/
-│   │       │   └── home-models.ts          # Type definitions
-│   │       ├── styles/
-│   │       │   ├── home-screen.styles.ts   # Main styles
-│   │       │   └── dashboard.styles.ts    # Dashboard styles
-│   │       └── index.ts                    # Export file
-│   │
+│   │   ├── home/
+│   │   ├── enter-ingredients/    # Phase 1
+│   │   ├── recipe-search/        # Phase 1
+│   │   └── recipe-detail/        # Phase 1
 │   └── shared/
-│       ├── constants/
-│       │   └── app-config.ts               # App configuration
+│       ├── constants/            # recipio-colors.ts
 │       ├── services/
-│       │   ├── supabase-service.ts         # Supabase client (TEMEL)
-│       │   ├── recipe-service.ts           # Recipe operations
-│       │   ├── user-service.ts             # User operations
-│       │   ├── recipe-search-service.ts     # Recipe search (sonraki aşama)
-│       │   └── index.ts                     # Central export
 │       └── utils/
-│           └── storage.ts                   # AsyncStorage helpers
-│
-├── metro-stubs/                             # Optional dependency stubs
-│   ├── firebase-stub.js
-│   ├── sentry-stub.js
-│   ├── slider-stub.js
-│   ├── expo-haptics-stub.js
-│   ├── expo-battery-stub.js
-│   ├── expo-av-stub.js
-│   └── expo-web-browser-stub.js
-│
-├── package.json                             # Dependencies
-├── tsconfig.json                            # TypeScript config
-├── metro.config.js                          # Metro bundler config
-├── app.json                                 # Expo config
-└── index.js                                 # Entry point
+├── metro-stubs/
+├── package.json
+├── tsconfig.json
+├── metro.config.js
+└── app.json
 ```
 
-### İsimlendirme Kuralları
+### 6.2 Naming Conventions
 
-**Dosya İsimlendirme:**
-- ✅ `kebab-case` kullanılır: `splash-screen.tsx`, `use-splash-navigation.ts`
-- ✅ Component dosyaları: `component-name.tsx`
-- ✅ Hook dosyaları: `use-hook-name.ts`
-- ✅ Model dosyaları: `model-name-models.ts`
-- ✅ Style dosyaları: `screen-name.styles.ts`
-- ✅ Store dosyaları: `store-name-store.ts`
-
-**Klasör İsimlendirme:**
-- ✅ `kebab-case` kullanılır: `splash-screen`, `recipe-results`
-- ✅ Her screen için aynı yapı: `components/`, `hooks/`, `models/`, `styles/`, `store/`
-
-**Export Dosyaları:**
-- ✅ Her screen klasöründe `index.ts` olmalı
-- ✅ Central export pattern kullanılır
-
-**Örnek Export:**
-
-```typescript
-// src/screens/splash/index.ts
-export { SplashScreen } from './components/splash-screen';
-export { useSplashNavigation } from './hooks/use-splash-navigation';
-export type { SplashConfig } from './models/splash-models';
-```
+- **Files:** kebab-case (`splash-screen.tsx`, `use-splash-navigation.ts`).
+- **Components:** `component-name.tsx`; hooks: `use-hook-name.ts`; models: `*-models.ts`; styles: `*.styles.ts`; stores: `*-store.ts`.
+- **Folders:** kebab-case; each screen: `components/`, `hooks/`, `models/`, `styles/`, optional `store/`.
+- **Exports:** `index.ts` per screen; central exports from `shared/services/index.ts`.
 
 ---
 
-## 🔧 Gerekli Package'ler
+## 7. Required Packages (Expo App)
 
-### Core Dependencies
+- **Core:** expo, expo-router, expo-splash-screen, expo-constants, react, react-native, react-native-safe-area-context, react-native-screens, react-native-gesture-handler.
+- **UI/theme:** `@masterfabric-expo/core` (workspace).
+- **Data:** `@supabase/supabase-js`.
+- **State/storage:** zustand, `@react-native-async-storage/async-storage`.
+- **Icons:** `@expo/vector-icons`.
 
-```json
-{
-  "dependencies": {
-    "expo": "~54.0.31",
-    "expo-router": "~6.0.17",
-    "expo-splash-screen": "~31.0.12",
-    "expo-constants": "~18.0.13",
-    "expo-device": "~8.0.10",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-gesture-handler": "~2.28.0",
-    "react-native-safe-area-context": "~5.6.0",
-    "react-native-screens": "~4.16.0",
-    "react-native-web": "~0.21.0",
-    "@masterfabric-expo/core": "file:../../packages/masterfabric-expo-core",
-    "@react-native-async-storage/async-storage": "2.2.0",
-    "@supabase/supabase-js": "^2.39.0",
-    "@expo/vector-icons": "^15.0.2",
-    "zustand": "^4.4.0"
-  },
-  "overrides": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@types/react": "~19.1.10",
-    "typescript": "~5.9.2"
-  }
-}
-```
-
-### Package Açıklamaları
-
-- **expo-router**: File-based routing için
-- **@masterfabric-expo/core**: MasterFabric Core bileşenleri ve utilities
-- **@supabase/supabase-js**: Supabase client library
-- **zustand**: State management (onboarding store için)
-- **@react-native-async-storage/async-storage**: Local storage (onboarding durumu için)
-- **react-native-safe-area-context**: Safe area handling
-- **@expo/vector-icons**: Icon library (MaterialIcons kullanımı)
+(Exact versions should match the project’s `package.json` and Expo SDK.)
 
 ---
 
-## 🎨 MasterFabric Core Kullanımı
+## 8. Error Prevention & Best Practices
 
-### Kullanılan Bileşenler
-
-**Components:**
-- `ThemedView` - Theme-aware View component
-- `ThemedText` - Theme-aware Text component
-
-**Constants:**
-- `Colors` - MasterFabric color palette
-
-**Contexts:**
-- `ThemeProvider` - Theme context provider
-
-### Kullanım Örnekleri
-
-**Splash Screen:**
-
-```typescript
-import { ThemedText } from '@masterfabric-expo/core/dist/components/ThemedText';
-import { ThemedView } from '@masterfabric-expo/core/dist/components/ThemedView';
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
-
-export function SplashScreen() {
-  return (
-    <SafeAreaView style={splashScreenStyles.container}>
-      <ThemedView style={splashScreenStyles.content}>
-        <ThemedText style={splashScreenStyles.title}>Recipio</ThemedText>
-        <ThemedText style={splashScreenStyles.subtitle}>
-          Find recipes based on your ingredients
-        </ThemedText>
-        <ActivityIndicator size="large" color={Colors.light.primary} />
-      </ThemedView>
-    </SafeAreaView>
-  );
-}
-```
-
-**Onboarding Screen:**
-
-```typescript
-import { ThemedView } from '@masterfabric-expo/core/dist/components/ThemedView';
-import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
-
-export function OnboardingScreen() {
-  return (
-    <ThemedView style={onboardingScreenStyles.content}>
-      {/* Content */}
-    </ThemedView>
-  );
-}
-```
-
-**Root Layout:**
-
-```typescript
-import { ThemeProvider } from '@masterfabric-expo/core/dist/contexts/ThemeContext';
-
-export default function RootLayout() {
-  return (
-    <ThemeProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        {/* Screens */}
-      </Stack>
-    </ThemeProvider>
-  );
-}
-```
+- **Navigation:** Use typed `RootStackParamList` and `router.replace()` / `router.push()` (no `as any`).
+- **Imports:** Prefer `@/` aliases; each screen folder has an `index.ts`.
+- **MasterFabric:** Only use documented exports; ensure Metro resolves the local package.
+- **Supabase:** Validate URL/anon key at startup; handle errors in services and show fallback UI where appropriate.
+- **Types:** Define models and navigation types; avoid `any`.
 
 ---
 
-## 🛠️ Helper'lar ve Utilities
+## 9. Implementation Checklist (Expo App)
 
-### Mevcut Helper'lar
+### Phase 1 — Setup & core screens
 
-**Storage Helper:**
-- `src/shared/utils/storage.ts` - AsyncStorage wrapper
+- [x] MasterFabric core linked; Expo Router and path aliases; navigation types; Metro (stubs, aliases).
+- [x] Supabase config; `supabase-service.ts`, `recipe-service.ts`, `user-service.ts`.
+- [x] Splash (component, navigation, styles).
+- [x] Onboarding (3 slides, Zustand + AsyncStorage, dark theme).
+- [x] Home (Dashboard, Find Your Next Meal card, Cook Tonight, Recent Activity, search icon, dark theme).
+- [x] Root layout with ThemeProvider and Stack.
+- [ ] **Enter Ingredients** screen — layout per reference; add/remove ingredients; "Find Recipes with These Ingredients..." CTA.
+- [ ] **Recipe Search** screen — search by recipe name; recent searches; search results list; navigate to Recipe Detail.
+- [ ] **Recipe Detail** screen — hero image, meta, nutrition cards, ingredients (Available/Missing), Chef's Tip; opens when tapping a recipe.
+- [ ] **Find Your Next Meal** card → `/enter-ingredients`.
+- [ ] **Search icon** (header) → `/recipe-search`.
+- [ ] **Recipe card tap** (Cook Tonight, Recipe Search) → `/recipe-detail/[id]`.
 
-**App Config:**
-- `src/shared/constants/app-config.ts` - App-wide constants
+### Later phases
 
-### Kullanılabilir Helper'lar (MasterFabric Core'dan)
-
-**⚠️ NOT: Bu helper'lar şu an kullanılmıyor, ama gerektiğinde kullanılabilir:**
-
-1. **Snackbar Service** (Kullanılacaksa)
-   - Toast mesajları için
-   - Başarı/hata bildirimleri için
-   - Import: `@masterfabric-expo/core/dist/services/snackbar-service`
-
-2. **Typography** (Kullanılacaksa)
-   - Text styling utilities
-   - Font size helpers
-   - Import: `@masterfabric-expo/core/dist/utils/typography`
-
-3. **Logger** (Kullanılacaksa)
-   - Debug logging
-   - Error logging
-   - Import: `@masterfabric-expo/core/dist/utils/logger`
-
-**Kullanım Örneği (Gelecekte):**
-
-```typescript
-// Snackbar kullanımı (gelecekte)
-import { useSnackbar } from '@masterfabric-expo/core/dist/services/snackbar-service';
-
-function MyComponent() {
-  const snackbar = useSnackbar();
-  
-  const handleSave = () => {
-    snackbar.success('Recipe saved!');
-  };
-}
-
-// Logger kullanımı (gelecekte)
-import { logger } from '@masterfabric-expo/core/dist/utils/logger';
-
-logger.debug('Debug message');
-logger.error('Error message');
-```
+- [ ] Recipe results (from Enter Ingredients) — list of matching recipes.
+- [ ] Cooking guide (step-by-step).
+- [ ] Favorites, History, Profile tab screens.
+- [ ] Optional: Supabase Auth and protected routes.
 
 ---
 
-## ⚠️ Hata Önleme Stratejileri
+## 10. References
 
-### 1. Router/Navigation Hataları
-
-**Sorun:** TypeScript router type hataları
-
-**Çözüm:**
-```typescript
-// ✅ DOĞRU: Navigation types tanımla
-export type RootStackParamList = {
-  index: undefined;
-  splash: undefined;
-  onboarding: undefined;
-};
-
-// ✅ DOĞRU: Type-safe navigation
-import { router } from 'expo-router';
-router.replace('/onboarding');
-
-// ❌ YANLIŞ
-router.replace('/onboarding' as any);
-```
-
-### 2. Import Hataları
-
-**Sorun:** Yanlış import path'leri
-
-**Çözüm:**
-- ✅ Her screen klasöründe `index.ts` export dosyası olmalı
-- ✅ Path aliases kullanılmalı (`@/screens/...`)
-- ✅ Relative import'lar sadece aynı klasör içinde
-
-### 3. MasterFabric Package Hataları
-
-**Sorun:** Package bulunamıyor
-
-**Çözüm:**
-- ✅ Package'in `package.json`'da dependency olarak eklenmesi
-- ✅ Local package için workspace link (`file:../../packages/masterfabric-expo-core`)
-- ✅ Metro config'de `watchFolders` ve `extraNodeModules` yapılandırması
-- ✅ Sadece documented export'lar kullanılmalı
-
-### 4. Supabase Hataları
-
-**Sorun:** Supabase client başlatılamıyor
-
-**Çözüm:**
-- ✅ `app.json`'da `extra` bölümüne Supabase bilgileri eklenmeli
-- ✅ Environment variables kontrol edilmeli
-- ✅ Error handling eklenmeli
-
-### 5. TypeScript Hataları
-
-**Sorun:** Type tanımları eksik
-
-**Çözüm:**
-- ✅ Her model için type tanımları
-- ✅ Navigation types
-- ✅ Component prop types
-- ✅ `any` kullanımından kaçınılmalı
+- **Next.js (website) analysis & schema:** [recipio/docs](https://github.com/NurhayatYurtaslan/recipio/tree/main/docs) — [ANALYSIS.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/ANALYSIS.md), [DB_SCHEMA.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/DB_SCHEMA.md), [SESSION_PLAN.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/SESSION_PLAN.md).
+- **This repo:** [Features](./01-features/), [Architecture](./02-architecture/), [Tech stack](./03-tech-stack/), [Integrations (Supabase)](./04-integrations/), [Getting started](./05-getting-started/), [i18n keys](./06-i18n-translation-keys.md).
+- **MasterFabric Core:** workspace package README.
+- **Expo Router:** [docs.expo.dev/router](https://docs.expo.dev/router/introduction/).
+- **Supabase JS:** [supabase.com/docs/reference/javascript](https://supabase.com/docs/reference/javascript/introduction).
 
 ---
 
-## 📝 İlk Aşama Implementation Checklist
-
-### Phase 1: Setup & Configuration
-- [x] MasterFabric core package ekleme ve link etme
-- [x] Expo Router yapılandırması
-- [x] TypeScript path aliases yapılandırması
-- [x] Navigation types tanımlama
-- [x] Metro config yapılandırması (stubs, path aliases)
-- [x] Supabase yapılandırması (app.json)
-- [x] Gerekli package'lerin eklenmesi
-
-### Phase 2: Splash Screen
-- [x] Splash screen component oluşturma
-- [x] Splash navigation hook
-- [x] Splash models ve types
-- [x] Splash styles (MasterFabric Colors)
-- [x] App route yapılandırması (`app/index.tsx`)
-
-### Phase 3: Onboarding Screen
-- [x] Onboarding screen component
-- [x] Step content component
-- [x] Step controls component
-- [x] Step indicator component
-- [x] Onboarding store (Zustand + AsyncStorage)
-- [x] Onboarding models
-- [x] Onboarding styles (MasterFabric Colors)
-- [x] App route yapılandırması (`app/onboarding.tsx`)
-
-### Phase 4: Home Screen
-- [x] Home screen component (Dashboard)
-- [x] Dashboard header component
-- [x] Current plan card component
-- [x] Quick actions component
-- [x] Cook tonight section component
-- [x] Recent activity section component
-- [x] Bottom tabs component
-- [x] Home view model hook (Supabase integration)
-- [x] Home models
-- [x] Home styles (Dark theme)
-- [x] App route yapılandırması (`app/index.tsx`)
-
-### Phase 5: Supabase Integration
-- [x] Supabase service oluşturma
-- [x] Recipe service oluşturma
-- [x] User service oluşturma
-- [x] Supabase client yapılandırması
-- [x] Error handling
-
-### Phase 6: Root Layout
-- [x] `app/_layout.tsx` oluşturma
-- [x] ThemeProvider wrapper
-- [x] Stack navigator setup
-
-### Phase 7: Testing & Validation
-- [x] Tüm ekranlar arası navigasyon testi
-- [x] TypeScript hata kontrolü
-- [x] Import path kontrolü
-- [x] MasterFabric component kullanım kontrolü
-- [x] Supabase bağlantı testi
-- [x] Linter hata kontrolü
-
----
-
-## 🎨 Basitlik Prensipleri
-
-### Yapılacaklar ✅
-- Minimal state yönetimi
-- Basit navigation (direkt router kullanımı)
-- Sadece gerekli component'ler
-- Type-safe kod
-- Clean import yapısı
-- Modüler servis yapısı (supabase-service, recipe-service, user-service)
-- Stub'lar ile optional dependency yönetimi
-
-### Yapılmayacaklar ❌
-- Karmaşık state management (sadece gerekli yerlerde Zustand)
-- Gereksiz abstraction'lar
-- Over-engineering
-- Karmaşık navigation wrapper'lar
-- Gereksiz dependency'ler
-- Firebase/Sentry entegrasyonu (stub edilmiş)
-
----
-
-## 🚀 Sonraki Adımlar
-
-Bu analiz tamamlandıktan sonra:
-
-1. **Setup Phase**: Package'lerin eklenmesi ve yapılandırma ✅
-2. **Splash Implementation**: İlk ekranın oluşturulması ✅
-3. **Onboarding Implementation**: İkinci ekranın oluşturulması ✅
-4. **Home Implementation**: Üçüncü ekranın oluşturulması ✅
-5. **Supabase Integration**: Veri çekme işlemleri ✅
-6. **Integration & Testing**: Tüm ekranların birleştirilmesi ve test edilmesi ✅
-
-**Sonraki Aşamalar:**
-- Enter Ingredients screen
-- Recipe Results screen
-- Recipe Detail screen
-- Favorites screen
-- Profile screen
-- Authentication (opsiyonel)
-
----
-
-## 📚 Referanslar
-
-- [MasterFabric Core Documentation](../../../../packages/masterfabric-expo-core/README.md)
-- [Expo Router Documentation](https://docs.expo.dev/router/introduction/)
-- [Supabase JavaScript Client](https://supabase.com/docs/reference/javascript/introduction)
-- [Recipio Features Documentation](./01-features/)
-- [Recipio Architecture Documentation](./02-architecture/)
-
----
-
-## 📌 Önemli Notlar
-
-1. **Minimal Yaklaşım**: İlk aşamada sadece 3 ekran (Splash, Onboarding, Home)
-2. **MasterFabric Core**: Tüm UI bileşenleri MasterFabric Core'dan alınır
-3. **Supabase**: Temel veri çekme işlemleri için kullanılır
-4. **Stubs**: Optional dependency'ler stub edilir (Firebase, Sentry)
-5. **Modüler Yapı**: Her servis ayrı dosyada, temiz export yapısı
-6. **Type Safety**: Tüm kod TypeScript ile type-safe
-7. **Path Aliases**: `@/` prefix ile temiz import'lar
-8. **Dark Theme**: Home screen için özel dark theme tasarımı
-
----
-
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0  
-**Durum:** ✅ İlk aşama tamamlandı
+**Last updated:** 2025-02-10  
+**Version:** 2.0.0  
+**Status:** Phase 1 in progress (Enter Ingredients, Recipe Search, Recipe Detail to implement); analysis aligned with Next.js docs and shared Supabase; language: English.

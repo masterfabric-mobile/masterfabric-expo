@@ -1,14 +1,14 @@
 # i18n Translation Keys
 
-Recipio uygulaması için i18n çeviri anahtarları yapısı.
+i18n translation key structure for the Recipio app.
 
 ## Translation Structure
 
-Çeviri dosyaları `src/shared/i18n/translations/` klasöründe bulunur:
-- `en.json`: İngilizce çeviriler
-- `tr.json`: Türkçe çeviriler
+Translation files live in `src/shared/i18n/translations/`:
+- `en.json`: English
+- `tr.json`: Turkish
 
-## Complete Translation Keys
+## Translation Keys (English examples)
 
 ### app.json
 
@@ -16,7 +16,7 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 {
   "app": {
     "name": "Recipio",
-    "tagline": "Akıllı Tarif Önerileri"
+    "tagline": "Smart Recipe Suggestions"
   }
 }
 ```
@@ -27,22 +27,22 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 {
   "common": {
     "ok": "OK",
-    "cancel": "İptal",
-    "save": "Kaydet",
-    "delete": "Sil",
-    "edit": "Düzenle",
-    "loading": "Yükleniyor...",
-    "error": "Hata",
-    "retry": "Tekrar Dene",
-    "success": "Başarılı",
-    "previous": "Önceki",
-    "next": "Sonraki",
-    "skip": "Atla",
-    "getStarted": "Başlayalım",
-    "close": "Kapat",
-    "search": "Ara...",
-    "filter": "Filtrele",
-    "sort": "Sırala"
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "success": "Success",
+    "previous": "Previous",
+    "next": "Next",
+    "skip": "Skip",
+    "getStarted": "Get Started",
+    "close": "Close",
+    "search": "Search...",
+    "filter": "Filter",
+    "sort": "Sort"
   }
 }
 ```
@@ -53,13 +53,13 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 {
   "splash": {
     "appName": "Recipio",
-    "tagline": "Akıllı Tarif Önerileri",
+    "tagline": "Smart Recipe Suggestions",
     "loading": {
-      "fonts": "Fontlar yükleniyor",
-      "services": "Servisler başlatılıyor",
-      "auth": "Kimlik doğrulama kontrol ediliyor",
-      "preferences": "Kullanıcı tercihleri yükleniyor",
-      "finalize": "Kurulum tamamlanıyor"
+      "fonts": "Loading fonts",
+      "services": "Starting services",
+      "auth": "Checking authentication",
+      "preferences": "Loading user preferences",
+      "finalize": "Finishing setup"
     }
   }
 }
@@ -71,30 +71,30 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 {
   "onboarding": {
     "welcome": {
-      "title": "Hoş Geldiniz!",
-      "description": "Recipio ile elinizdeki malzemelere göre akıllı tarif önerileri alın"
+      "title": "Welcome!",
+      "description": "Get smart recipe suggestions based on the ingredients you have"
     },
     "step1": {
-      "title": "Malzeme Girişi",
-      "description": "Elinizdeki malzemeleri ve ölçülerini girin"
+      "title": "Ingredient Input",
+      "description": "Enter your ingredients and quantities"
     },
     "step2": {
-      "title": "Akıllı Öneriler",
-      "description": "Uyumluluk skoruna göre size en uygun tarifleri bulun"
+      "title": "Smart Suggestions",
+      "description": "Find the best matching recipes by score"
     },
     "step3": {
-      "title": "Adım Adım Rehber",
-      "description": "Yemek yapma sürecini kolayca takip edin"
+      "title": "Step-by-Step Guide",
+      "description": "Follow the cooking process easily"
     },
     "step4": {
-      "title": "Favoriler",
-      "description": "Beğendiğiniz tarifleri kaydedin ve kolayca erişin"
+      "title": "Favorites",
+      "description": "Save recipes you like and access them easily"
     },
     "controls": {
-      "back": "Geri",
-      "next": "İleri",
-      "skip": "Atla",
-      "getStarted": "Başlayalım"
+      "back": "Back",
+      "next": "Next",
+      "skip": "Skip",
+      "getStarted": "Get Started"
     }
   }
 }
@@ -105,26 +105,26 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "home": {
-    "title": "Ana Sayfa",
+    "title": "Home",
     "greeting": {
-      "hello": "Merhaba",
-      "goodMorning": "Günaydın",
-      "goodAfternoon": "İyi günler",
-      "goodEvening": "İyi akşamlar"
+      "hello": "Hello",
+      "goodMorning": "Good morning",
+      "goodAfternoon": "Good afternoon",
+      "goodEvening": "Good evening"
     },
     "quickActions": {
-      "addIngredients": "Malzeme Ekle",
-      "quickRecipe": "Hızlı Tarif",
-      "favorites": "Favoriler"
+      "addIngredients": "Add Ingredients",
+      "quickRecipe": "Quick Recipe",
+      "favorites": "Favorites"
     },
     "sections": {
-      "recommended": "Önerilen Tarifler",
-      "recent": "Son Görüntülenenler",
-      "categories": "Popüler Kategoriler"
+      "recommended": "Recommended Recipes",
+      "recent": "Recently Viewed",
+      "categories": "Popular Categories"
     },
     "empty": {
-      "noRecipes": "Henüz tarif yok",
-      "noRecent": "Son görüntülenen tarif yok"
+      "noRecipes": "No recipes yet",
+      "noRecent": "No recently viewed recipes"
     }
   }
 }
@@ -135,17 +135,17 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "ingredientInput": {
-    "title": "Malzeme Ekle",
-    "searchPlaceholder": "Malzeme ara...",
-    "addButton": "Ekle",
-    "suggestRecipe": "Tarif Öner",
-    "empty": "Henüz malzeme eklenmedi",
+    "title": "Add Ingredients",
+    "searchPlaceholder": "Search ingredients...",
+    "addButton": "Add",
+    "suggestRecipe": "Suggest Recipes",
+    "empty": "No ingredients added yet",
     "categories": {
-      "all": "Tümü",
-      "vegetable": "Sebze",
-      "meat": "Et",
-      "spice": "Baharat",
-      "dairy": "Süt Ürünleri"
+      "all": "All",
+      "vegetable": "Vegetable",
+      "meat": "Meat",
+      "spice": "Spice",
+      "dairy": "Dairy"
     }
   }
 }
@@ -156,19 +156,19 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "recipeList": {
-    "title": "Tarif Önerileri",
-    "suggestAgain": "Tekrar Öner",
+    "title": "Recipe Suggestions",
+    "suggestAgain": "Suggest Again",
     "filters": {
-      "speed": "Hız",
-      "practicality": "Pratiklik",
-      "difficulty": "Zorluk"
+      "speed": "Speed",
+      "practicality": "Practicality",
+      "difficulty": "Difficulty"
     },
     "sort": {
-      "match": "Uyumluluk",
-      "popularity": "Popülerlik",
-      "date": "Tarih"
+      "match": "Match",
+      "popularity": "Popularity",
+      "date": "Date"
     },
-    "empty": "Tarif bulunamadı"
+    "empty": "No recipes found"
   }
 }
 ```
@@ -178,20 +178,20 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "recipeDetail": {
-    "prepTime": "Hazırlık",
-    "cookTime": "Pişirme",
-    "totalTime": "Toplam",
-    "servings": "Porsiyon",
+    "prepTime": "Prep",
+    "cookTime": "Cook",
+    "totalTime": "Total",
+    "servings": "Servings",
     "difficulty": {
-      "title": "Zorluk",
-      "easy": "Kolay",
-      "medium": "Orta",
-      "hard": "Zor"
+      "title": "Difficulty",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
     },
-    "ingredients": "Malzemeler",
-    "startCooking": "Yemek Yapmaya Başla",
-    "addToFavorites": "Favorilere Ekle",
-    "removeFromFavorites": "Favorilerden Çıkar"
+    "ingredients": "Ingredients",
+    "startCooking": "Start Cooking",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites"
   }
 }
 ```
@@ -201,16 +201,16 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "cookingGuide": {
-    "title": "Yemek Yapma Rehberi",
-    "step": "Adım",
+    "title": "Cooking Guide",
+    "step": "Step",
     "of": "/",
-    "next": "İleri",
-    "previous": "Geri",
-    "complete": "Tamamlandı",
-    "timer": "Zamanlayıcı",
-    "addNote": "Not Ekle",
-    "notes": "Notlar",
-    "congratulations": "Tebrikler! Yemeğiniz hazır!"
+    "next": "Next",
+    "previous": "Previous",
+    "complete": "Complete",
+    "timer": "Timer",
+    "addNote": "Add Note",
+    "notes": "Notes",
+    "congratulations": "Congratulations! Your dish is ready!"
   }
 }
 ```
@@ -220,9 +220,9 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "favorites": {
-    "title": "Favoriler",
-    "empty": "Henüz favori tarif yok",
-    "remove": "Favorilerden Çıkar"
+    "title": "Favorites",
+    "empty": "No favorite recipes yet",
+    "remove": "Remove from Favorites"
   }
 }
 ```
@@ -232,14 +232,14 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "history": {
-    "title": "Geçmiş",
-    "viewed": "Görüntülenenler",
-    "cooked": "Yapılanlar",
-    "today": "Bugün",
-    "thisWeek": "Bu Hafta",
-    "thisMonth": "Bu Ay",
-    "clear": "Temizle",
-    "empty": "Geçmiş yok"
+    "title": "History",
+    "viewed": "Viewed",
+    "cooked": "Cooked",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "clear": "Clear",
+    "empty": "No history"
   }
 }
 ```
@@ -249,18 +249,18 @@ Recipio uygulaması için i18n çeviri anahtarları yapısı.
 ```json
 {
   "profile": {
-    "title": "Profil",
+    "title": "Profile",
     "stats": {
-      "totalRecipes": "Toplam Tarif",
-      "favorites": "Favoriler",
-      "cooked": "Yapılanlar"
+      "totalRecipes": "Total Recipes",
+      "favorites": "Favorites",
+      "cooked": "Cooked"
     },
     "settings": {
-      "language": "Dil",
-      "theme": "Tema",
-      "notifications": "Bildirimler"
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications"
     },
-    "signOut": "Çıkış Yap"
+    "signOut": "Sign Out"
   }
 }
 ```
@@ -279,3 +279,5 @@ const greeting = t('home.greeting.hello', { name: 'John' });
 // In component
 <ThemedText>{t('common.loading')}</ThemedText>
 ```
+
+**Note:** For Turkish locale, keep the same keys in `tr.json` with Turkish values.
