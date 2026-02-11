@@ -15,6 +15,7 @@ FROM
     public.recipe_stats rs;
 
 -- Public Recipe Cards View (for listing pages)
+-- Updated to include both TR and EN translations for client-side locale selection
 CREATE OR REPLACE VIEW public.v_public_recipe_cards AS
 SELECT
     r.id AS recipe_id,
@@ -23,16 +24,21 @@ SELECT
     r.user_id,
     r.cover_image_url,
     r.created_at,
-    -- Get title in preferred locale (fallback to 'en')
+    -- Both translations from recipe_translations table (for client-side locale selection)
+    rt_en.title AS title_en,
+    rt_tr.title AS title_tr,
+    rt_en.description AS description_en,
+    rt_tr.description AS description_tr,
+    -- Fallback title and description (prefer EN, then TR, then any available)
+    -- This ensures we always have a title/description even if one locale is missing
     COALESCE(
-        rt_tr.title,
         rt_en.title,
+        rt_tr.title,
         (SELECT title FROM public.recipe_translations WHERE recipe_id = r.id LIMIT 1)
     ) AS title,
-    -- Get description in preferred locale
     COALESCE(
-        rt_tr.description,
         rt_en.description,
+        rt_tr.description,
         (SELECT description FROM public.recipe_translations WHERE recipe_id = r.id LIMIT 1)
     ) AS description,
     -- Category slug
