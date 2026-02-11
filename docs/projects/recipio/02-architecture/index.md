@@ -1,14 +1,15 @@
 # Architecture Documentation
 
-Recipio uygulamasının mimari dokümantasyonu.
+Architecture documentation for the Recipio app.
 
-## İçindekiler
+## Contents
 
-- [Overview](./overview.md) - Mimari genel bakış
-- [Folder Structure](./folder-structure.md) - Klasör yapısı ve organizasyon
+- [Overview](./overview.md) — Architecture overview
+- [Folder Structure](./folder-structure.md) — Folder layout and organization
+- [Phased Development & View Structure](./phased-development-and-view-structure.md) — Phased development plan and view structure matrix
 
-## Hızlı Başlangıç
+## Quick Start
 
-Mimari hakkında bilgi edinmek için [Overview](./overview.md) sayfasını okuyun.
+Read the [Overview](./overview.md) page for architecture details.
 
-Klasör yapısını anlamak için [Folder Structure](./folder-structure.md) sayfasına bakın.
+See [Folder Structure](./folder-structure.md) for the directory layout.

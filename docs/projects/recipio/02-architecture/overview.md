@@ -1,34 +1,34 @@
 # Architecture Overview
 
-Uygulama, **feature-based architecture** (özellik tabanlı mimari) yaklaşımını takip eder. Bu, kodun domain veya özellik bazında organize edildiği ölçeklenebilir ve modüler bir yaklaşımdır. Bu, güçlü bir ayrım sağlar ve kod tabanını sürdürmeyi, test etmeyi ve ölçeklendirmeyi kolaylaştırır.
+The app follows a **feature-based architecture**: code is organized by domain or feature for a scalable, modular structure with clear separation and easier maintenance, testing, and scaling.
 
-Bu mimarinin temeli, paylaşılan bileşenler, hook'lar, context'ler ve yardımcı fonksiyonların sağlam bir temelini sağlayan `@masterfabric-expo/core` paketine dayanır. Bu, uygulama genelinde tutarlılığı sağlar ve boilerplate kodunu azaltır.
+The foundation is the `@masterfabric-expo/core` package, which provides shared components, hooks, contexts, and utilities for consistency and less boilerplate.
 
-## 🏗️ Core Principles
+## Core Principles
 
-### 1. Modularity (Modülerlik)
+### 1. Modularity
 
-Her özellik (örn. `splash`, `onboarding`, `home`) kendi kendine yeten bir modüldür. Bu, bir özellik için tüm mantık, UI ve state'in birlikte gruplandırıldığı anlamına gelir.
+Each feature (e.g. `splash`, `onboarding`, `home`) is a self-contained module: all logic, UI, and state for that feature live together.
 
-**Örnek:**
+**Example:**
 ```
 src/screens/home/
-├── components/        # UI bileşenleri
+├── components/        # UI components
 ├── hooks/            # Business logic
 ├── models/           # Type definitions
 ├── styles/           # Styling
-└── store/            # State management (opsiyonel)
+└── store/            # State management (optional)
 ```
 
-### 2. Separation of Concerns (Endişelerin Ayrılması)
+### 2. Separation of Concerns
 
-Uygulamanın farklı katmanları arasında net bir ayrım korunur:
+Clear separation is kept between layers:
 
 - **UI Layer**: `components/`, `screens/`, `styles/`
 - **Business Logic Layer**: `hooks/`, `store/`, `utils/`
 - **Data & Services Layer**: `services/`, `models/`
 
-**Örnek:**
+**Example:**
 ```typescript
 // UI Layer
 export function HomeScreen() {
@@ -49,17 +49,17 @@ export async function getCookTonightRecipes() {
 }
 ```
 
-### 3. Scalability (Ölçeklenebilirlik)
+### 3. Scalability
 
-Yapı büyümek için tasarlanmıştır. Yeni bir özellik eklemek, mevcut kodu bozmadan `src/screens/` altında yeni bir dizin oluşturmak kadar basittir.
+The structure is designed to grow. Adding a new feature is as simple as creating a new directory under `src/screens/` without breaking existing code.
 
-## 🔌 MasterFabric Core Integration
+## MasterFabric Core Integration
 
-Uygulama, `@masterfabric-expo/core` paketinden şu öğeleri kullanır:
+The app uses these elements from `@masterfabric-expo/core`:
 
 ### Components
-- **ThemedView**: Tema desteği olan View component
-- **ThemedText**: Tema desteği olan Text component
+- **ThemedView**: Theme-aware View component
+- **ThemedText**: Theme-aware Text component
 
 ### Constants
 - **Colors**: MasterFabric color palette
@@ -67,7 +67,7 @@ Uygulama, `@masterfabric-expo/core` paketinden şu öğeleri kullanır:
 ### Contexts
 - **ThemeProvider**: Theme context provider
 
-**Kullanım:**
+**Usage:**
 ```typescript
 // Root Layout
 import { ThemeProvider } from '@masterfabric-expo/core/dist/contexts/ThemeContext';
@@ -88,13 +88,13 @@ import { ThemedText } from '@masterfabric-expo/core/dist/components/ThemedText';
 import { Colors } from '@masterfabric-expo/core/dist/constants/Colors';
 ```
 
-## 📊 State Management
+## State Management
 
-Uygulama, state yönetimi için **Zustand** kullanır:
+The app uses **Zustand** for state management:
 
-### Kullanım Senaryoları
+### Usage
 
-1. **Onboarding Store** (AsyncStorage ile persistence)
+1. **Onboarding Store** (with AsyncStorage persistence)
    ```typescript
    // src/screens/onboarding/store/onboarding-store.ts
    import { create } from 'zustand';
@@ -115,32 +115,32 @@ Uygulama, state yönetimi için **Zustand** kullanır:
    );
    ```
 
-2. **Local State** (Basit durumlar için)
+2. **Local State** (for simple cases)
    ```typescript
-   // Component içinde
+   // Inside component
    const [isLoading, setIsLoading] = useState(false);
    ```
 
-### State Yönetimi Stratejisi
+### Strategy
 
-- ✅ **Zustand**: Global state ve persistence gerektiğinde
-- ✅ **Local State**: Component-specific state için
-- ✅ **AsyncStorage**: Kalıcı veri için (onboarding durumu)
+- **Zustand**: When global state or persistence is needed
+- **Local State**: For component-specific state
+- **AsyncStorage**: For persistent data (e.g. onboarding status)
 
 ## 🗄️ Data Layer
 
 ### Supabase Integration
 
-**Servis Yapısı:**
+**Service layout:**
 ```
 src/shared/services/
 ├── supabase-service.ts          # Temel Supabase client
 ├── recipe-service.ts            # Recipe operations
 ├── user-service.ts              # User operations
-└── recipe-search-service.ts     # Recipe search (sonraki aşama)
+└── recipe-search-service.ts     # Recipe search (later phase)
 ```
 
-**Kullanım:**
+**Usage:**
 ```typescript
 // Service
 import { getSupabaseClient } from './supabase-service';
@@ -168,9 +168,9 @@ export function useHomeViewModel() {
 
 ### Type Safety
 
-- ✅ TypeScript ile tip güvenliği
-- ✅ Model dosyalarında type definitions
-- ✅ Supabase query sonuçları için type mapping
+- TypeScript for type safety
+- Type definitions in model files
+- Type mapping for Supabase query results
 
 ## 🧭 Navigation
 
@@ -213,9 +213,9 @@ app/index.tsx (initial check)
   └─→ [Completed] → / (home)
 ```
 
-## 🎨 Styling Architecture
+## Styling Architecture
 
-### Styling Yaklaşımı
+### Approach
 
 1. **MasterFabric Colors** (Splash, Onboarding)
    ```typescript
@@ -233,7 +233,7 @@ app/index.tsx (initial check)
    const colors = {
      background: '#000000',
      cardBackground: '#1C1C1E',
-     primary: '#FF9500',
+     primary: '#FF5722',
    };
    
    export const styles = StyleSheet.create({
@@ -245,18 +245,18 @@ app/index.tsx (initial check)
 
 ### Style Organization
 
-- ✅ Her screen için ayrı styles dosyası
-- ✅ Component-specific styles
-- ✅ StyleSheet API kullanımı
+- One styles file per screen
+- Component-specific styles
+- StyleSheet API
 
-## 🔧 Metro Bundler Configuration
+## Metro Bundler Configuration
 
 ### Stubs
 
-Optional dependency'ler stub edilir:
-- Firebase (kullanılmıyor)
-- Sentry (kullanılmıyor)
-- Expo optional packages
+Optional dependencies are stubbed:
+- Firebase (not used)
+- Sentry (not used)
+- Optional Expo packages
 
 ### Path Aliases
 
@@ -353,5 +353,5 @@ try {
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0
