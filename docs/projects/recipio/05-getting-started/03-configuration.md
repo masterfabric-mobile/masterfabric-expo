@@ -1,14 +1,23 @@
 # Configuration
 
-Recipio uygulamasının yapılandırması ve ortam değişkenleri.
+Recipio app configuration and environment variables.
 
-## 🔧 Environment Variables
+## Environment Variables
 
 ### Supabase Configuration
 
-**Yöntem 1: app.json (Önerilen)**
+**Method 1: .env dosyası (Önerilen)**
 
-`app.json` dosyasını açın ve `extra` bölümünü güncelleyin:
+`project/recipio/.env` oluşturun (veya `.env.example`'ı kopyalayın):
+
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+**Önemli:** `.env` `.gitignore`'da olmalı; commit edilmez. Tüm veriler Supabase'den gelir; mock/manuel veri kullanılmaz.
+
+**Method 2: app.json extra**
 
 ```json
 {
@@ -21,28 +30,17 @@ Recipio uygulamasının yapılandırması ve ortam değişkenleri.
 }
 ```
 
-**Yöntem 2: .env Dosyası**
+### How to Get Supabase Credentials
 
-`project/recipio/.env` dosyası oluşturun:
+1. Go to your project in the [Supabase Dashboard](https://app.supabase.com)
+2. Open **Settings** → **API**
+3. Copy:
+   - **Project URL** → `EXPO_PUBLIC_SUPABASE_URL`
+   - **anon/public key** → `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 
-```env
-EXPO_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-```
+## app.json Configuration
 
-**Önemli:** `.env` dosyasını `.gitignore`'a ekleyin!
-
-### Supabase Credentials Nasıl Alınır?
-
-1. [Supabase Dashboard](https://app.supabase.com) üzerinden projenize gidin
-2. **Settings** → **API** bölümüne gidin
-3. Şu bilgileri kopyalayın:
-   - **Project URL**: `EXPO_PUBLIC_SUPABASE_URL`
-   - **anon/public key**: `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-
-## 📱 app.json Configuration
-
-`app.json` dosyası Expo yapılandırmasını içerir:
+`app.json` holds the Expo configuration:
 
 ```json
 {
@@ -74,9 +72,9 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 }
 ```
 
-## 📝 TypeScript Configuration
+## TypeScript Configuration
 
-`tsconfig.json` dosyası TypeScript yapılandırmasını içerir:
+`tsconfig.json` holds TypeScript settings:
 
 ```json
 {
@@ -95,55 +93,55 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 }
 ```
 
-## 🚇 Metro Configuration
+## Metro Configuration
 
-`metro.config.js` dosyası Metro bundler yapılandırmasını içerir:
+`metro.config.js` configures the Metro bundler:
 
-**Önemli Özellikler:**
+**Main features:**
 - Path alias support (`@/`)
 - Local package resolution (`@masterfabric-expo/core`)
-- Optional dependency stubs (Firebase, Sentry, vb.)
+- Optional dependency stubs (Firebase, Sentry, etc.)
 - Watch folders configuration
 
-**Stub Yapılandırması:**
+**Stub configuration:**
 ```javascript
-// metro-stubs/ klasöründeki stub dosyaları
+// Stub files in metro-stubs/
 const firebaseStub = path.resolve(projectRoot, 'metro-stubs/firebase-stub.js');
 const sentryStub = path.resolve(projectRoot, 'metro-stubs/sentry-stub.js');
-// ... diğer stubs
+// ... other stubs
 ```
 
-## 🗄️ Supabase Setup
+## Supabase Setup
 
 ### Database Migrations
 
-Supabase migration dosyaları GitHub'da mevcut:
-- `https://github.com/NurhayatYurtaslan/recipio/tree/main/supabase/migrations`
+Supabase migration files are on GitHub:
+- [recipio/supabase/migrations](https://github.com/NurhayatYurtaslan/recipio/tree/main/supabase/migrations)
 
-**Migration'ları Çalıştırma:**
+**Running migrations:**
 
-1. Supabase Dashboard'a gidin
-2. **SQL Editor** bölümüne gidin
-3. Migration dosyalarını sırayla çalıştırın:
+1. Open the Supabase Dashboard
+2. Go to **SQL Editor**
+3. Run migration files in order:
    - `init.sql`
    - `add-category.sql`
    - `views.sql`
 
-**Veya Supabase CLI ile:**
+**Or with Supabase CLI:**
 ```bash
 supabase db push
 ```
 
-### Storage Buckets (Opsiyonel)
+### Storage Buckets (Optional)
 
-Storage bucket'ları oluşturun:
-- `recipe-images`: Tarif görselleri için
+Create storage buckets as needed, e.g.:
+- `recipe-images`: For recipe images
 
-## 🎨 MasterFabric Core
+## MasterFabric Core
 
-`@masterfabric-expo/core` paketi otomatik olarak yüklenir. Ek yapılandırma gerekmez.
+The `@masterfabric-expo/core` package is installed automatically. No extra configuration is required.
 
-**Package Yapılandırması:**
+**Package configuration:**
 ```json
 {
   "dependencies": {
@@ -152,7 +150,7 @@ Storage bucket'ları oluşturun:
 }
 ```
 
-**Metro Config:**
+**Metro config:**
 ```javascript
 config.watchFolders = [
   path.resolve(workspaceRoot, 'packages/masterfabric-expo-core'),
@@ -163,27 +161,27 @@ config.resolver.extraNodeModules = {
 };
 ```
 
-## ✅ Configuration Checklist
+## Configuration Checklist
 
-- [ ] Supabase URL ve Anon Key `app.json`'a eklendi
-- [ ] TypeScript path aliases yapılandırıldı
-- [ ] Metro config doğru yapılandırıldı
-- [ ] Supabase migration'ları çalıştırıldı
-- [ ] MasterFabric Core package link edildi
-- [ ] Environment variables kontrol edildi
+- [ ] Supabase URL and Anon Key added to `app.json`
+- [ ] TypeScript path aliases configured
+- [ ] Metro config set up correctly
+- [ ] Supabase migrations run
+- [ ] MasterFabric Core package linked
+- [ ] Environment variables checked
 
-## 🔍 Verification
+## Verification
 
-Yapılandırmanın doğru olduğunu kontrol etmek için:
+To check that configuration is correct:
 
 ```bash
-# Supabase bağlantısını test et
+# Test Supabase connection
 npm start
-# Console'da şunu görmelisiniz:
-# ✅ Supabase client başlatıldı
+# You should see in the console:
+# ✅ Supabase client initialized
 ```
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0

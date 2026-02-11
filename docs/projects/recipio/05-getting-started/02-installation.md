@@ -1,82 +1,82 @@
 # Installation
 
-Recipio uygulamasını yerel geliştirme ortamına kurma adımları.
+Steps to set up the Recipio app in your local development environment.
 
-## 📦 Clone Repository
+## Clone Repository
 
 ```bash
-# Workspace kök dizinine git
+# Go to workspace root
 cd masterfabric-expo
 
-# Proje dizinine git
+# Go to project directory
 cd project/recipio
 ```
 
-## 🔧 Install Dependencies
+## Install Dependencies
 
 ```bash
 npm install
 ```
 
-Bu komut şunları yükler:
-- React Native ve Expo bağımlılıkları
-- TypeScript ve tip tanımlamaları
-- `@masterfabric-expo/core` paketi (local workspace package)
+This installs:
+- React Native and Expo dependencies
+- TypeScript and type definitions
+- `@masterfabric-expo/core` (local workspace package)
 - Supabase client (`@supabase/supabase-js`)
 - Zustand (state management)
 - AsyncStorage
-- Diğer tüm bağımlılıklar
+- All other dependencies
 
-## ✅ Verify Installation
+## Verify Installation
 
-Kurulumun başarılı olduğunu kontrol etmek için:
+To confirm installation succeeded:
 
 ```bash
-# Expo CLI versiyonu
+# Expo CLI version
 npx expo --version
 
 # Installed packages
 npm list --depth=0
 
-# MasterFabric Core package kontrolü
+# MasterFabric Core package check
 ls ../../packages/masterfabric-expo-core
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Node Modules Issues
 
-Eğer bağımlılıklarla ilgili sorun yaşıyorsanız:
+If you have dependency issues:
 
 ```bash
-# node_modules ve lock dosyasını temizle
+# Remove node_modules and lock file
 rm -rf node_modules package-lock.json
 
-# Yeniden yükle
+# Reinstall
 npm install
 ```
 
 ### MasterFabric Core Package Issues
 
-Eğer `@masterfabric-expo/core` paketi bulunamıyorsa:
+If `@masterfabric-expo/core` is not found:
 
 ```bash
-# Workspace kök dizinine git
+# Go to workspace root
 cd ../../
 
-# MasterFabric Core package'ini kontrol et
+# Check for MasterFabric Core package
 ls packages/masterfabric-expo-core
 
-# Eğer yoksa, package'i oluşturmanız gerekebilir
+# Create the package if it does not exist
 ```
 
 ### Metro Bundler Cache Issues
 
 ```bash
-# Expo cache'i temizle
+# Clear Expo cache
 npx expo start --clear
 
-# Metro cache'i temizle
+# Clear Metro cache
 npx expo start --reset-cache
 ```
 
@@ -88,17 +88,17 @@ pod install
 cd ..
 ```
 
-## 📋 Installation Checklist
+## Installation Checklist
 
-- [ ] Node.js kurulu (v18+)
-- [ ] npm kurulu
-- [ ] Git kurulu
-- [ ] Expo CLI erişilebilir (`npx expo`)
-- [ ] Dependencies yüklendi (`npm install`)
-- [ ] MasterFabric Core package mevcut
-- [ ] Supabase credentials hazır (app.json veya .env)
+- [ ] Node.js installed (v18+)
+- [ ] npm installed
+- [ ] Git installed
+- [ ] Expo CLI accessible (`npx expo`)
+- [ ] Dependencies installed (`npm install`)
+- [ ] MasterFabric Core package present
+- [ ] Supabase credentials ready (app.json or .env)
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0

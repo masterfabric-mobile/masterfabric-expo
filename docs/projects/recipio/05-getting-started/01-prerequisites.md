@@ -1,48 +1,48 @@
 # Prerequisites
 
-Recipio uygulamasını geliştirmek için gereken yazılımlar ve araçlar.
+Software and tools required to develop the Recipio app.
 
-## 📋 Gerekli Yazılımlar
+## Required Software
 
 ### Node.js
-- **Version**: 18.0.0 veya üzeri
+- **Version**: 18.0.0 or higher
 - **Download**: [nodejs.org](https://nodejs.org/)
-- **Kontrol**: `node --version`
+- **Check**: `node --version`
 
 ### npm
-- Node.js ile birlikte gelir
-- **Kontrol**: `npm --version`
+- Included with Node.js
+- **Check**: `npm --version`
 
 ### Git
 - **Download**: [git-scm.com](https://git-scm.com/)
-- **Kontrol**: `git --version`
+- **Check**: `git --version`
 
 ### Expo CLI
-- Global olarak yüklenebilir: `npm install -g expo-cli`
-- Veya `npx expo` kullanılabilir (önerilen)
-- **Kontrol**: `npx expo --version`
+- Can be installed globally: `npm install -g expo-cli`
+- Or use `npx expo` (recommended)
+- **Check**: `npx expo --version`
 
-## 🖥️ Platform-Specific Requirements
+## Platform-Specific Requirements
 
 ### iOS Development (macOS only)
-- **Xcode**: 14.0 veya üzeri
-- **iOS Simulator**: Xcode ile birlikte gelir
+- **Xcode**: 14.0 or higher
+- **iOS Simulator**: Included with Xcode
 - **CocoaPods**: `sudo gem install cocoapods`
 
 ### Android Development
-- **Android Studio**: En son sürüm
-- **Android SDK**: Android Studio ile birlikte gelir
-- **Android Emulator**: Android Studio ile kurulabilir
-- **Java Development Kit (JDK)**: 11 veya üzeri
+- **Android Studio**: Latest version
+- **Android SDK**: Included with Android Studio
+- **Android Emulator**: Can be installed via Android Studio
+- **Java Development Kit (JDK)**: 11 or higher
 
 ### Web Development
-- Modern web tarayıcısı (Chrome, Firefox, Safari, Edge)
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
-## 🛠️ Recommended Tools
+## Recommended Tools
 
 ### Code Editor
 - **VS Code**: [code.visualstudio.com](https://code.visualstudio.com/)
-- Önerilen eklentiler:
+- Recommended extensions:
   - ESLint
   - Prettier
   - TypeScript
@@ -50,46 +50,46 @@ Recipio uygulamasını geliştirmek için gereken yazılımlar ve araçlar.
   - Expo Tools
 
 ### Mobile Device (Optional)
-- **Expo Go App**: iOS veya Android cihazınızda test etmek için
+- **Expo Go app**: For testing on a physical iOS or Android device
   - iOS: [App Store](https://apps.apple.com/app/expo-go/id982107779)
   - Android: [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
-## ☁️ Supabase Account
+## Supabase Account
 
-- **Supabase Account**: [supabase.com](https://supabase.com)
-- Yeni bir proje oluşturulmalı
-- API keys alınmalı (Settings → API)
+- **Supabase account**: [supabase.com](https://supabase.com)
+- Create a new project
+- Get API keys (Settings → API)
   - Project URL
   - anon/public key
 
-## ✅ Verification
+## Verification
 
-Tüm gereksinimlerin kurulu olduğunu kontrol etmek için:
+To verify all requirements are installed:
 
 ```bash
-node --version      # v18.0.0 veya üzeri
-npm --version       # v9.0.0 veya üzeri
-git --version       # v2.30.0 veya üzeri
-npx expo --version  # v0.0.0 veya üzeri
+node --version      # v18.0.0 or higher
+npm --version       # v9.0.0 or higher
+git --version       # v2.30.0 or higher
+npx expo --version  # any version
 ```
 
-## 📦 Workspace Requirements
+## Workspace Requirements
 
 ### MasterFabric Expo Workspace
 
-Proje, MasterFabric Expo workspace içinde yer alır:
+The project lives inside the MasterFabric Expo workspace:
 
 ```
 masterfabric-expo/
 ├── packages/
-│   └── masterfabric-expo-core/    # Local package (gerekli)
+│   └── masterfabric-expo-core/    # Local package (required)
 └── project/
     └── recipio/                    # Application
 ```
 
-**Önemli:** `@masterfabric-expo/core` paketi workspace içinde olmalıdır.
+**Important:** The `@masterfabric-expo/core` package must be present in the workspace.
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0

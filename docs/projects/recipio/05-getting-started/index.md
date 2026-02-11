@@ -1,17 +1,17 @@
 # Getting Started
 
-Recipio uygulamasını yerel olarak kurma ve çalıştırma için adım adım talimatlar.
+Step-by-step instructions to set up and run the Recipio app locally.
 
-## İçindekiler
+## Contents
 
-- [Prerequisites](./01-prerequisites.md) - Gereksinimler
-- [Installation](./02-installation.md) - Kurulum
-- [Configuration](./03-configuration.md) - Yapılandırma
-- [Running the App](./04-running-the-app.md) - Uygulamayı çalıştırma
+- [Prerequisites](./01-prerequisites.md) — Requirements
+- [Installation](./02-installation.md) — Installation
+- [Configuration](./03-configuration.md) — Configuration
+- [Running the App](./04-running-the-app.md) — Running the app
 
-## Hızlı Başlangıç
+## Quick Start
 
-1. [Prerequisites](./01-prerequisites.md) sayfasından gereksinimleri kontrol edin
-2. [Installation](./02-installation.md) sayfasındaki adımları takip edin
-3. [Configuration](./03-configuration.md) sayfasından yapılandırmayı yapın
-4. [Running the App](./04-running-the-app.md) sayfasından uygulamayı çalıştırın
+1. Check requirements on [Prerequisites](./01-prerequisites.md)
+2. Follow the steps on [Installation](./02-installation.md)
+3. Configure as described on [Configuration](./03-configuration.md)
+4. Run the app as described on [Running the App](./04-running-the-app.md)

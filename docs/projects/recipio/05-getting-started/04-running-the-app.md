@@ -1,8 +1,8 @@
 # Running the App
 
-Recipio uygulamasını çalıştırma ve test etme.
+How to run and test the Recipio app.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Windows
 
@@ -19,7 +19,7 @@ chmod +x run.sh
 ./run.sh
 ```
 
-## 📱 Manual Start
+## Manual Start
 
 ### Start Development Server
 
@@ -28,7 +28,7 @@ cd project/recipio
 npm start
 ```
 
-veya
+or
 
 ```bash
 npx expo start
@@ -36,14 +36,14 @@ npx expo start
 
 ### Platform Options
 
-Development server başladıktan sonra:
+After the development server starts:
 
-- **iOS Simulator**: `i` tuşuna basın
-- **Android Emulator**: `a` tuşuna basın
-- **Web Browser**: `w` tuşuna basın
-- **QR Code**: Expo Go uygulaması ile QR kodu tarayın
+- **iOS Simulator**: Press `i`
+- **Android Emulator**: Press `a`
+- **Web Browser**: Press `w`
+- **QR Code**: Scan with the Expo Go app
 
-## 🎯 Running on Specific Platform
+## Running on a Specific Platform
 
 ### iOS
 
@@ -51,7 +51,7 @@ Development server başladıktan sonra:
 npm run ios
 ```
 
-veya
+or
 
 ```bash
 npx expo start --ios
@@ -63,7 +63,7 @@ npx expo start --ios
 npm run android
 ```
 
-veya
+or
 
 ```bash
 npx expo start --android
@@ -75,32 +75,32 @@ npx expo start --android
 npm run web
 ```
 
-veya
+or
 
 ```bash
 npx expo start --web
 ```
 
-## 📲 Using Expo Go
+## Using Expo Go
 
-1. **Expo Go** uygulamasını cihazınıza yükleyin:
+1. Install the **Expo Go** app on your device:
    - iOS: [App Store](https://apps.apple.com/app/expo-go/id982107779)
    - Android: [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
-2. Development server'ı başlatın:
+2. Start the development server:
    ```bash
    npm start
    ```
 
-3. QR kodu tarayın:
-   - iOS: Camera uygulaması ile
-   - Android: Expo Go uygulaması içinden
+3. Scan the QR code:
+   - iOS: With the Camera app
+   - Android: From within the Expo Go app
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Port Already in Use
 
-Eğer port zaten kullanılıyorsa:
+If the port is already in use:
 
 ```bash
 npx expo start --port 8082
@@ -120,7 +120,7 @@ npx expo start --reset-cache
 
 ### Network Issues
 
-Aynı WiFi ağında olduğunuzdan emin olun. Veya tunnel modunu kullanın:
+Make sure you are on the same Wi‑Fi network. Or use tunnel mode:
 
 ```bash
 npx expo start --tunnel
@@ -128,23 +128,23 @@ npx expo start --tunnel
 
 ### Supabase Connection Issues
 
-Eğer Supabase bağlantı hatası alıyorsanız:
+If you get Supabase connection errors:
 
-1. `app.json` dosyasındaki Supabase credentials'ı kontrol edin
-2. Console log'larını kontrol edin:
+1. Check Supabase credentials in `app.json`
+2. Check console output for:
    ```
-   ✅ Supabase client başlatıldı
+   ✅ Supabase client initialized
    ```
-3. Supabase Dashboard'da projenizin aktif olduğundan emin olun
+3. Ensure the project is active in the Supabase Dashboard
 
-## 💡 Development Tips
+## Development Tips
 
-- **Hot Reload**: Varsayılan olarak etkindir. Kod değişiklikleri otomatik olarak yansır.
-- **Fast Refresh**: React bileşenleri için hızlı yenileme.
-- **Debugging**: Chrome DevTools veya React Native Debugger kullanılabilir.
-- **Console Logs**: Terminal'de tüm console.log'ları görebilirsiniz.
+- **Hot Reload**: Enabled by default. Code changes are reflected automatically.
+- **Fast Refresh**: Quick refresh for React components.
+- **Debugging**: Use Chrome DevTools or React Native Debugger.
+- **Console logs**: All `console.log` output appears in the terminal.
 
-## 🏗️ Building for Production
+## Building for Production
 
 ### iOS
 
@@ -167,15 +167,15 @@ eas build --platform ios
 eas build --platform android
 ```
 
-## ✅ Running Checklist
+## Running Checklist
 
-- [ ] Development server başlatıldı (`npm start`)
-- [ ] Platform seçildi (iOS/Android/Web)
-- [ ] Supabase bağlantısı başarılı (console'da görünmeli)
-- [ ] Splash screen görünüyor
-- [ ] Onboarding/Home screen'e geçiş çalışıyor
+- [ ] Development server started (`npm start`)
+- [ ] Platform selected (iOS/Android/Web)
+- [ ] Supabase connection successful (see console)
+- [ ] Splash screen appears
+- [ ] Onboarding/Home screen transition works
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0
