@@ -1,33 +1,33 @@
 # Integrations
 
-Recipio uygulamasında kullanılan üçüncü taraf servisler ve entegrasyonlar.
+Third-party services and integrations used in the Recipio app.
 
-## 📋 İçindekiler
+## Contents
 
-- **[Supabase](./supabase.md)** - Backend ve veritabanı entegrasyonu
+- **[Supabase](./supabase.md)** — Backend and database integration
 
-## 🔌 Ana Entegrasyonlar
+## Main Integrations
 
-### Supabase ✅
+### Supabase
 
-Supabase, uygulamanın backend altyapısını sağlar:
+Supabase provides the app backend:
 
-- **Veritabanı (PostgreSQL)**: Tarifler, kullanıcı aktiviteleri, profiller
-- **Authentication** (opsiyonel, sonraki aşama): Kullanıcı girişi
-- **Real-time subscriptions** (opsiyonel): Gerçek zamanlı güncellemeler
-- **Storage** (opsiyonel): Tarif görselleri için
-- **Edge Functions** (opsiyonel): Tarif öneri algoritması için
+- **Database (PostgreSQL)**: Recipes, user activities, profiles
+- **Authentication** (optional, later phase): User sign-in
+- **Real-time subscriptions** (optional): Live updates
+- **Storage** (optional): Recipe images
+- **Edge Functions** (optional): Recipe suggestion logic
 
-**Servis Yapısı:**
+**Service layout:**
 ```
 src/shared/services/
-├── supabase-service.ts          # Temel Supabase client (TEMEL)
+├── supabase-service.ts          # Core Supabase client
 ├── recipe-service.ts            # Recipe operations
 ├── user-service.ts              # User operations
-└── recipe-search-service.ts     # Recipe search (sonraki aşama)
+└── recipe-search-service.ts     # Recipe search (later phase)
 ```
 
-**Kullanım:**
+**Usage:**
 ```typescript
 import { getSupabaseClient } from '@/shared/services/supabase-service';
 
@@ -35,15 +35,15 @@ const supabase = getSupabaseClient();
 const { data, error } = await supabase.from('recipes').select('*');
 ```
 
-Detaylar için [Supabase Integration](./supabase.md) sayfasına bakın.
+See [Supabase Integration](./supabase.md) for details.
 
-## 🚫 Kullanılmayan Entegrasyonlar
+## Unused Integrations (Stubbed)
 
-### Firebase ❌
+### Firebase
 
-Firebase kullanılmıyor. Metro config'de stub edilmiş.
+Firebase is not used. It is stubbed in Metro config.
 
-**Stub Dosyası:**
+**Stub file:**
 ```javascript
 // metro-stubs/firebase-stub.js
 module.exports = {
@@ -52,11 +52,11 @@ module.exports = {
 };
 ```
 
-### Sentry ❌
+### Sentry
 
-Sentry kullanılmıyor. Metro config'de stub edilmiş.
+Sentry is not used. It is stubbed in Metro config.
 
-**Stub Dosyası:**
+**Stub file:**
 ```javascript
 // metro-stubs/sentry-stub.js
 module.exports = {
@@ -65,12 +65,12 @@ module.exports = {
 };
 ```
 
-## 🔧 Integration Setup
+## Integration Setup
 
 ### Supabase Setup
 
-1. Supabase Dashboard'dan credentials alın
-2. `app.json` dosyasına ekleyin:
+1. Get credentials from the Supabase Dashboard
+2. Add them to `app.json`:
    ```json
    {
      "expo": {
@@ -81,11 +81,11 @@ module.exports = {
      }
    }
    ```
-3. Migration dosyalarını çalıştırın (Supabase SQL Editor)
+3. Run migration files (Supabase SQL Editor)
 
-Detaylar için [Supabase Integration](./supabase.md) sayfasına bakın.
+See [Supabase Integration](./supabase.md) for details.
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0

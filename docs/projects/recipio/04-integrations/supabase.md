@@ -1,16 +1,25 @@
 # Supabase Integration
 
-Recipio uygulamasında Supabase entegrasyonu ve kullanımı.
+Supabase is the shared backend for both the **Recipio website (Next.js)** and the **Recipio mobile app (Expo)**. Same project, schema, views, and RLS.
 
 ## 📋 Overview
 
-Supabase, Recipio uygulamasının backend altyapısını sağlar. Veritabanı, authentication (opsiyonel), storage ve real-time özellikler için kullanılır.
+Supabase provides database, optional authentication, storage, and real-time for Recipio. The **canonical schema, views, and RLS** are documented in the [recipio/docs/DB_SCHEMA.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/DB_SCHEMA.md) repository. This doc describes app-side configuration and usage.
 
 ## 🔧 Setup & Configuration
 
 ### 1. Supabase Credentials
 
-**app.json Yapılandırması:**
+**`.env` dosyası (önerilen):** Recipio tüm veriyi Supabase'den çeker; mock veri kullanılmaz. `project/recipio/.env` içinde:
+
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+`.env.example` şablon olarak projede bulunur; `.env` `.gitignore`'dadır.
+
+**Alternatif — app.json extra:**
 ```json
 {
   "expo": {
@@ -22,27 +31,22 @@ Supabase, Recipio uygulamasının backend altyapısını sağlar. Veritabanı, a
 }
 ```
 
-**Alternatif: .env Dosyası**
-```env
-EXPO_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-```
-
 ### 2. Supabase Service
 
-**Temel Client:**
+**Core client:**
 ```typescript
 // src/shared/services/supabase-service.ts
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 
+// .env öncelikli (EXPO_PUBLIC_*), yoksa app.json extra
 const SUPABASE_URL = 
-  Constants.expoConfig?.extra?.supabaseUrl || 
-  process.env.EXPO_PUBLIC_SUPABASE_URL;
+  process.env.EXPO_PUBLIC_SUPABASE_URL || 
+  Constants.expoConfig?.extra?.supabaseUrl;
 
 const SUPABASE_ANON_KEY = 
-  Constants.expoConfig?.extra?.supabaseAnonKey || 
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || 
+  Constants.expoConfig?.extra?.supabaseAnonKey;
 
 let supabaseClient: SupabaseClient | null = null;
 
@@ -52,7 +56,7 @@ export function initSupabase(): SupabaseClient {
   }
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error('Supabase URL ve Anon Key bulunamadı!');
+    throw new Error('Supabase URL and Anon Key not found!');
   }
 
   supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -76,11 +80,17 @@ export function getSupabaseClient(): SupabaseClient {
 
 ## 🗄️ Database Schema
 
-### Mevcut Tablolar
+**Authoritative reference:** [recipio/docs/DB_SCHEMA.md](https://github.com/NurhayatYurtaslan/recipio/blob/main/docs/DB_SCHEMA.md) (same backend for website and app).
 
-#### `recipes` - Tarifler Tablosu
+**Key views for the app:**
+- **`v_public_recipe_cards`** — Recipe listing (title, description, stats, category).
+- **`v_recipe_detail`** — Single recipe with all variants (1–4 servings), ingredients (TR/EN), steps, stats (one query).
 
-**Gerçek Column'lar (Console log'larından):**
+### Tables (summary)
+
+#### `recipes` — Recipes table
+
+**Actual columns (from console logs):**
 - `id` (UUID)
 - `user_id` (UUID, nullable)
 - `status` (TEXT) - 'published', vb.
@@ -89,11 +99,11 @@ export function getSupabaseClient(): SupabaseClient {
 - `created_at` (TIMESTAMP)
 - `updated_at` (TIMESTAMP)
 
-**GitHub Migrations'a Göre Olması Gerekenler:**
+**Expected from GitHub migrations:**
 - `title` (TEXT)
 - `description` (TEXT)
-- `cooking_time` (INTEGER) - dakika cinsinden
-- `difficulty` (TEXT) - 'Easy', 'Medium', 'Hard'
+- `cooking_time` (INTEGER) — minutes
+- `difficulty` (TEXT) — 'Easy', 'Medium', 'Hard'
 - `tags` (TEXT[]) - Array
 - `ingredients` (JSONB) - Ingredient array
 - `cooking_steps` (JSONB) - Step array
@@ -101,7 +111,7 @@ export function getSupabaseClient(): SupabaseClient {
 - `calories` (INTEGER)
 - `cuisine` (TEXT)
 
-**Örnek Schema:**
+**Example schema:**
 ```sql
 CREATE TABLE recipes (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -109,7 +119,7 @@ CREATE TABLE recipes (
   description TEXT,
   cover_image_url TEXT,
   image_url TEXT,
-  cooking_time INTEGER, -- dakika cinsinden
+  cooking_time INTEGER, -- minutes
   difficulty TEXT DEFAULT 'Medium', -- 'Easy', 'Medium', 'Hard'
   tags TEXT[] DEFAULT '{}',
   ingredients JSONB DEFAULT '[]'::jsonb,
@@ -125,7 +135,7 @@ CREATE TABLE recipes (
 );
 ```
 
-#### `user_activities` - Kullanıcı Aktiviteleri
+#### `user_activities` — User activities
 
 ```sql
 CREATE TABLE user_activities (
@@ -137,7 +147,7 @@ CREATE TABLE user_activities (
 );
 ```
 
-#### `profiles` - Kullanıcı Profilleri
+#### `profiles` — User profiles
 
 ```sql
 CREATE TABLE profiles (
@@ -272,31 +282,31 @@ export async function searchRecipesByIngredients(
 ### Policies
 
 ```sql
--- Recipes: Herkes okuyabilir
+-- Recipes: readable by everyone
 CREATE POLICY "Recipes are viewable by everyone"
   ON recipes FOR SELECT
   USING (true);
 
--- User activities: Public read access (demo için)
+-- User activities: public read (for demo)
 CREATE POLICY "Anyone can view activities"
   ON user_activities FOR SELECT
   USING (true);
 
--- Profiles: Public read access (demo için)
+-- Profiles: public read (for demo)
 CREATE POLICY "Anyone can view profiles"
   ON profiles FOR SELECT
   USING (true);
 ```
 
-## 📁 Migration Files
+## Migration Files
 
-Migration dosyaları `supabase/migrations/` klasöründe saklanır:
+Migration files live in `supabase/migrations/`:
 
 - `init.sql` - Initial schema
 - `add-category.sql` - Category support
 - `views.sql` - Database views
 
-**Not:** Migration dosyaları GitHub'da mevcut: `https://github.com/NurhayatYurtaslan/recipio/tree/main/supabase/migrations`
+**Note:** Migrations are on GitHub: [recipio/supabase/migrations](https://github.com/NurhayatYurtaslan/recipio/tree/main/supabase/migrations)
 
 ## 🔄 Environment Variables
 
@@ -312,10 +322,10 @@ Migration dosyaları `supabase/migrations/` klasöründe saklanır:
 }
 ```
 
-**Öncelik Sırası:**
+**Priority order:**
 1. `app.json` → `extra.supabaseUrl`
 2. `process.env.EXPO_PUBLIC_SUPABASE_URL`
-3. `.env` dosyası (eğer kullanılıyorsa)
+3. `.env` file (if used)
 
 ## 🛠️ Error Handling
 
@@ -357,11 +367,11 @@ const mappedRecipe = {
 
 ## 🔗 Related Documentation
 
-- [Implementation Analysis](../00-implementation-analysis.md) - Supabase entegrasyonu detayları
+- [Implementation Analysis](../00-implementation-analysis.md) — Supabase integration details
 - [Recipe Service](../../../project/recipio/src/shared/services/recipe-service.ts) - Recipe operations
 - [User Service](../../../project/recipio/src/shared/services/user-service.ts) - User operations
 
 ---
 
-**Son Güncelleme:** 2025-01-18  
-**Versiyon:** 1.0.0
+**Last updated:** 2025-02-10  
+**Version:** 1.0.0
