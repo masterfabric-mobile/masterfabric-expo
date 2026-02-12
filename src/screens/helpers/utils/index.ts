@@ -57,6 +57,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'play-circle-outline';
     case 'haptic-helper':
       return 'phone-portrait-outline';
+    case 'double-extension-helper':
+      return 'calculator-outline';
     default:
       return 'help-outline';
   }
@@ -105,6 +107,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#FF2D55'; // Pink for video player helpers
     case 'haptic-helper':
       return '#FF6B9D'; // Light pink for haptic helpers
+    case 'web-viewer-helper':
+      return '#007AFF'; // Blue for web viewer helpers
     default:
       return '#8E8E93';
   }
@@ -260,6 +264,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/haptic-helper',
     available: true,
     category: 'device-helpers'
+  },
+  {
+    id: 'web-viewer-helper',
+    name: 'Web Viewer Helper',
+    description: 'Display HTML content and web URLs within the app using WebView',
+    icon: 'globe-outline',
+    color: '#007AFF',
+    route: '/web-viewer-helper',
+    available: true,
+    category: 'ui-helpers'
   }
 ];
 
