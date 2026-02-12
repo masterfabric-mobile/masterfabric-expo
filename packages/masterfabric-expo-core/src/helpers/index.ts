@@ -58,3 +58,17 @@ export * from './app_icon_helper';
 // Video Player & Haptic Helper
 export * from './videoPlayerHapticHelper';
 
+// Double Extension Helper — Implementation Pattern: individual exports, JSDoc, type-safe, Intl, edge cases (NaN/Infinity/zero/negative)
+export {
+  ceil, clamp, CurrencyLocaleValidationError, DoubleExtensionHelper, doubleHelper, floor, formatClean, formatCompact, formatCurrency, formatPercentage, isApproximatelyEqual, isFiniteNumber,
+  isPositiveNumber, isValidCurrency,
+  isValidLocale, isZero, NumericInputValidationError, round, safeAdd, safeDivide, safeMultiply, safeSubtract, TextInputValidationError, toClean, toCompact, toCurrency,
+  toCurrencyStrict, toPercentage, toPrecision, truncate, validateNumberInput,
+  validateTextInput
+} from './double_extension_helper';
+export type {
+  CompactOptions, CurrencyOptions,
+  PercentageOptions, PrecisionOptions,
+  TextValidationOptions
+} from './double_extension_helper';
+
