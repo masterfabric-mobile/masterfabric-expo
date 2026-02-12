@@ -130,6 +130,9 @@ export default function RootLayout() {
                     <Stack.Screen name="onboarding" />
                     <Stack.Screen name="projects" />
                     <Stack.Screen name="settings" />
+                    <Stack.Screen name="helpers" />
+                    <Stack.Screen name="double-extension-helper" />
+                    <Stack.Screen name="web-viewer-helper" />
                     <Stack.Screen name="supabase-auth" />
                     <Stack.Screen name="supabase-database" />
                     <Stack.Screen name="supabase-cases" />
