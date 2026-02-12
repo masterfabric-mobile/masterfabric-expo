@@ -48,7 +48,7 @@ const colors = {
 |  │ 20m Easy│ │ 30m Med │ │ 25m Easy│              |
 |  └─────────┘ └─────────┘ └─────────┘              |
 +-----------------------------------------------------+
-|  Recent Activity                                    |
+|  Recent Activity                        [View All]  |
 |  ┌─────────────────────────────────────────────┐  |
 |  │ [Image] You saved Recipe Name     2h ago → │  |
 |  └─────────────────────────────────────────────┘  |
@@ -59,6 +59,9 @@ const colors = {
 |  [🏠 Home] [❤️ Saved] [🕐 History] [👤 Profile]  |
 +-----------------------------------------------------+
 ```
+
+**Navigation from Home:**
+- **Recent Activity "View All"** → navigates to the **History** tab/screen (full history list).
 
 ## 🏗️ Architecture & Components
 
@@ -237,13 +240,18 @@ export function CookTonightSection({ recipes, onViewAll, onRecipePress }: Props)
 ```
 
 #### RecentActivitySection
-Kullanıcının son aktivitelerini listeler.
+Lists the user's recent activities (saved/finished recipes). Includes a **View All** control (right of the section title) that navigates to the **History** tab/screen.
 
 ```typescript
-export function RecentActivitySection({ activities }: Props) {
+export function RecentActivitySection({ activities, onViewAllPress }: Props) {
   return (
     <View style={dashboardStyles.recentActivitySection}>
-      <Text style={dashboardStyles.sectionTitle}>Recent Activity</Text>
+      <View style={dashboardStyles.sectionHeaderRow}>
+        <Text style={dashboardStyles.sectionTitle}>Recent Activity</Text>
+        <TouchableOpacity onPress={onViewAllPress}>
+          <Text style={dashboardStyles.viewAllText}>View All</Text>
+        </TouchableOpacity>
+      </View>
       <View style={dashboardStyles.activitiesList}>
         {activities.map(activity => (
           <TouchableOpacity key={activity.id} style={dashboardStyles.activityCard}>
@@ -429,9 +437,11 @@ export async function getMonthlyRecipesCount(): Promise<{ saved: number; limit: 
 ```
 Home Screen
     ↓
-    ├─→ [Search icon] / [Find Your Next Meal] → Enter Ingredients Screen
-    ├─→ [Recipe Card] → Recipe Detail Screen (later phase)
-    ├─→ [Activity Item] → Recipe Detail Screen (later phase)
+    ├─→ [Search icon] → Recipe Search Screen
+    ├─→ [Find Your Next Meal] → Enter Ingredients Screen
+    ├─→ [Recipe Card] → Recipe Detail Screen
+    ├─→ [Activity Item] → Recipe Detail Screen
+    ├─→ [Recent Activity "View All"] → History Screen (tab)
     └─→ [Bottom Tab] → Saved, History, Profile screens
 ```
 
@@ -503,6 +513,7 @@ export const dashboardStyles = StyleSheet.create({
     },
     "recentActivity": {
       "title": "Recent Activity",
+      "viewAll": "View All",
       "saved": "You saved {recipeName}",
       "finished": "Finished {recipeName}"
     },

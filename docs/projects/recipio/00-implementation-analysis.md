@@ -65,22 +65,14 @@ Recipio is a minimalist, bilingual (Turkish / English) recipe platform with **no
 
 ### 3.1 User Segments
 
-- **Public (anonymous)**
-  - Browse a limited set of free, published recipes.
-  - Search and filter recipes.
-  - Switch between English and Turkish.
+**No anonymous user concept.** Until the user signs in, there is no profile; "registration" is not relevant until Phase 1 when profile and auth screens are implemented. The app flow is: **Splash → Onboarding (first launch only) → Home**. If onboarding is already completed (persisted), onboarding is skipped and the user goes directly to Home.
 
-- **Authenticated users**
-  - All public features.
+- **Authenticated users (only user segment for the app)**
+  - Browse recipes, search and filter, switch language (en/tr).
   - Bookmark/save recipes, mark as favorited, mark as tried.
   - Comment on recipes.
   - Submit recipes for moderation (UGC).
   - Manage profile (display name, avatar, locale).
-
-- **Admin**
-  - All user features.
-  - Moderate user-submitted recipes (approve/reject).
-  - Manage content (e.g. hide comments).
 
 ### 3.2 Core Differentiator: Recipe Variants
 
@@ -94,12 +86,11 @@ Recipio is a minimalist, bilingual (Turkish / English) recipe platform with **no
 |--------|--------------------|------------|
 | Public recipe list | ✅ `RecipeList` + `v_public_recipe_cards` | ✅ Home “Cook Tonight” + later Recipe List screen |
 | Recipe detail + servings | ✅ `RecipeDetail` + `v_recipe_detail` | ⏳ Recipe Detail View (planned) |
-| Auth (login/signup) | ✅ Supabase Auth | ⏳ Optional, later phase |
+| Auth (login/signup) | ✅ Supabase Auth | ⏳ Phase 1; use validator_helper for form validation |
 | Favorites / saved / tried | ✅ `UserActions` + RLS | ⏳ Favorites / History views (planned) |
 | Comments | ✅ `Comments` component | ⏳ Optional in app |
 | Profile | ✅ `/profile` | ⏳ Profile View (planned) |
 | Submit recipe (UGC) | ✅ `/submit-recipe` | ❌ Typically web-only |
-| Admin moderation | ✅ Admin dashboard | ❌ Typically web-only |
 | i18n (en/tr) | ✅ next-intl | ✅ App i18n keys (see 06-i18n-translation-keys.md) |
 
 ---
@@ -129,50 +120,46 @@ Both the **website** and the **Expo app** use the **same** Supabase project.
 
 ## 4. Expo App: Implementation Scope
 
-### 4.1 Phase 1 (In Progress)
+### 4.1 Entry Flow (Splash & Onboarding First)
 
-**Core screens (done):**
-- **Splash** — App entry, checks onboarding state.
-- **Onboarding** — 3-slide flow; state with Zustand + AsyncStorage; dark theme.
-- **Home (Dashboard)** — Header with search icon, Current Plan, **Find Your Next Meal** card, Cook Tonight, Recent Activity; dark theme.
+**First launch:** Splash (min delay) → **Onboarding** (3 slides) → on completion → **Home**.  
+**Subsequent launches:** If onboarding is already completed (persisted via Zustand + AsyncStorage), onboarding is **not** shown; app goes Splash → Home. There is no "anonymous user" mode; profile and auth are introduced in Phase 1 when those screens are built.
 
-**Phase 1 — additional screens (to implement):**
+### 4.2 Phase 1 — Core entry & discovery (in progress)
 
-| Screen | Trigger | Purpose |
-|--------|---------|---------|
-| **Enter Ingredients** | "Find Your Next Meal" card tap | Add ingredients to pantry; CTA "Find Recipes with These Ingredients..." → recipe results |
-| **Recipe Search** | Search icon (header) tap | Search by recipe name; recent searches; search results list |
-| **Recipe Detail** | Recipe card tap (Cook Tonight, Recipe Search, etc.) | Full recipe info: hero image, meta, nutrition, ingredients (Available/Missing), Chef's Tip |
+Phase 1 is ordered so the user can open the app, complete onboarding, reach Home, then search and view recipes. Each item has a number (1.1–1.10) for easy reference.
+
+| # | Item | Description | Status |
+|---|------|-------------|--------|
+| **1.1** | Splash | App entry; checks onboarding state; redirects to Onboarding or Home | ✅ |
+| **1.2** | Onboarding | 3-slide flow; Zustand + AsyncStorage; dark theme; shown only on first launch | ✅ |
+| **1.3** | Home (Dashboard) | Header with search icon, Current Plan, Find Your Next Meal card, Cook Tonight, Recent Activity (View All → History), bottom tabs | ✅ |
+| **1.4** | Recipe Search | Search icon tap; search by recipe name; **matching recipes** from `v_public_recipe_cards`/recipe_translations; recent searches; results list → Recipe Detail | ⏳ |
+| **1.5** | Enter Ingredients | "Find Your Next Meal" tap; add ingredients to pantry; CTA "Find Recipes with These Ingredients..." → recipe results | ⏳ |
+| **1.6** | Recipe Detail | Recipe card tap (Cook Tonight, Recipe Search, etc.); hero image, meta, nutrition, ingredients (Available/Missing), Chef's Tip, servings stepper (1–4) | ⏳ |
+| **1.7** | Cooking Start | Entry to cooking flow from Recipe Detail | ⏳ |
+| **1.8** | Recent Activity | List on Home; **View All** → History tab/screen | ⏳ |
+| **1.9** | Auth | Login/Sign up screens; use **validator_helper** from `@masterfabric-expo/core` (e.g. `validateEmail`, password validation) | ⏳ |
+| **1.10** | Profile / Settings | User info, stats, language, theme, sign out (if time allows in Phase 1) | ⏳ |
 
 **Navigation (Phase 1):**
-- **Find Your Next Meal** card → `/enter-ingredients` (Enter Ingredients screen)
-- **Search icon** (header) → `/recipe-search` (Recipe Search screen)
-- **Recipe card tap** (any list) → `/recipe-detail/[id]` (Recipe Detail screen)
+- Find Your Next Meal card → `/enter-ingredients`
+- Search icon (header) → `/recipe-search`
+- Recipe card tap (any list) → `/recipe-detail/[id]`
+- Recent Activity "View All" (on Home) → History screen (tab)
 
-### 4.2 Later Phases
+### 4.3 Phase 2 — Full recipe flow & tabs (planned)
 
-- Recipe results (from Enter Ingredients) — list of matching recipes.
-- Cooking guide (step-by-step).
-- Favorites, History, Profile (tab screens).
-- Optional: Supabase Auth (login/signup) and protected screens.
+Phase 2 adds the full recipe-results flow, cooking guide, and complete tab screens.
 
-### 4.3 Figma Design Reference
-
-The Expo app UI/UX is aligned with a **Figma design** (Recipe App Design Prompt). The design was exported as a web code bundle (Vite + React + Tailwind); we use it as the **visual and flow reference** for the mobile app.
-
-- **Figma:** [Recipe App Design Prompt](https://www.figma.com/design/kda8cS427jeLZCQ5NkqmMR/Recipe-App-Design-Prompt)
-- **Local bundle:** `docs/projects/recipio/figma-design-extract/` (from `Recipe App Design Prompt.zip`)
-
-**[07-figma-design-reference.md](./07-figma-design-reference.md)** contains:
-
-- Full **screen list** and **navigation flow** (12 screens: splash, onboarding, dashboard, ingredient-entry, recipe-suggestions, recipe-detail, cooking-mode, favorites, history, recipe-creation, profile, search).
-- **Recipe UI model** (compatibility %, ingredients with available/missing, steps with optional timer/tip, nutrition) and **mapping to Supabase** (`v_public_recipe_cards`, `v_recipe_detail`).
-- **Design tokens** (light/dark): colors (primary-accent, success, error, orange), compatibility/difficulty colors, radii.
-- **Implementation checklist** for Expo (theme, splash, onboarding, dashboard, ingredient entry, recipe list/detail, cooking guide, favorites/history/profile, dark mode).
-
-Implement screens and flows to match this reference where applicable; data comes from Supabase, not mock.
-
-**Home design (reference image):** Header shows **search icon** (navigates to Recipe Search). Single **Find Your Next Meal** card (navigates to Enter Ingredients). Card: primary-accent spoon/fork icon, title "Find Your Next Meal", subtitle "Browse recipes by ingredients you have on hand", chevron arrow. Sections: Current Plan, Find Your Next Meal, Cook Tonight, Recent Activity, bottom tabs. **Recipe cards are tappable** → Recipe Detail.
+| # | Item | Description | Status |
+|---|------|-------------|--------|
+| **2.1** | Recipe results | List of matching recipes from Enter Ingredients flow | Planned |
+| **2.2** | Cooking Guide | Step-by-step mode; progress, timer/tip, Previous/Next/Complete | Planned |
+| **2.3** | Favorites tab | Full Favorites screen (list, remove) | Planned |
+| **2.4** | History tab | Full History screen (saved/tried); already reachable via Home "View All" | Planned |
+| **2.5** | Profile (full) | Full profile/settings if not completed in Phase 1 | Planned |
+| **2.6** | Protected routes | Auth-guarded routes where needed; Supabase Auth + validator_helper | Planned |
 
 ---
 
@@ -219,8 +206,8 @@ Implement screens and flows to match this reference where applicable; data comes
 - **Current Plan card:** "CURRENT PLAN", "Pro Chef", "Monthly Recipes Saved", progress bar 45/50, "Active" badge
 - **Find Your Next Meal card:** Orange spoon/fork icon, "Find Your Next Meal", "Browse recipes by ingredients you have on hand", chevron
 - **Cook Tonight:** Horizontal scroll of recipe cards (image, title, time, difficulty)
-- **Recent Activity:** List of saved/finished recipes with thumbnails and timestamps
-- **Bottom tabs:** Home, Saved, History, Profile
+- **Recent Activity:** List of saved/finished recipes with thumbnails and timestamps; **View All** (right of section title) navigates to the **History** tab/screen
+- **Bottom tabs:** Home, Saved, History, Profile (History is also reachable via Recent Activity → View All)
 
 ### Recipe Detail Screen (Reference Image — Opens When Tapping a Recipe)
 
@@ -376,7 +363,7 @@ Helpers are available from `@masterfabric-expo/core`. Use them when the correspo
 | **snackbar_helper** | `import { snackbarHelper } from '@masterfabric-expo/core'` | Showing snackbars (success, error, undo) |
 | **toast_helper** | `import { toastHelper } from '@masterfabric-expo/core'` | Toast notifications |
 | **rich_text_helper** | `import { ... } from '@masterfabric-expo/core'` | Rich text rendering |
-| **validator_helper** | `import { validateEmail, ... } from '@masterfabric-expo/core'` | Form validation |
+| **validator_helper** | `import { validateEmail, validateField, ValidatorType, ... } from '@masterfabric-expo/core'` | Form validation; **use actively for auth screens** (login/signup: email, password) |
 | **onboarding_helper** | `import { ... } from '@masterfabric-expo/core'` | App onboarding state (Recipio has its own; use if integrating) |
 | **device-info** | `import { getDeviceInfo } from '@masterfabric-expo/core'` | Device info (model, OS) |
 | **ui_size_helper** | `import { ... } from '@masterfabric-expo/core'` | Responsive sizing |
@@ -419,15 +406,18 @@ app/
 **Flow:**
 
 ```
-App start → index.tsx
-  → First launch? → /onboarding
-  → Else → / (home)
+App start → index.tsx → Splash (min delay)
+  → Onboarding not completed? → /onboarding → (on complete) → / (home)
+  → Onboarding already completed? → / (home)
 
 Home:
   → Find Your Next Meal tap → /enter-ingredients
-  → Search icon tap → /recipe-search
+  → Search icon tap → /recipe-search (matching recipes)
   → Recipe card tap (Cook Tonight, etc.) → /recipe-detail/[id]
+  → Recent Activity "View All" tap → History (tab)
 ```
+
+There is no anonymous user path; onboarding is shown only on first launch until the user completes it, then Home is shown. Profile and auth screens are part of Phase 1 when implemented.
 
 **Navigation types:**
 
@@ -487,7 +477,7 @@ export const useOnboardingStore = create<OnboardingStore>()(
 - **Init:** Client is created with `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` from the `.env` file; `persistSession: true`, `detectSessionInUrl: false`.
 - **Data source:** All data comes **only from Supabase**. Mock or manual test data is **never used**.
 - **Recipe service:** `getCookTonightRecipes()` — from `v_public_recipe_cards` or `recipes` table; returns empty array on error.
-- **User service:** `getCurrentUserProfile()` — Anonymous state for unauthenticated users (e.g. "Guest"); profile data from Supabase `profiles` table.
+- **User service:** `getCurrentUserProfile()` — Returns profile from Supabase `profiles` table when authenticated; until auth is implemented, no anonymous/guest concept — profile UI can be minimal or placeholder.
 - **Future:** Recipe detail uses `v_recipe_detail` view for variant + steps + translations in a single query.
 
 ### 5.7 Metro & Optional Dependencies
@@ -572,27 +562,32 @@ project/recipio/
 
 ## 9. Implementation Checklist (Expo App)
 
-### Phase 1 — Setup & core screens
+Same order as Section 4.2 / 4.3: **Phase 1** items **1.1–1.10**, **Phase 2** items **2.1–2.6**.
 
-- [x] MasterFabric core linked; Expo Router and path aliases; navigation types; Metro (stubs, aliases).
-- [x] Supabase config; `supabase-service.ts`, `recipe-service.ts`, `user-service.ts`.
-- [x] Splash (component, navigation, styles).
-- [x] Onboarding (3 slides, Zustand + AsyncStorage, dark theme).
-- [x] Home (Dashboard, Find Your Next Meal card, Cook Tonight, Recent Activity, search icon, dark theme).
-- [x] Root layout with ThemeProvider and Stack.
-- [ ] **Enter Ingredients** screen — layout per reference; add/remove ingredients; "Find Recipes with These Ingredients..." CTA.
-- [ ] **Recipe Search** screen — search by recipe name; recent searches; search results list; navigate to Recipe Detail.
-- [ ] **Recipe Detail** screen — hero image, meta, nutrition cards, ingredients (Available/Missing), Chef's Tip; opens when tapping a recipe.
-- [ ] **Find Your Next Meal** card → `/enter-ingredients`.
-- [ ] **Search icon** (header) → `/recipe-search`.
-- [ ] **Recipe card tap** (Cook Tonight, Recipe Search) → `/recipe-detail/[id]`.
+### Phase 1 (1.1–1.10)
 
-### Later phases
+- [x] **Setup:** MasterFabric core linked; Expo Router and path aliases; navigation types; Metro (stubs, aliases).
+- [x] **Setup:** Supabase config; `supabase-service.ts`, `recipe-service.ts`, `user-service.ts`.
+- [x] **1.1** Splash — component, navigation, styles; entry checks onboarding state.
+- [x] **1.2** Onboarding — 3 slides, Zustand + AsyncStorage, dark theme; completion persisted.
+- [x] **1.3** Home — Dashboard, Find Your Next Meal card, Cook Tonight, Recent Activity (View All → History), search icon, dark theme; root layout with ThemeProvider and Stack.
+- [ ] **1.4** Recipe Search — search by recipe name; matching recipes from backend; recent searches; → Recipe Detail.
+- [ ] **1.5** Enter Ingredients — layout per reference; add/remove ingredients; CTA "Find Recipes with These Ingredients...".
+- [ ] **1.6** Recipe Detail — hero image, meta, nutrition, ingredients (Available/Missing), Chef's Tip; opens when tapping a recipe.
+- [ ] **1.7** Cooking Start — entry to cooking flow from Recipe Detail.
+- [ ] **1.8** Recent Activity — list on Home; View All → History tab/screen.
+- [ ] **1.9** Auth screens (login/signup) — validator_helper for email/password validation.
+- [ ] **1.10** Profile / Settings — if time allows in Phase 1.
+- [ ] **Navigation:** Find Your Next Meal → `/enter-ingredients`; Search icon → `/recipe-search`; Recipe card → `/recipe-detail/[id]`; Recent Activity View All → History tab.
 
-- [ ] Recipe results (from Enter Ingredients) — list of matching recipes.
-- [ ] Cooking guide (step-by-step).
-- [ ] Favorites, History, Profile tab screens.
-- [ ] Optional: Supabase Auth and protected routes.
+### Phase 2 (2.1–2.6)
+
+- [ ] **2.1** Recipe results — list of matching recipes from Enter Ingredients flow.
+- [ ] **2.2** Cooking Guide — step-by-step mode with timer/tip.
+- [ ] **2.3** Favorites tab — full screen.
+- [ ] **2.4** History tab — full screen (already reachable via Home View All).
+- [ ] **2.5** Profile (full) — if not done in Phase 1.
+- [ ] **2.6** Protected routes — Supabase Auth + validator_helper where needed.
 
 ---
 
@@ -606,6 +601,6 @@ project/recipio/
 
 ---
 
-**Last updated:** 2025-02-10  
-**Version:** 2.0.0  
-**Status:** Phase 1 in progress (Enter Ingredients, Recipe Search, Recipe Detail to implement); analysis aligned with Next.js docs and shared Supabase; language: English.
+**Last updated:** 2026-02-12  
+**Version:** 2.1.0  
+**Status:** Phase 1 in progress (onboarding first, then Recipe Search with matching recipes, Cooking Start, Recent, Profile if time; auth with validator_helper). Analysis aligned with Next.js docs and shared Supabase. Language: English only.
