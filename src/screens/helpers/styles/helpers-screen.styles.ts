@@ -11,7 +11,7 @@ export const helpersScreenStyles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: Sizing.padding.m,
     paddingTop: Sizing.padding.m,
-    paddingBottom: Sizing.padding.xxl,
+    paddingBottom: 120,
   },
   categoriesContainer: {
     gap: Sizing.gap.xs,
