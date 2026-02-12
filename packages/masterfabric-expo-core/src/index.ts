@@ -36,9 +36,9 @@ export { Sizing } from './constants/Sizing';
 // Utilities
 export * from './utils';
 
-// Helpers
+// Helpers (doubleHelper, webViewerHelper, getTypographyStyleFromSizing zaten ./helpers içinde)
 export * from './helpers';
-export { getTypographyStyleFromSizing } from './helpers/typography_helper';
+
 
 // Note: Do not re-export DeviceInfo from './types' to avoid name conflicts
 
@@ -59,7 +59,7 @@ export * from './components/battery/BatteryHelperView';
 export * from './components/battery/BatteryStatusCard';
 export * from './components/battery/DeviceInfoCard';
 export * from './components/battery/LowPowerModeCard';
-export * from './helpers/batteryHelper';
+// batteryHelper zaten export * from './helpers' ile geliyor
 export * from './hooks/useBatteryHelper';
 export * from './stores/batteryStore';
 export * from './types/battery';
@@ -80,11 +80,11 @@ export * from './hooks/useHapticHelper';
 export * from './stores/hapticStore';
 
 // Shared Video Player & Haptic Components
+export * from './components/video-player-haptic-helper/HapticFeedbackCard';
 export * from './components/video-player-haptic-helper/VideoDisplayCard';
 export * from './components/video-player-haptic-helper/VideoPlayerCard';
 export * from './components/video-player-haptic-helper/VideoPlayerStatusCard';
-export * from './components/video-player-haptic-helper/HapticFeedbackCard';
-export * from './helpers/videoPlayerHapticHelper';
+// videoPlayerHapticHelper zaten export * from './helpers' ile geliyor
 export * from './types/videoPlayerHaptic';
 
 // Auto-Initialization
@@ -94,6 +94,6 @@ export { setupMasterView } from './setup';
 
 // Auto-Detection Utilities (for advanced users)
 export { getAppName, getAppVersion, getEnvironment, isDevelopment, isProduction } from './utils/auto-detect';
-export { detectIntegrations, hasIntegration } from './utils/integration-detector';
 export { buildMasterViewConfig } from './utils/config-builder';
+export { detectIntegrations, hasIntegration } from './utils/integration-detector';
 
