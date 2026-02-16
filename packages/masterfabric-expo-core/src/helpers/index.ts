@@ -61,3 +61,6 @@ export * from './videoPlayerHapticHelper';
 // Web Viewer Helper
 export * from './web_viewer_helper';
 
+// Local Notification Helper
+export * from './local_notification_helper';
+
