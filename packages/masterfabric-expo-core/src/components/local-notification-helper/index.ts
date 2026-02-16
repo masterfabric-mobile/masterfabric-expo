@@ -1,1 +1,4 @@
-export { LocalNotificationHelperView } from './LocalNotificationHelperView';
+export {
+  LocalNotificationHelperView,
+  type LocalNotificationHelperViewProps,
+} from './LocalNotificationHelperView';
