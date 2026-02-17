@@ -59,6 +59,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'phone-portrait-outline';
     case 'double-extension-helper':
       return 'calculator-outline';
+    case 'web-viewer-helper':
+      return 'globe-outline';
     default:
       return 'help-outline';
   }

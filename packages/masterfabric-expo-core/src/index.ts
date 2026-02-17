@@ -15,6 +15,9 @@ export { MasterView as MasterViewComponent } from './components/MasterView';
 export { initMasterView, MasterView } from './core/MasterViewCore';
 export { useMasterView } from './hooks/useMasterView';
 export { useResponsive } from './hooks/useResponsive';
+
+// WebViewer Hook
+export { useWebViewer } from './hooks/useWebViewer';
 export { createActivityStore, createMasterViewStore, createNavigationStore, createThemeStore, createUserStore, MasterViewStoreFactory } from './stores/MasterViewStore';
 
 // Theme System
@@ -38,6 +41,7 @@ export * from './utils';
 
 // Helpers (doubleHelper, webViewerHelper, getTypographyStyleFromSizing zaten ./helpers içinde)
 export * from './helpers';
+export { webViewerHelper } from './helpers/web_viewer_helper';
 
 
 // Note: Do not re-export DeviceInfo from './types' to avoid name conflicts

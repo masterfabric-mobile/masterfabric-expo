@@ -108,7 +108,9 @@ Then:
 - Favorites management
 - Search functionality
 - User profile
-- Recipe creation
+- Step-by-step cooking guide
+- Manual ingredient entry
+- AI-powered recipe suggestions
 
 ## 🔧 Configuration
 
