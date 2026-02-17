@@ -189,13 +189,15 @@ export function isValidCurrency(currency: string): boolean {
 /**
  * Returns true if the given string is a valid BCP 47 locale for Intl.
  * Validates region part (e.g. in "en-US") against ISO 3166-1 alpha-2 so that
- * invalid combinations like "nn-ff" are rejected even if Intl accepts them.
+ * invalid combinations like "en-FF" are rejected. Accepts "en-En" style when
+ * region matches language (case-insensitive).
  *
- * @param locale - Locale string (e.g. 'en-US', 'tr-TR'). Empty/whitespace is invalid.
+ * @param locale - Locale string (e.g. 'en-US', 'en-En', 'tr-TR'). Empty/whitespace is invalid.
  * @returns true if valid
  * @example
  * isValidLocale('en-US')   // true
- * isValidLocale('nn-ff')   // false (ff is not a valid region code)
+ * isValidLocale('en-En')   // true (region matches language)
+ * isValidLocale('en-FF')   // false (FF is not a valid region code)
  */
 export function isValidLocale(locale: string): boolean {
   if (typeof locale !== 'string') return false;
@@ -205,7 +207,14 @@ export function isValidLocale(locale: string): boolean {
   if (parts.length >= 2) {
     const lastPart = parts[parts.length - 1];
     if (lastPart.length === 2 && /^[a-zA-Z]{2}$/.test(lastPart)) {
-      if (!ISO_3166_1_ALPHA2_REGIONS.has(lastPart.toUpperCase())) return false;
+      const regionUpper = lastPart.toUpperCase();
+      const langPart = parts[0];
+      // Allow xx-Xx when region matches language (e.g. en-En, tr-Tr)
+      const regionMatchesLanguage =
+        langPart.length === 2 && langPart.toUpperCase() === regionUpper;
+      if (!regionMatchesLanguage && !ISO_3166_1_ALPHA2_REGIONS.has(regionUpper)) {
+        return false;
+      }
     }
   }
   try {

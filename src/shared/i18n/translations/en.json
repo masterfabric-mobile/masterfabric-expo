@@ -526,9 +526,19 @@
       "defaultsApplied": "Empty or invalid fields filled with defaults",
       "fieldsCannotBeEmpty": "Required fields cannot be left empty",
       "fail": "FAIL",
+      "outputTrue": "True",
+      "outputFalse": "False",
       "invalidCurrencyOrLocale": "Invalid currency or locale",
       "invalidCurrency": "Invalid currency \"{{code}}\". Use a valid ISO 4217 code (e.g. USD, EUR, TRY).",
-      "invalidLocale": "Invalid locale \"{{code}}\". Use a valid BCP 47 locale (e.g. en-US, tr-TR)."
+      "invalidLocale": "Invalid locale \"{{code}}\". Use a valid BCP 47 locale (e.g. en-US, tr-TR).",
+      "validation": {
+        "invalidNumber": "Please enter a valid number",
+        "invalidDecimals": "Decimals must be between 0 and 20",
+        "currencyInvalid": "Invalid currency code. Enter a 3-letter ISO 4217 code (e.g. USD, EUR, TRY)",
+        "localeInvalid": "Invalid locale. Enter a valid format (e.g. en-US, tr-TR, en-En)",
+        "valueOutOfRange": "Value must be between {{min}} and {{max}}",
+        "clampMinGreaterThanMax": "Minimum cannot be greater than maximum"
+      }
     },
     "toastHelper": {
       "title": "Toast Helper",

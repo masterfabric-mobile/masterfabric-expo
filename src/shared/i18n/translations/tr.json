@@ -522,9 +522,19 @@
       "defaultsApplied": "Boş veya geçersiz alanlar varsayılanlarla dolduruldu",
       "fieldsCannotBeEmpty": "Zorunlu alanlar boş bırakılmamalıdır",
       "fail": "BAŞARISIZ",
+      "outputTrue": "Doğru",
+      "outputFalse": "Yanlış",
       "invalidCurrencyOrLocale": "Geçersiz para birimi veya yerel ayar",
       "invalidCurrency": "Geçersiz para birimi \"{{code}}\". Geçerli ISO 4217 kodu girin (ör. USD, EUR, TRY).",
-      "invalidLocale": "Geçersiz yerel ayar \"{{code}}\". Geçerli BCP 47 locale girin (ör. en-US, tr-TR)."
+      "invalidLocale": "Geçersiz yerel ayar \"{{code}}\". Geçerli BCP 47 locale girin (ör. en-US, tr-TR).",
+      "validation": {
+        "invalidNumber": "Lütfen geçerli bir sayı girin",
+        "invalidDecimals": "Ondalık 0 ile 20 arasında olmalıdır",
+        "currencyInvalid": "Geçersiz para birimi kodu. 3 harfli ISO 4217 kodu girin (ör. USD, EUR, TRY)",
+        "localeInvalid": "Geçersiz yerel ayar. Geçerli format girin (ör. en-US, tr-TR, en-En)",
+        "valueOutOfRange": "Değer {{min}} ile {{max}} arasında olmalıdır",
+        "clampMinGreaterThanMax": "Minimum değer maksimumdan büyük olamaz"
+      }
     },
     "toastHelper": {
       "title": "Toast Yardımcısı",

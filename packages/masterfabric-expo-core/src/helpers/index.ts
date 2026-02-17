@@ -58,18 +58,45 @@ export * from './app_icon_helper';
 // Video Player & Haptic Helper
 export * from './videoPlayerHapticHelper';
 
-// Double Extension Helper — Implementation Pattern: individual exports, JSDoc, type-safe, Intl, edge cases (NaN/Infinity/zero/negative)
+// Double Extension Helper (truncate, formatCurrency excluded — conflict with string_helper; use doubleHelper.truncate/formatCurrency)
 export {
-  ceil, clamp, CurrencyLocaleValidationError, DoubleExtensionHelper, doubleHelper, floor, formatClean, formatCompact, formatCurrency, formatPercentage, isApproximatelyEqual, isFiniteNumber,
-  isPositiveNumber, isValidCurrency,
-  isValidLocale, isZero, NumericInputValidationError, round, safeAdd, safeDivide, safeMultiply, safeSubtract, TextInputValidationError, toClean, toCompact, toCurrency,
-  toCurrencyStrict, toPercentage, toPrecision, truncate, validateNumberInput,
-  validateTextInput
+  ceil,
+  clamp,
+  CurrencyLocaleValidationError,
+  DoubleExtensionHelper,
+  doubleHelper,
+  floor,
+  formatClean,
+  formatCompact,
+  formatPercentage,
+  isApproximatelyEqual,
+  isFiniteNumber,
+  isPositiveNumber,
+  isValidCurrency,
+  isValidLocale,
+  isZero,
+  NumericInputValidationError,
+  round,
+  safeAdd,
+  safeDivide,
+  safeMultiply,
+  safeSubtract,
+  TextInputValidationError,
+  toClean,
+  toCompact,
+  toCurrency,
+  toCurrencyStrict,
+  toPercentage,
+  toPrecision,
+  validateNumberInput,
+  validateTextInput,
 } from './double_extension_helper';
 export type {
-  CompactOptions, CurrencyOptions,
-  PercentageOptions, PrecisionOptions,
-  TextValidationOptions
+  CompactOptions,
+  CurrencyOptions,
+  PercentageOptions,
+  PrecisionOptions,
+  TextValidationOptions,
 } from './double_extension_helper';
 
 // Web Viewer Helper

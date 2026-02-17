@@ -291,14 +291,14 @@ export function useDoubleHelperViewModel() {
         'isApproximatelyEqual',
         '0.1 + 0.2 ≈ 0.3',
         descKey('isApproximatelyEqual'),
-        () => (doubleHelper.isApproximatelyEqual(0.1 + 0.2, 0.3) ? 'true' : 'false')
+        () => (doubleHelper.isApproximatelyEqual(0.1 + 0.2, 0.3) ? t('helpers.doubleExtensionHelper.outputTrue') : t('helpers.doubleExtensionHelper.outputFalse'))
       );
       runTest(
         'isZero',
         'isZero',
         '1e-12',
         descKey('isZero'),
-        () => (doubleHelper.isZero(1e-12) ? 'true' : 'false')
+        () => (doubleHelper.isZero(1e-12) ? t('helpers.doubleExtensionHelper.outputTrue') : t('helpers.doubleExtensionHelper.outputFalse'))
       );
     } finally {
       setTestResults(results);

@@ -2,6 +2,8 @@ import React from 'react';
 import { TextInput, View } from 'react-native';
 import {
   getThemeColors,
+  isValidCurrency,
+  isValidLocale,
   snackbarHelper,
   ThemedText,
   ThemedView,
@@ -96,7 +98,7 @@ export function DoubleInputField({
                 onInputChange({ value: null });
                 return;
               }
-              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
+              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
               onInputChange({ value: parseNum(text, DEFAULT_TEST_INPUT.value ?? 19.999) });
             }}
             placeholder="19.999"
@@ -117,7 +119,7 @@ export function DoubleInputField({
                 onInputChange({ decimals: null });
                 return;
               }
-              if (isInvalidDecimalsInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
+              if (isInvalidDecimalsInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidDecimals'));
               onInputChange({ decimals: parseDecimals(text, DEFAULT_TEST_INPUT.decimals ?? 2) });
             }}
             placeholder="2"
@@ -136,6 +138,12 @@ export function DoubleInputField({
             style={[doubleInputFieldStyles.textInput, inputStyle]}
             value={testInput.currency}
             onChangeText={(currency) => onInputChange({ currency })}
+            onBlur={() => {
+              const c = (testInput.currency ?? '').trim();
+              if (c && !isValidCurrency(c)) {
+                snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.currencyInvalid'));
+              }
+            }}
             placeholder="USD"
             placeholderTextColor={colors.placeholderText}
           />
@@ -148,6 +156,12 @@ export function DoubleInputField({
             style={[doubleInputFieldStyles.textInput, inputStyle]}
             value={testInput.locale}
             onChangeText={(locale) => onInputChange({ locale })}
+            onBlur={() => {
+              const l = (testInput.locale ?? '').trim();
+              if (l && !isValidLocale(l)) {
+                snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.localeInvalid'));
+              }
+            }}
             placeholder="en-US"
             placeholderTextColor={colors.placeholderText}
           />
@@ -168,8 +182,14 @@ export function DoubleInputField({
                 onInputChange({ clampMin: null });
                 return;
               }
-              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
-              onInputChange({ clampMin: parseNum(text, DEFAULT_TEST_INPUT.clampMin ?? 0) });
+              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
+              const newMin = parseNum(text, DEFAULT_TEST_INPUT.clampMin ?? 0);
+              onInputChange({ clampMin: newMin });
+            }}
+            onBlur={() => {
+              const min = testInput.clampMin ?? DEFAULT_TEST_INPUT.clampMin ?? 0;
+              const max = testInput.clampMax ?? DEFAULT_TEST_INPUT.clampMax ?? 100;
+              if (min > max) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.clampMinGreaterThanMax'));
             }}
             placeholder="0"
             placeholderTextColor={colors.placeholderText}
@@ -189,8 +209,14 @@ export function DoubleInputField({
                 onInputChange({ clampMax: null });
                 return;
               }
-              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
-              onInputChange({ clampMax: parseNum(text, DEFAULT_TEST_INPUT.clampMax ?? 100) });
+              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
+              const newMax = parseNum(text, DEFAULT_TEST_INPUT.clampMax ?? 100);
+              onInputChange({ clampMax: newMax });
+            }}
+            onBlur={() => {
+              const min = testInput.clampMin ?? DEFAULT_TEST_INPUT.clampMin ?? 0;
+              const max = testInput.clampMax ?? DEFAULT_TEST_INPUT.clampMax ?? 100;
+              if (min > max) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.clampMinGreaterThanMax'));
             }}
             placeholder="100"
             placeholderTextColor={colors.placeholderText}
@@ -213,7 +239,7 @@ export function DoubleInputField({
                 onInputChange({ safeA: null });
                 return;
               }
-              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
+              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
               onInputChange({ safeA: parseNum(text, DEFAULT_TEST_INPUT.safeA ?? 0.1) });
             }}
             placeholder="0.1"
@@ -234,7 +260,7 @@ export function DoubleInputField({
                 onInputChange({ safeB: null });
                 return;
               }
-              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
+              if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
               onInputChange({ safeB: parseNum(text, DEFAULT_TEST_INPUT.safeB ?? 0.2) });
             }}
             placeholder="0.2"
@@ -257,7 +283,7 @@ export function DoubleInputField({
               onInputChange({ percentageValue: null });
               return;
             }
-            if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.invalidNumber'));
+            if (isInvalidNumberInput(text)) snackbarHelper.warning(t('helpers.doubleExtensionHelper.validation.invalidNumber'));
             onInputChange({ percentageValue: parseNum(text, DEFAULT_TEST_INPUT.percentageValue ?? 0.8567) });
           }}
           placeholder="0.8567"
