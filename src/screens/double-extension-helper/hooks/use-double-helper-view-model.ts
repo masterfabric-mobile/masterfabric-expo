@@ -194,15 +194,18 @@ export function useDoubleHelperViewModel() {
             descriptionKey: descKey('toCurrency'),
             success: true,
           });
-        } catch (err) {
-          const message =
-            err instanceof CurrencyLocaleValidationError
-              ? err.code === 'INVALID_LOCALE'
+        } catch (err: unknown) {
+          let message: string;
+          if (err instanceof CurrencyLocaleValidationError) {
+            message =
+              err.code === 'INVALID_LOCALE'
                 ? t('helpers.doubleExtensionHelper.invalidLocale', { code: err.value })
-                : t('helpers.doubleExtensionHelper.invalidCurrency', { code: err.value })
-              : err instanceof Error
-                ? err.message
-                : t('helpers.doubleExtensionHelper.invalidCurrencyOrLocale');
+                : t('helpers.doubleExtensionHelper.invalidCurrency', { code: err.value });
+          } else if (err instanceof Error) {
+            message = err.message;
+          } else {
+            message = t('helpers.doubleExtensionHelper.invalidCurrencyOrLocale');
+          }
           results.push({
             id: 'toCurrency',
             functionName: 'toCurrency',
