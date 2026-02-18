@@ -186,6 +186,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     category: 'device-helpers'
   },
   {
+    id: 'permissions-helper',
+    name: 'Permissions Helper',
+    description: 'Test device permissions: camera, photo library, location, notifications',
+    icon: 'shield-checkmark-outline',
+    color: '#34C759',
+    route: '/permissions-helper',
+    available: true,
+    category: 'device-helpers'
+  },
+  {
     id: 'rich-text-helper',
     name: 'Rich Text Helper',
     description: 'HTML, Markdown, and text formatting utilities',
