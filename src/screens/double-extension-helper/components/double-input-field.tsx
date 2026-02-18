@@ -1,20 +1,20 @@
-import React from 'react';
-import { TextInput, View } from 'react-native';
-import {
-  doubleExtensionHelper,
-  getThemeColors,
-  snackbarHelper,
-  ThemedText,
-  ThemedView,
-  useTheme,
-} from 'masterfabric-expo-core';
-
-const { isValidCurrency, isValidLocale } = doubleExtensionHelper;
 import { Button } from '@/src/shared/components/button';
 import { t } from '@/src/shared/i18n';
+import {
+    doubleExtensionHelper,
+    getThemeColors,
+    snackbarHelper,
+    ThemedText,
+    ThemedView,
+    useTheme,
+} from 'masterfabric-expo-core';
+import React from 'react';
+import { TextInput, View } from 'react-native';
 import { BORDER_OPACITY_SUFFIX, DEFAULT_TEST_INPUT, NUMERIC_INPUT_RANGE } from '../constants/double-helper.constants';
 import type { DoubleTestInput } from '../models/double-helper-models';
 import { doubleInputFieldStyles } from '../styles/double-input-field.styles';
+
+const { isValidCurrency, isValidLocale } = doubleExtensionHelper;
 
 interface DoubleInputFieldProps {
   testInput: DoubleTestInput;
