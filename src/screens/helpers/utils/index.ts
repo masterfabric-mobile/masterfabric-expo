@@ -57,6 +57,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'play-circle-outline';
     case 'haptic-helper':
       return 'phone-portrait-outline';
+    case 'double-extension-helper':
+      return 'calculator-outline';
     case 'web-viewer-helper':
       return 'globe-outline';
     default:
@@ -107,6 +109,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#FF2D55'; // Pink for video player helpers
     case 'haptic-helper':
       return '#FF6B9D'; // Light pink for haptic helpers
+    case 'double-extension-helper':
+      return '#5856D6'; // Purple for number/double helpers
     case 'web-viewer-helper':
       return '#007AFF'; // Blue for web viewer helpers
     default:
@@ -274,6 +278,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/haptic-helper',
     available: true,
     category: 'device-helpers'
+  },
+  {
+    id: 'double-extension-helper',
+    name: 'Double Extension Helper',
+    description: 'Precision, formatting, and safe math for numbers (currency, percentage, compact, clamp)',
+    icon: 'calculator-outline',
+    color: '#5856D6',
+    route: '/double-extension-helper',
+    available: true,
+    category: 'number-helpers'
   },
   {
     id: 'web-viewer-helper',

@@ -15,6 +15,9 @@
       ],
       "@firebase-helper/*": [
         "./src/screens/firebase-helper/*"
+      ],
+      "masterfabric-expo-core": [
+        "./packages/masterfabric-expo-core/src/index.ts"
       ]
     }
   },
