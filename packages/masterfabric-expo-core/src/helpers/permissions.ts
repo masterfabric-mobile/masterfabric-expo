@@ -204,9 +204,9 @@ const LEGACY_TO_HANDLER: Record<LegacyPermissionType, PermissionType> = {
   location: 'location',
   contacts: 'contacts',
   calendar: 'calendar',
-  reminders: 'camera',
+  reminders: 'reminders',
   notifications: 'notifications',
-  bluetooth: 'camera',
+  bluetooth: 'bluetooth',
   speech_recognition: 'speechRecognition',
   face_id: 'faceId',
   touch_id: 'touchId',
@@ -253,6 +253,35 @@ function fromExpoResponse(
   let ourStatus: PermissionStatus['status'] = 'denied';
   if (granted) ourStatus = limited ? 'limited' : 'granted';
   else if (status === 'denied' || status === 'undetermined') ourStatus = canAskAgain ? 'denied' : 'blocked';
+  else ourStatus = canAskAgain ? 'denied' : 'blocked';
+  return {
+    granted,
+    canAskAgain,
+    limited: limited || ourStatus === 'limited',
+    status: ourStatus,
+    blocked: ourStatus === 'blocked',
+    ...(limited && { ios: { scope: 'limited' } }),
+  };
+}
+
+/**
+ * Map expo-image-picker MediaLibraryPermissionResponse.
+ * Only treat as granted when accessPrivileges is explicitly 'all' or 'limited'.
+ * When accessPrivileges is 'none' or undefined (e.g. Android 13+ or bad response), treat as denied
+ * so Settings "Don't allow" is never shown as granted.
+ */
+function fromMediaLibraryResponse(
+  r: { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' }
+): PermissionStatus {
+  const accessPrivileges = r.accessPrivileges;
+  const limited = accessPrivileges === 'limited';
+  const granted = accessPrivileges === 'all' || accessPrivileges === 'limited';
+  const canAskAgain = r.canAskAgain ?? true;
+  const status = (r.status ?? '').toLowerCase();
+  let ourStatus: PermissionStatus['status'] = 'denied';
+  if (granted) ourStatus = limited ? 'limited' : 'granted';
+  else if (status === 'denied' || status === 'undetermined' || accessPrivileges === 'none' || accessPrivileges == null)
+    ourStatus = canAskAgain ? 'denied' : 'blocked';
   else ourStatus = canAskAgain ? 'denied' : 'blocked';
   return {
     granted,
@@ -333,7 +362,7 @@ const statusListeners = new Map<PermissionType, Set<StatusCallback>>();
 const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   camera: 'Camera',
   microphone: 'Microphone',
-  photoLibrary: 'Photo Library',
+  photoLibrary: 'Photos and Videos',
   location: 'Location',
   locationBackground: 'Location (Background)',
   notifications: 'Notifications',
@@ -384,11 +413,21 @@ export const permissionsHandler = {
     if (permission === 'photoLibrary') {
       if (Platform.OS === 'android') {
         try {
-          const perm =
-            (Platform.Version as number) >= 33
-              ? (PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as string)
-              : (PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as string);
-          const granted = await PermissionsAndroid.check(perm);
+          if ((Platform.Version as number) >= 33) {
+            const [images, video] = await Promise.all([
+              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as never),
+              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO as never),
+            ]);
+            const granted = images || video;
+            return {
+              granted,
+              canAskAgain: true,
+              status: granted ? 'granted' : 'denied',
+            };
+          }
+          const granted = await PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never
+          );
           return {
             granted,
             canAskAgain: true,
@@ -402,7 +441,7 @@ export const permissionsHandler = {
       if (picker?.getMediaLibraryPermissionsAsync) {
         try {
           const r = await picker.getMediaLibraryPermissionsAsync(false);
-          return fromExpoResponse(r);
+          return fromMediaLibraryResponse(r as { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
         } catch {
           return mockStatus(false, true);
         }
@@ -619,21 +658,38 @@ export const permissionsHandler = {
     if (permission === 'photoLibrary') {
       if (Platform.OS === 'android') {
         try {
-          const perm =
-            (Platform.Version as number) >= 33
-              ? (PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as string)
-              : (PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as string);
-          // Rationale is required on Android so the system permission dialog is shown
-          // (especially after a previous deny). Without it, request can resolve immediately with no popup.
-          const rationale =
-            _options?.rationale != null
-              ? {
-                  title: _options.title ?? 'Photo Library',
-                  message: _options.rationale,
-                  buttonPositive: 'OK',
-                }
-              : undefined;
-          const result = await PermissionsAndroid.request(perm as never, rationale);
+          const rationale = {
+            title: _options?.title ?? 'Photos and Videos',
+            message: _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.',
+            buttonPositive: 'OK',
+          };
+          if ((Platform.Version as number) >= 33) {
+            const firstResult = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as never,
+              rationale
+            );
+            const result = await PermissionsAndroid.requestMultiple([
+              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+              PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
+            ] as never[]);
+            const images = result[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ?? firstResult;
+            const video = result[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO];
+            const granted =
+              images === PermissionsAndroid.RESULTS.GRANTED || video === PermissionsAndroid.RESULTS.GRANTED;
+            const neverAskImages = images === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+            const neverAskVideo = video === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+            const canAskAgain = !neverAskImages && !neverAskVideo;
+            return {
+              granted,
+              canAskAgain,
+              status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
+              blocked: !canAskAgain,
+            };
+          }
+          const result = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
+            rationale
+          );
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           return {
@@ -642,17 +698,17 @@ export const permissionsHandler = {
             status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
             blocked: !canAskAgain,
           };
-        } catch {
-          return mockStatus(false, true);
+        } catch (e) {
+          throw e;
         }
       }
       const picker = getImagePicker();
       if (picker?.requestMediaLibraryPermissionsAsync) {
         try {
           const r = await picker.requestMediaLibraryPermissionsAsync(false);
-          return fromExpoResponse(r);
-        } catch {
-          return mockStatus(false, true);
+          return fromMediaLibraryResponse(r as { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
+        } catch (e) {
+          throw e;
         }
       }
       return unavailableStatus('expo-image-picker required; run on device');
@@ -660,13 +716,26 @@ export const permissionsHandler = {
     if (permission === 'location') {
       if (Platform.OS === 'android') {
         try {
-          const result = await PermissionsAndroid.requestMultiple([
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-          ]);
-          const fine = result[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION];
-          const granted = fine === PermissionsAndroid.RESULTS.GRANTED;
-          const canAskAgain = fine !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          const rationale =
+            _options?.rationale != null
+              ? {
+                  title: _options.title ?? 'Location',
+                  message: _options.rationale,
+                  buttonPositive: 'OK',
+                }
+              : undefined;
+          const fineResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION as never,
+            rationale
+          );
+          const granted = fineResult === PermissionsAndroid.RESULTS.GRANTED;
+          const canAskAgain = fineResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          if (granted) {
+            PermissionsAndroid.requestMultiple([
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+            ]).catch(() => {});
+          }
           return {
             granted,
             canAskAgain,
@@ -691,26 +760,47 @@ export const permissionsHandler = {
     if (permission === 'locationBackground') {
       if (Platform.OS === 'android') {
         try {
-          const hasForeground = await PermissionsAndroid.check(
+          let hasForeground = await PermissionsAndroid.check(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION as never
           );
           if (!hasForeground) {
-            const fgResult = await PermissionsAndroid.requestMultiple([
-              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-              PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-            ]);
-            const fine = fgResult[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION];
-            if (fine !== PermissionsAndroid.RESULTS.GRANTED) {
+            const rationale =
+              _options?.rationale != null
+                ? {
+                    title: _options.title ?? 'Location',
+                    message: _options.rationale,
+                    buttonPositive: 'OK',
+                  }
+                : undefined;
+            const fineResult = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION as never,
+              rationale
+            );
+            hasForeground = fineResult === PermissionsAndroid.RESULTS.GRANTED;
+            if (!hasForeground) {
               return {
                 granted: false,
-                canAskAgain: fine !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
+                canAskAgain: fineResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
                 status: 'denied',
-                blocked: fine === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
+                blocked: fineResult === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
               };
             }
+            PermissionsAndroid.requestMultiple([
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+            ]).catch(() => {});
           }
+          const bgRationale =
+            _options?.rationale != null
+              ? {
+                  title: _options.title ?? 'Background location',
+                  message: _options.rationale,
+                  buttonPositive: 'OK',
+                }
+              : undefined;
           const result = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION
+            PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+            bgRationale
           );
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
@@ -806,9 +896,16 @@ export const permissionsHandler = {
             PermissionsAndroid.PERMISSIONS.READ_CALENDAR,
             PermissionsAndroid.PERMISSIONS.WRITE_CALENDAR,
           ]);
-          const read = result[PermissionsAndroid.PERMISSIONS.READ_CALENDAR];
-          const granted = read === PermissionsAndroid.RESULTS.GRANTED;
+          const readKey = PermissionsAndroid.PERMISSIONS.READ_CALENDAR;
+          const read = result[readKey];
+          let granted = read === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = read !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          if (!granted) {
+            const actual = await PermissionsAndroid.check(
+              PermissionsAndroid.PERMISSIONS.READ_CALENDAR as never
+            );
+            if (actual) granted = true;
+          }
           return {
             granted,
             canAskAgain,
@@ -1086,8 +1183,8 @@ export const permissionsHandler = {
     if (permissions.includes('camera')) add('NSCameraUsageDescription', 'We need camera access to take photos and videos.', 'Camera');
     if (permissions.includes('microphone')) add('NSMicrophoneUsageDescription', 'We need microphone access to record audio.', 'Microphone');
     if (permissions.includes('photoLibrary') || permissions.includes('mediaLibrary')) {
-      add('NSPhotoLibraryUsageDescription', 'We need photo library access to save and select images.', 'Photo Library');
-      add('NSPhotoLibraryAddUsageDescription', 'We need permission to save photos to your library.', 'Photo Library Add');
+      add('NSPhotoLibraryUsageDescription', 'We need photos and videos access to save and select media.', 'Photos and Videos');
+      add('NSPhotoLibraryAddUsageDescription', 'We need permission to save photos and videos to your library.', 'Photos and Videos Add');
     }
     if (permissions.includes('location') || permissions.includes('locationWhenInUse') || permissions.includes('locationBackground')) {
       add('NSLocationWhenInUseUsageDescription', 'We need your location to show nearby places.', 'Location When In Use');
@@ -1195,7 +1292,7 @@ export function showPermissionSettingsAlert(permission: LegacyPermissionType) {
   const permissionNames: Record<LegacyPermissionType, string> = {
     camera: 'Camera',
     microphone: 'Microphone',
-    photo_library: 'Photo Library',
+    photo_library: 'Photos and Videos',
     location: 'Location',
     contacts: 'Contacts',
     calendar: 'Calendar',
@@ -1271,7 +1368,7 @@ export function getPermissionRationale(permission: LegacyPermissionType): string
   const rationales: Record<LegacyPermissionType, string> = {
     camera: 'This app needs camera access to take photos and videos.',
     microphone: 'This app needs microphone access to record audio.',
-    photo_library: 'This app needs photo library access to select and save images.',
+    photo_library: 'This app needs photos and videos access to select and save media.',
     location: 'This app needs location access to provide location-based features.',
     contacts: 'This app needs contacts access to help you share content with friends.',
     calendar: 'This app needs calendar access to schedule events and reminders.',
