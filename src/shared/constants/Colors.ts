@@ -102,6 +102,9 @@ export const Colors = {
     splashSubtext: '#6C757D',
     splashProgress: '#007AFF',
     splashProgressBg: '#E9ECEF',
+
+    // Helper screen accent (e.g. Double Extension Helper)
+    doubleHelperColor: '#5856D6',
   },
   dark: {
     text: '#FFFFFF',
@@ -198,6 +201,9 @@ export const Colors = {
     splashSubtext: '#8E8E93',
     splashProgress: '#007AFF',
     splashProgressBg: '#333333',
+
+    // Helper screen accent (e.g. Double Extension Helper)
+    doubleHelperColor: '#5E5CE6',
   },
 };
 
