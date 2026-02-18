@@ -3,23 +3,42 @@ import { getOneSignalAppId } from '@/src/shared/constants';
 import { t } from '@/src/shared/i18n';
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
 import { onesignalHelper } from 'masterfabric-expo-core';
+import { useEffect, useState } from 'react';
+
+import {
+  permissionsHandler,
+  shouldShowOnboarding,
+} from 'masterfabric-expo-core';
+import { Platform } from 'react-native';
 import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
-import { shouldShowOnboarding } from 'masterfabric-expo-core';
+
+/** Triggers Android/iOS native runtime permission dialogs on app launch. */
+function requestCriticalPermissionsOnLaunch() {
+  if (Platform.OS === 'web') return;
+  const delayMs = 600;
+  setTimeout(async () => {
+    try {
+      await permissionsHandler.request('notifications');
+      // Location: only requested when user taps Request in Permissions Helper
+    } catch {
+      // Ignore – OS handles permission flow
+    }
+  }, delayMs);
+}
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState('');
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
-  const { 
-    isLoading, 
-    setLoading, 
-    setProgress: setSplashProgress, 
+  const {
+    isLoading,
+    setLoading,
+    setProgress: setSplashProgress,
     setLoadingMessage,
     setCurrentStep,
-    addCompletedStep 
+    addCompletedStep,
   } = useSplashStore();
 
   useEffect(() => {
@@ -27,8 +46,9 @@ export function useSplashViewModel() {
   }, []);
 
   const initializeApp = async () => {
+    requestCriticalPermissionsOnLaunch();
     setLoading(true);
-    
+
     const steps = createSplashSteps();
     const completed: string[] = [];
 
@@ -37,16 +57,19 @@ export function useSplashViewModel() {
       setCurrentTask(taskMessage);
       setLoadingMessage(taskMessage);
       setCurrentStep(step.id);
-      
+
       await new Promise(resolve => setTimeout(resolve, step.duration));
-      
+
       completed.push(step.id);
       setCompletedSteps([...completed]);
       addCompletedStep(step.id);
-      
+
       const completedStepObjects = steps.filter(s => completed.includes(s.id));
-      const currentProgress = getProgressPercentage(completedStepObjects, steps);
-      
+      const currentProgress = getProgressPercentage(
+        completedStepObjects,
+        steps
+      );
+
       setProgress(currentProgress);
       setSplashProgress(currentProgress);
     }
@@ -87,9 +110,13 @@ export function useSplashViewModel() {
         const oneSignalAppId = getOneSignalAppId();
         if (oneSignalAppId?.trim() && !onesignalHelper.isInitialized) {
           onesignalHelper
-            .init(oneSignalAppId.trim(), { promptForPush: true, verbose: __DEV__ })
-            .catch((e) => {
-              if (__DEV__) console.warn('[Splash] OneSignal init after splash:', e);
+            .init(oneSignalAppId.trim(), {
+              promptForPush: true,
+              verbose: __DEV__,
+            })
+            .catch(e => {
+              if (__DEV__)
+                console.warn('[Splash] OneSignal init after splash:', e);
             });
         }
       }, delayMs);
