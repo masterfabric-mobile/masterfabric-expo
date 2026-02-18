@@ -15,7 +15,13 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
+    marginBottom: 8,
+  },
+  hintText: {
+    fontSize: 12,
+    lineHeight: 18,
     marginBottom: 16,
+    fontStyle: 'italic',
   },
   settingsBtn: {
     paddingVertical: 10,
@@ -77,7 +83,6 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
   requestBtnText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FFFFFF',
   },
   configSection: {
     marginTop: 20,
