@@ -1,14 +1,15 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
 import {
+  doubleExtensionHelper,
   getThemeColors,
-  isValidCurrency,
-  isValidLocale,
   snackbarHelper,
   ThemedText,
   ThemedView,
   useTheme,
 } from 'masterfabric-expo-core';
+
+const { isValidCurrency, isValidLocale } = doubleExtensionHelper;
 import { Button } from '@/src/shared/components/button';
 import { t } from '@/src/shared/i18n';
 import { BORDER_OPACITY_SUFFIX, DEFAULT_TEST_INPUT, NUMERIC_INPUT_RANGE } from '../constants/double-helper.constants';
