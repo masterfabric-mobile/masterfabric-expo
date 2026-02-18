@@ -1,62 +1,91 @@
 {
-  "expo": {
-    "name": "MasterFabric",
-    "slug": "masterfabric-expo",
-    "description": "Modern mobile platform for fabric design and management applications",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/images/app_icon.png",
-    "scheme": "masterfabricexpo",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "primaryColor": "#000000",
-    "splash": {
-      "image": "./src/assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "icon": "./src/assets/images/app_icon.png",
-      "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "3"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/app_icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "com.masterfabric.expo.android",
-      "versionCode": 3
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./src/assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      "expo-dev-client",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./src/assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "da5b233a-cb42-4494-94c7-2b1427d32ebf"
-      }
-    },
-    "owner": "gurkanfikretgunak"
-  }
+    "expo":  {
+                 "name":  "MasterFabric",
+                 "slug":  "masterfabric-expo",
+                 "description":  "Modern mobile platform for fabric design and management applications",
+                 "version":  "1.0.0",
+                 "orientation":  "portrait",
+                 "icon":  "./src/assets/images/app_icon.png",
+                 "scheme":  "masterfabricexpo",
+                 "userInterfaceStyle":  "automatic",
+                 "newArchEnabled":  true,
+                 "primaryColor":  "#000000",
+                 "splash":  {
+                                "image":  "./src/assets/images/splash-icon.png",
+                                "resizeMode":  "contain",
+                                "backgroundColor":  "#000000"
+                            },
+                 "ios":  {
+                             "supportsTablet":  true,
+                             "icon":  "./src/assets/images/app_icon.png",
+                             "bundleIdentifier":  "com.masterfabric.expo.ios",
+                             "buildNumber":  "3"
+                         },
+                 "android":  {
+                                 "adaptiveIcon":  {
+                                                      "foregroundImage":  "./src/assets/images/app_icon.png",
+                                                      "backgroundColor":  "#ffffff"
+                                                  },
+                                 "edgeToEdgeEnabled":  true,
+                                 "package":  "com.masterfabric.expo.android",
+                                 "versionCode":  3
+                             },
+                 "web":  {
+                             "bundler":  "metro",
+                             "output":  "static",
+                             "favicon":  "./src/assets/images/favicon.png"
+                         },
+                 "plugins":  [
+                                 "./plugins/add-media-permissions.js",
+                                 "expo-router",
+                                 "expo-dev-client",
+                                 [
+                                     "expo-splash-screen",
+                                     {
+                                         "image":  "./src/assets/images/splash-icon.png",
+                                         "imageWidth":  200,
+                                         "resizeMode":  "contain",
+                                         "backgroundColor":  "#ffffff"
+                                     }
+                                 ],
+                                 [
+                                     "expo-image-picker",
+                                     {
+                                         "photosPermission":  "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+                                         "cameraPermission":  "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+                                         "microphonePermission":  "Uygulamanın video kaydı için mikrofon erişimine ihtiyacı var."
+                                     }
+                                 ],
+                                 [
+                                     "expo-av",
+                                     {
+                                         "microphonePermission":  "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
+                                     }
+                                 ],
+                                 [
+                                     "expo-calendar",
+                                     {
+                                         "calendarPermission":  "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var."
+                                     }
+                                 ],
+                                 [
+                                     "expo-contacts",
+                                     {
+                                         "contactsPermission": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var."
+                                     }
+                                 ]
+                             ],
+                 "experiments":  {
+                                     "typedRoutes":  true
+                                 },
+                 "extra":  {
+                               "router":  {
+
+                                          },
+                               "eas":  {
+                                           "projectId":  "da5b233a-cb42-4494-94c7-2b1427d32ebf"
+                                       }
+                           },
+                 "owner":  "gurkanfikretgunak"
+             }
 }

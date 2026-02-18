@@ -247,7 +247,7 @@
       "minLength": "At least 8 characters",
       "uppercase": "Uppercase letter (A-Z)",
       "lowercase": "Lowercase letter (a-z)",
-        "number": "Number (0-9)",
+      "number": "Number (0-9)",
       "specialChar": "Special character (e.g. !@#$%^&*)"
     },
     "passwordsMatch": "Passwords match"
@@ -320,7 +320,7 @@
       "dark": "Dark",
       "system": "System",
       "lightDescription": "Clean and bright appearance",
-      "darkDescription": "Eye-friendly dark appearance", 
+      "darkDescription": "Eye-friendly dark appearance",
       "systemDescription": "Follow device settings"
     },
     "notifications": {
@@ -354,7 +354,7 @@
     "subtitle": "Stay updated with your latest activities",
     "stageBadge": {
       "development": "DEV MODE",
-      "debug": "DEBUG MODE", 
+      "debug": "DEBUG MODE",
       "production": "LIVE MODE",
       "release": "LIVE MODE"
     },
@@ -392,7 +392,7 @@
   "deviceInfo": {
     "title": "Device Information",
     "platform": "Platform",
-    "device": "Device", 
+    "device": "Device",
     "brand": "Brand",
     "os": "OS",
     "app": "App",
@@ -535,7 +535,6 @@
       }
     },
     "title": "Helpers",
->>>>>>> 6ad14f2 (feat: add translations for Permissions Helper in English and Turkish)
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {
       "title": "String Helper",
@@ -926,7 +925,7 @@
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
     },
     "numberHelper": {
-      "title": "Number Helper", 
+      "title": "Number Helper",
       "description": "Number formatting, validation, and mathematical operations utilities"
     },
     "validationHelper": {
@@ -1789,14 +1788,14 @@
           "title": "Web Viewer Helper",
           "description": "Display HTML content and web URLs within the app using WebView"
         },
-    "uiSizeHelper": {
-      "title": "UI Size Helper",
-      "description": "Sizing system, spacing, typography, and responsive design utilities"
-    },
-    "appIconHelper": {
-      "title": "App Icon Helper",
-      "description": "Change your app icon dynamically on iOS devices"
-    }
+        "uiSizeHelper": {
+          "title": "UI Size Helper",
+          "description": "Sizing system, spacing, typography, and responsive design utilities"
+        },
+        "appIconHelper": {
+          "title": "App Icon Helper",
+          "description": "Change your app icon dynamically on iOS devices"
+        }
       },
       "core": {
         "title": "Core System",

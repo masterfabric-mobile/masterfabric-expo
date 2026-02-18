@@ -64,7 +64,7 @@
       "deviceInfoViewed": "Cihaz bilgi detayları görüntülendi",
       "notificationsChanged": "Bildirim ayarları güncellendi",
       "settingsChanged": "Ayarlar güncellendi",
-      "settingsOpened": "Ayarlar sayfası açıldı", 
+      "settingsOpened": "Ayarlar sayfası açıldı",
       "devToolUsed": "Geliştirici aracı kullanıldı",
       "onboardingStarted": "Tanıtım önizlemesi başlatıldı",
       "appStarted": "Uygulama başlatıldı",
@@ -203,7 +203,7 @@
       "minLength": "En az 8 karakter",
       "uppercase": "Büyük harf (A-Z)",
       "lowercase": "Küçük harf (a-z)",
-        "number": "Rakam (0-9)",
+      "number": "Rakam (0-9)",
       "specialChar": "Özel karakter (örn. !@#$%^&*)"
     },
     "passwordsMatch": "Şifreler eşleşiyor"
@@ -273,7 +273,7 @@
       "title": "Görünüm",
       "description": "Uygulamanın nasıl görünmesini istediğinizi seçin",
       "light": "Açık",
-      "dark": "Koyu", 
+      "dark": "Koyu",
       "system": "Sistem",
       "lightDescription": "Açık ve temiz görünüm",
       "darkDescription": "Göz dostu koyu görünüm",
@@ -531,7 +531,6 @@
       }
     },
     "title": "Yardımcılar",
->>>>>>> 6ad14f2 (feat: add translations for Permissions Helper in English and Turkish)
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",
     "stringHelper": {
       "title": "String Yardımcısı",
