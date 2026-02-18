@@ -1,9 +1,7 @@
 import { useCallback } from 'react';
-import {
-  CurrencyLocaleValidationError,
-  doubleHelper,
-  snackbarHelper,
-} from 'masterfabric-expo-core';
+import { doubleExtensionHelper, snackbarHelper } from 'masterfabric-expo-core';
+
+const { CurrencyLocaleValidationError, doubleHelper } = doubleExtensionHelper;
 import { t } from '@/src/shared/i18n';
 import { DEFAULT_TEST_INPUT } from '../constants/double-helper.constants';
 import type {
