@@ -1,26 +1,19 @@
-import { t } from '@/src/shared/i18n';
 import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
+import { t } from '@/src/shared/i18n';
+import {
+    permissionsHandler,
+    type PermissionStatus,
+    type PermissionType,
+} from 'masterfabric-expo-core';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
-import {
-  permissionsHandler,
-  type PermissionStatus,
-  type PermissionType,
-} from 'masterfabric-expo-core';
-import { CONFIG_PREVIEW_PERMISSIONS, PERMISSION_KEYS } from '../constants/permissions-helper.constants';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
+import {
+  CONFIG_PREVIEW_PERMISSIONS,
+  PERMISSION_KEYS,
+  PERMISSION_LABEL_KEYS,
+} from '../constants/permissions-helper.constants';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
-
-const PERMISSION_LABEL_I18N: Record<PermissionKey, string> = {
-  camera: 'helpers.permissionsHelper.permissionCamera',
-  microphone: 'helpers.permissionsHelper.permissionMicrophone',
-  photoLibrary: 'helpers.permissionsHelper.permissionPhotoLibrary',
-  location: 'helpers.permissionsHelper.permissionLocation',
-  notifications: 'helpers.permissionsHelper.permissionNotifications',
-  calendar: 'helpers.permissionsHelper.permissionCalendar',
-  contacts: 'helpers.permissionsHelper.permissionContacts',
-  phone: 'helpers.permissionsHelper.permissionPhone',
-};
 
 export type LocationPermissionInfo = {
   foreground: 'granted' | 'denied' | 'unavailable';
@@ -33,7 +26,7 @@ export function usePermissionsHelperViewModel() {
   const snackbar = useSnackbar();
   const [locationInfo, setLocationInfo] = useState<LocationPermissionInfo | null>(null);
 
-  const REQUEST_TIMEOUT_MS = 20000;
+  const REQUEST_TIMEOUT_MS = 8000;
   const withTimeout = <T>(p: Promise<T>) =>
     Promise.race([
       p,
@@ -46,12 +39,6 @@ export function usePermissionsHelperViewModel() {
     async (key: PermissionKey, silent = false) => {
       setLoading(key, true);
       try {
-        const type: PermissionType = key;
-        const existing = await permissionsHandler.check(type);
-        if (existing.granted && existing.status !== 'limited') {
-          setStatus(key, existing);
-          return existing;
-        }
         const fetchStatus = async (): Promise<PermissionStatus> => {
         switch (key) {
           case 'camera':
@@ -116,8 +103,17 @@ export function usePermissionsHelperViewModel() {
         }
       setStatus(key, status);
       if (!silent) {
-        // Blocked: native popup açılmaz – Ayarlar uyarısı göster
         if (status.status === 'blocked' || status.blocked) {
+          permissionsHandler.showSettingsAlert({
+            permission: key,
+            openSettings: true,
+            message: t('helpers.permissionsHelper.rationale.settingsMessage'),
+          });
+        } else if (!status.granted && status.status === 'denied' && key === 'photoLibrary') {
+          snackbar.error(
+            t('helpers.permissionsHelper.rationale.deniedOpenSettings'),
+            4500
+          );
           permissionsHandler.showSettingsAlert({
             permission: key,
             openSettings: true,
@@ -127,7 +123,7 @@ export function usePermissionsHelperViewModel() {
       }
       return status;
     } catch (e) {
-      const labelI18n = t(PERMISSION_LABEL_I18N[key] ?? key);
+      const labelI18n = t(PERMISSION_LABEL_KEYS[key] ?? key);
       snackbar.error(`${labelI18n}: ${e instanceof Error ? e.message : 'error'}`, 3500);
       throw e;
     } finally {
@@ -152,8 +148,18 @@ export function usePermissionsHelperViewModel() {
     }
   }, [setStatus, statuses]);
 
+  const refreshStatuses = useCallback(async () => {
+    await checkAll();
+    snackbar.success(t('helpers.permissionsHelper.refreshCompleted'), 2500);
+  }, [checkAll, snackbar.success]);
+
   const openSettings = useCallback(() => {
     permissionsHandler.openSettings();
+  }, []);
+
+  useEffect(() => {
+    checkAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount to refresh statuses
   }, []);
 
   useEffect(() => {
@@ -177,7 +183,7 @@ export function usePermissionsHelperViewModel() {
     loading,
     requestPermission,
     openSettings,
-    refreshStatuses: checkAll,
+    refreshStatuses,
     permissionKeys: PERMISSION_KEYS,
     iosEntries,
     androidEntries,
