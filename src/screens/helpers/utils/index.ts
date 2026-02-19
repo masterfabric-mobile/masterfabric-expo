@@ -61,6 +61,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'calculator-outline';
     case 'web-viewer-helper':
       return 'globe-outline';
+    case 'local-notification-helper':
+      return 'notifications-outline';
     default:
       return 'help-outline';
   }
@@ -113,6 +115,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for number/double helpers
     case 'web-viewer-helper':
       return '#007AFF'; // Blue for web viewer helpers
+    case 'local-notification-helper':
+      return '#FF9500'; // Orange for notification helpers
     default:
       return '#8E8E93';
   }
@@ -288,6 +292,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/web-viewer-helper',
     available: true,
     category: 'ui-helpers'
+  },
+  {
+    id: 'local-notification-helper',
+    name: 'Local Notification Helper',
+    description: 'Schedule, manage, and handle local notifications with permissions, badges, channels, and categories',
+    icon: 'notifications-outline',
+    color: '#FF9500',
+    route: '/local-notification-helper',
+    available: true,
+    category: 'device-helpers'
   }
 ];
 
