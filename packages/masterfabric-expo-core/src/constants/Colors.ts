@@ -46,6 +46,7 @@ export const Colors = {
     buttonBackgroundHover: '#E9ECEF',
     buttonBorder: '#C7C7CC',
     activeButton: '#007AFF',
+    activeButtonText: '#FFFFFF',
     inactiveText: '#3C3C43',
     
     // Onboarding colors
@@ -172,6 +173,7 @@ export const Colors = {
     buttonBackgroundHover: '#3A3A3C',
     buttonBorder: '#48484A',
     activeButton: '#007AFF',
+    activeButtonText: '#FFFFFF',
     inactiveText: '#98989D',
     
     // Onboarding colors
@@ -277,6 +279,7 @@ export const Colors = {
     buttonBackgroundHover: '#E9ECEF',
     buttonBorder: '#C7C7CC',
     activeButton: '#007AFF',
+    activeButtonText: '#FFFFFF',
     inactiveText: '#3C3C43',
     surfaceBackground: '#FFFFFF',
     surfaceBorder: '#E9ECEF',
