@@ -80,6 +80,10 @@ export * from './components/haptic-helper/HapticHelperView';
 export * from './hooks/useHapticHelper';
 export * from './stores/hapticStore';
 
+// Local Notification Helper (iOS/Android only)
+export * from './components/local-notification-helper';
+export * from './hooks/useLocalNotificationHelper';
+
 // Shared Video Player & Haptic Components
 export * from './components/video-player-haptic-helper/HapticFeedbackCard';
 export * from './components/video-player-haptic-helper/VideoDisplayCard';
