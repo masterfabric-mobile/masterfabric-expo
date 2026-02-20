@@ -6,7 +6,7 @@ export function getPermissionStatusDisplay(
   t: (key: string) => string,
   colors: ThemeColors
 ): { label: string; color: string } {
-  if (!status) return { label: '—', color: colors.inactiveText };
+  if (!status) return { label: t('helpers.permissionsHelper.notChecked'), color: colors.inactiveText };
   const s = status.status;
   const key = STATUS_I18N[s] || s;
   const themeKey = STATUS_BADGE_THEME_KEYS[s] ?? 'inactiveText';

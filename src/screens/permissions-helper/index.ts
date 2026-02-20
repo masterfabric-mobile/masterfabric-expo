@@ -3,10 +3,14 @@ export { CONFIG_PREVIEW_PERMISSIONS, PERMISSION_KEYS, PERMISSION_LABELS } from '
 export type { PermissionKey } from './constants/permissions-helper.constants';
 export { usePermissionsHelperViewModel } from './hooks/use-permissions-helper-view-model';
 export type {
+  LocationPermissionInfo,
   PermissionRowState,
   PermissionsHelperScreenProps,
   PermissionsHelperState,
 } from './models/permissions-helper-models';
 export { usePermissionsHelperStore } from './store/permissions-helper-store';
-export { permissionsHelperScreenStyles } from './styles/permissions-helper-screen.styles';
+export {
+  getPermissionsHelperScreenDynamicStyles,
+  permissionsHelperScreenStyles,
+} from './styles/permissions-helper-screen.styles';
 
