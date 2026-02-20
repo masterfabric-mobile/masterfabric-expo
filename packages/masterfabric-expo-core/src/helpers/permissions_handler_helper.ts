@@ -1,217 +1,154 @@
-import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
-
 /**
  * Permissions Handler Helper
  *
- * Comprehensive utilities for managing device permissions across iOS and Android.
- * Provides unified API for permission requests, status checking, and configuration management.
- * Aligns with [GitHub Issue #28](https://github.com/masterfabric-mobile/masterfabric-expo/issues/28).
+ * Unified permission API following existing helper patterns (e.g. string_helper, toast_helper).
+ * Uses Expo permission modules where available; falls back to React Native PermissionsAndroid
+ * on Android. For permissions not covered by Expo (e.g. Bluetooth, SMS), you can integrate
+ * `react-native-permissions` and extend the handler to delegate to it.
  *
- * Uses Expo modules where available (expo-image-picker, expo-location, expo-notifications);
- * other permissions return unavailable until corresponding Expo packages are added.
+ * **Strategy / Dependencies**
+ * - expo-camera (camera; fallback expo-image-picker), expo-location (location), expo-image-picker (photo library fallback),
+ *   expo-media-library (media library; fallback expo-image-picker), expo-notifications (notifications), expo-contacts (contacts),
+ *   expo-calendar (calendar), expo-av (microphone iOS), expo-local-authentication (biometrics).
+ * - Android: PermissionsAndroid for camera, storage, location, notifications, contacts, calendar, phone.
+ * - For permissions outside Expo scope, the app can use react-native-permissions (fallback).
+ *
+ * **Edge cases**
+ * - Missing permission / not on platform: returns `status: 'unavailable'` with a message.
+ * - Platform-specific: e.g. phone is Android-only; background location may require foreground first.
+ * - Blocked (user chose "Don't ask again"): `canAskAgain === false`, `status === 'blocked'`;
+ *   use `showPermissionSettingsAlert` or `openAppSettings()` to guide the user.
+ * - iOS limited photo library (iOS 14+): `status === 'limited'`, `ios.scope === 'limited'`; handle in UI.
+ * - iOS background location: request foreground/always first, then locationBackground; see requestLocation( { background: true } ).
+ * - iOS tracking (14.5+): requires App Tracking Transparency and NSUserTrackingUsageDescription; some permissions need Xcode capabilities (e.g. Push Notifications, Background Modes).
+ *
+ * **Integration with other helpers**
+ * - logger_helper: Logs permission check/request and errors when `setLoggerService()` is set.
+ * - toast_helper: Shows permission status messages (granted/denied/blocked) when `setToastService()` is set (e.g. after legacy requestPermission).
+ * - snackbar_helper: Shows permission alerts and "Open Settings" actionable warnings (e.g. when blocked or in showPermissionSettingsAlert).
+ *
+ * **TypeScript**: All types (PermissionType, PermissionStatus, options) are in `./permissions/types`.
+ * **Exports**: Use `import { permissionsHandler, checkPermission, requestPermission } from 'masterfabric-expo-core'`
+ * or from `./permissions` index.
  *
  * @example
- * ```typescript
- * import { permissionsHandler } from 'masterfabric-expo-core';
+ * // Check before use
+ * const status = await permissionsHandler.check('camera');
+ * if (status.granted) startCamera();
+ * else if (status.canAskAgain) await permissionsHandler.request('camera', { rationale: '...' });
+ * else showPermissionSettingsAlert('camera');
  *
- * const status = await permissionsHandler.requestCamera({
- *   rationale: 'We need camera access to take photos',
- *   showSettingsAlert: true
- * });
- * if (status.granted) { /* proceed *\/ }
- * else if (status.status === 'blocked') {
- *   permissionsHandler.showSettingsAlert({ permission: 'camera', openSettings: true });
- * }
+ * @example
+ * // Request with options
+ * const result = await permissionsHandler.requestCamera({ includePhotoLibrary: true });
+ * const loc = await permissionsHandler.requestLocation({ accuracy: 'high', background: true });
  *
- * const locationStatus = await permissionsHandler.check('location');
- * const permissions = await permissionsHandler.requestMultiple([
- *   { type: 'camera', rationale: 'For photos' },
- *   { type: 'microphone', rationale: 'For audio' }
- * ]);
- * ```
+ * @example
+ * // Legacy API (snake_case permission names)
+ * const legacy = await requestPermission('photo_library', { message: 'Select photos', showSettingsAlert: true });
  */
+import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
+import type {
+  AndroidManifestEntry,
+  BiometricPermissionOptions,
+  BiometricType,
+  CameraPermissionOptions,
+  LegacyPermissionStatus,
+  LegacyPermissionType,
+  LocationPermissionOptions,
+  NotificationPermissionOptions,
+  PermissionOptions,
+  PermissionRequest,
+  PermissionStatus,
+  PermissionType,
+  PhotoLibraryOptions,
+  SettingsAlertOptions,
+  StatusCallback,
+  StoragePermissionOptions,
+} from './permissions/types';
+import type { IOSInfoPlistEntry } from './permissions/types';
+import { getCanonicalPermission, isImplemented, LEGACY_TO_HANDLER } from './permissions/constants';
+import { getIOSInfoPlistEntries as getIOSInfoPlistEntriesFromConfig } from './permissions/ios-config';
+import { getAndroidManifestEntries as getAndroidManifestEntriesFromConfig } from './permissions/android-config';
+import { getLoggerService } from './logger_helper';
+import { getToastService } from './toast_helper';
+import { snackbarHelper } from './snackbar_helper';
 
-/** Legacy permission status (uses never_ask_again). */
-export interface LegacyPermissionStatus {
-  granted: boolean;
-  canAskAgain: boolean;
-  status: 'granted' | 'denied' | 'limited' | 'never_ask_again' | 'unknown';
-  message?: string;
+/** Log permission action only when logger service is set (no throw). */
+function logPermission(
+  level: 'info' | 'debug' | 'warning' | 'error',
+  message: string,
+  meta?: Record<string, unknown>
+): void {
+  try {
+    const logger = getLoggerService();
+    if (logger) logger[level](message, meta ?? {});
+  } catch {
+    // ignore
+  }
 }
 
-/** Legacy permission types (snake_case). */
-export type LegacyPermissionType =
-  | 'camera'
-  | 'microphone'
-  | 'photo_library'
-  | 'location'
-  | 'contacts'
-  | 'calendar'
-  | 'reminders'
-  | 'notifications'
-  | 'bluetooth'
-  | 'speech_recognition'
-  | 'face_id'
-  | 'touch_id'
-  | 'biometrics';
-
-/** Permission status (Issue #28). */
-export interface PermissionStatus {
-  granted: boolean;
-  canAskAgain: boolean;
-  status: 'granted' | 'denied' | 'blocked' | 'limited' | 'unavailable' | 'unknown';
-  /** True when status === 'blocked' (permanently denied). Convenience for Issue #28 examples. */
-  blocked?: boolean;
-  limited?: boolean;
-  message?: string;
-  ios?: { scope?: 'full' | 'limited' };
-  android?: { rationaleRequired?: boolean };
+/** Show permission status toast when toast service is set (no throw). */
+function toastPermissionStatus(permission: string, status: PermissionStatus['status'], displayName?: string): void {
+  try {
+    const toast = getToastService();
+    if (!toast) return;
+    const name = displayName ?? permission;
+    if (status === 'granted') toast.show({ message: `${name}: Granted`, type: 'success', duration: 3000 });
+    else if (status === 'denied') toast.show({ message: `${name}: Denied`, type: 'warning', duration: 3500 });
+    else if (status === 'blocked') toast.show({ message: `${name}: Blocked — open Settings`, type: 'error', duration: 4000 });
+    else if (status === 'unavailable') toast.show({ message: `${name}: Unavailable`, type: 'info', duration: 3000 });
+    else if (status === 'limited') toast.show({ message: `${name}: Limited access`, type: 'info', duration: 3000 });
+  } catch {
+    // ignore
+  }
 }
 
-/** Permission types supported by permissionsHandler (Issue #28). */
-export type PermissionType =
-  | 'camera'
-  | 'microphone'
-  | 'photoLibrary'
-  | 'mediaLibrary'
-  | 'musicLibrary'
-  | 'location'
-  | 'locationAlways'
-  | 'locationWhenInUse'
-  | 'locationBackground'
-  | 'contacts'
-  | 'calendar'
-  | 'reminders'
-  | 'notifications'
-  | 'bluetooth'
-  | 'bluetoothScan'
-  | 'bluetoothConnect'
-  | 'bluetoothAdvertise'
-  | 'faceId'
-  | 'touchId'
-  | 'biometrics'
-  | 'motionFitness'
-  | 'health'
-  | 'speechRecognition'
-  | 'siri'
-  | 'tracking'
-  | 'nearbyInteractions'
-  | 'storage'
-  | 'storageRead'
-  | 'storageWrite'
-  | 'phone'
-  | 'sms'
-  | 'callPhone'
-  | 'readPhoneState'
-  | 'readSms'
-  | 'sendSms'
-  | 'receiveSms';
-
-/** Permission options (Issue #28). */
-export interface PermissionOptions {
-  rationale?: string;
-  title?: string;
-  message?: string;
-  showSettingsAlert?: boolean;
-  onDenied?: (status: PermissionStatus) => void;
-  onBlocked?: (status: PermissionStatus) => void;
+/** Show snackbar for permission alert/warning; use for actionable messages (e.g. Open Settings). */
+function snackbarPermissionAlert(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'warning', action?: { label: string; onPress: () => void }): void {
+  try {
+    snackbarHelper.show({ message, type, duration: action ? 5000 : 4000, action: action ? { label: action.label, onPress: action.onPress } : undefined });
+  } catch {
+    // ignore
+  }
 }
 
-/** Camera permission options (Issue #28). */
-export interface CameraPermissionOptions extends PermissionOptions {
-  includePhotoLibrary?: boolean;
+/** Android 13+ media permission constants; fallback strings for older React Native where PERMISSIONS may not define them. */
+const ANDROID_READ_MEDIA_IMAGES = (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_MEDIA_IMAGES ?? 'android.permission.READ_MEDIA_IMAGES';
+const ANDROID_READ_MEDIA_VIDEO = (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_MEDIA_VIDEO ?? 'android.permission.READ_MEDIA_VIDEO';
+
+/** Return actual photo library permission status on Android (PermissionsAndroid.check). Use after request to avoid showing "granted" when system says denied. */
+async function getAndroidPhotoLibraryStatus(): Promise<PermissionStatus> {
+  const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+  if (apiLevel >= 33) {
+    try {
+      const [images, video] = await Promise.all([
+        PermissionsAndroid.check(ANDROID_READ_MEDIA_IMAGES as never),
+        PermissionsAndroid.check(ANDROID_READ_MEDIA_VIDEO as never),
+      ]);
+      const granted = images || video;
+      return {
+        granted,
+        canAskAgain: true,
+        status: granted ? 'granted' : 'denied',
+        blocked: false,
+      };
+    } catch {
+      return mockStatus(false, true);
+    }
+  }
+  try {
+    const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never);
+    return {
+      granted,
+      canAskAgain: true,
+      status: granted ? 'granted' : 'denied',
+      blocked: false,
+    };
+  } catch {
+    return mockStatus(false, true);
+  }
 }
-
-/** Photo library options (Issue #28). */
-export interface PhotoLibraryOptions extends PermissionOptions {
-  accessLevel?: 'readOnly' | 'readWrite' | 'addOnly';
-}
-
-/** Location permission options (Issue #28). */
-export interface LocationPermissionOptions extends PermissionOptions {
-  accuracy?: 'high' | 'low';
-  background?: boolean;
-  always?: boolean;
-}
-
-/** Notification permission options (Issue #28). */
-export interface NotificationPermissionOptions extends PermissionOptions {
-  alert?: boolean;
-  badge?: boolean;
-  sound?: boolean;
-  carPlay?: boolean;
-  criticalAlert?: boolean;
-  provisional?: boolean;
-  providesAppNotificationSettings?: boolean;
-}
-
-/** Single permission request (Issue #28). */
-export interface PermissionRequest {
-  type: PermissionType;
-  rationale?: string;
-  options?: PermissionOptions;
-}
-
-/** Settings alert options (Issue #28). */
-export interface SettingsAlertOptions {
-  permission: PermissionType;
-  title?: string;
-  message?: string;
-  openSettings?: boolean;
-}
-
-/** Biometric type (Issue #28). */
-export type BiometricType = 'faceId' | 'touchId' | 'fingerprint' | 'iris' | 'none';
-
-/** Status callback (Issue #28). */
-export type StatusCallback = (status: PermissionStatus) => void;
-
-/** iOS Info.plist entry (Issue #28). */
-export interface IOSInfoPlistEntry {
-  key: string;
-  value: string;
-  description: string;
-}
-
-/** Android Manifest entry (Issue #28). */
-export interface AndroidManifestEntry {
-  permission: string;
-  maxSdkVersion?: number;
-  description: string;
-}
-
-/** Permission types that have real Expo implementation in this helper. */
-const IMPLEMENTED_PERMISSIONS: PermissionType[] = [
-  'camera',
-  'microphone',
-  'photoLibrary',
-  'location',
-  'locationBackground',
-  'notifications',
-  'calendar',
-  'contacts',
-  'phone',
-];
-
-function isImplemented(p: PermissionType): boolean {
-  return IMPLEMENTED_PERMISSIONS.includes(p);
-}
-
-const LEGACY_TO_HANDLER: Record<LegacyPermissionType, PermissionType> = {
-  camera: 'camera',
-  microphone: 'microphone',
-  photo_library: 'photoLibrary',
-  location: 'location',
-  contacts: 'contacts',
-  calendar: 'calendar',
-  reminders: 'reminders',
-  notifications: 'notifications',
-  bluetooth: 'bluetooth',
-  speech_recognition: 'speechRecognition',
-  face_id: 'faceId',
-  touch_id: 'touchId',
-  biometrics: 'biometrics',
-};
 
 function toLegacyStatus(s: PermissionStatus): LegacyPermissionStatus {
   const status: LegacyPermissionStatus['status'] =
@@ -293,11 +230,37 @@ function fromMediaLibraryResponse(
   };
 }
 
-/** Load expo-image-picker only when needed (optional peer dependency). */
+/** Load expo-camera for camera permissions (optional peer dependency). Prefer over expo-image-picker when available. */
+function getCamera(): { getCameraPermissionsAsync: () => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean }>; requestCameraPermissionsAsync: () => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean }> } | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional native module
+    const cam = require('expo-camera');
+    const Camera = cam.Camera ?? cam.default ?? cam;
+    if (Camera?.getCameraPermissionsAsync && Camera?.requestCameraPermissionsAsync) return Camera;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Load expo-image-picker for camera/photo library when expo-camera or expo-media-library not used (optional peer dependency). */
 function getImagePicker(): ReturnType<typeof require> | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional native module
     return require('expo-image-picker');
+  } catch {
+    return null;
+  }
+}
+
+/** Load expo-media-library for media/photo library permissions (optional peer dependency). Prefer over expo-image-picker when available. */
+function getMediaLibrary(): { getPermissionsAsync: (writeOnly?: boolean) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }>; requestPermissionsAsync: (writeOnly?: boolean) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }> } | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional native module
+    const lib = require('expo-media-library');
+    const MediaLibrary = lib.MediaLibrary ?? lib.default ?? lib;
+    if (MediaLibrary?.getPermissionsAsync && MediaLibrary?.requestPermissionsAsync) return MediaLibrary;
+    return null;
   } catch {
     return null;
   }
@@ -377,14 +340,30 @@ const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
 };
 
 /**
- * permissionsHandler – unified permission API (Issue #28).
- * Real implementation for camera, photoLibrary, location, locationBackground, notifications, microphone;
- * other types return unavailable until corresponding Expo packages are used.
+ * Unified permission API. Use Expo modules where available; Android uses PermissionsAndroid.
+ * Implemented: camera, photoLibrary, location, locationBackground, notifications, microphone,
+ * contacts, calendar, phone (Android). Others return `status: 'unavailable'` until implemented
+ * or until you delegate to e.g. react-native-permissions.
+ *
+ * @example
+ * const status = await permissionsHandler.check('location');
+ * switch (status.status) {
+ *   case 'granted': useLocation(); break;
+ *   case 'denied': await permissionsHandler.request('location', { rationale: '...' }); break;
+ *   case 'blocked': showPermissionSettingsAlert('location'); break;
+ *   case 'unavailable': showUnsupportedMessage(); break;
+ * }
  */
 export const permissionsHandler = {
+  /**
+   * Check current permission status without prompting. Prefer this before requesting.
+   * @param permission - Canonical or alias type (e.g. 'locationWhenInUse' → 'location')
+   * @returns PermissionStatus (granted | denied | blocked | limited | unavailable | unknown)
+   */
   async check(permission: PermissionType): Promise<PermissionStatus> {
-    if (!isImplemented(permission)) return unavailableStatus(`Permission ${permission} not implemented`);
-    if (permission === 'camera') {
+    const effective = getCanonicalPermission(permission);
+    logPermission('debug', 'Permission check', { permission: effective });
+    if (effective === 'camera') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -399,6 +378,15 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
+      const camera = getCamera();
+      if (camera?.getCameraPermissionsAsync) {
+        try {
+          const r = await camera.getCameraPermissionsAsync();
+          return fromExpoResponse({ granted: r.status === 'granted', status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain });
+        } catch {
+          return mockStatus(false, true);
+        }
+      }
       const picker = getImagePicker();
       if (picker?.getCameraPermissionsAsync) {
         try {
@@ -408,21 +396,22 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
-      return unavailableStatus('expo-image-picker required; run on device');
+      return unavailableStatus('expo-camera or expo-image-picker required; run on device');
     }
-    if (permission === 'photoLibrary') {
+    if (effective === 'photoLibrary') {
       if (Platform.OS === 'android') {
         try {
           if ((Platform.Version as number) >= 33) {
             const [images, video] = await Promise.all([
-              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as never),
-              PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO as never),
+              PermissionsAndroid.check(ANDROID_READ_MEDIA_IMAGES as never),
+              PermissionsAndroid.check(ANDROID_READ_MEDIA_VIDEO as never),
             ]);
             const granted = images || video;
             return {
               granted,
               canAskAgain: true,
               status: granted ? 'granted' : 'denied',
+              blocked: false,
             };
           }
           const granted = await PermissionsAndroid.check(
@@ -437,6 +426,18 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
+      const mediaLib = getMediaLibrary();
+      if (mediaLib?.getPermissionsAsync) {
+        try {
+          const r = await mediaLib.getPermissionsAsync();
+          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
+          const accessPrivileges = (r as { accessPrivileges?: string }).accessPrivileges;
+          const limited = accessPrivileges === 'limited';
+          return fromMediaLibraryResponse({ granted: granted || limited, status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true, accessPrivileges: limited ? 'limited' : granted ? 'all' : 'none' });
+        } catch {
+          return mockStatus(false, true);
+        }
+      }
       const picker = getImagePicker();
       if (picker?.getMediaLibraryPermissionsAsync) {
         try {
@@ -446,9 +447,9 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
-      return unavailableStatus('expo-image-picker required; run on device');
+      return unavailableStatus('expo-media-library or expo-image-picker required; run on device');
     }
-    if (permission === 'location') {
+    if (effective === 'location') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -474,7 +475,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-location required; run on device');
     }
-    if (permission === 'locationBackground') {
+    if (effective === 'locationBackground') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -500,7 +501,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-location required; run on device');
     }
-    if (permission === 'notifications') {
+    if (effective === 'notifications') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -530,7 +531,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-notifications required; run on device');
     }
-    if (permission === 'microphone') {
+    if (effective === 'microphone') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -552,7 +553,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-av required for microphone on iOS');
     }
-    if (permission === 'calendar') {
+    if (effective === 'calendar') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -578,7 +579,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-calendar required for calendar on iOS');
     }
-    if (permission === 'contacts') {
+    if (effective === 'contacts') {
       if (Platform.OS === 'android') {
         try {
           const granted = await PermissionsAndroid.check(
@@ -604,7 +605,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-contacts required for contacts');
     }
-    if (permission === 'phone') {
+    if (effective === 'phone') {
       if (Platform.OS !== 'android') {
         return unavailableStatus('Phone permission is Android only');
       }
@@ -621,16 +622,30 @@ export const permissionsHandler = {
         return mockStatus(false, true);
       }
     }
-    return mockStatus(false, true);
+    return unavailableStatus(`Permission ${permission} not implemented`);
   },
 
+  /**
+   * Request permission; may show system dialog. Use options.rationale (and on Android title/message)
+   * for user-facing explanation. On blocked (canAskAgain === false), consider showing settings alert.
+   * @param permission - Permission type (alias resolved to canonical)
+   * @param _options - Optional rationale, title, message, showSettingsAlert, onDenied, onBlocked
+   * @returns PermissionStatus after the request
+   */
   async request(permission: PermissionType, _options?: PermissionOptions): Promise<PermissionStatus> {
-    if (!isImplemented(permission)) return unavailableStatus(`Permission ${permission} not implemented`);
-    if (permission === 'camera') {
+    const effective = getCanonicalPermission(permission);
+    logPermission('info', 'Permission request', { permission: effective });
+    if (effective === 'camera') {
       if (Platform.OS === 'android') {
         try {
+          const rationale = {
+            title: _options?.title ?? 'Camera',
+            message: _options?.rationale ?? 'This app needs camera access to take photos and videos.',
+            buttonPositive: 'OK',
+          };
           const result = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA as never
+            PermissionsAndroid.PERMISSIONS.CAMERA as never,
+            rationale
           );
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
@@ -640,6 +655,16 @@ export const permissionsHandler = {
             status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
             blocked: !canAskAgain,
           };
+        } catch (e) {
+          logPermission('warning', 'Camera permission request failed', { error: e });
+          return mockStatus(false, true);
+        }
+      }
+      const camera = getCamera();
+      if (camera?.requestCameraPermissionsAsync) {
+        try {
+          const r = await camera.requestCameraPermissionsAsync();
+          return fromExpoResponse({ granted: r.status === 'granted', status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain });
         } catch {
           return mockStatus(false, true);
         }
@@ -653,9 +678,23 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
-      return unavailableStatus('expo-image-picker required; run on device');
+      return unavailableStatus('expo-camera or expo-image-picker required; run on device');
     }
-    if (permission === 'photoLibrary') {
+    if (effective === 'photoLibrary') {
+      const mediaLib = getMediaLibrary();
+      const picker = getImagePicker();
+      if (Platform.OS === 'android' && (mediaLib?.requestPermissionsAsync ?? picker?.requestMediaLibraryPermissionsAsync)) {
+        try {
+          if (mediaLib?.requestPermissionsAsync) {
+            await mediaLib.requestPermissionsAsync();
+          } else if (picker?.requestMediaLibraryPermissionsAsync) {
+            await picker.requestMediaLibraryPermissionsAsync(false);
+          }
+          return await getAndroidPhotoLibraryStatus();
+        } catch (e) {
+          logPermission('warning', 'Photo library (Expo) request failed, falling back to PermissionsAndroid', { error: e });
+        }
+      }
       if (Platform.OS === 'android') {
         try {
           const rationale = {
@@ -663,46 +702,44 @@ export const permissionsHandler = {
             message: _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.',
             buttonPositive: 'OK',
           };
-          if ((Platform.Version as number) >= 33) {
-            const firstResult = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES as never,
+          const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+          let canAskAgain = true;
+          if (apiLevel >= 33) {
+            const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationale);
+            const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationale);
+            canAskAgain =
+              r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
+              r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          } else {
+            const result = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
               rationale
             );
-            const result = await PermissionsAndroid.requestMultiple([
-              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-              PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO,
-            ] as never[]);
-            const images = result[PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES] ?? firstResult;
-            const video = result[PermissionsAndroid.PERMISSIONS.READ_MEDIA_VIDEO];
-            const granted =
-              images === PermissionsAndroid.RESULTS.GRANTED || video === PermissionsAndroid.RESULTS.GRANTED;
-            const neverAskImages = images === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
-            const neverAskVideo = video === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
-            const canAskAgain = !neverAskImages && !neverAskVideo;
-            return {
-              granted,
-              canAskAgain,
-              status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
-              blocked: !canAskAgain,
-            };
+            canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           }
-          const result = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
-            rationale
-          );
-          const granted = result === PermissionsAndroid.RESULTS.GRANTED;
-          const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          const verified = await getAndroidPhotoLibraryStatus();
           return {
-            granted,
+            ...verified,
             canAskAgain,
-            status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
             blocked: !canAskAgain,
+            status: verified.granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
           };
+        } catch (e) {
+          logPermission('warning', 'Photo library permission request failed', { error: e });
+          throw e;
+        }
+      }
+      if (mediaLib?.requestPermissionsAsync) {
+        try {
+          const r = await mediaLib.requestPermissionsAsync();
+          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
+          const accessPrivileges = (r as { accessPrivileges?: string }).accessPrivileges;
+          const limited = accessPrivileges === 'limited';
+          return fromMediaLibraryResponse({ granted: granted || limited, status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true, accessPrivileges: limited ? 'limited' : granted ? 'all' : 'none' });
         } catch (e) {
           throw e;
         }
       }
-      const picker = getImagePicker();
       if (picker?.requestMediaLibraryPermissionsAsync) {
         try {
           const r = await picker.requestMediaLibraryPermissionsAsync(false);
@@ -711,9 +748,9 @@ export const permissionsHandler = {
           throw e;
         }
       }
-      return unavailableStatus('expo-image-picker required; run on device');
+      return unavailableStatus('expo-media-library or expo-image-picker required; run on device');
     }
-    if (permission === 'location') {
+    if (effective === 'location') {
       if (Platform.OS === 'android') {
         try {
           const rationale =
@@ -757,7 +794,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-location required; run on device');
     }
-    if (permission === 'locationBackground') {
+    if (effective === 'locationBackground') {
       if (Platform.OS === 'android') {
         try {
           let hasForeground = await PermissionsAndroid.check(
@@ -825,7 +862,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-location required; run on device');
     }
-    if (permission === 'notifications') {
+    if (effective === 'notifications') {
       if (Platform.OS === 'android') {
         try {
           const result = await PermissionsAndroid.request(
@@ -846,8 +883,13 @@ export const permissionsHandler = {
       const notif = getNotifications();
       if (notif?.requestPermissionsAsync) {
         try {
+          const opts = _options as NotificationPermissionOptions | undefined;
           const r = await notif.requestPermissionsAsync({
-            ios: { allowAlert: true, allowBadge: true, allowSound: true },
+            ios: {
+              allowAlert: opts?.alert ?? true,
+              allowBadge: opts?.badge ?? true,
+              allowSound: opts?.sound ?? true,
+            },
           });
           return fromExpoResponse({
             granted: r.status === 'granted',
@@ -860,7 +902,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-notifications required; run on device');
     }
-    if (permission === 'microphone') {
+    if (effective === 'microphone') {
       if (Platform.OS === 'android') {
         try {
           const result = await PermissionsAndroid.request(
@@ -889,7 +931,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-av required for microphone on iOS');
     }
-    if (permission === 'calendar') {
+    if (effective === 'calendar') {
       if (Platform.OS === 'android') {
         try {
           const result = await PermissionsAndroid.requestMultiple([
@@ -931,7 +973,7 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-calendar required for calendar on iOS');
     }
-    if (permission === 'contacts') {
+    if (effective === 'contacts') {
       if (Platform.OS === 'android') {
         try {
           const result = await PermissionsAndroid.requestMultiple([
@@ -966,13 +1008,19 @@ export const permissionsHandler = {
       }
       return unavailableStatus('expo-contacts required for contacts');
     }
-    if (permission === 'phone') {
+    if (effective === 'phone') {
       if (Platform.OS !== 'android') {
         return unavailableStatus('Phone permission is Android only');
       }
       try {
+        const rationale = {
+          title: _options?.title ?? 'Phone',
+          message: _options?.rationale ?? 'This app needs phone access to identify your device.',
+          buttonPositive: 'OK',
+        };
         const result = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE as never
+          PermissionsAndroid.PERMISSIONS.READ_PHONE_STATE as never,
+          rationale
         );
         const granted = result === PermissionsAndroid.RESULTS.GRANTED;
         const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
@@ -982,11 +1030,12 @@ export const permissionsHandler = {
           status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
           blocked: !canAskAgain,
         };
-      } catch {
+      } catch (e) {
+        logPermission('warning', 'Phone permission request failed', { error: e });
         return mockStatus(false, true);
       }
     }
-    return mockStatus(false, true);
+    return unavailableStatus(`Permission ${permission} not implemented`);
   },
 
   async requestMultiple(requests: PermissionRequest[]): Promise<Record<string, PermissionStatus>> {
@@ -1044,6 +1093,11 @@ export const permissionsHandler = {
     statusListeners.get(permission)?.delete(callback);
   },
 
+  /**
+   * Request camera permission. Use includePhotoLibrary: true when the feature also needs
+   * photo library access (e.g. pick or save photos).
+   * @example permissionsHandler.requestCamera({ includePhotoLibrary: true, rationale: '...' })
+   */
   async requestCamera(options?: CameraPermissionOptions): Promise<PermissionStatus> {
     const status = await this.request('camera', options);
     if (status.granted && options?.includePhotoLibrary) {
@@ -1057,24 +1111,55 @@ export const permissionsHandler = {
     return this.request('microphone', options);
   },
 
+  /**
+   * Request photo library (media library) access. Use accessLevel for read-only, read-write, or add-only (iOS 14+).
+   * On iOS 14+, user may grant "limited" access (selected photos only); check status.limited.
+   * @example
+   * const photoStatus = await permissionsHandler.requestPhotoLibrary({
+   *   accessLevel: 'readWrite',
+   *   rationale: 'We need access to your photos to save images'
+   * });
+   * if (photoStatus.limited) {
+   *   // User granted limited access (selected photos only)
+   * }
+   */
   async requestPhotoLibrary(options?: PhotoLibraryOptions): Promise<PermissionStatus> {
     return this.request('photoLibrary', options);
   },
 
+  /**
+   * Request location permission (foreground). Use accuracy and background when building
+   * location-based apps that need high accuracy and/or background tracking.
+   * iOS: Background requires "Always" first; with background: true we request location then locationBackground.
+   * @example permissionsHandler.requestLocation({ accuracy: 'high', background: true, rationale: '...' })
+   */
   async requestLocation(options?: LocationPermissionOptions): Promise<PermissionStatus> {
     const status = await this.request('location', options);
     if (status.granted && options?.background) return this.request('locationBackground', options);
     return status;
   },
 
+  /**
+   * Request background location. iOS: Foreground/always must be granted first; otherwise the system will not grant background.
+   */
   async requestLocationBackground(options?: PermissionOptions): Promise<PermissionStatus> {
     return this.request('locationBackground', options);
   },
 
+  /**
+   * Request notification permission (for push/instant notifications). Handles iOS vs Android:
+   * Android uses POST_NOTIFICATIONS (API 33+); iOS uses expo-notifications with alert/badge/sound.
+   * @example permissionsHandler.requestNotifications({ alert: true, badge: true, sound: true })
+   */
   async requestNotifications(options?: NotificationPermissionOptions): Promise<PermissionStatus> {
-    return this.request('notifications');
+    return this.request('notifications', options);
   },
 
+  /**
+   * Request contacts permission (e.g. for sharing). Use a clear rationale; handle denial
+   * gracefully (e.g. showSettingsAlert when blocked, avoid blocking the user).
+   * @example permissionsHandler.requestContacts({ rationale: 'We need access to help you share with friends' })
+   */
   async requestContacts(options?: PermissionOptions): Promise<PermissionStatus> {
     return this.request('contacts', options);
   },
@@ -1090,22 +1175,66 @@ export const permissionsHandler = {
   async requestSpeechRecognition(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Speech recognition not implemented');
   },
-  async requestBiometrics(_options?: { reason: string; fallbackTitle?: string }): Promise<PermissionStatus> {
-    return unavailableStatus('Install expo-local-authentication for biometrics');
+  /**
+   * Request biometric (Face ID / Touch ID) availability / permission. Manages biometric accessibility;
+   * use fallbackTitle for the passcode fallback label (e.g. 'Use Passcode'). Requires expo-local-authentication
+   * and NSFaceIDUsageDescription on iOS.
+   * @example permissionsHandler.requestBiometrics({ fallbackTitle: 'Use Passcode' })
+   */
+  async requestBiometrics(options?: BiometricPermissionOptions): Promise<PermissionStatus> {
+    try {
+      const LocalAuthentication = require('expo-local-authentication') as {
+        hasHardwareAsync: () => Promise<boolean>;
+        isEnrolledAsync: () => Promise<boolean>;
+      };
+      const [hasHardware, isEnrolled] = await Promise.all([
+        LocalAuthentication.hasHardwareAsync(),
+        LocalAuthentication.isEnrolledAsync(),
+      ]);
+      if (!hasHardware) return unavailableStatus('Biometric hardware not available');
+      if (!isEnrolled) return unavailableStatus('No biometrics enrolled');
+      return { granted: true, canAskAgain: true, status: 'granted' };
+    } catch {
+      return unavailableStatus('Install expo-local-authentication for biometrics');
+    }
   },
+  /**
+   * Request motion & fitness permission (e.g. for fitness tracking apps).
+   * Requires platform implementation (e.g. expo-sensors / Health Connect).
+   * @example permissionsHandler.requestMotionFitness({ rationale: 'We need motion data to track your activity' })
+   */
   async requestMotionFitness(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Motion & fitness not implemented');
   },
+  /**
+   * Request health permission (e.g. for fitness/health apps).
+   * Requires platform implementation (e.g. HealthKit / Health Connect).
+   * @example permissionsHandler.requestHealth({ rationale: 'We need health data to show your progress' })
+   */
   async requestHealth(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Health not implemented');
   },
-  async requestMediaLibrary(options?: PermissionOptions): Promise<PermissionStatus> {
-    return this.requestPhotoLibrary(options as PhotoLibraryOptions);
+  /**
+   * Request media library (photo/video) permission. For media players use accessLevel to request
+   * read-only or read-write. Delegates to photoLibrary.
+   * @example permissionsHandler.requestMediaLibrary({ accessLevel: 'readWrite', rationale: '...' })
+   */
+  async requestMediaLibrary(options?: PhotoLibraryOptions): Promise<PermissionStatus> {
+    return this.requestPhotoLibrary(options);
   },
   async requestTracking(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Tracking not implemented');
   },
-  async requestStorage(_options?: PermissionOptions): Promise<PermissionStatus> {
+  /**
+   * Request storage permission. Android (API 33+) may use read/write; iOS typically uses photo library.
+   * Use Platform.OS to handle platform-specific logic.
+   * @example
+   * if (Platform.OS === 'android') {
+   *   return await permissionsHandler.requestStorage({ read: true, write: true, rationale: '...' });
+   * }
+   * return { granted: true, status: 'granted' }; // iOS
+   */
+  async requestStorage(options?: StoragePermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Storage: platform-specific implementation required');
   },
   async requestPhone(options?: PermissionOptions): Promise<PermissionStatus> {
@@ -1176,69 +1305,24 @@ export const permissionsHandler = {
   },
 
   getIOSInfoPlistEntries(permissions: PermissionType[]): IOSInfoPlistEntry[] {
-    const entries: IOSInfoPlistEntry[] = [];
-    const add = (key: string, value: string, description: string) => {
-      if (!entries.some((e) => e.key === key)) entries.push({ key, value, description });
-    };
-    if (permissions.includes('camera')) add('NSCameraUsageDescription', 'We need camera access to take photos and videos.', 'Camera');
-    if (permissions.includes('microphone')) add('NSMicrophoneUsageDescription', 'We need microphone access to record audio.', 'Microphone');
-    if (permissions.includes('photoLibrary') || permissions.includes('mediaLibrary')) {
-      add('NSPhotoLibraryUsageDescription', 'We need photos and videos access to save and select media.', 'Photos and Videos');
-      add('NSPhotoLibraryAddUsageDescription', 'We need permission to save photos and videos to your library.', 'Photos and Videos Add');
-    }
-    if (permissions.includes('location') || permissions.includes('locationWhenInUse') || permissions.includes('locationBackground')) {
-      add('NSLocationWhenInUseUsageDescription', 'We need your location to show nearby places.', 'Location When In Use');
-      add('NSLocationAlwaysAndWhenInUseUsageDescription', 'We need your location to track your route.', 'Location Always');
-      add('NSLocationAlwaysUsageDescription', 'We need background location to track your route.', 'Location Background');
-    }
-    if (permissions.includes('contacts')) add('NSContactsUsageDescription', 'We need contacts access to help you share content.', 'Contacts');
-    if (permissions.includes('calendar')) add('NSCalendarsUsageDescription', 'We need calendar access to schedule events.', 'Calendar');
-    if (permissions.includes('reminders')) add('NSRemindersUsageDescription', 'We need reminders access to create reminders.', 'Reminders');
-    if (permissions.includes('motionFitness')) add('NSMotionUsageDescription', 'We need motion access to track your activity.', 'Motion & Fitness');
-    if (permissions.includes('faceId') || permissions.includes('touchId') || permissions.includes('biometrics')) add('NSFaceIDUsageDescription', 'We need Face ID to authenticate securely.', 'Face ID');
-    if (permissions.includes('speechRecognition')) add('NSSpeechRecognitionUsageDescription', 'We need speech recognition to convert speech to text.', 'Speech Recognition');
-    if (permissions.includes('tracking')) add('NSUserTrackingUsageDescription', 'We use tracking to provide personalized content.', 'Tracking');
-    return entries;
+    return getIOSInfoPlistEntriesFromConfig(permissions);
   },
 
   getAndroidManifestEntries(permissions: PermissionType[]): AndroidManifestEntry[] {
-    const entries: AndroidManifestEntry[] = [];
-    const add = (permission: string, description: string, maxSdkVersion?: number) => {
-      if (!entries.some((e) => e.permission === permission)) entries.push({ permission, description, maxSdkVersion });
-    };
-    if (permissions.includes('camera')) add('android.permission.CAMERA', 'Camera');
-    if (permissions.includes('microphone')) add('android.permission.RECORD_AUDIO', 'Microphone');
-    if (permissions.includes('photoLibrary') || permissions.includes('storageRead')) {
-      add('android.permission.READ_EXTERNAL_STORAGE', 'Read storage (legacy)', 32);
-      add('android.permission.READ_MEDIA_IMAGES', 'Read media images');
-    }
-    if (permissions.includes('location') || permissions.includes('locationWhenInUse')) {
-      add('android.permission.ACCESS_FINE_LOCATION', 'Fine location');
-      add('android.permission.ACCESS_COARSE_LOCATION', 'Coarse location');
-    }
-    if (permissions.includes('locationBackground')) add('android.permission.ACCESS_BACKGROUND_LOCATION', 'Background location');
-    if (permissions.includes('notifications')) add('android.permission.POST_NOTIFICATIONS', 'Notifications (API 33+)');
-    if (permissions.includes('contacts')) {
-      add('android.permission.READ_CONTACTS', 'Read contacts');
-      add('android.permission.WRITE_CONTACTS', 'Write contacts');
-    }
-    if (permissions.includes('calendar')) {
-      add('android.permission.READ_CALENDAR', 'Read calendar');
-      add('android.permission.WRITE_CALENDAR', 'Write calendar');
-    }
-    if (permissions.includes('bluetooth') || permissions.includes('bluetoothScan')) add('android.permission.BLUETOOTH_SCAN', 'Bluetooth scan');
-    if (permissions.includes('bluetooth') || permissions.includes('bluetoothConnect')) add('android.permission.BLUETOOTH_CONNECT', 'Bluetooth connect');
-    if (permissions.includes('phone') || permissions.includes('readPhoneState')) add('android.permission.READ_PHONE_STATE', 'Read phone state');
-    if (permissions.includes('callPhone')) add('android.permission.CALL_PHONE', 'Call phone');
-    if (permissions.includes('sendSms')) add('android.permission.SEND_SMS', 'Send SMS');
-    if (permissions.includes('receiveSms')) add('android.permission.RECEIVE_SMS', 'Receive SMS');
-    if (permissions.includes('readSms')) add('android.permission.READ_SMS', 'Read SMS');
-    return entries;
+    return getAndroidManifestEntriesFromConfig(permissions);
   },
 };
 
 /**
- * Request permission with user-friendly messaging (legacy API).
+ * Request permission with user-friendly messaging (legacy API, snake_case permission names).
+ * When permission is blocked (never ask again), shows settings alert if showSettingsAlert is true.
+ *
+ * @param permission - Legacy type: camera, microphone, photo_library, location, contacts, calendar, reminders, notifications, bluetooth, speech_recognition, face_id, touch_id, biometrics
+ * @param options - title, message, showSettingsAlert (default true)
+ * @returns LegacyPermissionStatus (granted, canAskAgain, status: never_ask_again | granted | denied | unknown)
+ * @example
+ * const result = await requestPermission('photo_library', { message: 'To choose photos', showSettingsAlert: true });
+ * if (!result.granted && !result.canAskAgain) { // settings alert was shown }
  */
 export async function requestPermission(
   permission: LegacyPermissionType,
@@ -1253,22 +1337,38 @@ export async function requestPermission(
     const handlerType = LEGACY_TO_HANDLER[permission];
     const result = await permissionsHandler.request(handlerType, { ...options, showSettingsAlert });
     const legacy = toLegacyStatus(result);
+    logPermission('info', 'Permission request result', { permission: handlerType, status: result.status });
+    toastPermissionStatus(handlerType, result.status, PERMISSION_DISPLAY_NAMES[handlerType]);
+    if (result.status === 'blocked') {
+      snackbarPermissionAlert('Open Settings to enable this permission.', 'warning', {
+        label: 'Open Settings',
+        onPress: openAppSettings,
+      });
+    }
     if (!legacy.granted && !legacy.canAskAgain && showSettingsAlert) {
       showPermissionSettingsAlert(permission);
     }
     return legacy;
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    logPermission('error', 'Permission request failed', { permission, error: message });
     return {
       granted: false,
       canAskAgain: false,
       status: 'unknown',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message,
     };
   }
 }
 
 /**
- * Check if permission is granted (legacy API).
+ * Check if permission is granted without prompting (legacy API).
+ *
+ * @param permission - Legacy permission type (snake_case)
+ * @returns LegacyPermissionStatus
+ * @example
+ * const status = await checkPermission('camera');
+ * if (status.granted) launchCamera();
  */
 export async function checkPermission(permission: LegacyPermissionType): Promise<LegacyPermissionStatus> {
   try {
@@ -1276,17 +1376,23 @@ export async function checkPermission(permission: LegacyPermissionType): Promise
     const result = await permissionsHandler.check(handlerType);
     return toLegacyStatus(result);
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    logPermission('error', 'Permission check failed', { permission, error: message });
     return {
       granted: false,
       canAskAgain: false,
       status: 'unknown',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message,
     };
   }
 }
 
 /**
- * Show alert to guide user to settings (legacy API).
+ * Show native alert guiding user to app settings (e.g. when permission is blocked / "Don't ask again").
+ *
+ * @param permission - Legacy permission type (used for display name)
+ * @example
+ * if (status.status === 'blocked') showPermissionSettingsAlert('photo_library');
  */
 export function showPermissionSettingsAlert(permission: LegacyPermissionType) {
   const permissionNames: Record<LegacyPermissionType, string> = {
@@ -1321,10 +1427,18 @@ export function showPermissionSettingsAlert(permission: LegacyPermissionType) {
       },
     ]
   );
+
+  snackbarPermissionAlert(`Enable ${permissionName} in Settings to use this feature.`, 'warning', {
+    label: 'Open Settings',
+    onPress: openAppSettings,
+  });
 }
 
 /**
- * Open app settings
+ * Open the app's system settings screen. Use when user must enable permission manually (e.g. blocked).
+ *
+ * @example
+ * await openAppSettings();
  */
 export async function openAppSettings() {
   try {
@@ -1336,6 +1450,9 @@ export async function openAppSettings() {
 
 /**
  * Check multiple permissions at once (legacy API).
+ *
+ * @param permissions - Array of legacy permission types
+ * @returns Record of permission -> LegacyPermissionStatus
  */
 export async function checkMultiplePermissions(
   permissions: LegacyPermissionType[]
@@ -1348,7 +1465,11 @@ export async function checkMultiplePermissions(
 }
 
 /**
- * Request multiple permissions at once (legacy API).
+ * Request multiple permissions sequentially (legacy API). Each may show a system dialog.
+ *
+ * @param permissions - Array of legacy permission types
+ * @param options - showSettingsAlert (for blocked state)
+ * @returns Record of permission -> LegacyPermissionStatus
  */
 export async function requestMultiplePermissions(
   permissions: LegacyPermissionType[],
@@ -1362,7 +1483,10 @@ export async function requestMultiplePermissions(
 }
 
 /**
- * Get permission rationale message (legacy API).
+ * Get default rationale message for a permission (for dialogs / Android rationale).
+ *
+ * @param permission - Legacy permission type
+ * @returns Localized rationale string
  */
 export function getPermissionRationale(permission: LegacyPermissionType): string {
   const rationales: Record<LegacyPermissionType, string> = {
@@ -1384,14 +1508,20 @@ export function getPermissionRationale(permission: LegacyPermissionType): string
 }
 
 /**
- * Check if all permissions are granted (legacy API).
+ * Check if all entries in a permission result record are granted (legacy API).
+ *
+ * @param permissions - Result from checkMultiplePermissions or requestMultiplePermissions
+ * @returns true if every permission is granted
  */
 export function areAllPermissionsGranted(permissions: Record<LegacyPermissionType, LegacyPermissionStatus>): boolean {
   return Object.values(permissions).every((p) => p.granted);
 }
 
 /**
- * Get list of denied permissions (legacy API).
+ * Get list of permission types that are not granted (legacy API).
+ *
+ * @param permissions - Result from checkMultiplePermissions or requestMultiplePermissions
+ * @returns Array of denied legacy permission types
  */
 export function getDeniedPermissions(permissions: Record<LegacyPermissionType, LegacyPermissionStatus>): LegacyPermissionType[] {
   return Object.entries(permissions)
@@ -1400,7 +1530,12 @@ export function getDeniedPermissions(permissions: Record<LegacyPermissionType, L
 }
 
 /**
- * Permission helper hook for React components (legacy API).
+ * Hook that exposes legacy permission helpers for React components (requestPermission, checkPermission,
+ * checkMultiplePermissions, requestMultiplePermissions, getPermissionRationale, showPermissionSettingsAlert, openAppSettings).
+ *
+ * @example
+ * const { requestPermission, checkPermission, showPermissionSettingsAlert } = usePermissions();
+ * const handleRequest = () => requestPermission('camera', { showSettingsAlert: true });
  */
 export function usePermissions() {
   return {
