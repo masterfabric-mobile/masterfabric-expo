@@ -466,6 +466,7 @@
       "allChecked": "All permissions checked",
       "iosConfig": "iOS Info.plist",
       "androidConfig": "Android Manifest",
+      "noConfig": "—",
       "statusGranted": "Granted",
       "statusDenied": "Denied",
       "statusBlocked": "Blocked (Don't ask again)",
@@ -498,7 +499,7 @@
         "location": "This app needs location access to show nearby places.",
         "locationBackground": "This app needs background location to track your route.",
         "calendar": "This app needs calendar access to schedule events.",
-        "contacts": "This app needs contacts access to help you share content with friends.",
+        "contacts": "We need contacts access to help you share with friends.",
         "phone": "This app needs phone access to identify your device.",
         "settingsMessage": "Permission was denied. Open Settings to enable it.",
         "deniedOpenSettings": "No dialog appeared (common on Xiaomi/Redmi). Open Settings to grant the permission.",
@@ -513,7 +514,7 @@
           "locationWhenInUse": "This app needs your location to show nearby places.",
           "locationAlways": "This app needs your location to track your route.",
           "locationBackground": "This app needs background location to track your route.",
-          "contacts": "This app needs contacts access to help you share content with friends."
+          "contacts": "We need contacts access to help you share with friends."
         },
         "android": {
           "camera": "Camera",

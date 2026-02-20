@@ -462,6 +462,7 @@
       "allChecked": "Tüm izinler kontrol edildi",
       "iosConfig": "iOS Bilgi Listesi (Info.plist)",
       "androidConfig": "Android Manifest Dosyası",
+      "noConfig": "—",
       "statusGranted": "Verildi",
       "statusDenied": "Reddedildi",
       "statusBlocked": "Engelli (Tekrar sorma)",
@@ -494,7 +495,7 @@
         "location": "Uygulamanın yakındaki yerleri göstermek için konum erişimine ihtiyacı var.",
         "locationBackground": "Uygulamanın rotanızı takip etmek için arka plan konumuna ihtiyacı var.",
         "calendar": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
-        "contacts": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var.",
+        "contacts": "Arkadaşlarınızla paylaşım için kişi listesine erişime ihtiyacımız var.",
         "phone": "Uygulamanın cihazınızı tanımlamak için telefon erişimine ihtiyacı var.",
         "settingsMessage": "İzin reddedildi. Açmak için Ayarlar'a gidin.",
         "deniedOpenSettings": "İzin penceresi çıkmadı (Xiaomi/Redmi'de sık görülür). İzni vermek için Ayarlar'ı açın.",
@@ -509,7 +510,7 @@
           "locationWhenInUse": "Uygulamanın yakındaki yerleri göstermek için konumunuza ihtiyacı var.",
           "locationAlways": "Uygulamanın rotanızı takip etmek için konumunuza ihtiyacı var.",
           "locationBackground": "Uygulamanın rotanızı takip etmek için arka plan konumuna ihtiyacı var.",
-          "contacts": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var."
+          "contacts": "Arkadaşlarınızla paylaşım için kişi listesine erişime ihtiyacımız var."
         },
         "android": {
           "camera": "Kamera",
