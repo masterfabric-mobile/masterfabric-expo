@@ -5,28 +5,23 @@ import {
     type PermissionStatus,
     type PermissionType,
 } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
 import {
-    CONFIG_PREVIEW_PERMISSIONS,
-    PERMISSION_KEYS,
-    PERMISSION_LABEL_KEYS,
+  CONFIG_PREVIEW_PERMISSIONS,
+  PERMISSION_KEYS,
+  PERMISSION_LABEL_KEYS,
 } from '../constants/permissions-helper.constants';
+import type { LocationPermissionInfo } from '../models/permissions-helper-models';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
-
-export type LocationPermissionInfo = {
-  foreground: 'granted' | 'denied' | 'unavailable';
-  background: 'granted' | 'denied' | 'unavailable';
-  precise: boolean;
-};
 
 export function usePermissionsHelperViewModel() {
   const { statuses, loading, setStatus, setLoading } = usePermissionsHelperStore();
   const snackbar = useSnackbar();
   const [locationInfo, setLocationInfo] = useState<LocationPermissionInfo | null>(null);
 
-  const REQUEST_TIMEOUT_MS = 8000;
+  const REQUEST_TIMEOUT_MS = 15000;
   const withTimeout = <T>(p: Promise<T>) =>
     Promise.race([
       p,
@@ -45,6 +40,7 @@ export function usePermissionsHelperViewModel() {
               return permissionsHandler.requestCamera({
                 rationale: t('helpers.permissionsHelper.rationale.camera'),
                 showSettingsAlert: true,
+                includePhotoLibrary: true,
               });
             case 'microphone':
               return permissionsHandler.requestMicrophone({
@@ -60,6 +56,8 @@ export function usePermissionsHelperViewModel() {
               return permissionsHandler.requestLocation({
                 rationale: t('helpers.permissionsHelper.rationale.location'),
                 showSettingsAlert: true,
+                accuracy: 'high',
+                background: true,
               });
             case 'notifications':
               return permissionsHandler.requestNotifications({
@@ -88,7 +86,7 @@ export function usePermissionsHelperViewModel() {
         };
       let status: PermissionStatus;
       const fetchPromise = fetchStatus();
-      fetchPromise.catch(() => {}); // Prevent unhandled rejection when timeout wins and fetch settles later
+      fetchPromise.catch(() => {});
       try {
         status = await withTimeout(fetchPromise);
       } catch (timeoutErr) {
@@ -103,17 +101,24 @@ export function usePermissionsHelperViewModel() {
       }
       setStatus(key, status);
       if (!silent) {
+        const labelI18n = t(PERMISSION_LABEL_KEYS[key] ?? key);
+        const statusKey =
+          status.status === 'granted'
+            ? 'helpers.permissionsHelper.statusGranted'
+            : status.status === 'denied'
+              ? 'helpers.permissionsHelper.statusDenied'
+              : status.status === 'blocked'
+                ? 'helpers.permissionsHelper.statusBlocked'
+                : status.status === 'limited'
+                  ? 'helpers.permissionsHelper.statusLimited'
+                  : 'helpers.permissionsHelper.statusUnavailable';
+        const resultMessage = `${labelI18n}: ${t(statusKey)}`;
+        if (status.granted) {
+          snackbar.success(resultMessage, 3000);
+        } else {
+          snackbar.error(resultMessage, 3500);
+        }
         if (status.status === 'blocked' || status.blocked) {
-          permissionsHandler.showSettingsAlert({
-            permission: key,
-            openSettings: true,
-            message: t('helpers.permissionsHelper.rationale.settingsMessage'),
-          });
-        } else if (!status.granted && status.status === 'denied' && key === 'photoLibrary') {
-          snackbar.error(
-            t('helpers.permissionsHelper.rationale.deniedOpenSettings'),
-            4500
-          );
           permissionsHandler.showSettingsAlert({
             permission: key,
             openSettings: true,
@@ -159,24 +164,31 @@ export function usePermissionsHelperViewModel() {
 
   useEffect(() => {
     checkAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount to refresh statuses
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (nextState === 'active') {
         checkAll();
+        PERMISSION_KEYS.forEach((k) => setLoading(k, false));
       }
     });
     return () => sub.remove();
-  }, [checkAll]);
+  }, [checkAll, setLoading]);
 
   useEffect(() => {
     permissionsHandler.getLocationPermissionInfo().then(setLocationInfo).catch(() => setLocationInfo(null));
   }, [statuses.location]);
 
-  const iosEntries = permissionsHandler.getIOSInfoPlistEntries(CONFIG_PREVIEW_PERMISSIONS);
-  const androidEntries = permissionsHandler.getAndroidManifestEntries(CONFIG_PREVIEW_PERMISSIONS);
+  const iosEntries = useMemo(
+    () => permissionsHandler.getIOSInfoPlistEntries(CONFIG_PREVIEW_PERMISSIONS),
+    []
+  );
+  const androidEntries = useMemo(
+    () => permissionsHandler.getAndroidManifestEntries(CONFIG_PREVIEW_PERMISSIONS),
+    []
+  );
 
   return {
     statuses,
