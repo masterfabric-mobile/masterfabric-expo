@@ -28,6 +28,3 @@ export const usePermissionsHelperStore = create<PermissionsHelperStore>((set) =>
     set((state) => ({ loading: { ...state.loading, [key]: loading } })),
   reset: () => set({ statuses: { ...initialStatuses }, loading: { ...initialLoading } }),
 }));
-
-export { PERMISSION_KEYS } from '../constants/permissions-helper.constants';
-export type { PermissionKey } from '../constants/permissions-helper.constants';

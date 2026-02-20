@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import type { ThemeColors } from 'masterfabric-expo-core';
+import { StyleSheet, type ViewStyle } from 'react-native';
 
 export const permissionsHelperScreenStyles = StyleSheet.create({
   container: {
@@ -67,7 +68,12 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
     fontSize: 13,
   },
   locationInfoBlock: {
-    gap: 2,
+    gap: 4,
+  },
+  locationStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   locationInfoText: {
     fontSize: 12,
@@ -101,3 +107,54 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
     fontSize: 11,
   },
 });
+
+/** Style maps for subcomponents (ConfigPreviewSection, LocationPermissionDetail, PermissionCard). */
+export const configPreviewSectionStyles = {
+  section: permissionsHelperScreenStyles.configSection,
+  title: permissionsHelperScreenStyles.configTitle,
+  block: permissionsHelperScreenStyles.configBlock,
+  code: permissionsHelperScreenStyles.configCode,
+};
+
+export const locationDetailStyles = {
+  block: permissionsHelperScreenStyles.locationInfoBlock,
+  row: permissionsHelperScreenStyles.locationStatusRow,
+  labelText: permissionsHelperScreenStyles.locationInfoText,
+  statusText: permissionsHelperScreenStyles.locationInfoText,
+};
+
+export const permissionCardStyles = {
+  cardContainer: permissionsHelperScreenStyles.cardContainer,
+  card: permissionsHelperScreenStyles.card,
+  cardRow: permissionsHelperScreenStyles.cardRow,
+  cardLabelBlock: permissionsHelperScreenStyles.cardLabelBlock,
+  sectionTitle: permissionsHelperScreenStyles.sectionTitle,
+  statusRow: permissionsHelperScreenStyles.statusRow,
+  statusDot: permissionsHelperScreenStyles.statusDot,
+  statusText: permissionsHelperScreenStyles.statusText,
+  requestBtn: permissionsHelperScreenStyles.requestBtn,
+  requestBtnText: permissionsHelperScreenStyles.requestBtnText,
+};
+
+/** Theme-dependent styles (light/dark). Use with permissionsHelperScreenStyles. */
+export function getPermissionsHelperScreenDynamicStyles(colors: ThemeColors): {
+  container: ViewStyle;
+  scrollView: ViewStyle;
+  card: ViewStyle;
+  configBlock: ViewStyle;
+  requestBtn: ViewStyle;
+  primaryBtnTextColor: string;
+} {
+  return {
+    container: { backgroundColor: colors.background },
+    scrollView: { backgroundColor: colors.background },
+    card: {
+      backgroundColor: colors.cardBackground,
+      borderWidth: 1,
+      borderColor: colors.surfaceBorder,
+    },
+    configBlock: { backgroundColor: colors.cardBackground },
+    requestBtn: { backgroundColor: colors.activeButton },
+    primaryBtnTextColor: colors.activeButtonText,
+  };
+}
