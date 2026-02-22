@@ -28,7 +28,13 @@
                                                   },
                                  "edgeToEdgeEnabled":  true,
                                  "package":  "com.masterfabric.expo.android",
-                                 "versionCode":  3
+                                 "versionCode":  3,
+                                 "permissions":  [
+                                                     "android.permission.CAMERA",
+                                                     "android.permission.RECORD_AUDIO",
+                                                     "android.permission.READ_EXTERNAL_STORAGE",
+                                                     "android.permission.WRITE_EXTERNAL_STORAGE"
+                                                 ]
                              },
                  "web":  {
                              "bundler":  "metro",
@@ -46,6 +52,15 @@
                                          "imageWidth":  200,
                                          "resizeMode":  "contain",
                                          "backgroundColor":  "#ffffff"
+                                     }
+                                 ],
+                                 [
+                                     "expo-media-library",
+                                     {
+                                         "photosPermission":  "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+                                         "savePhotosPermission":  "Uygulamanın fotoğrafları kütüphanenize kaydetmek için izne ihtiyacı var.",
+                                         "isAccessMediaLocationEnabled":  false,
+                                         "granularPermissions":  ["photo", "video"]
                                      }
                                  ],
                                  [
