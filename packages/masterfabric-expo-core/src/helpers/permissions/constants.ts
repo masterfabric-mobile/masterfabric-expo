@@ -35,6 +35,7 @@ export const IMPLEMENTED_PERMISSIONS: PermissionType[] = [
   'calendar',
   'contacts',
   'phone',
+  'storage',
 ];
 
 export function isImplemented(p: PermissionType): boolean {

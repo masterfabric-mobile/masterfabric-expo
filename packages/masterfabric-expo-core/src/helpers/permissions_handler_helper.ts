@@ -202,22 +202,22 @@ function fromExpoResponse(
 }
 
 /**
- * Map expo-image-picker MediaLibraryPermissionResponse.
- * Only treat as granted when accessPrivileges is explicitly 'all' or 'limited'.
- * When accessPrivileges is 'none' or undefined (e.g. Android 13+ or bad response), treat as denied
- * so Settings "Don't allow" is never shown as granted.
+ * Map expo-image-picker / expo-media-library MediaLibraryPermissionResponse.
+ * iOS: accessPrivileges 'all' | 'limited' | 'none'. When undefined (e.g. Android), use granted/status.
  */
 function fromMediaLibraryResponse(
-  r: { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' }
+  r: { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' }
 ): PermissionStatus {
   const accessPrivileges = r.accessPrivileges;
   const limited = accessPrivileges === 'limited';
-  const granted = accessPrivileges === 'all' || accessPrivileges === 'limited';
+  const statusLower = (r.status ?? '').toLowerCase();
+  const explicitGranted = r.granted === true || statusLower === 'granted';
+  const grantedByScope = accessPrivileges === 'all' || accessPrivileges === 'limited';
+  const granted = grantedByScope || (explicitGranted && accessPrivileges !== 'none');
   const canAskAgain = r.canAskAgain ?? true;
-  const status = (r.status ?? '').toLowerCase();
   let ourStatus: PermissionStatus['status'] = 'denied';
   if (granted) ourStatus = limited ? 'limited' : 'granted';
-  else if (status === 'denied' || status === 'undetermined' || accessPrivileges === 'none' || accessPrivileges == null)
+  else if (statusLower === 'denied' || statusLower === 'undetermined' || accessPrivileges === 'none')
     ourStatus = canAskAgain ? 'denied' : 'blocked';
   else ourStatus = canAskAgain ? 'denied' : 'blocked';
   return {
@@ -253,8 +253,14 @@ function getImagePicker(): ReturnType<typeof require> | null {
   }
 }
 
+/** Granular permissions for Android 13+ (expo-media-library). */
+const MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO: ('photo' | 'video')[] = ['photo', 'video'];
+
 /** Load expo-media-library for media/photo library permissions (optional peer dependency). Prefer over expo-image-picker when available. */
-function getMediaLibrary(): { getPermissionsAsync: (writeOnly?: boolean) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }>; requestPermissionsAsync: (writeOnly?: boolean) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }> } | null {
+function getMediaLibrary(): {
+  getPermissionsAsync: (writeOnly?: boolean, granularPermissions?: string[]) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }>;
+  requestPermissionsAsync: (writeOnly?: boolean, granularPermissions?: string[]) => Promise<{ status: string; granted?: boolean; canAskAgain?: boolean; accessPrivileges?: string }>;
+} | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional native module
     const lib = require('expo-media-library');
@@ -326,6 +332,7 @@ const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   camera: 'Camera',
   microphone: 'Microphone',
   photoLibrary: 'Photos and Videos',
+  storage: 'Storage (Files)',
   location: 'Location',
   locationBackground: 'Location (Background)',
   notifications: 'Notifications',
@@ -399,6 +406,22 @@ export const permissionsHandler = {
       return unavailableStatus('expo-camera or expo-image-picker required; run on device');
     }
     if (effective === 'photoLibrary') {
+      const mediaLib = getMediaLibrary();
+      const picker = getImagePicker();
+      if (mediaLib?.getPermissionsAsync) {
+        try {
+          const granular = Platform.OS === 'android' ? MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO : undefined;
+          const r = await mediaLib.getPermissionsAsync(false, granular);
+          return fromMediaLibraryResponse({
+            granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
+            status: r.status,
+            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+            accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
+          });
+        } catch {
+          return mockStatus(false, true);
+        }
+      }
       if (Platform.OS === 'android') {
         try {
           if ((Platform.Version as number) >= 33) {
@@ -426,23 +449,10 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
-      const mediaLib = getMediaLibrary();
-      if (mediaLib?.getPermissionsAsync) {
-        try {
-          const r = await mediaLib.getPermissionsAsync();
-          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
-          const accessPrivileges = (r as { accessPrivileges?: string }).accessPrivileges;
-          const limited = accessPrivileges === 'limited';
-          return fromMediaLibraryResponse({ granted: granted || limited, status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true, accessPrivileges: limited ? 'limited' : granted ? 'all' : 'none' });
-        } catch {
-          return mockStatus(false, true);
-        }
-      }
-      const picker = getImagePicker();
       if (picker?.getMediaLibraryPermissionsAsync) {
         try {
           const r = await picker.getMediaLibraryPermissionsAsync(false);
-          return fromMediaLibraryResponse(r as { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
+          return fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
         } catch {
           return mockStatus(false, true);
         }
@@ -622,6 +632,38 @@ export const permissionsHandler = {
         return mockStatus(false, true);
       }
     }
+    if (effective === 'storage') {
+      if (Platform.OS !== 'android') {
+        return { granted: true, canAskAgain: true, status: 'granted' as const };
+      }
+      try {
+        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        if (apiLevel >= 33) {
+          const [images, video] = await Promise.all([
+            PermissionsAndroid.check(ANDROID_READ_MEDIA_IMAGES as never),
+            PermissionsAndroid.check(ANDROID_READ_MEDIA_VIDEO as never),
+          ]);
+          const granted = images && video;
+          return {
+            granted,
+            canAskAgain: true,
+            status: granted ? 'granted' : 'denied',
+            blocked: false,
+          };
+        }
+        const read = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never);
+        const write = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE as never);
+        const granted = read && write;
+        return {
+          granted,
+          canAskAgain: true,
+          status: granted ? 'granted' : 'denied',
+          blocked: false,
+        };
+      } catch {
+        return mockStatus(false, true);
+      }
+    }
     return unavailableStatus(`Permission ${permission} not implemented`);
   },
 
@@ -683,39 +725,59 @@ export const permissionsHandler = {
     if (effective === 'photoLibrary') {
       const mediaLib = getMediaLibrary();
       const picker = getImagePicker();
-      if (Platform.OS === 'android' && (mediaLib?.requestPermissionsAsync ?? picker?.requestMediaLibraryPermissionsAsync)) {
+      const rationale = _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.';
+      if (mediaLib?.requestPermissionsAsync) {
         try {
-          if (mediaLib?.requestPermissionsAsync) {
-            await mediaLib.requestPermissionsAsync();
-          } else if (picker?.requestMediaLibraryPermissionsAsync) {
-            await picker.requestMediaLibraryPermissionsAsync(false);
+          const r = await mediaLib.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
+          const status = fromMediaLibraryResponse({
+            granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
+            status: r.status,
+            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+            accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
+          });
+          if (Platform.OS === 'android') {
+            const verified = await getAndroidPhotoLibraryStatus();
+            return {
+              ...verified,
+              canAskAgain: status.canAskAgain,
+              blocked: status.blocked ?? false,
+              status: verified.granted ? 'granted' : (status.canAskAgain ? 'denied' : 'blocked'),
+            };
           }
-          return await getAndroidPhotoLibraryStatus();
+          return status;
         } catch (e) {
-          logPermission('warning', 'Photo library (Expo) request failed, falling back to PermissionsAndroid', { error: e });
+          logPermission('warning', 'Photo library permission request failed (expo-media-library)', { error: e });
+          if (Platform.OS !== 'android') throw e;
         }
       }
       if (Platform.OS === 'android') {
+        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        const rationaleObj = {
+          title: _options?.title ?? 'Photos and Videos',
+          message: rationale,
+          buttonPositive: 'OK',
+        };
         try {
-          const rationale = {
-            title: _options?.title ?? 'Photos and Videos',
-            message: _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.',
-            buttonPositive: 'OK',
-          };
-          const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
           let canAskAgain = true;
           if (apiLevel >= 33) {
-            const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationale);
-            const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationale);
+            const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationaleObj);
+            const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationaleObj);
             canAskAgain =
               r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
               r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           } else {
             const result = await PermissionsAndroid.request(
               PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
-              rationale
+              rationaleObj
             );
             canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+          }
+          if (picker?.requestMediaLibraryPermissionsAsync) {
+            try {
+              await picker.requestMediaLibraryPermissionsAsync(false);
+            } catch {
+              // ignore
+            }
           }
           const verified = await getAndroidPhotoLibraryStatus();
           return {
@@ -729,21 +791,10 @@ export const permissionsHandler = {
           throw e;
         }
       }
-      if (mediaLib?.requestPermissionsAsync) {
-        try {
-          const r = await mediaLib.requestPermissionsAsync();
-          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
-          const accessPrivileges = (r as { accessPrivileges?: string }).accessPrivileges;
-          const limited = accessPrivileges === 'limited';
-          return fromMediaLibraryResponse({ granted: granted || limited, status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true, accessPrivileges: limited ? 'limited' : granted ? 'all' : 'none' });
-        } catch (e) {
-          throw e;
-        }
-      }
       if (picker?.requestMediaLibraryPermissionsAsync) {
         try {
           const r = await picker.requestMediaLibraryPermissionsAsync(false);
-          return fromMediaLibraryResponse(r as { granted: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
+          return fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
         } catch (e) {
           throw e;
         }
@@ -1035,6 +1086,55 @@ export const permissionsHandler = {
         return mockStatus(false, true);
       }
     }
+    if (effective === 'storage') {
+      if (Platform.OS !== 'android') {
+        return { granted: true, canAskAgain: true, status: 'granted' as const };
+      }
+      const rationale = {
+        title: _options?.title ?? 'Storage',
+        message: _options?.rationale ?? 'This app needs storage access to download and upload files.',
+        buttonPositive: 'OK',
+      };
+      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+      try {
+        let readGranted: boolean;
+        let writeGranted: boolean;
+        let canAskAgain: boolean;
+        if (apiLevel >= 33) {
+          const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationale);
+          const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationale);
+          readGranted = r1 === PermissionsAndroid.RESULTS.GRANTED;
+          writeGranted = r2 === PermissionsAndroid.RESULTS.GRANTED;
+          canAskAgain =
+            r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
+            r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+        } else {
+          const readResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
+            rationale
+          );
+          const writeResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE as never,
+            rationale
+          );
+          readGranted = readResult === PermissionsAndroid.RESULTS.GRANTED;
+          writeGranted = writeResult === PermissionsAndroid.RESULTS.GRANTED;
+          canAskAgain =
+            readResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
+            writeResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+        }
+        const granted = readGranted && writeGranted;
+        return {
+          granted,
+          canAskAgain,
+          status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
+          blocked: !canAskAgain,
+        };
+      } catch (e) {
+        logPermission('warning', 'Storage permission request failed', { error: e });
+        return mockStatus(false, true);
+      }
+    }
     return unavailableStatus(`Permission ${permission} not implemented`);
   },
 
@@ -1226,16 +1326,11 @@ export const permissionsHandler = {
     return unavailableStatus('Tracking not implemented');
   },
   /**
-   * Request storage permission. Android (API 33+) may use read/write; iOS typically uses photo library.
-   * Use Platform.OS to handle platform-specific logic.
-   * @example
-   * if (Platform.OS === 'android') {
-   *   return await permissionsHandler.requestStorage({ read: true, write: true, rationale: '...' });
-   * }
-   * return { granted: true, status: 'granted' }; // iOS
+   * Request storage permission. Android: READ_EXTERNAL_STORAGE + WRITE_EXTERNAL_STORAGE for file download/upload.
+   * iOS: no runtime storage permission; use photo library for media; app-specific dirs need no permission.
    */
   async requestStorage(options?: StoragePermissionOptions): Promise<PermissionStatus> {
-    return unavailableStatus('Storage: platform-specific implementation required');
+    return this.request('storage', options);
   },
   async requestPhone(options?: PermissionOptions): Promise<PermissionStatus> {
     return this.request('phone', options);
