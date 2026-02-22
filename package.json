@@ -22,7 +22,11 @@
     "masterfabric"
   ],
   "license": "AGPL-3.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
+    "postinstall": "node scripts/audit-fix-override.js",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
@@ -63,6 +67,7 @@
     "expo-contacts": "~15.0.11",
     "expo-dev-client": "~6.0.20",
     "expo-device": "~8.0.10",
+    "expo-file-system": "~19.0.21",
     "expo-font": "~14.0.10",
     "expo-haptics": "~15.0.8",
     "expo-image": "~3.0.11",
@@ -71,6 +76,7 @@
     "expo-linking": "~8.0.10",
     "expo-localization": "~17.0.8",
     "expo-location": "~18.0.8",
+    "expo-media-library": "~18.2.1",
     "expo-notifications": "~0.32.0",
     "expo-router": "~6.0.17",
     "expo-splash-screen": "~31.0.12",
@@ -80,7 +86,7 @@
     "expo-web-browser": "~15.0.10",
     "firebase": "^12.8.0",
     "i18n-js": "^4.5.1",
-    "masterfabric-expo-core": "file:packages/masterfabric-expo-core",
+    "masterfabric-expo-core": "workspace:*",
     "onesignal-expo-plugin": "^2.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -113,7 +119,9 @@
     "typescript": "~5.9.2"
   },
   "overrides": {
-    "ajv": "^8.18.0"
+    "ajv": "^8.18.0",
+    "minimatch": "^10.2.1",
+    "glob": "^13.0.0"
   },
   "private": true
 }
