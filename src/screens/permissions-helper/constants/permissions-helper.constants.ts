@@ -1,9 +1,13 @@
 import type { PermissionType } from 'masterfabric-expo-core';
 
+/** AsyncStorage key for which permissions the user has tapped "Request" at least once. */
+export const STORAGE_KEY_REQUEST_ATTEMPTED = 'permissionsHelper.requestAttempted';
+
 export const PERMISSION_KEYS = [
   'camera',
   'microphone',
   'photoLibrary',
+  'storage',
   'location',
   'notifications',
   'calendar',
@@ -17,6 +21,7 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   camera: 'Camera',
   microphone: 'Microphone',
   photoLibrary: 'Photos and Videos',
+  storage: 'Storage (Files)',
   location: 'Location',
   notifications: 'Notifications',
   calendar: 'Calendar',
@@ -28,6 +33,7 @@ export const CONFIG_PREVIEW_PERMISSIONS: PermissionType[] = [
   'camera',
   'microphone',
   'photoLibrary',
+  'storage',
   'location',
   'notifications',
   'calendar',
@@ -58,6 +64,7 @@ export const PERMISSION_LABEL_KEYS: Record<string, string> = {
   camera: 'helpers.permissionsHelper.permissionCamera',
   microphone: 'helpers.permissionsHelper.permissionMicrophone',
   photoLibrary: 'helpers.permissionsHelper.permissionPhotoLibrary',
+  storage: 'helpers.permissionsHelper.permissionStorage',
   location: 'helpers.permissionsHelper.permissionLocation',
   notifications: 'helpers.permissionsHelper.permissionNotifications',
   calendar: 'helpers.permissionsHelper.permissionCalendar',
@@ -82,7 +89,9 @@ export const ANDROID_PERMISSION_TO_I18N: Record<string, string> = {
   CAMERA: 'helpers.permissionsHelper.config.android.CAMERA',
   RECORD_AUDIO: 'helpers.permissionsHelper.config.android.RECORD_AUDIO',
   READ_EXTERNAL_STORAGE: 'helpers.permissionsHelper.config.android.READ_EXTERNAL_STORAGE',
+  WRITE_EXTERNAL_STORAGE: 'helpers.permissionsHelper.config.android.WRITE_EXTERNAL_STORAGE',
   READ_MEDIA_IMAGES: 'helpers.permissionsHelper.config.android.READ_MEDIA_IMAGES',
+  READ_MEDIA_VIDEO: 'helpers.permissionsHelper.config.android.READ_MEDIA_VIDEO',
   ACCESS_FINE_LOCATION: 'helpers.permissionsHelper.config.android.ACCESS_FINE_LOCATION',
   ACCESS_COARSE_LOCATION: 'helpers.permissionsHelper.config.android.ACCESS_COARSE_LOCATION',
   ACCESS_BACKGROUND_LOCATION: 'helpers.permissionsHelper.config.android.ACCESS_BACKGROUND_LOCATION',
