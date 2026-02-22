@@ -5,13 +5,15 @@ import {
     type PermissionStatus,
     type PermissionType,
 } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
+import { StorageService } from '@/src/shared/services/storage';
 import {
   CONFIG_PREVIEW_PERMISSIONS,
   PERMISSION_KEYS,
   PERMISSION_LABEL_KEYS,
+  STORAGE_KEY_REQUEST_ATTEMPTED,
 } from '../constants/permissions-helper.constants';
 import type { LocationPermissionInfo } from '../models/permissions-helper-models';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
@@ -20,8 +22,13 @@ export function usePermissionsHelperViewModel() {
   const { statuses, loading, setStatus, setLoading } = usePermissionsHelperStore();
   const snackbar = useSnackbar();
   const [locationInfo, setLocationInfo] = useState<LocationPermissionInfo | null>(null);
+  const [requestAttempted, setRequestAttemptedState] = useState<Record<PermissionKey, boolean>>(
+    () => Object.fromEntries(PERMISSION_KEYS.map((k) => [k, false])) as Record<PermissionKey, boolean>
+  );
 
   const REQUEST_TIMEOUT_MS = 15000;
+  const SKIP_CHECK_AFTER_REQUEST_MS = 2500;
+  const lastRequestedRef = useRef<{ key: PermissionKey; time: number } | null>(null);
   const withTimeout = <T>(p: Promise<T>) =>
     Promise.race([
       p,
@@ -50,6 +57,11 @@ export function usePermissionsHelperViewModel() {
             case 'photoLibrary':
               return permissionsHandler.requestPhotoLibrary({
                 rationale: t('helpers.permissionsHelper.rationale.photoLibrary'),
+                showSettingsAlert: true,
+              });
+            case 'storage':
+              return permissionsHandler.requestStorage({
+                rationale: t('helpers.permissionsHelper.rationale.storage'),
                 showSettingsAlert: true,
               });
             case 'location':
@@ -100,36 +112,21 @@ export function usePermissionsHelperViewModel() {
         }
       }
       setStatus(key, status);
-      if (!silent) {
-        const labelI18n = t(PERMISSION_LABEL_KEYS[key] ?? key);
-        const statusKey =
-          status.status === 'granted'
-            ? 'helpers.permissionsHelper.statusGranted'
-            : status.status === 'denied'
-              ? 'helpers.permissionsHelper.statusDenied'
-              : status.status === 'blocked'
-                ? 'helpers.permissionsHelper.statusBlocked'
-                : status.status === 'limited'
-                  ? 'helpers.permissionsHelper.statusLimited'
-                  : 'helpers.permissionsHelper.statusUnavailable';
-        const resultMessage = `${labelI18n}: ${t(statusKey)}`;
-        if (status.granted) {
-          snackbar.success(resultMessage, 3000);
-        } else {
-          snackbar.error(resultMessage, 3500);
-        }
-        if (status.status === 'blocked' || status.blocked) {
-          permissionsHandler.showSettingsAlert({
-            permission: key,
-            openSettings: true,
-            message: t('helpers.permissionsHelper.rationale.settingsMessage'),
-          });
-        }
+      lastRequestedRef.current = { key, time: Date.now() };
+      setRequestAttemptedState((prev) => {
+        const next = { ...prev, [key]: true };
+        StorageService.setItem(STORAGE_KEY_REQUEST_ATTEMPTED, next).catch(() => {});
+        return next;
+      });
+      if (!silent && (status.status === 'blocked' || status.blocked)) {
+        permissionsHandler.showSettingsAlert({
+          permission: key,
+          openSettings: true,
+          message: t('helpers.permissionsHelper.rationale.settingsMessage'),
+        });
       }
       return status;
     } catch (e) {
-      const labelI18n = t(PERMISSION_LABEL_KEYS[key] ?? key);
-      snackbar.error(`${labelI18n}: ${e instanceof Error ? e.message : 'error'}`, 3500);
       throw e;
     } finally {
       setLoading(key, false);
@@ -137,7 +134,12 @@ export function usePermissionsHelperViewModel() {
   }, [setStatus, setLoading, snackbar]);
 
   const checkAll = useCallback(async () => {
+    const now = Date.now();
     for (const key of PERMISSION_KEYS) {
+      const recentlyRequested =
+        lastRequestedRef.current?.key === key &&
+        now - lastRequestedRef.current.time < SKIP_CHECK_AFTER_REQUEST_MS;
+      if (recentlyRequested) continue;
       try {
         const type: PermissionType = key;
         const status = await permissionsHandler.check(type);
@@ -168,13 +170,31 @@ export function usePermissionsHelperViewModel() {
   }, []);
 
   useEffect(() => {
+    StorageService.getItem<Record<PermissionKey, boolean>>(STORAGE_KEY_REQUEST_ATTEMPTED).then(
+      (stored) => {
+        if (stored && typeof stored === 'object') {
+          setRequestAttemptedState((prev) => ({ ...prev, ...stored }));
+        }
+      }
+    );
+  }, []);
+
+  const activeCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (nextState === 'active') {
-        checkAll();
         PERMISSION_KEYS.forEach((k) => setLoading(k, false));
+        if (activeCheckTimeoutRef.current != null) clearTimeout(activeCheckTimeoutRef.current);
+        activeCheckTimeoutRef.current = setTimeout(() => {
+          activeCheckTimeoutRef.current = null;
+          checkAll();
+        }, 300);
       }
     });
-    return () => sub.remove();
+    return () => {
+      sub.remove();
+      if (activeCheckTimeoutRef.current != null) clearTimeout(activeCheckTimeoutRef.current);
+    };
   }, [checkAll, setLoading]);
 
   useEffect(() => {
@@ -197,6 +217,7 @@ export function usePermissionsHelperViewModel() {
     openSettings,
     refreshStatuses,
     permissionKeys: PERMISSION_KEYS,
+    requestAttempted,
     iosEntries,
     androidEntries,
     locationPermissionInfo: locationInfo,

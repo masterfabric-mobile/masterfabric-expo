@@ -35,6 +35,7 @@ export function PermissionsHelperScreen() {
     openSettings,
     refreshStatuses,
     permissionKeys,
+    requestAttempted,
     locationPermissionInfo,
     iosEntries,
     androidEntries,
@@ -109,14 +110,16 @@ export function PermissionsHelperScreen() {
           const labelKey = PERMISSION_LABEL_KEYS[key] ?? key;
           const label = t(labelKey);
           const statusDisplay = status
-            ? getPermissionStatusDisplay(status, t, colors)
+            ? getPermissionStatusDisplay(status, t, colors, {
+                requestAttempted: requestAttempted[key],
+              })
             : {
                 label: t('helpers.permissionsHelper.notChecked'),
                 color: colors.inactiveText,
               };
 
           const statusContent =
-            key === 'location' && locationPermissionInfo ? (
+            key === 'location' && locationPermissionInfo && requestAttempted[key] ? (
               <LocationPermissionDetail
                 info={locationPermissionInfo}
                 labels={{

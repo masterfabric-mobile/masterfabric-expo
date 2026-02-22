@@ -1,10 +1,11 @@
 import { ConfirmationDialog, ThemedText } from '@/src/shared/components';
+import { t } from '@/src/shared/i18n';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import { getThemeColors, useTheme } from 'masterfabric-expo-core';
+import { getThemeColors, permissionsHandler, useTheme } from 'masterfabric-expo-core';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useStorageCaseViewModel } from '../hooks/use-storage-case-view-model';
 import { storageCaseStyles } from '../styles/storage-case.styles';
 import { supabaseCasesScreenStyles } from '../styles/supabase-cases-screen.styles';
@@ -63,11 +64,22 @@ export function StorageCaseView({
 
   const handlePickImage = async () => {
     try {
-      // Request permissions
+      // Request photo library permission (for picking images)
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission Required', 'We need access to your photos to upload files.');
         return;
+      }
+
+      // On Android, also ensure storage permission for file download/upload
+      if (Platform.OS === 'android') {
+        const storageStatus = await permissionsHandler.check('storage');
+        if (!storageStatus.granted) {
+          await permissionsHandler.requestStorage({
+            rationale: t('helpers.permissionsHelper.rationale.storage'),
+            showSettingsAlert: true,
+          });
+        }
       }
 
       // Launch image picker
