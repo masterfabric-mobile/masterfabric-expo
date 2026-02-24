@@ -64,21 +64,29 @@ export function StorageCaseView({
 
   const handlePickImage = async () => {
     try {
-      // Request photo library permission (for picking images)
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Required', 'We need access to your photos to upload files.');
+      // İzinleri permission helper üzerinden iste (tek merkezi katman)
+      const photoStatus = await permissionsHandler.requestPhotoLibrary({
+        rationale: t('helpers.permissionsHelper.rationale.photoLibrary'),
+        showSettingsAlert: true,
+      });
+      if (!photoStatus.granted && photoStatus.status !== 'limited') {
+        if (photoStatus.blocked || !photoStatus.canAskAgain) {
+          permissionsHandler.showSettingsAlert({
+            permission: 'photoLibrary',
+            message: t('helpers.permissionsHelper.rationale.settingsMessage'),
+          });
+        }
         return;
       }
 
-      // On Android, also ensure storage permission for file download/upload
       if (Platform.OS === 'android') {
         const storageStatus = await permissionsHandler.check('storage');
         if (!storageStatus.granted) {
-          await permissionsHandler.requestStorage({
+          const requested = await permissionsHandler.requestStorage({
             rationale: t('helpers.permissionsHelper.rationale.storage'),
             showSettingsAlert: true,
           });
+          if (!requested.granted) return;
         }
       }
 

@@ -26,7 +26,6 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "node scripts/audit-fix-override.js",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
@@ -74,6 +73,7 @@
     "expo-image-picker": "~17.0.9",
     "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.10",
+    "expo-local-authentication": "~15.0.0",
     "expo-localization": "~17.0.8",
     "expo-location": "~18.0.8",
     "expo-media-library": "~18.2.1",

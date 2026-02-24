@@ -3,16 +3,17 @@ import type { PermissionType } from 'masterfabric-expo-core';
 /** AsyncStorage key for which permissions the user has tapped "Request" at least once. */
 export const STORAGE_KEY_REQUEST_ATTEMPTED = 'permissionsHelper.requestAttempted';
 
+/** Only these permissions are shown on the helper screen. */
 export const PERMISSION_KEYS = [
   'camera',
   'microphone',
   'photoLibrary',
-  'storage',
-  'location',
   'notifications',
-  'calendar',
   'contacts',
-  'phone',
+  'sms',
+  'calendar',
+  'location',
+  'bluetooth',
 ] as const;
 
 export type PermissionKey = (typeof PERMISSION_KEYS)[number];
@@ -21,24 +22,24 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   camera: 'Camera',
   microphone: 'Microphone',
   photoLibrary: 'Photos and Videos',
-  storage: 'Storage (Files)',
-  location: 'Location',
   notifications: 'Notifications',
-  calendar: 'Calendar',
   contacts: 'Contacts',
-  phone: 'Phone',
+  sms: 'SMS',
+  calendar: 'Calendar',
+  location: 'Location',
+  bluetooth: 'Bluetooth',
 };
 
 export const CONFIG_PREVIEW_PERMISSIONS: PermissionType[] = [
   'camera',
   'microphone',
   'photoLibrary',
-  'storage',
-  'location',
   'notifications',
-  'calendar',
   'contacts',
-  'phone',
+  'sms',
+  'calendar',
+  'location',
+  'bluetooth',
 ];
 
 /** i18n keys for permission status labels */
@@ -48,6 +49,7 @@ export const STATUS_I18N: Record<string, string> = {
   blocked: 'helpers.permissionsHelper.statusBlocked',
   unavailable: 'helpers.permissionsHelper.statusUnavailable',
   limited: 'helpers.permissionsHelper.statusLimited',
+  unknown: 'helpers.permissionsHelper.statusUnknown',
 };
 
 /** Theme color keys for status badges (use with getThemeColors(isDark)[key]) */
@@ -57,6 +59,7 @@ export const STATUS_BADGE_THEME_KEYS: Record<string, keyof import('masterfabric-
   blocked: 'errorColor',
   unavailable: 'inactiveText',
   limited: 'warningColor',
+  unknown: 'inactiveText',
 };
 
 /** i18n keys for permission row labels */
@@ -64,12 +67,12 @@ export const PERMISSION_LABEL_KEYS: Record<string, string> = {
   camera: 'helpers.permissionsHelper.permissionCamera',
   microphone: 'helpers.permissionsHelper.permissionMicrophone',
   photoLibrary: 'helpers.permissionsHelper.permissionPhotoLibrary',
-  storage: 'helpers.permissionsHelper.permissionStorage',
-  location: 'helpers.permissionsHelper.permissionLocation',
   notifications: 'helpers.permissionsHelper.permissionNotifications',
-  calendar: 'helpers.permissionsHelper.permissionCalendar',
   contacts: 'helpers.permissionsHelper.permissionContacts',
-  phone: 'helpers.permissionsHelper.permissionPhone',
+  sms: 'helpers.permissionsHelper.permissionSms',
+  calendar: 'helpers.permissionsHelper.permissionCalendar',
+  location: 'helpers.permissionsHelper.permissionLocation',
+  bluetooth: 'helpers.permissionsHelper.permissionBluetooth',
 };
 
 /** iOS Info.plist key -> i18n key for config preview */
