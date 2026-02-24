@@ -1,0 +1,302 @@
+import { Ionicons } from '@expo/vector-icons';
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useEffect, useRef } from 'react';
+import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useRecipeDetailViewModel } from '../hooks/use-recipe-detail-view-model';
+import { recipeDetailStyles } from '../styles/recipe-detail.styles';
+import { SERVINGS_OPTIONS } from '../models/recipe-detail-models';
+
+export function RecipeDetailScreen() {
+  const containerRef = useRef<View>(null);
+  const {
+    recipe,
+    loading,
+    favorite,
+    servings,
+    toggleFavorite,
+    onServingsChange,
+    handleBack,
+  } = useRecipeDetailViewModel();
+
+  useEffect(() => {
+    if (Platform.OS !== 'web' || loading || !recipe) return;
+    const node = containerRef.current as unknown as HTMLElement | undefined;
+    if (node?.focus) node.focus();
+  }, [loading, recipe]);
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          recipeDetailStyles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
+        <ActivityIndicator
+          size="large"
+          color={RecipioColors.primaryAccent}
+        />
+      </View>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <View style={recipeDetailStyles.container}>
+        <View
+          style={[
+            recipeDetailStyles.header,
+            {
+              position: 'relative',
+              paddingTop: Platform.OS === 'web' ? 12 : 44,
+              backgroundColor: RecipioColors.background,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={recipeDetailStyles.headerBtn}
+            onPress={handleBack}
+          >
+            <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+          </TouchableOpacity>
+        </View>
+        <View style={recipeDetailStyles.error}>
+          <Text style={recipeDetailStyles.errorText}>Recipe not found.</Text>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View
+      ref={containerRef}
+      style={recipeDetailStyles.container}
+      {...(Platform.OS === 'web' && { tabIndex: -1 })}
+    >
+      <View style={recipeDetailStyles.hero}>
+        {recipe.imageUrl ? (
+          <Image
+            source={{ uri: recipe.imageUrl }}
+            style={StyleSheet.absoluteFill}
+            resizeMode="cover"
+          />
+        ) : (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              { justifyContent: 'center', alignItems: 'center' },
+            ]}
+          >
+            <Text style={{ fontSize: 64 }}>🍳</Text>
+          </View>
+        )}
+      </View>
+      <View style={[recipeDetailStyles.header, { backgroundColor: 'transparent' }]}>
+        <TouchableOpacity
+          style={recipeDetailStyles.headerBtn}
+          onPress={handleBack}
+        >
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={recipeDetailStyles.headerBtn}
+          onPress={toggleFavorite}
+        >
+          <Ionicons
+            name={favorite ? 'heart' : 'heart-outline'}
+            size={24}
+            color={favorite ? RecipioColors.error : '#FFFFFF'}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        style={recipeDetailStyles.scroll}
+        contentContainerStyle={recipeDetailStyles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={recipeDetailStyles.title}>{recipe.title}</Text>
+
+        <View style={recipeDetailStyles.metaRow}>
+          {recipe.rating != null && (
+            <View style={recipeDetailStyles.metaItem}>
+              <Ionicons
+                name="star"
+                size={16}
+                color={RecipioColors.primaryAccent}
+              />
+              <Text style={recipeDetailStyles.metaText}>
+                {recipe.rating} ({recipe.reviewCount ?? 0})
+              </Text>
+            </View>
+          )}
+          <View style={recipeDetailStyles.metaItem}>
+            <Ionicons
+              name="time-outline"
+              size={16}
+              color={RecipioColors.textSecondary}
+            />
+            <Text style={recipeDetailStyles.metaText}>{recipe.time}</Text>
+          </View>
+          <View style={recipeDetailStyles.metaItem}>
+            <Ionicons
+              name="restaurant-outline"
+              size={16}
+              color={RecipioColors.textSecondary}
+            />
+            <Text style={recipeDetailStyles.metaText}>{recipe.difficulty}</Text>
+          </View>
+        </View>
+
+        <View style={recipeDetailStyles.servingsRow}>
+          <Text style={recipeDetailStyles.servingsLabel}>SERVINGS</Text>
+          <View style={recipeDetailStyles.servingsPills}>
+            {SERVINGS_OPTIONS.map((n) => (
+              <TouchableOpacity
+                key={n}
+                style={[
+                  recipeDetailStyles.pill,
+                  servings === n && recipeDetailStyles.pillSelected,
+                ]}
+                onPress={() => onServingsChange(n)}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    recipeDetailStyles.pillText,
+                    servings === n && recipeDetailStyles.pillTextSelected,
+                  ]}
+                >
+                  {n}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={[recipeDetailStyles.metaText, { marginTop: 6 }]}>
+            {servings} kişilik
+          </Text>
+        </View>
+
+        {recipe.description ? (
+          <Text style={recipeDetailStyles.description}>{recipe.description}</Text>
+        ) : null}
+
+        {recipe.nutrition && (
+          <View style={recipeDetailStyles.nutritionRow}>
+            <View
+              style={[
+                recipeDetailStyles.nutritionCard,
+                recipeDetailStyles.nutritionCardKcal,
+              ]}
+            >
+              <Text
+                style={[
+                  recipeDetailStyles.nutritionValue,
+                  recipeDetailStyles.nutritionValueKcal,
+                ]}
+              >
+                {recipe.nutrition.kcal}
+              </Text>
+              <Text
+                style={[
+                  recipeDetailStyles.nutritionLabel,
+                  recipeDetailStyles.nutritionLabelKcal,
+                ]}
+              >
+                Kcal
+              </Text>
+            </View>
+            <View style={recipeDetailStyles.nutritionCard}>
+              <Text style={recipeDetailStyles.nutritionValue}>
+                {recipe.nutrition.protein}g
+              </Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>PROT</Text>
+            </View>
+            <View style={recipeDetailStyles.nutritionCard}>
+              <Text style={recipeDetailStyles.nutritionValue}>
+                {recipe.nutrition.carbs}g
+              </Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>CARB</Text>
+            </View>
+            <View style={recipeDetailStyles.nutritionCard}>
+              <Text style={recipeDetailStyles.nutritionValue}>
+                {recipe.nutrition.fat}g
+              </Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>FAT</Text>
+            </View>
+          </View>
+        )}
+
+        <View style={recipeDetailStyles.ingredientsHeader}>
+          <Text style={recipeDetailStyles.ingredientsTitle}>Ingredients</Text>
+          <Text style={recipeDetailStyles.ingredientsCount}>
+            {recipe.ingredients.length} items
+          </Text>
+        </View>
+        {recipe.ingredients.map((name, i) => (
+          <View
+            key={`${name}-${i}`}
+            style={recipeDetailStyles.ingredientRow}
+          >
+            <Text style={recipeDetailStyles.ingredientName}>{name}</Text>
+          </View>
+        ))}
+
+        {recipe.steps && recipe.steps.length > 0 && (
+          <>
+            <Text style={recipeDetailStyles.stepsSectionTitle}>
+              Preparation
+            </Text>
+            {recipe.steps.map((step, i) => (
+              <View key={`step-${i}`} style={recipeDetailStyles.stepRow}>
+                <View style={recipeDetailStyles.stepNumber}>
+                  <Text style={recipeDetailStyles.stepNumberText}>{i + 1}</Text>
+                </View>
+                <Text style={recipeDetailStyles.stepText}>{step}</Text>
+              </View>
+            ))}
+          </>
+        )}
+
+        {recipe.chefTip && (
+          <View style={recipeDetailStyles.chefTip}>
+            <Ionicons
+              name="bulb"
+              size={22}
+              color={RecipioColors.primaryAccent}
+            />
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[
+                  recipeDetailStyles.sectionTitle,
+                  { marginBottom: 6, color: RecipioColors.text },
+                ]}
+              >
+                Chef's Tip
+              </Text>
+              <Text style={recipeDetailStyles.chefTipText}>{recipe.chefTip}</Text>
+            </View>
+          </View>
+        )}
+
+        <TouchableOpacity
+          style={recipeDetailStyles.cta}
+          onPress={() => {}}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="flame" size={22} color="#FFFFFF" />
+          <Text style={recipeDetailStyles.ctaText}>Start Cooking</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+}

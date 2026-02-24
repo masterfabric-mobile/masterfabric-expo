@@ -1,59 +1,61 @@
+import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { StyleSheet } from 'react-native';
-import { RecipioColors } from '../../../shared/constants/recipio-colors';
+
+const ICON_WRAPPER_SIZE = 120;
+const ICON_SIZE = 72;
 
 export const splashScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: RecipioColors.splash.background,
+    backgroundColor: RecipioColors.background,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 56,
-    backgroundColor: 'transparent',
-    width: '100%',
+    paddingHorizontal: 40,
   },
-  logoBadge: {
-    width: 96,
-    height: 96,
+  iconWrapper: {
+    width: ICON_WRAPPER_SIZE,
+    height: ICON_WRAPPER_SIZE,
     borderRadius: 28,
-    backgroundColor: RecipioColors.primaryAccent,
+    backgroundColor: RecipioColors.cardBackground,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    marginBottom: 32,
+  },
+  icon: {
+    color: RecipioColors.text,
   },
   title: {
-    fontSize: 40,
-    fontWeight: '800',
-    color: RecipioColors.splash.title,
-    letterSpacing: 1,
-    marginTop: 24,
-    marginBottom: 24,
-    paddingHorizontal: 48,
-    paddingVertical: 8,
-    textAlign: 'center',
-    alignSelf: 'stretch',
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: RecipioColors.text,
+    marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 15,
-    color: RecipioColors.splash.subtitle,
-    textAlign: 'center',
-    lineHeight: 22,
-    maxWidth: 260,
-  },
-  loaderContainer: {
-    alignItems: 'center',
-    paddingBottom: 40,
-  },
-  loaderSpinner: {
-    marginBottom: 14,
-  },
-  loaderText: {
+  slogan: {
     fontSize: 12,
-    color: RecipioColors.splash.subtitle,
+    fontWeight: '600',
+    color: RecipioColors.textSecondary,
     letterSpacing: 2,
+    marginBottom: 48,
+  },
+  loaderSection: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 56,
+    alignItems: 'center',
+  },
+  loader: {
+    marginBottom: 12,
+  },
+  loadingLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: RecipioColors.textSecondary,
+    letterSpacing: 1.5,
   },
 });
+
+export const splashIconSize = ICON_SIZE;

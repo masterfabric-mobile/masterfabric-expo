@@ -4,19 +4,24 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PREFIX = '@recipio/';
+const STORAGE_KEYS = {
+  ONBOARDING_COMPLETED: '@recipio/onboarding_completed',
+} as const;
 
 export const storage = {
-  async get<T>(key: string): Promise<T | null> {
-    const value = await AsyncStorage.getItem(PREFIX + key);
-    return value ? JSON.parse(value) : null;
+  async setOnboardingCompleted(value: boolean): Promise<void> {
+    await AsyncStorage.setItem(
+      STORAGE_KEYS.ONBOARDING_COMPLETED,
+      JSON.stringify(value)
+    );
   },
 
-  async set<T>(key: string, value: T): Promise<void> {
-    await AsyncStorage.setItem(PREFIX + key, JSON.stringify(value));
+  async getOnboardingCompleted(): Promise<boolean> {
+    const value = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING_COMPLETED);
+    return value ? JSON.parse(value) : false;
   },
 
-  async remove(key: string): Promise<void> {
-    await AsyncStorage.removeItem(PREFIX + key);
+  async clearOnboardingStatus(): Promise<void> {
+    await AsyncStorage.removeItem(STORAGE_KEYS.ONBOARDING_COMPLETED);
   },
 };

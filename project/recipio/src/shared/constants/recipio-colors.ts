@@ -19,14 +19,6 @@ export const RecipioColors = {
   success: '#34C759',
   error: '#FF3B30',
 
-  // Splash (dark theme)
-  splash: {
-    background: '#1C1C1E',
-    title: '#FFFFFF',
-    subtitle: '#9E9E9E',
-    logoBadgeText: '#FFFFFF',
-  },
-
   // Light theme (for future)
   light: {
     background: '#FFFFFF',

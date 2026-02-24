@@ -50,7 +50,7 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('display_name, avatar_url')
+      .select('display_name, avatar_url, plan_name, plan_active')
       .eq('id', user.id)
       .single();
 
@@ -58,7 +58,10 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
       id: user.id,
       name: profile?.display_name || user.email?.split('@')[0] || 'User',
       avatarUrl: profile?.avatar_url,
-      currentPlan: { name: 'Pro Chef', isActive: true },
+      currentPlan: {
+        name: profile?.plan_name ?? 'Pro Chef',
+        isActive: profile?.plan_active ?? true,
+      },
     };
   } catch {
     return getAnonymousProfile();
@@ -82,13 +85,34 @@ export async function getMonthlyRecipesCount(): Promise<MonthlyRecipesCount> {
     } = await supabase.auth.getUser();
     if (!user) return { saved: 0, limit: 50 };
 
-    const { count } = await supabase
-      .from('saved_recipes')
+    // Limit from profiles (Supabase schema: profiles.recipes_limit)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('recipes_limit')
+      .eq('id', user.id)
+      .single();
+    const limit = profile?.recipes_limit ?? 50;
+
+    // Saved count: try user_activities (type='saved') per docs, fallback to saved_recipes
+    let saved = 0;
+    const { count: activitiesCount } = await supabase
+      .from('user_activities')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id)
+      .eq('type', 'saved')
       .gte('created_at', startOfMonth);
+    if (activitiesCount !== null && activitiesCount !== undefined) {
+      saved = activitiesCount;
+    } else {
+      const { count: savedCount } = await supabase
+        .from('saved_recipes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', startOfMonth);
+      saved = savedCount ?? 0;
+    }
 
-    return { saved: count ?? 0, limit: 50 };
+    return { saved, limit };
   } catch {
     return { saved: 0, limit: 50 };
   }

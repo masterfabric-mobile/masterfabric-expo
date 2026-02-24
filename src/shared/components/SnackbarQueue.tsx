@@ -193,9 +193,9 @@ function SingleSnackbar({ snackbar, index, onDismiss }: SingleSnackbarProps) {
           {
             opacity,
             zIndex: 9999 - index,
+            pointerEvents: 'auto',
           },
         ]}
-        pointerEvents="auto"
       >
         <View
           style={[

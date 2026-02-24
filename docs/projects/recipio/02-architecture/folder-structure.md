@@ -2,7 +2,7 @@
 
 Recipio app folder structure, aligned with the current working system.
 
-**Project location:** All Recipio app code lives under `project/recipio`. No extra project folders are created; the app is developed entirely in this directory.
+**Proje konumu:** Tüm Recipio uygulaması `project/recipio` altında geliştirilir. Ekstra proje klasörü oluşturulmaz; uygulama doğrudan bu dizine kurulur.
 
 ## Phased Development (Summary)
 
@@ -11,7 +11,8 @@ The app is developed **in phases**; only the screens for that phase get folders 
 | Phase | Views |
 |-------|-------|
 | **Phase 1** | Splash ✅, Onboarding, Home (Find Your Next Meal card, search icon) |
-| **Phase 2** | Ingredient Input, Recipe List, Recipe Detail, Cooking Guide, Favorites, History, Profile, Auth (login/signup) |
+| **Phase 2** | Ingredient Input, Recipe List, Recipe Detail, Cooking Guide, Favorites, History |
+| **Phase 3** | Profile, Auth (login/signup) |
 
 Detailed phase descriptions and view–structure matrix: **[Phased Development & View Structure Analysis](./phased-development-and-view-structure.md)**.
 
@@ -26,17 +27,17 @@ project/recipio/
 │   ├── index.tsx                           # Entry; onboarding vs home check
 │   ├── splash.tsx                          # (optional) Splash route
 │   ├── onboarding.tsx                     # Phase 1 — Onboarding
-│   ├── (tabs)/                             # Phase 1: home; Phase 2: favorites, history, profile
+│   ├── (tabs)/                             # Phase 1: home; Phase 2: favorites, history
 │   │   ├── _layout.tsx
 │   │   ├── index.tsx                       # Home
 │   │   ├── favorites.tsx                  # Phase 2
 │   │   ├── history.tsx                     # Phase 2
-│   │   └── profile.tsx                     # Phase 2
+│   │   └── profile.tsx                     # Phase 3
 │   ├── enter-ingredients.tsx               # Phase 2 — Ingredient input
 │   ├── recipe-results.tsx                  # Phase 2 — Recipe list
 │   ├── recipe-detail/[id].tsx              # Phase 2 — Recipe detail
 │   ├── cooking-guide/[id].tsx             # Phase 2 — Cooking guide
-│   └── (auth)/                             # Phase 2 — login, signup (optional)
+│   └── (auth)/                             # Phase 3 — login, signup (optional)
 │
 ├── src/
 │   ├── navigation/
@@ -153,11 +154,11 @@ The structure below is the target for each view. Add `store` and `utils` only wh
 | cooking-guide | 2 | ✅ | ✅ | ✅ | opt | ✅ | opt |
 | favorites | 2 | ✅ | ✅ | ✅ | ✅ | ✅ | opt |
 | history | 2 | ✅ | ✅ | ✅ | opt | ✅ | opt |
-| profile | 2 | ✅ | ✅ | ✅ | ✅ | ✅ | opt |
+| profile | 3 | ✅ | ✅ | ✅ | ✅ | ✅ | opt |
 
 **Views not yet in the project:** home, onboarding, ingredient-input, recipe-list, recipe-detail, cooking-guide, favorites, history, profile. Create `src/screens/[view-name]/` only when that view's phase is active; structure follows the template above.
 
-### Planned Screens — Folder Template (Phase 2)
+### Planned Screens — Folder Template (Phase 2 & 3)
 
 Each uses the same structure under `src/screens/[view-name]/`:
 
@@ -213,7 +214,7 @@ src/screens/history/
 ├── styles/      (history-screen.styles.ts)
 └── index.ts
 
-# profile (Phase 2)
+# profile (Phase 3)
 src/screens/profile/
 ├── components/  (profile-screen.tsx, sections/, stat-card.tsx)
 ├── hooks/       (use-profile-view-model.ts)

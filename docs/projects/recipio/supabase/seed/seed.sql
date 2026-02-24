@@ -85,6 +85,17 @@ INSERT INTO public.ingredient_translations (ingredient_id, locale, name) VALUES
 (20, 'en', 'Dark Chocolate'), (20, 'tr', 'Bitter Çikolata')
 ON CONFLICT (ingredient_id, locale) DO NOTHING;
 
+-- Suggested ingredients that were missing: Cheese, Yogurt (so "Suggested" chips all match recipes)
+INSERT INTO public.ingredients (id, slug, image_url) VALUES
+(21, 'cheese', NULL),
+(22, 'yogurt', NULL)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.ingredient_translations (ingredient_id, locale, name) VALUES
+(21, 'en', 'Cheese'), (21, 'tr', 'Peynir'),
+(22, 'en', 'Yogurt'), (22, 'tr', 'Yoğurt')
+ON CONFLICT (ingredient_id, locale) DO NOTHING;
+
 
 -- 4. Recipes
 -- Recipe 1: Lentil Soup (Published, Free)
@@ -246,9 +257,13 @@ ON CONFLICT (id) DO NOTHING;
 -- Ingredients for Recipe 3 (all servings)
 INSERT INTO public.recipe_variant_ingredients (variant_id, ingredient_id, amount, unit_id) VALUES
 (9, 6, 50, (SELECT id from public.units where code = 'g')),
+(9, 22, 30, (SELECT id from public.units where code = 'g')),
 (10, 6, 100, (SELECT id from public.units where code = 'g')),
+(10, 22, 60, (SELECT id from public.units where code = 'g')),
 (11, 6, 150, (SELECT id from public.units where code = 'g')),
-(12, 6, 200, (SELECT id from public.units where code = 'g'))
+(11, 22, 90, (SELECT id from public.units where code = 'g')),
+(12, 6, 200, (SELECT id from public.units where code = 'g')),
+(12, 22, 120, (SELECT id from public.units where code = 'g'))
 ON CONFLICT (variant_id, ingredient_id) DO NOTHING;
 
 -- Recipe 4: Grilled Chicken
@@ -388,15 +403,19 @@ INSERT INTO public.recipe_variant_ingredients (variant_id, ingredient_id, amount
 (25, 1, 1, (SELECT id from public.units where code = 'pcs')),
 (25, 3, 0.5, (SELECT id from public.units where code = 'pcs')),
 (25, 8, 1, (SELECT id from public.units where code = 'tbsp')),
+(25, 21, 20, (SELECT id from public.units where code = 'g')),
 (26, 1, 2, (SELECT id from public.units where code = 'pcs')),
 (26, 3, 1, (SELECT id from public.units where code = 'pcs')),
 (26, 8, 2, (SELECT id from public.units where code = 'tbsp')),
+(26, 21, 40, (SELECT id from public.units where code = 'g')),
 (27, 1, 3, (SELECT id from public.units where code = 'pcs')),
 (27, 3, 1.5, (SELECT id from public.units where code = 'pcs')),
 (27, 8, 3, (SELECT id from public.units where code = 'tbsp')),
+(27, 21, 60, (SELECT id from public.units where code = 'g')),
 (28, 1, 4, (SELECT id from public.units where code = 'pcs')),
 (28, 3, 2, (SELECT id from public.units where code = 'pcs')),
-(28, 8, 4, (SELECT id from public.units where code = 'tbsp'))
+(28, 8, 4, (SELECT id from public.units where code = 'tbsp')),
+(28, 21, 80, (SELECT id from public.units where code = 'g'))
 ON CONFLICT (variant_id, ingredient_id) DO NOTHING;
 
 -- Recipe 8: Tomato Soup
@@ -504,6 +523,18 @@ INSERT INTO public.recipe_variant_ingredients (variant_id, ingredient_id, amount
 (39, 6, 150, (SELECT id from public.units where code = 'g')),
 (40, 6, 200, (SELECT id from public.units where code = 'g'))
 ON CONFLICT (variant_id, ingredient_id) DO NOTHING;
+
+-- Prep time and difficulty (per recipe; run after migration 0010)
+UPDATE public.recipe_translations SET prep_time_minutes = 25, difficulty = 'Easy' WHERE recipe_id = 1;
+UPDATE public.recipe_translations SET prep_time_minutes = 30, difficulty = 'Medium' WHERE recipe_id = 2;
+UPDATE public.recipe_translations SET prep_time_minutes = 10, difficulty = 'Easy' WHERE recipe_id = 3;
+UPDATE public.recipe_translations SET prep_time_minutes = 20, difficulty = 'Easy' WHERE recipe_id = 4;
+UPDATE public.recipe_translations SET prep_time_minutes = 15, difficulty = 'Medium' WHERE recipe_id = 5;
+UPDATE public.recipe_translations SET prep_time_minutes = 5, difficulty = 'Easy' WHERE recipe_id = 6;
+UPDATE public.recipe_translations SET prep_time_minutes = 15, difficulty = 'Easy' WHERE recipe_id = 7;
+UPDATE public.recipe_translations SET prep_time_minutes = 35, difficulty = 'Easy' WHERE recipe_id = 8;
+UPDATE public.recipe_translations SET prep_time_minutes = 60, difficulty = 'Medium' WHERE recipe_id = 9;
+UPDATE public.recipe_translations SET prep_time_minutes = 10, difficulty = 'Easy' WHERE recipe_id = 10;
 
 -- 5. Set one admin user
 -- In a real scenario, you would find a user's ID from the auth.users table

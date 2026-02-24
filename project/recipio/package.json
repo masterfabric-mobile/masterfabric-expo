@@ -29,7 +29,8 @@
   },
   "overrides": {
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "minimatch": "^10.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

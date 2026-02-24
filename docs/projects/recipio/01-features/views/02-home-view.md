@@ -437,11 +437,9 @@ export async function getMonthlyRecipesCount(): Promise<{ saved: number; limit: 
 ```
 Home Screen
     ↓
-    ├─→ [Search icon] → Recipe Search Screen
-    ├─→ [Find Your Next Meal] → Enter Ingredients Screen
-    ├─→ [Recipe Card] → Recipe Detail Screen
-    ├─→ [Activity Item] → Recipe Detail Screen
-    ├─→ [Recent Activity "View All"] → History Screen (tab)
+    ├─→ [Search icon] / [Find Your Next Meal] → Enter Ingredients Screen
+    ├─→ [Recipe Card] → Recipe Detail Screen (later phase)
+    ├─→ [Activity Item] → Recipe Detail Screen (later phase)
     └─→ [Bottom Tab] → Saved, History, Profile screens
 ```
 

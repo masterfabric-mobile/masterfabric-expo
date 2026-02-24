@@ -1,33 +1,33 @@
+import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ThemedText } from '@masterfabric-expo/core';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RecipioColors } from '../../../shared/constants/recipio-colors';
-import { splashScreenStyles } from '../styles/splash-screen.styles';
+import {
+  splashScreenStyles,
+  splashIconSize,
+} from '../styles/splash-screen.styles';
 
 export function SplashScreen() {
   return (
     <SafeAreaView style={splashScreenStyles.container}>
       <View style={splashScreenStyles.content}>
-        <View style={splashScreenStyles.logoBadge}>
+        <View style={splashScreenStyles.iconWrapper}>
           <MaterialCommunityIcons
             name="chef-hat"
-            size={52}
-            color={RecipioColors.splash.logoBadgeText}
+            size={splashIconSize}
+            style={splashScreenStyles.icon}
           />
         </View>
-        <ThemedText style={splashScreenStyles.title}>Recipio</ThemedText>
-        <ThemedText style={splashScreenStyles.subtitle}>
-          TASTE THE DIFFERENCE
-        </ThemedText>
+        <Text style={splashScreenStyles.title}>Recipe App</Text>
+        <Text style={splashScreenStyles.slogan}>TASTE THE DIFFERENCE</Text>
       </View>
-      <View style={splashScreenStyles.loaderContainer}>
+      <View style={splashScreenStyles.loaderSection}>
         <ActivityIndicator
           size="large"
           color={RecipioColors.primaryAccent}
-          style={splashScreenStyles.loaderSpinner}
+          style={splashScreenStyles.loader}
         />
-        <ThemedText style={splashScreenStyles.loaderText}>LOADING</ThemedText>
+        <Text style={splashScreenStyles.loadingLabel}>LOADING</Text>
       </View>
     </SafeAreaView>
   );
