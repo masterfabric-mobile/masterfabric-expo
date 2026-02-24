@@ -29,12 +29,27 @@
                                  "edgeToEdgeEnabled":  true,
                                  "package":  "com.masterfabric.expo.android",
                                  "versionCode":  3,
-                                 "permissions":  [
-                                                     "android.permission.CAMERA",
-                                                     "android.permission.RECORD_AUDIO",
-                                                     "android.permission.READ_EXTERNAL_STORAGE",
-                                                     "android.permission.WRITE_EXTERNAL_STORAGE"
-                                                 ]
+"permissions":  [
+                                                    "android.permission.CAMERA",
+                                                    "android.permission.RECORD_AUDIO",
+                                                    "android.permission.READ_EXTERNAL_STORAGE",
+                                                    "android.permission.WRITE_EXTERNAL_STORAGE",
+                                                    "android.permission.READ_MEDIA_IMAGES",
+                                                    "android.permission.READ_MEDIA_VIDEO",
+                                                    "android.permission.ACCESS_FINE_LOCATION",
+                                                    "android.permission.ACCESS_COARSE_LOCATION",
+                                                    "android.permission.ACCESS_BACKGROUND_LOCATION",
+                                                    "android.permission.POST_NOTIFICATIONS",
+                                                    "android.permission.READ_CONTACTS",
+                                                    "android.permission.WRITE_CONTACTS",
+                                                    "android.permission.READ_CALENDAR",
+                                                    "android.permission.WRITE_CALENDAR",
+                                                    "android.permission.READ_PHONE_STATE",
+                                                    "android.permission.READ_SMS",
+                                                    "android.permission.RECEIVE_SMS",
+                                                    "android.permission.BLUETOOTH_CONNECT",
+                                                    "android.permission.BLUETOOTH_SCAN"
+                                                ]
                              },
                  "web":  {
                              "bundler":  "metro",
@@ -57,8 +72,8 @@
                                  [
                                      "expo-media-library",
                                      {
-                                         "photosPermission":  "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
-                                         "savePhotosPermission":  "Uygulamanın fotoğrafları kütüphanenize kaydetmek için izne ihtiyacı var.",
+                                         "photosPermission":  "The app needs gallery access to select photos and videos.",
+                                         "savePhotosPermission":  "The app needs permission to save photos to your library.",
                                          "isAccessMediaLocationEnabled":  false,
                                          "granularPermissions":  ["photo", "video"]
                                      }
@@ -66,30 +81,36 @@
                                  [
                                      "expo-image-picker",
                                      {
-                                         "photosPermission":  "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
-                                         "cameraPermission":  "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
-                                         "microphonePermission":  "Uygulamanın video kaydı için mikrofon erişimine ihtiyacı var."
+                                         "photosPermission":  "The app needs gallery access to select photos and videos.",
+                                         "cameraPermission":  "The app needs camera access to take photos and videos.",
+                                         "microphonePermission":  "The app needs microphone access for video recording."
                                      }
                                  ],
                                  [
                                      "expo-av",
                                      {
-                                         "microphonePermission":  "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
+                                         "microphonePermission":  "The app needs microphone access for audio recording."
                                      }
                                  ],
                                  [
                                      "expo-calendar",
                                      {
-                                         "calendarPermission":  "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var."
+                                         "calendarPermission":  "The app needs calendar access to plan events."
                                      }
                                  ],
-                                 [
-                                     "expo-contacts",
-                                     {
-                                         "contactsPermission": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var."
-                                     }
-                                 ]
-                             ],
+                                [
+                                    "expo-contacts",
+                                    {
+                                        "contactsPermission": "The app needs access to your contacts to share content."
+                                    }
+                                ],
+                                [
+                                    "expo-local-authentication",
+                                    {
+                                        "faceIDPermission": "Allow the app to use Face ID for secure sign-in."
+                                    }
+                                ]
+                            ],
                  "experiments":  {
                                      "typedRoutes":  true
                                  },

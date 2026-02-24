@@ -54,10 +54,18 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 2,
   },
+  statusColumn: {
+    gap: 2,
+  },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+  },
+  statusSubtext: {
+    fontSize: 11,
+    marginLeft: 12,
+    opacity: 0.9,
   },
   statusDot: {
     width: 6,
@@ -129,7 +137,9 @@ export const permissionCardStyles = {
   cardRow: permissionsHelperScreenStyles.cardRow,
   cardLabelBlock: permissionsHelperScreenStyles.cardLabelBlock,
   sectionTitle: permissionsHelperScreenStyles.sectionTitle,
+  statusColumn: permissionsHelperScreenStyles.statusColumn,
   statusRow: permissionsHelperScreenStyles.statusRow,
+  statusSubtext: permissionsHelperScreenStyles.statusSubtext,
   statusDot: permissionsHelperScreenStyles.statusDot,
   statusText: permissionsHelperScreenStyles.statusText,
   requestBtn: permissionsHelperScreenStyles.requestBtn,

@@ -113,9 +113,19 @@ function snackbarPermissionAlert(message: string, type: 'success' | 'error' | 'w
   }
 }
 
-/** Android 13+ media permission constants; fallback strings for older React Native where PERMISSIONS may not define them. */
+/** Android permission constants; fallback strings for older React Native where PERMISSIONS may not define them. */
+const ANDROID_CAMERA = (PermissionsAndroid.PERMISSIONS as Record<string, string>).CAMERA ?? 'android.permission.CAMERA';
+const ANDROID_READ_EXTERNAL_STORAGE =
+  (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_EXTERNAL_STORAGE ?? 'android.permission.READ_EXTERNAL_STORAGE';
+const ANDROID_WRITE_EXTERNAL_STORAGE =
+  (PermissionsAndroid.PERMISSIONS as Record<string, string>).WRITE_EXTERNAL_STORAGE ?? 'android.permission.WRITE_EXTERNAL_STORAGE';
 const ANDROID_READ_MEDIA_IMAGES = (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_MEDIA_IMAGES ?? 'android.permission.READ_MEDIA_IMAGES';
 const ANDROID_READ_MEDIA_VIDEO = (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_MEDIA_VIDEO ?? 'android.permission.READ_MEDIA_VIDEO';
+const ANDROID_READ_SMS = (PermissionsAndroid.PERMISSIONS as Record<string, string>).READ_SMS ?? 'android.permission.READ_SMS';
+const ANDROID_RECEIVE_SMS = (PermissionsAndroid.PERMISSIONS as Record<string, string>).RECEIVE_SMS ?? 'android.permission.RECEIVE_SMS';
+const ANDROID_SEND_SMS = (PermissionsAndroid.PERMISSIONS as Record<string, string>).SEND_SMS ?? 'android.permission.SEND_SMS';
+const ANDROID_BLUETOOTH_CONNECT = (PermissionsAndroid.PERMISSIONS as Record<string, string>).BLUETOOTH_CONNECT ?? 'android.permission.BLUETOOTH_CONNECT';
+const ANDROID_BLUETOOTH_SCAN = (PermissionsAndroid.PERMISSIONS as Record<string, string>).BLUETOOTH_SCAN ?? 'android.permission.BLUETOOTH_SCAN';
 
 /** Return actual photo library permission status on Android (PermissionsAndroid.check). Use after request to avoid showing "granted" when system says denied. */
 async function getAndroidPhotoLibraryStatus(): Promise<PermissionStatus> {
@@ -138,7 +148,7 @@ async function getAndroidPhotoLibraryStatus(): Promise<PermissionStatus> {
     }
   }
   try {
-    const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never);
+    const granted = await PermissionsAndroid.check(ANDROID_READ_EXTERNAL_STORAGE as never);
     return {
       granted,
       canAskAgain: true,
@@ -324,6 +334,32 @@ function getContacts(): { getPermissionsAsync: () => Promise<{ status: string; g
   }
 }
 
+/** True when running inside Expo Go (Face ID not supported there). */
+function isExpoGo(): boolean {
+  try {
+    const Constants = require('expo-constants') as { default: { executionEnvironment?: string } };
+    return Constants.default?.executionEnvironment === 'storeClient';
+  } catch {
+    return false;
+  }
+}
+
+/** Load expo-local-authentication for biometrics (Face ID / Touch ID). */
+function getLocalAuthentication(): {
+  hasHardwareAsync: () => Promise<boolean>;
+  isEnrolledAsync: () => Promise<boolean>;
+  authenticateAsync: (options?: { promptMessage?: string; fallbackLabel?: string }) => Promise<{ success: boolean; error?: string }>;
+} | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional native module
+    const mod = require('expo-local-authentication');
+    if (mod?.hasHardwareAsync && mod?.isEnrolledAsync && mod?.authenticateAsync) return mod;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 /** Status listeners (Issue #28). */
 const statusListeners = new Map<PermissionType, Set<StatusCallback>>();
 
@@ -344,6 +380,7 @@ const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   faceId: 'Face ID',
   touchId: 'Touch ID',
   biometrics: 'Biometrics',
+  sms: 'SMS',
 };
 
 /**
@@ -373,9 +410,7 @@ export const permissionsHandler = {
     if (effective === 'camera') {
       if (Platform.OS === 'android') {
         try {
-          const granted = await PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.CAMERA as never
-          );
+          const granted = await PermissionsAndroid.check(ANDROID_CAMERA as never);
           return {
             granted,
             canAskAgain: true,
@@ -437,9 +472,7 @@ export const permissionsHandler = {
               blocked: false,
             };
           }
-          const granted = await PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never
-          );
+          const granted = await PermissionsAndroid.check(ANDROID_READ_EXTERNAL_STORAGE as never);
           return {
             granted,
             canAskAgain: true,
@@ -632,6 +665,25 @@ export const permissionsHandler = {
         return mockStatus(false, true);
       }
     }
+    if (effective === 'sms') {
+      if (Platform.OS !== 'android') {
+        return unavailableStatus('SMS permission is Android only');
+      }
+      try {
+        const [readSms, receiveSms] = await Promise.all([
+          PermissionsAndroid.check(ANDROID_READ_SMS as never),
+          PermissionsAndroid.check(ANDROID_RECEIVE_SMS as never),
+        ]);
+        const granted = readSms && receiveSms;
+        return {
+          granted,
+          canAskAgain: true,
+          status: granted ? 'granted' : 'denied',
+        };
+      } catch {
+        return mockStatus(false, true);
+      }
+    }
     if (effective === 'storage') {
       if (Platform.OS !== 'android') {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
@@ -651,8 +703,18 @@ export const permissionsHandler = {
             blocked: false,
           };
         }
-        const read = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never);
-        const write = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE as never);
+        // API 30–32: manifest often has WRITE_EXTERNAL_STORAGE with maxSdkVersion=29, so only check READ.
+        if (apiLevel >= 30) {
+          const read = await PermissionsAndroid.check(ANDROID_READ_EXTERNAL_STORAGE as never);
+          return {
+            granted: read,
+            canAskAgain: true,
+            status: read ? 'granted' : 'denied',
+            blocked: false,
+          };
+        }
+        const read = await PermissionsAndroid.check(ANDROID_READ_EXTERNAL_STORAGE as never);
+        const write = await PermissionsAndroid.check(ANDROID_WRITE_EXTERNAL_STORAGE as never);
         const granted = read && write;
         return {
           granted,
@@ -662,6 +724,46 @@ export const permissionsHandler = {
         };
       } catch {
         return mockStatus(false, true);
+      }
+    }
+    if (effective === 'bluetooth') {
+      if (Platform.OS !== 'android') {
+        return unavailableStatus('Bluetooth permission is Android only');
+      }
+      try {
+        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        if (apiLevel >= 31) {
+          const [connect, scan] = await Promise.all([
+            PermissionsAndroid.check(ANDROID_BLUETOOTH_CONNECT as never),
+            PermissionsAndroid.check(ANDROID_BLUETOOTH_SCAN as never),
+          ]);
+          const granted = connect && scan;
+          return { granted, canAskAgain: true, status: granted ? 'granted' : 'denied' };
+        }
+        return unavailableStatus('Bluetooth runtime permission requires Android 12+');
+      } catch {
+        return mockStatus(false, true);
+      }
+    }
+    if (effective === 'biometrics' || effective === 'faceId' || effective === 'touchId') {
+      if (isExpoGo()) {
+        return unavailableStatus('Face ID is not supported in Expo Go. Use a development build on a real device.');
+      }
+      const LocalAuth = getLocalAuthentication();
+      if (!LocalAuth) {
+        return unavailableStatus('Face ID requires expo-local-authentication and a development build (not Expo Go).');
+      }
+      try {
+        const [hasHardware, isEnrolled] = await Promise.all([
+          LocalAuth.hasHardwareAsync(),
+          LocalAuth.isEnrolledAsync(),
+        ]);
+        if (!hasHardware) return unavailableStatus('No Face ID / Touch ID hardware on this device.');
+        if (!isEnrolled) return unavailableStatus('No face or fingerprint enrolled in device settings.');
+        return { granted: false, canAskAgain: true, status: 'unknown' };
+      } catch (e) {
+        logPermission('warning', 'Biometrics check failed', { error: e });
+        return unavailableStatus('Biometric check failed.');
       }
     }
     return unavailableStatus(`Permission ${permission} not implemented`);
@@ -678,17 +780,11 @@ export const permissionsHandler = {
     const effective = getCanonicalPermission(permission);
     logPermission('info', 'Permission request', { permission: effective });
     if (effective === 'camera') {
+      // Android: always call request() so the system shows "Allow/Deny" when not yet granted.
+      // (If already granted, request() returns GRANTED without showing the dialog.)
       if (Platform.OS === 'android') {
         try {
-          const rationale = {
-            title: _options?.title ?? 'Camera',
-            message: _options?.rationale ?? 'This app needs camera access to take photos and videos.',
-            buttonPositive: 'OK',
-          };
-          const result = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA as never,
-            rationale
-          );
+          const result = await PermissionsAndroid.request(ANDROID_CAMERA as never);
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           return {
@@ -702,16 +798,26 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
+      // iOS: try expo-camera first, then expo-image-picker if request fails (so dialog is shown)
       const camera = getCamera();
+      const picker = getImagePicker();
       if (camera?.requestCameraPermissionsAsync) {
         try {
           const r = await camera.requestCameraPermissionsAsync();
           return fromExpoResponse({ granted: r.status === 'granted', status: r.status, canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain });
-        } catch {
+        } catch (e) {
+          logPermission('warning', 'Camera permission request failed (expo-camera)', { error: e });
+          if (picker?.requestCameraPermissionsAsync) {
+            try {
+              const r = await picker.requestCameraPermissionsAsync();
+              return fromExpoResponse(r);
+            } catch {
+              return mockStatus(false, true);
+            }
+          }
           return mockStatus(false, true);
         }
       }
-      const picker = getImagePicker();
       if (picker?.requestCameraPermissionsAsync) {
         try {
           const r = await picker.requestCameraPermissionsAsync();
@@ -723,33 +829,9 @@ export const permissionsHandler = {
       return unavailableStatus('expo-camera or expo-image-picker required; run on device');
     }
     if (effective === 'photoLibrary') {
-      const mediaLib = getMediaLibrary();
-      const picker = getImagePicker();
       const rationale = _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.';
-      if (mediaLib?.requestPermissionsAsync) {
-        try {
-          const r = await mediaLib.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
-          const status = fromMediaLibraryResponse({
-            granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
-            status: r.status,
-            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
-            accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
-          });
-          if (Platform.OS === 'android') {
-            const verified = await getAndroidPhotoLibraryStatus();
-            return {
-              ...verified,
-              canAskAgain: status.canAskAgain,
-              blocked: status.blocked ?? false,
-              status: verified.granted ? 'granted' : (status.canAskAgain ? 'denied' : 'blocked'),
-            };
-          }
-          return status;
-        } catch (e) {
-          logPermission('warning', 'Photo library permission request failed (expo-media-library)', { error: e });
-          if (Platform.OS !== 'android') throw e;
-        }
-      }
+      // On Android, always use PermissionsAndroid so the system permission dialog is shown reliably.
+      // expo-media-library.requestPermissionsAsync can skip the dialog on some builds/Expo Go.
       if (Platform.OS === 'android') {
         const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
         const rationaleObj = {
@@ -760,24 +842,21 @@ export const permissionsHandler = {
         try {
           let canAskAgain = true;
           if (apiLevel >= 33) {
-            const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationaleObj);
-            const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationaleObj);
+            const results = await PermissionsAndroid.requestMultiple(
+              [ANDROID_READ_MEDIA_IMAGES, ANDROID_READ_MEDIA_VIDEO] as never[],
+              rationaleObj
+            );
+            const r1 = results[ANDROID_READ_MEDIA_IMAGES];
+            const r2 = results[ANDROID_READ_MEDIA_VIDEO];
             canAskAgain =
               r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
               r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           } else {
             const result = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
+              ANDROID_READ_EXTERNAL_STORAGE as never,
               rationaleObj
             );
             canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
-          }
-          if (picker?.requestMediaLibraryPermissionsAsync) {
-            try {
-              await picker.requestMediaLibraryPermissionsAsync(false);
-            } catch {
-              // ignore
-            }
           }
           const verified = await getAndroidPhotoLibraryStatus();
           return {
@@ -788,6 +867,23 @@ export const permissionsHandler = {
           };
         } catch (e) {
           logPermission('warning', 'Photo library permission request failed', { error: e });
+          return mockStatus(false, true);
+        }
+      }
+      // iOS: use expo-media-library or expo-image-picker
+      const mediaLib = getMediaLibrary();
+      const picker = getImagePicker();
+      if (mediaLib?.requestPermissionsAsync) {
+        try {
+          const r = await mediaLib.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
+          return fromMediaLibraryResponse({
+            granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
+            status: r.status,
+            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+            accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
+          });
+        } catch (e) {
+          logPermission('warning', 'Photo library permission request failed (expo-media-library)', { error: e });
           throw e;
         }
       }
@@ -1097,33 +1193,40 @@ export const permissionsHandler = {
       };
       const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
       try {
-        let readGranted: boolean;
-        let writeGranted: boolean;
+        let granted: boolean;
         let canAskAgain: boolean;
         if (apiLevel >= 33) {
           const r1 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_IMAGES as never, rationale);
           const r2 = await PermissionsAndroid.request(ANDROID_READ_MEDIA_VIDEO as never, rationale);
-          readGranted = r1 === PermissionsAndroid.RESULTS.GRANTED;
-          writeGranted = r2 === PermissionsAndroid.RESULTS.GRANTED;
+          granted =
+            r1 === PermissionsAndroid.RESULTS.GRANTED && r2 === PermissionsAndroid.RESULTS.GRANTED;
           canAskAgain =
             r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
             r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+        } else if (apiLevel >= 30) {
+          // API 30–32: WRITE_EXTERNAL_STORAGE often has maxSdkVersion=29 in manifest; only request READ so the dialog is shown.
+          const readResult = await PermissionsAndroid.request(
+            ANDROID_READ_EXTERNAL_STORAGE as never,
+            rationale
+          );
+          granted = readResult === PermissionsAndroid.RESULTS.GRANTED;
+          canAskAgain = readResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
         } else {
           const readResult = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE as never,
+            ANDROID_READ_EXTERNAL_STORAGE as never,
             rationale
           );
           const writeResult = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE as never,
+            ANDROID_WRITE_EXTERNAL_STORAGE as never,
             rationale
           );
-          readGranted = readResult === PermissionsAndroid.RESULTS.GRANTED;
-          writeGranted = writeResult === PermissionsAndroid.RESULTS.GRANTED;
+          granted =
+            readResult === PermissionsAndroid.RESULTS.GRANTED &&
+            writeResult === PermissionsAndroid.RESULTS.GRANTED;
           canAskAgain =
             readResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
             writeResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
         }
-        const granted = readGranted && writeGranted;
         return {
           granted,
           canAskAgain,
@@ -1134,6 +1237,45 @@ export const permissionsHandler = {
         logPermission('warning', 'Storage permission request failed', { error: e });
         return mockStatus(false, true);
       }
+    }
+    if (effective === 'sms') {
+      if (Platform.OS !== 'android') {
+        return unavailableStatus('SMS permission is Android only');
+      }
+      const rationale = {
+        title: _options?.title ?? 'SMS',
+        message: _options?.rationale ?? 'This app needs SMS access to read or send messages (Android).',
+        buttonPositive: 'OK',
+      };
+      try {
+        const results = await PermissionsAndroid.requestMultiple(
+          [ANDROID_READ_SMS, ANDROID_RECEIVE_SMS] as never[],
+          rationale
+        );
+        const readResult = results[ANDROID_READ_SMS];
+        const receiveResult = results[ANDROID_RECEIVE_SMS];
+        const granted =
+          readResult === PermissionsAndroid.RESULTS.GRANTED &&
+          receiveResult === PermissionsAndroid.RESULTS.GRANTED;
+        const canAskAgain =
+          readResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
+          receiveResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+        return {
+          granted,
+          canAskAgain,
+          status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
+          blocked: !canAskAgain,
+        };
+      } catch (e) {
+        logPermission('warning', 'SMS permission request failed', { error: e });
+        return mockStatus(false, true);
+      }
+    }
+    if (effective === 'bluetooth') {
+      return this.requestBluetooth(_options);
+    }
+    if (effective === 'biometrics' || effective === 'faceId' || effective === 'touchId') {
+      return this.requestBiometrics(_options as BiometricPermissionOptions);
     }
     return unavailableStatus(`Permission ${permission} not implemented`);
   },
@@ -1269,33 +1411,88 @@ export const permissionsHandler = {
   async requestReminders(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Reminders not implemented');
   },
-  async requestBluetooth(_options?: PermissionOptions): Promise<PermissionStatus> {
-    return unavailableStatus('Bluetooth not implemented');
+  async requestBluetooth(options?: PermissionOptions): Promise<PermissionStatus> {
+    if (Platform.OS !== 'android') {
+      return unavailableStatus('Bluetooth permission is Android only');
+    }
+    const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+    if (apiLevel < 31) {
+      return unavailableStatus('Bluetooth runtime permission requires Android 12+');
+    }
+    const rationale = {
+      title: options?.title ?? 'Bluetooth',
+      message: options?.rationale ?? 'This app needs Bluetooth to connect to nearby devices.',
+      buttonPositive: 'OK',
+    };
+    try {
+      const results = await PermissionsAndroid.requestMultiple(
+        [ANDROID_BLUETOOTH_CONNECT, ANDROID_BLUETOOTH_SCAN] as never[],
+        rationale
+      );
+      const connectResult = results[ANDROID_BLUETOOTH_CONNECT];
+      const scanResult = results[ANDROID_BLUETOOTH_SCAN];
+      const granted =
+        connectResult === PermissionsAndroid.RESULTS.GRANTED &&
+        scanResult === PermissionsAndroid.RESULTS.GRANTED;
+      const canAskAgain =
+        connectResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
+        scanResult !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
+      return {
+        granted,
+        canAskAgain,
+        status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
+        blocked: !canAskAgain,
+      };
+    } catch (e) {
+      logPermission('warning', 'Bluetooth permission request failed', { error: e });
+      return mockStatus(false, true);
+    }
   },
   async requestSpeechRecognition(_options?: PermissionOptions): Promise<PermissionStatus> {
     return unavailableStatus('Speech recognition not implemented');
   },
   /**
-   * Request biometric (Face ID / Touch ID) availability / permission. Manages biometric accessibility;
-   * use fallbackTitle for the passcode fallback label (e.g. 'Use Passcode'). Requires expo-local-authentication
-   * and NSFaceIDUsageDescription on iOS.
-   * @example permissionsHandler.requestBiometrics({ fallbackTitle: 'Use Passcode' })
+   * Request biometric (Face ID / Touch ID): shows the system prompt and returns granted/denied.
+   * Use fallbackTitle for the passcode fallback label (e.g. 'Use Passcode'). Requires expo-local-authentication
+   * and NSFaceIDUsageDescription on iOS. Face ID is not supported in Expo Go — use a development build.
+   * @example permissionsHandler.requestBiometrics({ fallbackTitle: 'Use Passcode', promptMessage: 'Authenticate to continue' })
    */
   async requestBiometrics(options?: BiometricPermissionOptions): Promise<PermissionStatus> {
+    if (isExpoGo()) {
+      return unavailableStatus('Face ID is not supported in Expo Go. Use a development build on a real device.');
+    }
+    const LocalAuth = getLocalAuthentication();
+    if (!LocalAuth) {
+      logPermission('warning', 'expo-local-authentication not available');
+      return unavailableStatus('Face ID requires expo-local-authentication and a development build (not Expo Go).');
+    }
     try {
-      const LocalAuthentication = require('expo-local-authentication') as {
-        hasHardwareAsync: () => Promise<boolean>;
-        isEnrolledAsync: () => Promise<boolean>;
-      };
       const [hasHardware, isEnrolled] = await Promise.all([
-        LocalAuthentication.hasHardwareAsync(),
-        LocalAuthentication.isEnrolledAsync(),
+        LocalAuth.hasHardwareAsync(),
+        LocalAuth.isEnrolledAsync(),
       ]);
-      if (!hasHardware) return unavailableStatus('Biometric hardware not available');
-      if (!isEnrolled) return unavailableStatus('No biometrics enrolled');
-      return { granted: true, canAskAgain: true, status: 'granted' };
-    } catch {
-      return unavailableStatus('Install expo-local-authentication for biometrics');
+      if (!hasHardware) return unavailableStatus('No Face ID / Touch ID hardware on this device.');
+      if (!isEnrolled) return unavailableStatus('No face or fingerprint enrolled in device settings.');
+
+      const result = await LocalAuth.authenticateAsync({
+        promptMessage: options?.promptMessage ?? 'Authenticate with Face ID or Touch ID',
+        fallbackLabel: options?.fallbackTitle ?? 'Use Passcode',
+      });
+      if (result.success) {
+        return { granted: true, canAskAgain: true, status: 'granted' };
+      }
+      const errorCode = (result as { error?: string }).error ?? '';
+      const userCancel = errorCode === 'user_cancel' || errorCode === 'user_fallback';
+      return {
+        granted: false,
+        canAskAgain: userCancel,
+        status: userCancel ? 'denied' : 'denied',
+        message: errorCode || 'Authentication failed',
+      };
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      logPermission('error', 'Biometrics request failed', { error: message });
+      return unavailableStatus(message || 'Biometric authentication failed');
     }
   },
   /**
@@ -1335,8 +1532,8 @@ export const permissionsHandler = {
   async requestPhone(options?: PermissionOptions): Promise<PermissionStatus> {
     return this.request('phone', options);
   },
-  async requestSMS(_options?: PermissionOptions): Promise<PermissionStatus> {
-    return unavailableStatus('SMS permission not implemented');
+  async requestSMS(options?: PermissionOptions): Promise<PermissionStatus> {
+    return this.request('sms', options);
   },
 
   async isBiometricsAvailable(): Promise<boolean> {

@@ -7,14 +7,16 @@ export function getPermissionStatusDisplay(
   colors: ThemeColors,
   options?: { requestAttempted?: boolean }
 ): { label: string; color: string } {
-  if (!status) return { label: t('helpers.permissionsHelper.notChecked'), color: colors.inactiveText };
   const requestAttempted = options?.requestAttempted === true;
+  if (status != null) {
+    const s = status.status;
+    const key = STATUS_I18N[s] || s;
+    const themeKey = STATUS_BADGE_THEME_KEYS[s] ?? 'inactiveText';
+    const color = colors[themeKey] ?? colors.inactiveText;
+    return { label: t(key), color };
+  }
   if (!requestAttempted) {
     return { label: t('helpers.permissionsHelper.notYetRequested'), color: colors.inactiveText };
   }
-  const s = status.status;
-  const key = STATUS_I18N[s] || s;
-  const themeKey = STATUS_BADGE_THEME_KEYS[s] ?? 'inactiveText';
-  const color = colors[themeKey] ?? colors.inactiveText;
-  return { label: t(key), color };
+  return { label: t('helpers.permissionsHelper.notChecked'), color: colors.inactiveText };
 }

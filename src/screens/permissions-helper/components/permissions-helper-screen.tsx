@@ -1,6 +1,7 @@
 import { t } from '@/src/shared/i18n';
 import { getThemeColors, ScreenHeader, ThemedText, useTheme } from 'masterfabric-expo-core';
-import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import React, { useCallback } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -34,12 +35,20 @@ export function PermissionsHelperScreen() {
     requestPermission,
     openSettings,
     refreshStatuses,
+    refreshStatusesSilent,
     permissionKeys,
     requestAttempted,
+    isAnyRequestInProgress,
     locationPermissionInfo,
     iosEntries,
     androidEntries,
   } = usePermissionsHelperViewModel();
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshStatusesSilent();
+    }, [refreshStatusesSilent])
+  );
 
   const iosConfigContent =
     iosEntries.length > 0
@@ -81,7 +90,11 @@ export function PermissionsHelperScreen() {
         <View style={styles.topButtonsRow}>
           <TouchableOpacity
             onPress={openSettings}
-            style={[styles.settingsBtn, { backgroundColor: colors.buttonBackground }]}
+            disabled={isAnyRequestInProgress}
+            style={[
+              styles.settingsBtn,
+              { backgroundColor: colors.buttonBackground, opacity: isAnyRequestInProgress ? 0.6 : 1 },
+            ]}
             activeOpacity={0.8}
           >
             <ThemedText style={[styles.settingsBtnText, { color: colors.text }] as ThemedTextStyle}>
@@ -90,7 +103,11 @@ export function PermissionsHelperScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => refreshStatuses()}
-            style={[styles.settingsBtn, { backgroundColor: colors.buttonBackground }]}
+            disabled={isAnyRequestInProgress}
+            style={[
+              styles.settingsBtn,
+              { backgroundColor: colors.buttonBackground, opacity: isAnyRequestInProgress ? 0.6 : 1 },
+            ]}
             activeOpacity={0.8}
           >
             <ThemedText style={[styles.settingsBtnText, { color: colors.text }] as ThemedTextStyle}>
@@ -109,14 +126,9 @@ export function PermissionsHelperScreen() {
           const isAnyLoading = Object.values(loading).some(Boolean);
           const labelKey = PERMISSION_LABEL_KEYS[key] ?? key;
           const label = t(labelKey);
-          const statusDisplay = status
-            ? getPermissionStatusDisplay(status, t, colors, {
-                requestAttempted: requestAttempted[key],
-              })
-            : {
-                label: t('helpers.permissionsHelper.notChecked'),
-                color: colors.inactiveText,
-              };
+          const statusDisplay = getPermissionStatusDisplay(status, t, colors, {
+            requestAttempted: requestAttempted[key],
+          });
 
           const statusContent =
             key === 'location' && locationPermissionInfo && requestAttempted[key] ? (
@@ -171,11 +183,21 @@ export function PermissionsHelperScreen() {
                 }}
               />
             ) : (
-              <View style={styles.statusRow}>
-                <View style={[styles.statusDot, { backgroundColor: statusDisplay.color }]} />
-                <ThemedText style={[styles.statusText, { color: statusDisplay.color }] as ThemedTextStyle}>
-                  {statusDisplay.label}
-                </ThemedText>
+              <View style={styles.statusColumn}>
+                <View style={styles.statusRow}>
+                  <View style={[styles.statusDot, { backgroundColor: statusDisplay.color }]} />
+                  <ThemedText style={[styles.statusText, { color: statusDisplay.color }] as ThemedTextStyle}>
+                    {statusDisplay.label}
+                  </ThemedText>
+                </View>
+                {status?.status === 'unavailable' && status?.message ? (
+                  <ThemedText
+                    style={[styles.statusSubtext, { color: colors.inactiveText }] as ThemedTextStyle}
+                    numberOfLines={2}
+                  >
+                    {status.message}
+                  </ThemedText>
+                ) : null}
               </View>
             );
 

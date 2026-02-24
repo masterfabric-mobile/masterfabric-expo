@@ -8,27 +8,25 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
-import { StorageService } from '@/src/shared/services/storage';
 import {
   CONFIG_PREVIEW_PERMISSIONS,
   PERMISSION_KEYS,
   PERMISSION_LABEL_KEYS,
-  STORAGE_KEY_REQUEST_ATTEMPTED,
 } from '../constants/permissions-helper.constants';
 import type { LocationPermissionInfo } from '../models/permissions-helper-models';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
 
 export function usePermissionsHelperViewModel() {
-  const { statuses, loading, setStatus, setLoading } = usePermissionsHelperStore();
+  const { statuses, loading, requestAttempted, setStatus, setLoading, setRequestAttempted } =
+    usePermissionsHelperStore();
   const snackbar = useSnackbar();
   const [locationInfo, setLocationInfo] = useState<LocationPermissionInfo | null>(null);
-  const [requestAttempted, setRequestAttemptedState] = useState<Record<PermissionKey, boolean>>(
-    () => Object.fromEntries(PERMISSION_KEYS.map((k) => [k, false])) as Record<PermissionKey, boolean>
-  );
 
-  const REQUEST_TIMEOUT_MS = 15000;
-  const SKIP_CHECK_AFTER_REQUEST_MS = 2500;
+  const REQUEST_TIMEOUT_MS = 20000;
+  const SKIP_CHECK_AFTER_REQUEST_MS = 5000;
   const lastRequestedRef = useRef<{ key: PermissionKey; time: number } | null>(null);
+  const requestInProgressRef = useRef(false);
+  const currentRequestKeyRef = useRef<PermissionKey | null>(null);
   const withTimeout = <T>(p: Promise<T>) =>
     Promise.race([
       p,
@@ -39,6 +37,9 @@ export function usePermissionsHelperViewModel() {
 
   const requestPermission = useCallback(
     async (key: PermissionKey, silent = false) => {
+      if (requestInProgressRef.current) return;
+      requestInProgressRef.current = true;
+      currentRequestKeyRef.current = key;
       setLoading(key, true);
       try {
         const fetchStatus = async (): Promise<PermissionStatus> => {
@@ -47,7 +48,7 @@ export function usePermissionsHelperViewModel() {
               return permissionsHandler.requestCamera({
                 rationale: t('helpers.permissionsHelper.rationale.camera'),
                 showSettingsAlert: true,
-                includePhotoLibrary: true,
+                includePhotoLibrary: false,
               });
             case 'microphone':
               return permissionsHandler.requestMicrophone({
@@ -59,23 +60,12 @@ export function usePermissionsHelperViewModel() {
                 rationale: t('helpers.permissionsHelper.rationale.photoLibrary'),
                 showSettingsAlert: true,
               });
-            case 'storage':
-              return permissionsHandler.requestStorage({
-                rationale: t('helpers.permissionsHelper.rationale.storage'),
-                showSettingsAlert: true,
-              });
             case 'location':
               return permissionsHandler.requestLocation({
                 rationale: t('helpers.permissionsHelper.rationale.location'),
                 showSettingsAlert: true,
                 accuracy: 'high',
                 background: true,
-              });
-            case 'notifications':
-              return permissionsHandler.requestNotifications({
-                alert: true,
-                badge: true,
-                sound: true,
               });
             case 'calendar':
               return permissionsHandler.requestCalendar({
@@ -87,9 +77,19 @@ export function usePermissionsHelperViewModel() {
                 rationale: t('helpers.permissionsHelper.rationale.contacts'),
                 showSettingsAlert: true,
               });
-            case 'phone':
-              return permissionsHandler.requestPhone({
-                rationale: t('helpers.permissionsHelper.rationale.phone'),
+            case 'notifications':
+              return permissionsHandler.requestNotifications({
+                rationale: t('helpers.permissionsHelper.rationale.notifications'),
+                showSettingsAlert: true,
+              });
+            case 'bluetooth':
+              return permissionsHandler.request('bluetooth', {
+                rationale: t('helpers.permissionsHelper.rationale.bluetooth'),
+                showSettingsAlert: true,
+              });
+            case 'sms':
+              return permissionsHandler.request('sms', {
+                rationale: t('helpers.permissionsHelper.rationale.sms'),
                 showSettingsAlert: true,
               });
             default:
@@ -113,11 +113,7 @@ export function usePermissionsHelperViewModel() {
       }
       setStatus(key, status);
       lastRequestedRef.current = { key, time: Date.now() };
-      setRequestAttemptedState((prev) => {
-        const next = { ...prev, [key]: true };
-        StorageService.setItem(STORAGE_KEY_REQUEST_ATTEMPTED, next).catch(() => {});
-        return next;
-      });
+      setRequestAttempted(key, true);
       if (!silent && (status.status === 'blocked' || status.blocked)) {
         permissionsHandler.showSettingsAlert({
           permission: key,
@@ -127,15 +123,23 @@ export function usePermissionsHelperViewModel() {
       }
       return status;
     } catch (e) {
+      const fallbackStatus = await permissionsHandler.check(key as PermissionType).catch(() => null);
+      if (fallbackStatus) {
+        setStatus(key, fallbackStatus);
+        setRequestAttempted(key, true);
+      }
       throw e;
     } finally {
+      currentRequestKeyRef.current = null;
+      requestInProgressRef.current = false;
       setLoading(key, false);
     }
-  }, [setStatus, setLoading, snackbar]);
+  }, [setStatus, setLoading, setRequestAttempted, snackbar]);
 
   const checkAll = useCallback(async () => {
     const now = Date.now();
     for (const key of PERMISSION_KEYS) {
+      if (currentRequestKeyRef.current === key) continue;
       const recentlyRequested =
         lastRequestedRef.current?.key === key &&
         now - lastRequestedRef.current.time < SKIP_CHECK_AFTER_REQUEST_MS;
@@ -143,7 +147,7 @@ export function usePermissionsHelperViewModel() {
       try {
         const type: PermissionType = key;
         const status = await permissionsHandler.check(type);
-        const prev = statuses[key];
+        const prev = usePermissionsHelperStore.getState().statuses[key];
         const resolved =
           !status.granted && prev?.status === 'blocked'
             ? { ...status, status: 'blocked' as const, blocked: true, canAskAgain: false }
@@ -153,37 +157,32 @@ export function usePermissionsHelperViewModel() {
         setStatus(key, null);
       }
     }
-  }, [setStatus, statuses]);
+  }, [setStatus]);
 
   const refreshStatuses = useCallback(async () => {
     await checkAll();
     snackbar.success(t('helpers.permissionsHelper.refreshCompleted'), 2500);
   }, [checkAll, snackbar]);
 
+  /** Refresh statuses from system without snackbar (e.g. when screen gains focus). */
+  const refreshStatusesSilent = useCallback(() => {
+    checkAll();
+  }, [checkAll]);
+
   const openSettings = useCallback(() => {
     permissionsHandler.openSettings();
   }, []);
 
-  useEffect(() => {
-    checkAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    StorageService.getItem<Record<PermissionKey, boolean>>(STORAGE_KEY_REQUEST_ATTEMPTED).then(
-      (stored) => {
-        if (stored && typeof stored === 'object') {
-          setRequestAttemptedState((prev) => ({ ...prev, ...stored }));
-        }
-      }
-    );
-  }, []);
+  // checkAll runs when app returns to foreground (AppState) and when screen gains focus (call refreshStatusesSilent from screen).
 
   const activeCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (nextState === 'active') {
-        PERMISSION_KEYS.forEach((k) => setLoading(k, false));
+        const currentKey = currentRequestKeyRef.current;
+        PERMISSION_KEYS.forEach((k) => {
+          if (k !== currentKey) setLoading(k, false);
+        });
         if (activeCheckTimeoutRef.current != null) clearTimeout(activeCheckTimeoutRef.current);
         activeCheckTimeoutRef.current = setTimeout(() => {
           activeCheckTimeoutRef.current = null;
@@ -210,14 +209,18 @@ export function usePermissionsHelperViewModel() {
     []
   );
 
+  const isAnyRequestInProgress = Object.values(loading).some(Boolean);
+
   return {
     statuses,
     loading,
     requestPermission,
     openSettings,
     refreshStatuses,
+    refreshStatusesSilent,
     permissionKeys: PERMISSION_KEYS,
     requestAttempted,
+    isAnyRequestInProgress,
     iosEntries,
     androidEntries,
     locationPermissionInfo: locationInfo,

@@ -36,6 +36,11 @@ export const IMPLEMENTED_PERMISSIONS: PermissionType[] = [
   'contacts',
   'phone',
   'storage',
+  'faceId',
+  'touchId',
+  'biometrics',
+  'sms',
+  'bluetooth',
 ];
 
 export function isImplemented(p: PermissionType): boolean {
