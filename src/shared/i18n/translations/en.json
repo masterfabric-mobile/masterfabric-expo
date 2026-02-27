@@ -1644,6 +1644,10 @@
       "notificationTaskTitle": "Task Reminder",
       "notificationTaskBody": "Tap Complete or Snooze",
       "commonOk": "OK"
+    },
+    "onesignalHelper": {
+      "title": "OneSignal Helper",
+      "description": "Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)"
     }
   },
   "documentation": {

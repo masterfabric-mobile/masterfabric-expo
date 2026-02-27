@@ -1588,6 +1588,10 @@
       "notificationTaskTitle": "Görev Hatırlatıcısı",
       "notificationTaskBody": "Tamamla veya Ertele'ye dokunun",
       "commonOk": "Tamam"
+    },
+    "onesignalHelper": {
+      "title": "OneSignal Yardımcısı",
+      "description": "OneSignal ile uzak push bildirimleri; init, izin, kullanıcı ID ve abonelik (.env'deki App ID)"
     }
   },
   "documentation": {
