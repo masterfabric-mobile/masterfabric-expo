@@ -14,6 +14,7 @@ export const PERMISSION_KEYS = [
   'calendar',
   'location',
   'bluetooth',
+  'phone',
 ] as const;
 
 export type PermissionKey = (typeof PERMISSION_KEYS)[number];
@@ -28,6 +29,7 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   calendar: 'Calendar',
   location: 'Location',
   bluetooth: 'Bluetooth',
+  phone: 'Phone',
 };
 
 export const CONFIG_PREVIEW_PERMISSIONS: PermissionType[] = [
@@ -40,6 +42,7 @@ export const CONFIG_PREVIEW_PERMISSIONS: PermissionType[] = [
   'calendar',
   'location',
   'bluetooth',
+  'phone',
 ];
 
 /** i18n keys for permission status labels */
@@ -73,6 +76,7 @@ export const PERMISSION_LABEL_KEYS: Record<string, string> = {
   calendar: 'helpers.permissionsHelper.permissionCalendar',
   location: 'helpers.permissionsHelper.permissionLocation',
   bluetooth: 'helpers.permissionsHelper.permissionBluetooth',
+  phone: 'helpers.permissionsHelper.permissionPhone',
 };
 
 /** iOS Info.plist key -> i18n key for config preview */
