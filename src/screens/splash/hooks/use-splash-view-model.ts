@@ -5,14 +5,24 @@ import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { onesignalHelper } from 'masterfabric-expo-core';
 import { useEffect, useState } from 'react';
-
-import {
-  shouldShowOnboarding
-} from 'masterfabric-expo-core';
+import { Platform } from 'react-native';
 import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
+import { permissionsHandler, shouldShowOnboarding } from 'masterfabric-expo-core';
 
-/** Permissions (notifications, location, etc.) are requested only when the user taps Request in the Permissions Helper screen, not on app launch. */
+/** Triggers Android/iOS native runtime permission dialogs on app launch. */
+function requestCriticalPermissionsOnLaunch() {
+  if (Platform.OS === 'web') return;
+  const delayMs = 600;
+  setTimeout(async () => {
+    try {
+      await permissionsHandler.request('notifications');
+      // Location: only requested when user taps Request in Permissions Helper
+    } catch {
+      // Ignore – OS handles permission flow
+    }
+  }, delayMs);
+}
 
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
@@ -32,6 +42,7 @@ export function useSplashViewModel() {
   }, []);
 
   const initializeApp = async () => {
+    requestCriticalPermissionsOnLaunch();
     setLoading(true);
 
     const steps = createSplashSteps();

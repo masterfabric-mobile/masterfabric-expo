@@ -92,6 +92,11 @@ export function usePermissionsHelperViewModel() {
                 rationale: t('helpers.permissionsHelper.rationale.sms'),
                 showSettingsAlert: true,
               });
+            case 'phone':
+              return permissionsHandler.requestPhone({
+                rationale: t('helpers.permissionsHelper.rationale.phone'),
+                showSettingsAlert: true,
+              });
             default:
               return permissionsHandler.request(key as PermissionType, { showSettingsAlert: true });
           }
