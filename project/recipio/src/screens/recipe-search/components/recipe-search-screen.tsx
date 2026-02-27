@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import { useRecipeSearchViewModel } from '../hooks/use-recipe-search-view-model';
 import { recipeSearchStyles } from '../styles/recipe-search.styles';
 import { RecipeRow } from './recipe-row';
@@ -27,6 +28,7 @@ export function RecipeSearchScreen() {
     handleBack,
     handleRecipePress,
   } = useRecipeSearchViewModel();
+  const { t } = useI18n();
 
   return (
     <View style={recipeSearchStyles.container}>
@@ -45,7 +47,7 @@ export function RecipeSearchScreen() {
           />
           <TextInput
             style={recipeSearchStyles.searchInput}
-            placeholder="Search by recipe name..."
+            placeholder={t('recipeSearch.placeholder')}
             placeholderTextColor={RecipioColors.textSecondary}
             value={query}
             onChangeText={handleQueryChange}
@@ -58,29 +60,29 @@ export function RecipeSearchScreen() {
       {!query.trim() ? (
         <View style={recipeSearchStyles.section}>
           <View style={recipeSearchStyles.sectionRow}>
-            <Text style={recipeSearchStyles.sectionTitle}>RECENT SEARCHES</Text>
+            <Text style={recipeSearchStyles.sectionTitle}>{t('recipeSearch.recentSearches')}</Text>
             {recent.length > 0 ? (
               <TouchableOpacity
                 style={recipeSearchStyles.clearRecent}
                 onPress={clearRecent}
               >
-                <Text style={recipeSearchStyles.clearRecentText}>Clear All</Text>
+                <Text style={recipeSearchStyles.clearRecentText}>{t('recipeSearch.clearAll')}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
           {recent.length > 0 ? (
             <View style={recipeSearchStyles.chipWrap}>
-              {recent.map((q) => (
+              {recent.map((item) => (
                 <TouchableOpacity
-                  key={q}
+                  key={item.id}
                   style={recipeSearchStyles.chip}
-                  onPress={() => handleRecentSelect(q)}
+                  onPress={() => handleRecentSelect(item.id)}
                 >
-                  <Text style={recipeSearchStyles.chipText}>{q}</Text>
+                  <Text style={recipeSearchStyles.chipText}>{item.title}</Text>
                   <TouchableOpacity
                     onPress={async (e) => {
                       e.stopPropagation();
-                      await handleRemoveRecent(q);
+                      await handleRemoveRecent(item.id);
                     }}
                   >
                     <Ionicons
@@ -98,7 +100,7 @@ export function RecipeSearchScreen() {
 
       {query.trim().length > 0 ? (
         <View style={recipeSearchStyles.section}>
-          <Text style={recipeSearchStyles.sectionTitle}>SUGGESTIONS</Text>
+          <Text style={recipeSearchStyles.sectionTitle}>{t('recipeSearch.suggestions')}</Text>
         </View>
       ) : null}
 
@@ -111,21 +113,21 @@ export function RecipeSearchScreen() {
           data={results}
           keyExtractor={(r) => String(r.id)}
           contentContainerStyle={recipeSearchStyles.list}
-          ListEmptyComponent={
-            searched ? (
-              <View style={recipeSearchStyles.empty}>
-                <Text style={recipeSearchStyles.emptyText}>
-                  {query.trim()
-                    ? 'No recipes found. Try another search.'
-                    : 'Type a recipe name above to search.'}
-                </Text>
-              </View>
-            ) : null
-          }
+            ListEmptyComponent={
+              searched ? (
+                <View style={recipeSearchStyles.empty}>
+                  <Text style={recipeSearchStyles.emptyText}>
+                    {query.trim()
+                      ? t('recipeSearch.noResults')
+                      : t('recipeSearch.typeToSearch')}
+                  </Text>
+                </View>
+              ) : null
+            }
           renderItem={({ item }) => (
             <RecipeRow
               recipe={item}
-              onPress={() => handleRecipePress(item.id)}
+              onPress={() => handleRecipePress(item)}
             />
           )}
         />

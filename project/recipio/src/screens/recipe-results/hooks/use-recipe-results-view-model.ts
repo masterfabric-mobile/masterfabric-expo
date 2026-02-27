@@ -1,12 +1,17 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
   getCookTonightRecipes,
   getRecipesByIngredients,
   type RecipeCardWithMatch,
 } from '@/shared/services/recipe-service';
+import { useI18n } from '@/shared/i18n';
 import { useRecipeResultsStore } from '../store/recipe-results-store';
-import { parseIngredientsParam } from '../utils/recipe-results-utils';
+import {
+  parseIngredientsParam,
+  sortRecipes,
+  type RecipeSortType,
+} from '../utils/recipe-results-utils';
 
 function toCardWithMatch(
   r: Awaited<ReturnType<typeof getCookTonightRecipes>>[number]
@@ -22,8 +27,15 @@ function toCardWithMatch(
 
 export function useRecipeResultsViewModel() {
   const router = useRouter();
+  const { locale } = useI18n();
   const params = useLocalSearchParams<{ ingredients?: string }>();
-  const { recipes, loading, setRecipes, setLoading } = useRecipeResultsStore();
+  const { recipes, loading, sortType, setRecipes, setLoading, setSortType } =
+    useRecipeResultsStore();
+
+  const sortedRecipes = useMemo(
+    () => sortRecipes(recipes, sortType),
+    [recipes, sortType]
+  );
 
   const ingredientList = parseIngredientsParam(params.ingredients);
 
@@ -31,22 +43,29 @@ export function useRecipeResultsViewModel() {
     setLoading(true);
     try {
       if (ingredientList.length > 0) {
-        const list = await getRecipesByIngredients(ingredientList, { limit: 20 });
-        setRecipes(list);
+        const list = await getRecipesByIngredients(ingredientList, { limit: 20, locale });
+        // Show only recipes with at least one matching ingredient (exclude 0% match)
+        setRecipes(list.filter((r) => r.matchPercent > 0));
       } else {
-        const list = await getCookTonightRecipes({ limit: 20 });
+        const list = await getCookTonightRecipes({ limit: 20, locale });
         setRecipes(list.map(toCardWithMatch));
       }
     } finally {
       setLoading(false);
     }
-  }, [params.ingredients, setRecipes, setLoading]);
+  }, [params.ingredients, locale, setRecipes, setLoading]);
 
   useEffect(() => {
     load();
   }, [load]);
 
-  const handleBack = useCallback(() => router.back(), [router]);
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  }, [router]);
 
   const handleRecipePress = useCallback(
     (recipeId: number) => router.push(`/recipe-detail/${recipeId}`),
@@ -59,10 +78,12 @@ export function useRecipeResultsViewModel() {
       : 'Recipe results';
 
   return {
-    recipes,
+    recipes: sortedRecipes,
     loading,
     ingredientList,
     title,
+    sortType,
+    setSortType,
     handleBack,
     handleRecipePress,
   };

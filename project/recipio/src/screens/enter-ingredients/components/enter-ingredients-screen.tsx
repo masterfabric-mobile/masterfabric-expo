@@ -9,10 +9,27 @@ import {
   View,
 } from 'react-native';
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import { useEnterIngredientsViewModel } from '../hooks/use-enter-ingredients-view-model';
 import { enterIngredientsStyles } from '../styles/enter-ingredients.styles';
 
+const SUGGESTED_INGREDIENT_KEYS = [
+  'ingredient.egg',
+  'ingredient.milk',
+  'ingredient.flour',
+  'ingredient.chicken',
+  'ingredient.tomato',
+  'ingredient.onion',
+  'ingredient.garlic',
+  'ingredient.oliveOil',
+  'ingredient.salt',
+  'ingredient.pepper',
+  'ingredient.cheese',
+  'ingredient.yogurt',
+] as const;
+
 export function EnterIngredientsScreen() {
+  const { t } = useI18n();
   const {
     inputValue,
     ingredients,
@@ -26,20 +43,7 @@ export function EnterIngredientsScreen() {
     handleAddSuggestion,
   } = useEnterIngredientsViewModel();
 
-  const suggestedFoods = [
-    'Egg',
-    'Milk',
-    'Flour',
-    'Chicken',
-    'Tomato',
-    'Onion',
-    'Garlic',
-    'Olive oil',
-    'Salt',
-    'Pepper',
-    'Cheese',
-    'Yogurt',
-  ];
+  const suggestedFoods = SUGGESTED_INGREDIENT_KEYS.map((key) => t(key));
 
   return (
     <View style={enterIngredientsStyles.container}>
@@ -47,7 +51,7 @@ export function EnterIngredientsScreen() {
         <TouchableOpacity style={enterIngredientsStyles.backBtn} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
         </TouchableOpacity>
-        <Text style={enterIngredientsStyles.title}>Enter Ingredients</Text>
+        <Text style={enterIngredientsStyles.title}>{t('enterIngredients.title')}</Text>
         <TouchableOpacity
           style={enterIngredientsStyles.clearBtn}
           onPress={clearAll}
@@ -59,7 +63,7 @@ export function EnterIngredientsScreen() {
               !canSubmit && { opacity: 0.5 },
             ]}
           >
-            Clear All
+            {t('enterIngredients.clearAll')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -75,15 +79,15 @@ export function EnterIngredientsScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={enterIngredientsStyles.sectionLabel}>Add items to your pantry</Text>
+          <Text style={enterIngredientsStyles.sectionLabel}>{t('enterIngredients.sectionLabel')}</Text>
           <Text style={enterIngredientsStyles.hint}>
-            Start typing to add ingredients for your search.
+            {t('enterIngredients.hint')}
           </Text>
 
           <View style={enterIngredientsStyles.inputRow}>
             <TextInput
               style={enterIngredientsStyles.input}
-              placeholder="Type ingredient name..."
+              placeholder={t('enterIngredients.placeholder')}
               placeholderTextColor={RecipioColors.textSecondary}
               value={inputValue}
               onChangeText={setInputValue}
@@ -95,19 +99,19 @@ export function EnterIngredientsScreen() {
               onPress={handleAddIngredient}
               activeOpacity={0.8}
             >
-              <Text style={enterIngredientsStyles.addBtnText}>Add</Text>
+              <Text style={enterIngredientsStyles.addBtnText}>{t('enterIngredients.add')}</Text>
             </TouchableOpacity>
           </View>
 
           <View style={enterIngredientsStyles.ingredientsHeader}>
             <Text style={enterIngredientsStyles.ingredientsTitle}>
-              YOUR INGREDIENTS ({ingredients.length})
+              {t('enterIngredients.yourIngredients')} ({ingredients.length})
             </Text>
           </View>
 
           {ingredients.length === 0 ? (
             <Text style={enterIngredientsStyles.emptyListHint}>
-              No ingredients added yet. Type above and tap Add.
+              {t('enterIngredients.emptyListHint')}
             </Text>
           ) : (
             <View style={enterIngredientsStyles.tagList}>
@@ -132,7 +136,7 @@ export function EnterIngredientsScreen() {
 
           <View style={enterIngredientsStyles.suggestionSection}>
             <Text style={enterIngredientsStyles.suggestionLabel}>
-              Suggested
+              {t('enterIngredients.suggested')}
             </Text>
             <View style={enterIngredientsStyles.suggestionChipsRow}>
               {suggestedFoods.map((food) => {
@@ -163,7 +167,7 @@ export function EnterIngredientsScreen() {
             activeOpacity={0.8}
           >
             <Text style={enterIngredientsStyles.ctaText}>
-              Find Recipes with These Ingredients…
+              {t('enterIngredients.findRecipes')}
             </Text>
           </TouchableOpacity>
         </ScrollView>

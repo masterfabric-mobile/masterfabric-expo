@@ -1,18 +1,22 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { RecipeCard } from '@/shared/services/recipe-service';
 import { searchRecipes } from '@/shared/services/recipe-service';
+import { useI18n } from '@/shared/i18n';
 import { DEBOUNCE_MS } from '../models/recipe-search-models';
+import type { RecentRecipe } from '../utils/recent-searches';
 import {
   clearRecentSearches,
   getRecentSearches,
   removeRecentSearch,
-  saveRecentSearch,
+  saveRecentRecipe,
 } from '../utils/recent-searches';
 
 export function useRecipeSearchViewModel() {
   const router = useRouter();
+  const { locale } = useI18n();
   const [query, setQuery] = useState('');
-  const [recent, setRecent] = useState<string[]>([]);
+  const [recent, setRecent] = useState<RecentRecipe[]>([]);
   const [results, setResults] = useState<Awaited<ReturnType<typeof searchRecipes>>>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -32,15 +36,13 @@ export function useRecipeSearchViewModel() {
       setLoading(true);
       setSearched(true);
       try {
-        const list = await searchRecipes(q);
+        const list = await searchRecipes(q, { locale });
         setResults(list);
-        if (q.trim()) await saveRecentSearch(q);
-        loadRecent();
       } finally {
         setLoading(false);
       }
     },
-    [loadRecent]
+    [locale]
   );
 
   const clearRecent = useCallback(async () => {
@@ -66,16 +68,15 @@ export function useRecipeSearchViewModel() {
   );
 
   const handleRecentSelect = useCallback(
-    (q: string) => {
-      setQuery(q);
-      runSearch(q);
+    (recipeId: number) => {
+      router.push(`/recipe-detail/${recipeId}`);
     },
-    [runSearch]
+    [router]
   );
 
   const handleRemoveRecent = useCallback(
-    async (q: string) => {
-      const next = await removeRecentSearch(recent, q);
+    async (recipeId: number) => {
+      const next = await removeRecentSearch(recent, recipeId);
       setRecent(next);
     },
     [recent]
@@ -84,8 +85,12 @@ export function useRecipeSearchViewModel() {
   const handleBack = useCallback(() => router.back(), [router]);
 
   const handleRecipePress = useCallback(
-    (recipeId: number) => router.push(`/recipe-detail/${recipeId}`),
-    [router]
+    async (recipe: RecipeCard) => {
+      await saveRecentRecipe({ id: recipe.id, title: recipe.title });
+      loadRecent();
+      router.push(`/recipe-detail/${recipe.id}`);
+    },
+    [router, loadRecent]
   );
 
   useEffect(

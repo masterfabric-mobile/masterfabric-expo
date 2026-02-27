@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import type { RecipeCardWithMatch } from '@/shared/services/recipe-service';
+import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
 import {
   getMatchBadgeStyle,
   recipeResultsStyles,
@@ -13,12 +15,13 @@ interface RecipeResultsRowProps {
 }
 
 export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
+  const { t } = useI18n();
   const matchStyle = getMatchBadgeStyle(recipe.matchPercent);
   const statusText = recipe.hasAllIngredients
-    ? 'You have all items'
+    ? t('recipeResults.youHaveAll')
     : recipe.missingCount === 1 && recipe.missingIngredients[0]
-      ? `Missing: ${recipe.missingIngredients[0]}`
-      : `Missing ${recipe.missingCount} ingredients`;
+      ? t('recipeResults.missingOne', { name: recipe.missingIngredients[0] })
+      : t('recipeResults.missingCount', { count: recipe.missingCount });
   const statusColor = recipe.hasAllIngredients
     ? recipeResultsStyles.cardStatusAll
     : undefined;
@@ -48,7 +51,7 @@ export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
         )}
         <View style={[recipeResultsStyles.matchBadge, matchStyle]}>
           <Text style={recipeResultsStyles.matchBadgeText}>
-            {recipe.matchPercent}% Match
+            {t('recipeResults.match', { percent: recipe.matchPercent })}
           </Text>
         </View>
       </View>
@@ -57,9 +60,9 @@ export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
           {recipe.title}
         </Text>
         <View style={recipeResultsStyles.cardMeta}>
-          <Text style={recipeResultsStyles.cardMetaText}>{recipe.time}</Text>
+          <Text style={recipeResultsStyles.cardMetaText}>{formatRecipeTime(t, recipe.time)}</Text>
           <Text style={recipeResultsStyles.cardMetaText}>•</Text>
-          <Text style={recipeResultsStyles.cardMetaText}>{recipe.difficulty}</Text>
+          <Text style={recipeResultsStyles.cardMetaText}>{formatRecipeDifficulty(t, recipe.difficulty)}</Text>
         </View>
         <View style={recipeResultsStyles.cardStatusRow}>
           <View style={recipeResultsStyles.cardStatus}>

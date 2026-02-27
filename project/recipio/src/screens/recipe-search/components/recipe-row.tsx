@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import type { RecipeCard } from '@/shared/services/recipe-service';
+import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
 import { recipeSearchStyles } from '../styles/recipe-search.styles';
 
 interface RecipeRowProps {
@@ -10,6 +12,7 @@ interface RecipeRowProps {
 }
 
 export function RecipeRow({ recipe, onPress }: RecipeRowProps) {
+  const { t } = useI18n();
   return (
     <TouchableOpacity
       style={recipeSearchStyles.card}
@@ -37,9 +40,9 @@ export function RecipeRow({ recipe, onPress }: RecipeRowProps) {
           {recipe.title}
         </Text>
         <View style={recipeSearchStyles.cardMeta}>
-          <Text style={recipeSearchStyles.cardMetaText}>{recipe.time}</Text>
+          <Text style={recipeSearchStyles.cardMetaText}>{formatRecipeTime(t, recipe.time)}</Text>
           <Text style={recipeSearchStyles.cardMetaText}>•</Text>
-          <Text style={recipeSearchStyles.cardMetaText}>{recipe.difficulty}</Text>
+          <Text style={recipeSearchStyles.cardMetaText}>{formatRecipeDifficulty(t, recipe.difficulty)}</Text>
         </View>
       </View>
       <Ionicons

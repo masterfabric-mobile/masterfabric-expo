@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
+import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
 import { useRecipeDetailViewModel } from '../hooks/use-recipe-detail-view-model';
 import { recipeDetailStyles } from '../styles/recipe-detail.styles';
 import { SERVINGS_OPTIONS } from '../models/recipe-detail-models';
@@ -26,6 +28,7 @@ export function RecipeDetailScreen() {
     onServingsChange,
     handleBack,
   } = useRecipeDetailViewModel();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (Platform.OS !== 'web' || loading || !recipe) return;
@@ -70,7 +73,7 @@ export function RecipeDetailScreen() {
           </TouchableOpacity>
         </View>
         <View style={recipeDetailStyles.error}>
-          <Text style={recipeDetailStyles.errorText}>Recipe not found.</Text>
+          <Text style={recipeDetailStyles.errorText}>{t('recipeDetail.recipeNotFound')}</Text>
         </View>
       </View>
     );
@@ -145,7 +148,7 @@ export function RecipeDetailScreen() {
               size={16}
               color={RecipioColors.textSecondary}
             />
-            <Text style={recipeDetailStyles.metaText}>{recipe.time}</Text>
+            <Text style={recipeDetailStyles.metaText}>{formatRecipeTime(t, recipe.time)}</Text>
           </View>
           <View style={recipeDetailStyles.metaItem}>
             <Ionicons
@@ -153,7 +156,7 @@ export function RecipeDetailScreen() {
               size={16}
               color={RecipioColors.textSecondary}
             />
-            <Text style={recipeDetailStyles.metaText}>{recipe.difficulty}</Text>
+            <Text style={recipeDetailStyles.metaText}>{formatRecipeDifficulty(t, recipe.difficulty)}</Text>
           </View>
         </View>
 
@@ -237,9 +240,9 @@ export function RecipeDetailScreen() {
         )}
 
         <View style={recipeDetailStyles.ingredientsHeader}>
-          <Text style={recipeDetailStyles.ingredientsTitle}>Ingredients</Text>
+          <Text style={recipeDetailStyles.ingredientsTitle}>{t('recipeDetail.ingredients')}</Text>
           <Text style={recipeDetailStyles.ingredientsCount}>
-            {recipe.ingredients.length} items
+            {recipe.ingredients.length} {t('recipeDetail.items')}
           </Text>
         </View>
         {recipe.ingredients.map((name, i) => (

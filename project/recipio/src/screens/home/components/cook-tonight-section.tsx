@@ -1,4 +1,6 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useI18n } from '@/shared/i18n';
+import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
 import { dashboardStyles } from '../styles/dashboard.styles';
 import type { RecipeCard } from '../models/home-models';
 
@@ -8,6 +10,7 @@ interface CookTonightSectionProps {
 }
 
 export function CookTonightSection({ recipes, onRecipePress }: CookTonightSectionProps) {
+  const { t } = useI18n();
   return (
     <View style={dashboardStyles.cookTonightSection}>
       <View style={dashboardStyles.sectionHeader}>
@@ -53,10 +56,10 @@ export function CookTonightSection({ recipes, onRecipePress }: CookTonightSectio
                 {recipe.title}
               </Text>
               <View style={dashboardStyles.recipeMeta}>
-                <Text style={dashboardStyles.recipeMetaText}>{recipe.time}</Text>
+                <Text style={dashboardStyles.recipeMetaText}>{formatRecipeTime(t, recipe.time)}</Text>
                 <Text style={dashboardStyles.recipeMetaText}>•</Text>
                 <Text style={dashboardStyles.recipeMetaText}>
-                  {recipe.difficulty}
+                  {formatRecipeDifficulty(t, recipe.difficulty)}
                 </Text>
               </View>
             </TouchableOpacity>

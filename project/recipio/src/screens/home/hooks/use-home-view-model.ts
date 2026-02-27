@@ -6,6 +6,7 @@ import {
   getGreeting,
   getMonthlyRecipesCount,
 } from '@/shared/services';
+import { useI18n } from '@/shared/i18n';
 import type {
   ActivityItem,
   CurrentPlan,
@@ -23,6 +24,7 @@ interface HomeState {
 
 export function useHomeViewModel() {
   const router = useRouter();
+  const { locale } = useI18n();
   const [state, setState] = useState<HomeState>({
     isLoading: true,
     userName: 'Alex',
@@ -44,7 +46,7 @@ export function useHomeViewModel() {
 
         const [userProfile, recipes, monthlyCount] = await Promise.all([
           getCurrentUserProfile(),
-          getCookTonightRecipes({ limit: 5 }),
+          getCookTonightRecipes({ limit: 5, locale }),
           getMonthlyRecipesCount(),
         ]);
 
@@ -68,7 +70,7 @@ export function useHomeViewModel() {
     };
 
     loadData();
-  }, []);
+  }, [locale]);
 
   const handleFindRecipes = () => {
     router.push('/enter-ingredients');

@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 export const recipeResultsStyles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative',
     backgroundColor: RecipioColors.background,
   },
   header: {
@@ -38,9 +39,68 @@ export const recipeResultsStyles = StyleSheet.create({
     fontSize: 14,
     color: RecipioColors.textSecondary,
   },
+  sortRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   sortText: {
     fontSize: 14,
     color: RecipioColors.textSecondary,
+  },
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  resultsBarWrapper: {
+    position: 'relative',
+    zIndex: 10,
+  },
+  sortDropdownBackdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9,
+    backgroundColor: 'transparent',
+  },
+  sortDropdown: {
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: 4,
+    minWidth: 180,
+    backgroundColor: RecipioColors.cardBackground,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: RecipioColors.border,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  sortOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginBottom: 2,
+  },
+  sortOptionText: {
+    fontSize: 15,
+    color: RecipioColors.text,
+  },
+  sortOptionSelected: {
+    backgroundColor: RecipioColors.background,
   },
   list: {
     paddingHorizontal: 20,

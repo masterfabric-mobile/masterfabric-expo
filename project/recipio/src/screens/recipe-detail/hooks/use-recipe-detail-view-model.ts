@@ -1,11 +1,13 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect } from 'react';
 import { getRecipeDetail } from '@/shared/services/recipe-service';
+import { useI18n } from '@/shared/i18n';
 import { useRecipeDetailStore } from '../store/recipe-detail-store';
 import { parseRecipeId } from '../utils/recipe-detail-utils';
 
 export function useRecipeDetailViewModel() {
   const router = useRouter();
+  const { locale } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const {
     recipe,
@@ -33,6 +35,7 @@ export function useRecipeDetailViewModel() {
       }
       try {
         const data = await getRecipeDetail(recipeId, {
+          locale,
           servings: servingsOverride ?? servings,
         });
         setRecipe(data);
@@ -50,7 +53,7 @@ export function useRecipeDetailViewModel() {
         setLoading(false);
       }
     },
-    [recipeId, servings, setRecipe, setLoading, setServings]
+    [recipeId, servings, setRecipe, setLoading, setServings, locale]
   );
 
   useEffect(() => {
@@ -65,7 +68,7 @@ export function useRecipeDetailViewModel() {
       setLoading(true);
     }
     load();
-  }, [recipeId]);
+  }, [recipeId, locale]);
 
   const onServingsChange = useCallback(
     (newServings: number) => {
