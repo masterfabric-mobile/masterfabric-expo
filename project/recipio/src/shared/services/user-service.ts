@@ -50,17 +50,17 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('display_name, avatar_url, plan_name, plan_active')
+      .select('display_name, avatar_url')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     return {
       id: user.id,
-      name: profile?.display_name || user.email?.split('@')[0] || 'User',
+      name: profile?.display_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
       avatarUrl: profile?.avatar_url,
       currentPlan: {
-        name: profile?.plan_name ?? 'Pro Chef',
-        isActive: profile?.plan_active ?? true,
+        name: 'Pro Chef',
+        isActive: true,
       },
     };
   } catch {
@@ -85,13 +85,7 @@ export async function getMonthlyRecipesCount(): Promise<MonthlyRecipesCount> {
     } = await supabase.auth.getUser();
     if (!user) return { saved: 0, limit: 50 };
 
-    // Limit from profiles (Supabase schema: profiles.recipes_limit)
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('recipes_limit')
-      .eq('id', user.id)
-      .single();
-    const limit = profile?.recipes_limit ?? 50;
+    const limit = 50;
 
     // Saved count: try user_activities (type='saved') per docs, fallback to saved_recipes
     let saved = 0;
