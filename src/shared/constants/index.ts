@@ -1,5 +1,14 @@
+import Constants from 'expo-constants';
+
 // Shared constants for the application
 export { Colors } from './Colors';
+
+/** OneSignal App ID from app.config extra (from .env) or process.env. Restart Metro after changing .env. */
+export function getOneSignalAppId(): string {
+  const fromExtra = Constants.expoConfig?.extra?.oneSignalAppId;
+  if (fromExtra && typeof fromExtra === 'string') return fromExtra.trim();
+  return (process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID ?? '').trim();
+}
 
 export const APP_CONFIG = {
   API_URL: process.env.EXPO_PUBLIC_API_URL || 'https://api.masterfabric.co',

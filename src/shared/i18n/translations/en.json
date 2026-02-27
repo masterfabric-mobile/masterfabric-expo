@@ -133,7 +133,7 @@
         "description": "Browse project templates"
       },
       "helpers": {
-        "title": "Helpers",
+        "title": "OneSignal Helpers",
         "description": "Utility tools and helpers"
       },
       "documentation": {
@@ -451,7 +451,7 @@
       "title": "App Icon Helper",
       "description": "Change your app icon dynamically on iOS devices"
     },
-    "title": "Helpers",
+    "title": "OneSignal Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {
       "title": "String Helper",

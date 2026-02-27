@@ -1,7 +1,10 @@
 import { navigationUtils } from '@/src/navigation/utils';
+import { getOneSignalAppId } from '@/src/shared/constants';
 import { t } from '@/src/shared/i18n';
+import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { onesignalHelper } from 'masterfabric-expo-core';
 import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
 import { shouldShowOnboarding } from 'masterfabric-expo-core';
@@ -57,7 +60,7 @@ export function useSplashViewModel() {
 
   const navigateToNextScreen = async () => {
     console.log('🧿 Splash screen completed, checking onboarding status');
-    
+
     try {
       if (await shouldShowOnboarding()) {
         console.log('First time user - navigating to onboarding');
@@ -68,13 +71,28 @@ export function useSplashViewModel() {
       }
     } catch (error) {
       console.error('Navigation error from splash screen:', error);
-      // Fallback to tabs
       try {
         navigationUtils.replace('(tabs)');
       } catch (fallbackError) {
         console.error('Fallback navigation also failed:', fallbackError);
         navigationUtils.replace('(tabs)');
       }
+    }
+
+    // OneSignal uses native code and is not supported in Expo Go. Only init in development/standalone builds.
+    const isExpoGo = Constants.appOwnership === 'expo';
+    if (!isExpoGo) {
+      const delayMs = 1500;
+      setTimeout(() => {
+        const oneSignalAppId = getOneSignalAppId();
+        if (oneSignalAppId?.trim() && !onesignalHelper.isInitialized) {
+          onesignalHelper
+            .init(oneSignalAppId.trim(), { promptForPush: true, verbose: __DEV__ })
+            .catch((e) => {
+              if (__DEV__) console.warn('[Splash] OneSignal init after splash:', e);
+            });
+        }
+      }, delayMs);
     }
   };
 

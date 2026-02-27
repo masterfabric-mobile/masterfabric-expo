@@ -89,7 +89,7 @@
         "description": "Proje şablonlarına göz atın"
       },
       "helpers": {
-        "title": "Yardımcılar",
+        "title": "OneSignal Yardımcıları",
         "description": "Yardımcı araçlar ve araçlar"
       },
       "documentation": {
@@ -447,7 +447,7 @@
       "title": "Firebase Yardımcısı",
       "description": "Kimlik doğrulama, analitik (yalnızca web) ve Firestore araçları"
     },
-    "title": "Yardımcılar",
+    "title": "OneSignal Yardımcıları",
     "subtitle": "Yardımcı araçlar ve geliştirme araçları",
     "stringHelper": {
       "title": "String Yardımcısı",

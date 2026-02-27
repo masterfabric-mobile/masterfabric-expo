@@ -50,6 +50,22 @@ export default function RootLayout() {
     SpaceMono: require('../src/assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  // Prevent permanent black screen on real device: force show app after timeout
+  // (e.g. when Metro is unreachable or initMasterView hangs)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAppReady((ready) => {
+        if (!ready) {
+          console.warn('[RootLayout] App ready timeout – showing UI anyway (check Metro connection on device)');
+          SplashScreen.hideAsync();
+          return true;
+        }
+        return ready;
+      });
+    }, 12000);
+    return () => clearTimeout(timeout);
+  }, [setAppReady]);
+
   useEffect(() => {
     if (loaded) {
       // Start connectivity monitoring while app is active
@@ -102,6 +118,7 @@ export default function RootLayout() {
         // MasterView initialized, app is ready for splash screen
         setAppReady(true);
         SplashScreen.hideAsync();
+        // Notification permission is requested after splash (see use-splash-view-model)
       }).catch((error) => {
         console.error('Failed to initialize MasterView:', error);
         // Still proceed with app loading
