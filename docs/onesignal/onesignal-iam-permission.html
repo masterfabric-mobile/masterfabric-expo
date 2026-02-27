@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --overlay-bg: rgba(0, 0, 0, 0.5);
+      --card-bg: #ffffff;
+      --card-radius: 24px;
+      --card-shadow: 0 24px 48px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.04);
+      --card-max-width: 380px;
+      --card-padding: 28px;
+      --header-height: 160px;
+      --close-bg: rgba(0, 0, 0, 0.4);
+      --close-icon: #ffffff;
+      --title-color: #111827;
+      --text-color: #4b5563;
+      --text-muted: #6b7280;
+      --brand-color: #24292f;
+      --github-bg: #24292f;
+      --github-text: #ffffff;
+      --close-btn-bg: #f3f4f6;
+      --close-btn-text: #374151;
+      --header-bg-image: url("https://img.onesignal.com/i/4722d713-821f-405d-b639-55c53037b512/WwNBOUFSOWhjZ2WsDejQ_4c786f1e99fb7f8f7905a51550ee07fdfea207a0%201.png");
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--overlay-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .iam-card {
+      width: 100%;
+      max-width: var(--card-max-width);
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .iam-header {
+      height: var(--header-height);
+      background-image: var(--header-bg-image);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--close-bg);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+
+    .close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--close-icon);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    .close-btn:active {
+      transform: scale(0.94);
+    }
+
+    .iam-body {
+      padding: var(--card-padding);
+      padding-bottom: 20px;
+      color: var(--text-color);
+    }
+
+    .iam-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--title-color);
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .iam-tagline {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .iam-list {
+      list-style: none;
+      padding: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-color);
+    }
+
+    .iam-list li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 10px;
+    }
+
+    .iam-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand-color);
+      opacity: 0.6;
+    }
+
+    .iam-brand {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      margin-top: 20px;
+      text-transform: uppercase;
+    }
+
+    .iam-footer-extra {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 12px;
+      padding: 0 var(--card-padding) var(--card-padding);
+    }
+
+    .iam-btn {
+      flex: 1;
+      min-height: 48px;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, opacity 0.15s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .iam-btn:active {
+      transform: scale(0.97);
+      opacity: 0.92;
+    }
+
+    .btn-github {
+      background: var(--github-bg);
+      color: var(--github-text);
+    }
+
+    .btn-github .github-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-close {
+      background: var(--close-btn-bg);
+      color: var(--close-btn-text);
+      max-width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="iam-wrapper">
+    <div class="iam-card">
+      <div class="iam-header">
+        <button
+          id="close-btn"
+          class="close-btn"
+          aria-label="Close"
+          data-onesignal-unique-label="permission-close"
+        >
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="iam-body">
+        <h1 class="iam-title">Welcome</h1>
+        <p class="iam-tagline">Built with MasterFabric Expo — open source, for you.</p>
+        <ul class="iam-list">
+          <li>Stay updated on your projects, orders, and design updates.</li>
+          <li>Get notified when you receive feedback or important messages.</li>
+          <li>Never miss reminders for your goals and deadlines.</li>
+        </ul>
+        <p class="iam-brand">Open source · A MasterFabric product</p>
+      </div>
+
+      <div class="iam-footer-extra">
+        <button
+          type="button"
+          id="github-btn"
+          class="iam-btn btn-github"
+          data-onesignal-unique-label="permission-github"
+          data-github-url="https://github.com/masterfabric-mobile/masterfabric-expo"
+        >
+          <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+          </svg>
+          GitHub
+        </button>
+        <button
+          id="close-dismiss-btn"
+          class="iam-btn btn-close"
+          data-onesignal-unique-label="permission-close-dismiss"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var closeBtn = document.getElementById("close-btn");
+      var closeDismissBtn = document.getElementById("close-dismiss-btn");
+      var githubBtn = document.getElementById("github-btn");
+
+      function closeIam(e) {
+        OneSignalIamApi.close(e);
+      }
+
+      closeBtn.addEventListener("click", closeIam);
+      closeDismissBtn.addEventListener("click", function (e) {
+        OneSignalIamApi.tagUser(e, { permission_prompt: "closed" });
+        closeIam(e);
+      });
+
+      githubBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var url = githubBtn.getAttribute("data-github-url") || "https://github.com/masterfabric-mobile/masterfabric-expo";
+        OneSignalIamApi.tagUser(e, { permission_prompt: "github_clicked" });
+        if (typeof OneSignalIamApi.openUrl === "function") {
+          try {
+            OneSignalIamApi.openUrl(url);
+          } catch (err) {
+            OneSignalIamApi.openUrl(e, url);
+          }
+        } else {
+          window.open(url, "_blank", "noopener,noreferrer");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
