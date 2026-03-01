@@ -18,6 +18,9 @@ export const CANONICAL_PERMISSION: Partial<Record<PermissionType, PermissionType
   readSms: 'sms',
   sendSms: 'sms',
   receiveSms: 'sms',
+  bluetoothScan: 'bluetooth',
+  bluetoothConnect: 'bluetooth',
+  bluetoothAdvertise: 'bluetooth',
 };
 
 export function getCanonicalPermission(p: PermissionType): PermissionType {
