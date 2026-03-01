@@ -6,6 +6,9 @@ export const STORAGE_KEY_REQUEST_ATTEMPTED = 'permissionsHelper.requestAttempted
 /** Timeout for permission request (ms); after this we fall back to check(). */
 export const REQUEST_TIMEOUT_MS = 20000;
 
+/** Shorter timeout for photo library (Expo Go can hang on iOS; we fall back to check() to show status). */
+export const REQUEST_TIMEOUT_PHOTOLIBRARY_MS = 8000;
+
 /** After requesting a permission, skip refresh check for this duration (ms). */
 export const SKIP_CHECK_AFTER_REQUEST_MS = 5000;
 
@@ -15,7 +18,6 @@ export const PERMISSION_KEYS = [
   'microphone',
   'photoLibrary',
   'location',
-  'locationBackground',
   'notifications',
   'calendar',
   'contacts',
@@ -33,7 +35,6 @@ export const PERMISSION_LABELS: Record<PermissionKey, string> = {
   microphone: 'Microphone',
   photoLibrary: 'Photos and Videos',
   location: 'Location',
-  locationBackground: 'Location (Background)',
   notifications: 'Notifications',
   calendar: 'Calendar',
   contacts: 'Contacts',
@@ -49,7 +50,6 @@ export const CONFIG_PREVIEW_PERMISSIONS: PermissionType[] = [
   'microphone',
   'photoLibrary',
   'location',
-  'locationBackground',
   'notifications',
   'calendar',
   'contacts',
@@ -78,7 +78,7 @@ export const STATUS_I18N: Record<string, string> = {
 export const UNAVAILABLE_MESSAGE_TO_I18N: Array<{ pattern: string | RegExp; i18nKey: string }> = [
   { pattern: 'expo go', i18nKey: 'helpers.permissionsHelper.unavailableReasonExpoGo' },
   { pattern: 'not supported in expo go', i18nKey: 'helpers.permissionsHelper.unavailableReasonExpoGo' },
-  { pattern: 'development build (not expo go)', i18nKey: 'helpers.permissionsHelper.unavailableReasonExpoGo' },
+  { pattern: 'photos permission is not supported', i18nKey: 'helpers.permissionsHelper.unavailableReasonExpoGo' },
   { pattern: 'android only', i18nKey: 'helpers.permissionsHelper.unavailableReasonAndroidOnly' },
   { pattern: 'ios only', i18nKey: 'helpers.permissionsHelper.unavailableReasonIosOnly' },
   { pattern: 'android 12+', i18nKey: 'helpers.permissionsHelper.unavailableReasonBluetoothAndroid12' },
@@ -106,7 +106,6 @@ export const PERMISSION_LABEL_KEYS: Record<string, string> = {
   microphone: 'helpers.permissionsHelper.permissionMicrophone',
   photoLibrary: 'helpers.permissionsHelper.permissionPhotoLibrary',
   location: 'helpers.permissionsHelper.permissionLocation',
-  locationBackground: 'helpers.permissionsHelper.permissionLocationBackground',
   notifications: 'helpers.permissionsHelper.permissionNotifications',
   calendar: 'helpers.permissionsHelper.permissionCalendar',
   contacts: 'helpers.permissionsHelper.permissionContacts',

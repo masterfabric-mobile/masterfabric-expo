@@ -2,31 +2,72 @@ import { t } from '@/src/shared/i18n';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   getThemeColors,
+  permissionsHandler,
   ScreenHeader,
   ThemedText,
   useTheme,
 } from 'masterfabric-expo-core';
-import React, { useCallback } from 'react';
+import type { PermissionType } from 'masterfabric-expo-core';
+import React, { useCallback, useMemo } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PERMISSION_LABEL_KEYS } from '../constants/permissions-helper.constants';
+import {
+  PERMISSION_LABEL_KEYS,
+  PERMISSION_KEYS,
+} from '../constants/permissions-helper.constants';
 import { usePermissionsHelperViewModel } from '../hooks/use-permissions-helper-view-model';
 import {
+  configPreviewSectionStyles,
   getPermissionsHelperScreenDynamicStyles,
   locationDetailStyles,
   permissionCardStyles,
   permissionsHelperScreenStyles as styles,
 } from '../styles/permissions-helper-screen.styles';
 import { getPermissionStatusDisplay } from '../utils';
+import { ConfigPreviewSection } from './config-preview-section';
 import { LocationPermissionDetail } from './location-permission-detail';
 import { PermissionCard } from './permission-card';
 
 type ThemedTextStyle = React.ComponentProps<typeof ThemedText>['style'];
 
+const permissionKeysForConfig = PERMISSION_KEYS as unknown as PermissionType[];
+
+function formatIOSConfigContent(): string {
+  const entries = permissionsHandler.getIOSInfoPlistEntries(permissionKeysForConfig);
+  return entries
+    .map(
+      (e) =>
+        `<key>${e.key}</key>\n<string>${e.value}</string>\n<!-- ${e.description} -->`
+    )
+    .join('\n\n');
+}
+
+function formatAndroidConfigContent(): string {
+  const entries =
+    permissionsHandler.getAndroidManifestEntries(permissionKeysForConfig);
+  return entries
+    .map((e) => {
+      const name = `android:name="${e.permission}"`;
+      const maxSdk =
+        e.maxSdkVersion != null
+          ? ` android:maxSdkVersion="${e.maxSdkVersion}"`
+          : '';
+      const flags =
+        e.usesPermissionFlags != null
+          ? ` android:usesPermissionFlags="${e.usesPermissionFlags}"`
+          : '';
+      return `<uses-permission ${name}${maxSdk}${flags} />\n<!-- ${e.description} -->`;
+    })
+    .join('\n');
+}
+
 export function PermissionsHelperScreen() {
   const { isDark } = useTheme();
   const colors = getThemeColors(isDark);
   const dynamicStyles = getPermissionsHelperScreenDynamicStyles(colors);
+
+  const iosConfigContent = useMemo(() => formatIOSConfigContent(), []);
+  const androidConfigContent = useMemo(() => formatAndroidConfigContent(), []);
 
   const {
     statuses,
@@ -233,6 +274,23 @@ export function PermissionsHelperScreen() {
             />
           );
         })}
+
+        <ConfigPreviewSection
+          title={t('helpers.permissionsHelper.iosConfig')}
+          content={iosConfigContent}
+          titleStyle={{ color: colors.sectionTitle }}
+          blockStyle={dynamicStyles.configBlock}
+          codeStyle={{ color: colors.text }}
+          styles={configPreviewSectionStyles}
+        />
+        <ConfigPreviewSection
+          title={t('helpers.permissionsHelper.androidConfig')}
+          content={androidConfigContent}
+          titleStyle={{ color: colors.sectionTitle }}
+          blockStyle={dynamicStyles.configBlock}
+          codeStyle={{ color: colors.text }}
+          styles={configPreviewSectionStyles}
+        />
       </ScrollView>
     </SafeAreaView>
   );
