@@ -1,18 +1,20 @@
-import { create } from 'zustand';
 import type { PermissionStatus } from 'masterfabric-expo-core';
-import type { PermissionKey } from '../constants/permissions-helper.constants';
-import { PERMISSION_KEYS } from '../constants/permissions-helper.constants';
+import { create } from 'zustand';
+import {
+  PERMISSION_KEYS,
+  type PermissionKey,
+} from '../constants/permissions-helper.constants';
 
 const initialStatuses = Object.fromEntries(
-  PERMISSION_KEYS.map((key) => [key, null as PermissionStatus | null])
+  PERMISSION_KEYS.map(key => [key, null as PermissionStatus | null])
 ) as Record<PermissionKey, PermissionStatus | null>;
 
 const initialLoading = Object.fromEntries(
-  PERMISSION_KEYS.map((key) => [key, false])
+  PERMISSION_KEYS.map(key => [key, false])
 ) as Record<PermissionKey, boolean>;
 
 const initialRequestAttempted = Object.fromEntries(
-  PERMISSION_KEYS.map((key) => [key, false])
+  PERMISSION_KEYS.map(key => [key, false])
 ) as Record<PermissionKey, boolean>;
 
 interface PermissionsHelperStore {
@@ -25,20 +27,24 @@ interface PermissionsHelperStore {
   reset: () => void;
 }
 
-export const usePermissionsHelperStore = create<PermissionsHelperStore>((set) => ({
-  statuses: { ...initialStatuses },
-  loading: { ...initialLoading },
-  requestAttempted: { ...initialRequestAttempted },
-  setStatus: (key, status) =>
-    set((state) => ({ statuses: { ...state.statuses, [key]: status } })),
-  setLoading: (key, loading) =>
-    set((state) => ({ loading: { ...state.loading, [key]: loading } })),
-  setRequestAttempted: (key, attempted) =>
-    set((state) => ({ requestAttempted: { ...state.requestAttempted, [key]: attempted } })),
-  reset: () =>
-    set({
-      statuses: { ...initialStatuses },
-      loading: { ...initialLoading },
-      requestAttempted: { ...initialRequestAttempted },
-    }),
-}));
+export const usePermissionsHelperStore = create<PermissionsHelperStore>(
+  set => ({
+    statuses: { ...initialStatuses },
+    loading: { ...initialLoading },
+    requestAttempted: { ...initialRequestAttempted },
+    setStatus: (key, status) =>
+      set(state => ({ statuses: { ...state.statuses, [key]: status } })),
+    setLoading: (key, loading) =>
+      set(state => ({ loading: { ...state.loading, [key]: loading } })),
+    setRequestAttempted: (key, attempted) =>
+      set(state => ({
+        requestAttempted: { ...state.requestAttempted, [key]: attempted },
+      })),
+    reset: () =>
+      set({
+        statuses: { ...initialStatuses },
+        loading: { ...initialLoading },
+        requestAttempted: { ...initialRequestAttempted },
+      }),
+  })
+);
