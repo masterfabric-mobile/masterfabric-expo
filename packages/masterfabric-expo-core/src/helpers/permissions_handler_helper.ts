@@ -1248,8 +1248,14 @@ export const permissionsHandler = {
     if (effective === 'notifications') {
       if (Platform.OS === 'android') {
         try {
+          const rationale = {
+            title: _options?.title ?? 'Notifications',
+            message: _options?.rationale ?? 'This app would like to send you notifications for updates and reminders.',
+            buttonPositive: 'OK',
+          };
           const result = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+            PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS as never,
+            rationale
           );
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;

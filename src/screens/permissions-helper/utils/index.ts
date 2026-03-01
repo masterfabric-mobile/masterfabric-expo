@@ -41,9 +41,14 @@ export function getPermissionStatusDisplay(
     const color = colors[themeKey] ?? colors.inactiveText;
     const unavailableExplanation =
       s === 'unavailable'
-        ? getUnavailableReasonI18nKey(status.message)
-          ? t(getUnavailableReasonI18nKey(status.message)!)
-          : status.message
+        ? (() => {
+            const i18nKey = getUnavailableReasonI18nKey(status.message);
+            if (!i18nKey) return status.message;
+            // Don't show "Not supported in Expo Go" etc. under the card (no subtext)
+            if (i18nKey === 'helpers.permissionsHelper.unavailableReasonExpoGo')
+              return '';
+            return t(i18nKey);
+          })()
         : undefined;
     return { label: t(key), color, unavailableExplanation };
   }

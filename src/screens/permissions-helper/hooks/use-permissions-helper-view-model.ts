@@ -11,6 +11,7 @@ import type { PermissionKey } from '../constants/permissions-helper.constants';
 import {
   PERMISSION_KEYS,
   REQUEST_TIMEOUT_MS,
+  REQUEST_TIMEOUT_PHOTOLIBRARY_MS,
   SKIP_CHECK_AFTER_REQUEST_MS,
 } from '../constants/permissions-helper.constants';
 import type { LocationPermissionInfo } from '../models/permissions-helper-models';
@@ -34,13 +35,13 @@ export function usePermissionsHelperViewModel() {
   );
   const requestInProgressRef = useRef(false);
   const currentRequestKeyRef = useRef<PermissionKey | null>(null);
-  const withTimeout = <T>(p: Promise<T>) =>
+  const withTimeout = <T>(p: Promise<T>, timeoutMs = REQUEST_TIMEOUT_MS) =>
     Promise.race([
       p,
       new Promise<never>((_, reject) =>
         setTimeout(
           () => reject(new Error('Permission request timed out')),
-          REQUEST_TIMEOUT_MS
+          timeoutMs
         )
       ),
     ]);
@@ -79,15 +80,6 @@ export function usePermissionsHelperViewModel() {
                 showSettingsAlert: true,
                 accuracy: 'high',
                 background: false,
-              });
-            case 'locationBackground':
-              return permissionsHandler.requestLocation({
-                rationale: t(
-                  'helpers.permissionsHelper.rationale.locationBackground'
-                ),
-                showSettingsAlert: true,
-                accuracy: 'high',
-                background: true,
               });
             case 'calendar':
               return permissionsHandler.requestCalendar({
@@ -140,12 +132,28 @@ export function usePermissionsHelperViewModel() {
         let status: PermissionStatus;
         const fetchPromise = fetchStatus();
         fetchPromise.catch(() => {});
-        // Do not timeout when system dialog is shown (user may take time to respond; SMS shows two dialogs)
-        const useTimeout =
-          key !== 'photoLibrary' && key !== 'camera' && key !== 'sms';
+        // Do not timeout when system dialog is shown (user may take time to respond; rely on AppState when they return).
+        // photoLibrary and notifications use timeout: can hang in Expo Go / some runtimes; timeout + check() shows status.
+        const noTimeoutKeys: PermissionKey[] = [
+          'camera',
+          'sms',
+          'microphone',
+          'location',
+          'calendar',
+          'contacts',
+          'phone',
+          'storage',
+          'biometrics',
+          'bluetooth',
+        ];
+        const useTimeout = !noTimeoutKeys.includes(key);
+        const timeoutMs =
+          key === 'photoLibrary' || key === 'notifications'
+            ? REQUEST_TIMEOUT_PHOTOLIBRARY_MS
+            : REQUEST_TIMEOUT_MS;
         try {
           status = useTimeout
-            ? await withTimeout(fetchPromise)
+            ? await withTimeout(fetchPromise, timeoutMs)
             : await fetchPromise;
         } catch (timeoutErr) {
           const isTimeout =
@@ -245,10 +253,27 @@ export function usePermissionsHelperViewModel() {
           });
           if (activeCheckTimeoutRef.current != null)
             clearTimeout(activeCheckTimeoutRef.current);
-          activeCheckTimeoutRef.current = setTimeout(() => {
+          activeCheckTimeoutRef.current = setTimeout(async () => {
             activeCheckTimeoutRef.current = null;
-            checkAll();
-          }, 300);
+            // User returned from system dialog: update status for the requested key and clear loading
+            // so UI updates immediately (request promise can be very slow to resolve)
+            if (currentKey != null) {
+              try {
+                const status = await permissionsHandler.check(
+                  currentKey as PermissionType
+                );
+                setStatus(currentKey, status);
+                setRequestAttempted(currentKey, true);
+              } catch {
+                // ignore
+              }
+              setLoading(currentKey, false);
+              // Allow next request: the pending promise may never resolve, so clear refs here
+              currentRequestKeyRef.current = null;
+              requestInProgressRef.current = false;
+            }
+            await checkAll();
+          }, 400);
         }
       }
     );
