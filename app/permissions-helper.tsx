@@ -1,5 +1,5 @@
 import { PermissionsHelperScreen } from '@/src/screens/permissions-helper';
-import { ThemeProvider } from '../src/shared/contexts/theme-context';
+import { ThemeProvider } from 'masterfabric-expo-core';
 
 export default function PermissionsHelperPage() {
   return (
