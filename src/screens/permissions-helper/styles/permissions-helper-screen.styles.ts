@@ -77,6 +77,7 @@ export const permissionsHelperScreenStyles = StyleSheet.create({
   },
   locationInfoBlock: {
     gap: 4,
+    marginTop: 4,
   },
   locationStatusRow: {
     flexDirection: 'row',
