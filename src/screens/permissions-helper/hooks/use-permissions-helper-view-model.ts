@@ -1,37 +1,47 @@
 import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
 import { t } from '@/src/shared/i18n';
 import {
-    permissionsHandler,
-    type PermissionStatus,
-    type PermissionType,
+  permissionsHandler,
+  type PermissionStatus,
+  type PermissionType,
 } from 'masterfabric-expo-core';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
 import {
-  CONFIG_PREVIEW_PERMISSIONS,
   PERMISSION_KEYS,
-  PERMISSION_LABEL_KEYS,
+  REQUEST_TIMEOUT_MS,
+  SKIP_CHECK_AFTER_REQUEST_MS,
 } from '../constants/permissions-helper.constants';
 import type { LocationPermissionInfo } from '../models/permissions-helper-models';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
 
 export function usePermissionsHelperViewModel() {
-  const { statuses, loading, requestAttempted, setStatus, setLoading, setRequestAttempted } =
-    usePermissionsHelperStore();
+  const {
+    statuses,
+    loading,
+    requestAttempted,
+    setStatus,
+    setLoading,
+    setRequestAttempted,
+  } = usePermissionsHelperStore();
   const snackbar = useSnackbar();
-  const [locationInfo, setLocationInfo] = useState<LocationPermissionInfo | null>(null);
+  const [locationInfo, setLocationInfo] =
+    useState<LocationPermissionInfo | null>(null);
 
-  const REQUEST_TIMEOUT_MS = 20000;
-  const SKIP_CHECK_AFTER_REQUEST_MS = 5000;
-  const lastRequestedRef = useRef<{ key: PermissionKey; time: number } | null>(null);
+  const lastRequestedRef = useRef<{ key: PermissionKey; time: number } | null>(
+    null
+  );
   const requestInProgressRef = useRef(false);
   const currentRequestKeyRef = useRef<PermissionKey | null>(null);
   const withTimeout = <T>(p: Promise<T>) =>
     Promise.race([
       p,
       new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Permission request timed out')), REQUEST_TIMEOUT_MS)
+        setTimeout(
+          () => reject(new Error('Permission request timed out')),
+          REQUEST_TIMEOUT_MS
+        )
       ),
     ]);
 
@@ -57,12 +67,24 @@ export function usePermissionsHelperViewModel() {
               });
             case 'photoLibrary':
               return permissionsHandler.requestPhotoLibrary({
-                rationale: t('helpers.permissionsHelper.rationale.photoLibrary'),
+                accessLevel: 'readWrite',
+                rationale: t(
+                  'helpers.permissionsHelper.rationale.photoLibrary'
+                ),
                 showSettingsAlert: true,
               });
             case 'location':
               return permissionsHandler.requestLocation({
                 rationale: t('helpers.permissionsHelper.rationale.location'),
+                showSettingsAlert: true,
+                accuracy: 'high',
+                background: false,
+              });
+            case 'locationBackground':
+              return permissionsHandler.requestLocation({
+                rationale: t(
+                  'helpers.permissionsHelper.rationale.locationBackground'
+                ),
                 showSettingsAlert: true,
                 accuracy: 'high',
                 background: true,
@@ -79,7 +101,9 @@ export function usePermissionsHelperViewModel() {
               });
             case 'notifications':
               return permissionsHandler.requestNotifications({
-                rationale: t('helpers.permissionsHelper.rationale.notifications'),
+                rationale: t(
+                  'helpers.permissionsHelper.rationale.notifications'
+                ),
                 showSettingsAlert: true,
               });
             case 'bluetooth':
@@ -97,49 +121,71 @@ export function usePermissionsHelperViewModel() {
                 rationale: t('helpers.permissionsHelper.rationale.phone'),
                 showSettingsAlert: true,
               });
+            case 'storage':
+              return permissionsHandler.request('storage', {
+                rationale: t('helpers.permissionsHelper.rationale.storage'),
+                showSettingsAlert: true,
+              });
+            case 'biometrics':
+              return permissionsHandler.request('biometrics', {
+                rationale: t('helpers.permissionsHelper.rationale.biometrics'),
+                showSettingsAlert: true,
+              });
             default:
-              return permissionsHandler.request(key as PermissionType, { showSettingsAlert: true });
+              return permissionsHandler.request(key as PermissionType, {
+                showSettingsAlert: true,
+              });
           }
         };
-      let status: PermissionStatus;
-      const fetchPromise = fetchStatus();
-      fetchPromise.catch(() => {});
-      try {
-        status = await withTimeout(fetchPromise);
-      } catch (timeoutErr) {
-        const isTimeout =
-          timeoutErr instanceof Error && timeoutErr.message === 'Permission request timed out';
-        if (isTimeout) {
-          const type: PermissionType = key;
-          status = await permissionsHandler.check(type);
-        } else {
-          throw timeoutErr;
+        let status: PermissionStatus;
+        const fetchPromise = fetchStatus();
+        fetchPromise.catch(() => {});
+        // Do not timeout when system dialog is shown (user may take time to respond; SMS shows two dialogs)
+        const useTimeout =
+          key !== 'photoLibrary' && key !== 'camera' && key !== 'sms';
+        try {
+          status = useTimeout
+            ? await withTimeout(fetchPromise)
+            : await fetchPromise;
+        } catch (timeoutErr) {
+          const isTimeout =
+            timeoutErr instanceof Error &&
+            timeoutErr.message === 'Permission request timed out';
+          if (isTimeout) {
+            const type: PermissionType = key;
+            status = await permissionsHandler.check(type);
+          } else {
+            throw timeoutErr;
+          }
         }
-      }
-      setStatus(key, status);
-      lastRequestedRef.current = { key, time: Date.now() };
-      setRequestAttempted(key, true);
-      if (!silent && (status.status === 'blocked' || status.blocked)) {
-        permissionsHandler.showSettingsAlert({
-          permission: key,
-          openSettings: true,
-          message: t('helpers.permissionsHelper.rationale.settingsMessage'),
-        });
-      }
-      return status;
-    } catch (e) {
-      const fallbackStatus = await permissionsHandler.check(key as PermissionType).catch(() => null);
-      if (fallbackStatus) {
-        setStatus(key, fallbackStatus);
+        setStatus(key, status);
+        lastRequestedRef.current = { key, time: Date.now() };
         setRequestAttempted(key, true);
+        if (!silent && (status.status === 'blocked' || status.blocked)) {
+          permissionsHandler.showSettingsAlert({
+            permission: key,
+            openSettings: true,
+            message: t('helpers.permissionsHelper.rationale.settingsMessage'),
+          });
+        }
+        return status;
+      } catch (e) {
+        const fallbackStatus = await permissionsHandler
+          .check(key as PermissionType)
+          .catch(() => null);
+        if (fallbackStatus) {
+          setStatus(key, fallbackStatus);
+          setRequestAttempted(key, true);
+        }
+        throw e;
+      } finally {
+        currentRequestKeyRef.current = null;
+        requestInProgressRef.current = false;
+        setLoading(key, false);
       }
-      throw e;
-    } finally {
-      currentRequestKeyRef.current = null;
-      requestInProgressRef.current = false;
-      setLoading(key, false);
-    }
-  }, [setStatus, setLoading, setRequestAttempted, snackbar]);
+    },
+    [setStatus, setLoading, setRequestAttempted, snackbar]
+  );
 
   const checkAll = useCallback(async () => {
     const now = Date.now();
@@ -155,7 +201,12 @@ export function usePermissionsHelperViewModel() {
         const prev = usePermissionsHelperStore.getState().statuses[key];
         const resolved =
           !status.granted && prev?.status === 'blocked'
-            ? { ...status, status: 'blocked' as const, blocked: true, canAskAgain: false }
+            ? {
+                ...status,
+                status: 'blocked' as const,
+                blocked: true,
+                canAskAgain: false,
+              }
             : status;
         setStatus(key, resolved);
       } catch {
@@ -180,39 +231,48 @@ export function usePermissionsHelperViewModel() {
 
   // checkAll runs when app returns to foreground (AppState) and when screen gains focus (call refreshStatusesSilent from screen).
 
-  const activeCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activeCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
   useEffect(() => {
-    const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
-      if (nextState === 'active') {
-        const currentKey = currentRequestKeyRef.current;
-        PERMISSION_KEYS.forEach((k) => {
-          if (k !== currentKey) setLoading(k, false);
-        });
-        if (activeCheckTimeoutRef.current != null) clearTimeout(activeCheckTimeoutRef.current);
-        activeCheckTimeoutRef.current = setTimeout(() => {
-          activeCheckTimeoutRef.current = null;
-          checkAll();
-        }, 300);
+    const sub = AppState.addEventListener(
+      'change',
+      (nextState: AppStateStatus) => {
+        if (nextState === 'active') {
+          const currentKey = currentRequestKeyRef.current;
+          PERMISSION_KEYS.forEach(k => {
+            if (k !== currentKey) setLoading(k, false);
+          });
+          if (activeCheckTimeoutRef.current != null)
+            clearTimeout(activeCheckTimeoutRef.current);
+          activeCheckTimeoutRef.current = setTimeout(() => {
+            activeCheckTimeoutRef.current = null;
+            checkAll();
+          }, 300);
+        }
       }
-    });
+    );
     return () => {
       sub.remove();
-      if (activeCheckTimeoutRef.current != null) clearTimeout(activeCheckTimeoutRef.current);
+      if (activeCheckTimeoutRef.current != null)
+        clearTimeout(activeCheckTimeoutRef.current);
     };
   }, [checkAll, setLoading]);
 
   useEffect(() => {
-    permissionsHandler.getLocationPermissionInfo().then(setLocationInfo).catch(() => setLocationInfo(null));
+    permissionsHandler
+      .getLocationPermissionInfo()
+      .then(setLocationInfo)
+      .catch(() => setLocationInfo(null));
+  }, []);
+  useEffect(() => {
+    if (statuses.location != null) {
+      permissionsHandler
+        .getLocationPermissionInfo()
+        .then(setLocationInfo)
+        .catch(() => setLocationInfo(null));
+    }
   }, [statuses.location]);
-
-  const iosEntries = useMemo(
-    () => permissionsHandler.getIOSInfoPlistEntries(CONFIG_PREVIEW_PERMISSIONS),
-    []
-  );
-  const androidEntries = useMemo(
-    () => permissionsHandler.getAndroidManifestEntries(CONFIG_PREVIEW_PERMISSIONS),
-    []
-  );
 
   const isAnyRequestInProgress = Object.values(loading).some(Boolean);
 
@@ -226,8 +286,6 @@ export function usePermissionsHelperViewModel() {
     permissionKeys: PERMISSION_KEYS,
     requestAttempted,
     isAnyRequestInProgress,
-    iosEntries,
-    androidEntries,
     locationPermissionInfo: locationInfo,
   };
 }
