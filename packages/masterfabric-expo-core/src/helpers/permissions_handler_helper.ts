@@ -588,7 +588,6 @@ export const permissionsHandler = {
    */
   async check(permission: PermissionType): Promise<PermissionStatus> {
     const effective = getCanonicalPermission(permission);
-    logPermission('debug', 'Permission check', { permission: effective });
     if (effective === 'camera') {
       if (Platform.OS === 'android') {
         try {
