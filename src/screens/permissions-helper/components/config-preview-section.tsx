@@ -1,6 +1,6 @@
+import { ThemedText } from 'masterfabric-expo-core';
 import React from 'react';
 import { View } from 'react-native';
-import { ThemedText } from 'masterfabric-expo-core';
 import type { ConfigPreviewSectionProps } from '../models/permissions-helper-models';
 
 export function ConfigPreviewSection({
@@ -13,11 +13,24 @@ export function ConfigPreviewSection({
 }: ConfigPreviewSectionProps) {
   return (
     <View style={styleSet.section}>
-      <ThemedText style={[styleSet.title, titleStyle] as React.ComponentProps<typeof ThemedText>['style']}>
+      <ThemedText
+        style={
+          [styleSet.title, titleStyle] as React.ComponentProps<
+            typeof ThemedText
+          >['style']
+        }
+      >
         {title}
       </ThemedText>
       <View style={[styleSet.block, blockStyle]}>
-        <ThemedText style={[styleSet.code, codeStyle] as React.ComponentProps<typeof ThemedText>['style']} selectable>
+        <ThemedText
+          style={
+            [styleSet.code, codeStyle] as React.ComponentProps<
+              typeof ThemedText
+            >['style']
+          }
+          selectable
+        >
           {content}
         </ThemedText>
       </View>
