@@ -178,6 +178,8 @@ export interface BiometricOptions {
 /** Biometric permission / auth options (reason optional for handler). */
 export interface BiometricPermissionOptions {
   reason?: string;
+  /** iOS/Android: prompt message shown in the system dialog (e.g. "Authenticate to continue"). */
+  promptMessage?: string;
   fallbackTitle?: string;
   cancelTitle?: string;
   disableDeviceFallback?: boolean;
