@@ -453,7 +453,7 @@
     },
     "permissionsHelper": {
       "title": "Permissions Helper",
-      "description": "Test device permissions: camera, photo library, location, notifications",
+      "description": "Request and check permissions",
       "check": "Check",
       "request": "Request",
       "status": "Status",
@@ -469,6 +469,12 @@
       "statusDenied": "Denied",
       "statusBlocked": "Blocked (Don't ask again)",
       "statusUnavailable": "Unavailable",
+      "unavailableReasonExpoGo": "Not supported in Expo Go (not in its manifest). Use a development build on a real device.",
+      "unavailableReasonAndroidOnly": "This permission is only available on Android.",
+      "unavailableReasonIosOnly": "This permission is only available on iOS.",
+      "unavailableReasonBluetoothAndroid12": "Bluetooth permission requires Android 12 or higher.",
+      "unavailableReasonExpoModuleRunOnDevice": "Requires the corresponding Expo module; run on a real device (not simulator).",
+      "unavailableReasonNoHardwareOrNotEnrolled": "No biometric hardware or no face/fingerprint enrolled in device settings.",
       "statusLimited": "Limited (iOS)",
       "statusUnknown": "Not yet requested",
       "locationInfoForeground": "Foreground",
@@ -481,7 +487,8 @@
       "resetConfirmMessage": "To reset all permissions, open Settings and revoke them for this app. Then return here to refresh the status.",
       "refreshStatuses": "Refresh statuses",
       "refreshCompleted": "Statuses updated",
-      "changePermissionHint": "To change a permission (grant or revoke), open Settings, update it for this app, then tap Refresh statuses.",
+      "changePermissionHint": "Change in Settings, then tap Refresh.",
+      "platformHint": "SMS & Bluetooth: Android only.",
       "permissionCamera": "Camera",
       "permissionMicrophone": "Microphone",
       "permissionPhotoLibrary": "Gallery",
@@ -511,6 +518,7 @@
         "reminders": "This app needs reminders access to create and manage your reminders.",
         "bluetooth": "This app needs Bluetooth access to connect to nearby devices.",
         "notifications": "This app would like to send you notifications for updates and reminders.",
+        "biometrics": "This app uses Face ID / Touch ID / Biometrics for secure sign-in.",
         "biometricsFallback": "Use Passcode",
         "speechRecognition": "This app needs speech recognition access to convert speech to text.",
         "tracking": "This app would like permission to track your activity across apps and websites.",
@@ -528,7 +536,10 @@
           "locationWhenInUse": "This app needs your location to show nearby places.",
           "locationAlways": "This app needs your location to track your route.",
           "locationBackground": "This app needs background location to track your route.",
-          "contacts": "We need contacts access to help you share with friends."
+          "calendar": "This app needs calendar access to schedule events.",
+          "contacts": "We need contacts access to help you share with friends.",
+          "faceId": "This app uses Face ID to authenticate securely.",
+          "bluetooth": "This app needs Bluetooth to connect to nearby devices."
         },
         "android": {
           "camera": "Camera",
@@ -542,6 +553,8 @@
           "WRITE_EXTERNAL_STORAGE": "Write storage (legacy)",
           "READ_MEDIA_IMAGES": "Read media images",
           "READ_MEDIA_VIDEO": "Read media video",
+          "READ_MEDIA_AUDIO": "Read media audio",
+          "READ_MEDIA_VISUAL_USER_SELECTED": "Gallery partial access (Android 14+)",
           "ACCESS_FINE_LOCATION": "Fine location",
           "ACCESS_COARSE_LOCATION": "Coarse location",
           "ACCESS_BACKGROUND_LOCATION": "Background location",
@@ -550,7 +563,15 @@
           "WRITE_CALENDAR": "Write calendar",
           "READ_CONTACTS": "Read contacts",
           "WRITE_CONTACTS": "Write contacts",
-          "READ_PHONE_STATE": "Read phone state"
+          "READ_PHONE_STATE": "Read phone state",
+          "USE_BIOMETRIC": "Biometrics (fingerprint / face)",
+          "SEND_SMS": "Send SMS",
+          "RECEIVE_SMS": "Receive SMS",
+          "READ_SMS": "Read SMS",
+          "BLUETOOTH": "Bluetooth (legacy)",
+          "BLUETOOTH_SCAN": "Bluetooth scan",
+          "BLUETOOTH_CONNECT": "Bluetooth connect",
+          "BLUETOOTH_ADVERTISE": "Bluetooth advertise"
         }
       }
     },

@@ -447,9 +447,13 @@
       "title": "Firebase Yardımcısı",
       "description": "Kimlik doğrulama, analitik (yalnızca web) ve Firestore araçları"
     },
+    "appIconHelper": {
+      "title": "Uygulama İkonu Yardımcısı",
+      "description": "iOS cihazlarında uygulama ikonunu dinamik olarak değiştirin"
+    },
     "permissionsHelper": {
       "title": "İzinler Yardımcısı",
-      "description": "Cihaz izinlerini test edin: kamera, fotoğraf kütüphanesi, konum, bildirimler",
+      "description": "İzin iste ve durumunu kontrol et",
       "check": "Kontrol",
       "request": "İste",
       "status": "Durum",
@@ -465,6 +469,12 @@
       "statusDenied": "Reddedildi",
       "statusBlocked": "Engelli (Tekrar sorma)",
       "statusUnavailable": "Kullanılamıyor",
+      "unavailableReasonExpoGo": "Expo Go'da desteklenmiyor (manifestinde yok). Gerçek cihazda development build kullanın.",
+      "unavailableReasonAndroidOnly": "Bu izin yalnızca Android'de kullanılabilir.",
+      "unavailableReasonIosOnly": "Bu izin yalnızca iOS'ta kullanılabilir.",
+      "unavailableReasonBluetoothAndroid12": "Bluetooth izni için Android 12 veya üstü gerekir.",
+      "unavailableReasonExpoModuleRunOnDevice": "İlgili Expo modülü gerekir; gerçek cihazda (simülatör değil) çalıştırın.",
+      "unavailableReasonNoHardwareOrNotEnrolled": "Biyometrik donanım yok veya cihaz ayarlarında yüz/parmak izi kayıtlı değil.",
       "statusLimited": "Sınırlı (iOS)",
       "statusUnknown": "Henüz istenmedi",
       "locationInfoForeground": "Ön plan",
@@ -477,7 +487,8 @@
       "resetConfirmMessage": "Tüm izinleri sıfırlamak için Ayarlar'dan bu uygulamayı bulup izinleri kapatın. Ardından buraya dönün; durum yenilenecektir.",
       "refreshStatuses": "Durumları yenile",
       "refreshCompleted": "Durumlar güncellendi",
-      "changePermissionHint": "İzin durumunu değiştirmek (açmak veya kapatmak) için Ayarlar'ı açın, bu uygulama için izni güncelleyin, ardından Durumları yenile'ye basın.",
+      "changePermissionHint": "Ayarlar'dan değiştir, sonra Yenile'ye bas.",
+      "platformHint": "SMS ve Bluetooth: yalnızca Android.",
       "permissionCamera": "Kamera",
       "permissionMicrophone": "Mikrofon",
       "permissionPhotoLibrary": "Galeri",
@@ -507,6 +518,7 @@
         "reminders": "Uygulamanın hatırlatıcı oluşturup yönetmesi için hatırlatıcı erişimine ihtiyacı var.",
         "bluetooth": "Uygulamanın yakındaki cihazlara bağlanması için Bluetooth erişimine ihtiyacı var.",
         "notifications": "Güncellemeler ve hatırlatmalar için size bildirim göndermek istiyoruz.",
+        "biometrics": "Uygulama güvenli giriş için Face ID / Touch ID / Biyometrik kullanır.",
         "biometricsFallback": "Parola Kullan",
         "speechRecognition": "Uygulamanın konuşmayı metne çevirmesi için konuşma tanıma erişimine ihtiyacı var.",
         "tracking": "Uygulama, uygulamalar ve web siteleri arasında etkinliğinizi izleme izni istiyor.",
@@ -524,7 +536,10 @@
           "locationWhenInUse": "Uygulamanın yakındaki yerleri göstermek için konumunuza ihtiyacı var.",
           "locationAlways": "Uygulamanın rotanızı takip etmek için konumunuza ihtiyacı var.",
           "locationBackground": "Uygulamanın rotanızı takip etmek için arka plan konumuna ihtiyacı var.",
-          "contacts": "Arkadaşlarınızla paylaşım için kişi listesine erişime ihtiyacımız var."
+          "calendar": "Uygulamanın etkinlik planlamak için takvim erişimine ihtiyacı var.",
+          "contacts": "Arkadaşlarınızla paylaşım için kişi listesine erişime ihtiyacımız var.",
+          "faceId": "Uygulama güvenli kimlik doğrulama için Face ID kullanır.",
+          "bluetooth": "Uygulamanın yakındaki cihazlara bağlanmak için Bluetooth'a ihtiyacı var."
         },
         "android": {
           "camera": "Kamera",
@@ -538,6 +553,8 @@
           "WRITE_EXTERNAL_STORAGE": "Depolama yazma (eski)",
           "READ_MEDIA_IMAGES": "Medya görselleri okuma",
           "READ_MEDIA_VIDEO": "Medya videoları okuma",
+          "READ_MEDIA_AUDIO": "Medya sesi okuma",
+          "READ_MEDIA_VISUAL_USER_SELECTED": "Galeri kısmi erişim (Android 14+)",
           "ACCESS_FINE_LOCATION": "Hassas konum",
           "ACCESS_COARSE_LOCATION": "Yaklaşık konum",
           "ACCESS_BACKGROUND_LOCATION": "Arka plan konumu",
@@ -546,7 +563,15 @@
           "WRITE_CALENDAR": "Takvim yazma",
           "READ_CONTACTS": "Kişiler okuma",
           "WRITE_CONTACTS": "Kişiler yazma",
-          "READ_PHONE_STATE": "Telefon durumu okuma"
+          "READ_PHONE_STATE": "Telefon durumu okuma",
+          "USE_BIOMETRIC": "Biyometri (parmak izi / yüz)",
+          "SEND_SMS": "SMS gönderme",
+          "RECEIVE_SMS": "SMS alma",
+          "READ_SMS": "SMS okuma",
+          "BLUETOOTH": "Bluetooth (eski)",
+          "BLUETOOTH_SCAN": "Bluetooth tarama",
+          "BLUETOOTH_CONNECT": "Bluetooth bağlantı",
+          "BLUETOOTH_ADVERTISE": "Bluetooth reklam"
         }
       }
     },
