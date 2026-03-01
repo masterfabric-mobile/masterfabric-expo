@@ -48,7 +48,12 @@
                                                     "android.permission.READ_SMS",
                                                     "android.permission.RECEIVE_SMS",
                                                     "android.permission.BLUETOOTH_CONNECT",
-                                                    "android.permission.BLUETOOTH_SCAN"
+                                                    "android.permission.BLUETOOTH_SCAN",
+                                                    "android.permission.BLUETOOTH_ADVERTISE",
+                                                    "android.permission.SEND_SMS",
+                                                    "android.permission.READ_MEDIA_AUDIO",
+                                                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+                                                    "android.permission.BODY_SENSORS"
                                                 ]
                              },
                  "web":  {
