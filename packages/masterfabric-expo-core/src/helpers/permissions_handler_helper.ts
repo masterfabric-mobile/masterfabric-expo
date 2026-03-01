@@ -2,49 +2,67 @@
  * Permissions Handler Helper
  *
  * Unified permission API following existing helper patterns (e.g. string_helper, toast_helper).
- * Uses Expo permission modules where available; falls back to React Native PermissionsAndroid
- * on Android. For permissions not covered by Expo (e.g. Bluetooth, SMS), you can integrate
- * `react-native-permissions` and extend the handler to delegate to it.
+ * Uses **Expo** permission modules where available; falls back to **react-native-permissions**
+ * for permissions Expo does not cover (reminders, speechRecognition, tracking).
  *
- * **Strategy / Dependencies**
- * - expo-camera (camera; fallback expo-image-picker), expo-location (location), expo-image-picker (photo library fallback),
- *   expo-media-library (media library; fallback expo-image-picker), expo-notifications (notifications), expo-contacts (contacts),
- *   expo-calendar (calendar), expo-av (microphone iOS), expo-local-authentication (biometrics).
- * - Android: PermissionsAndroid for camera, storage, location, notifications, contacts, calendar, phone.
- * - For permissions outside Expo scope, the app can use react-native-permissions (fallback).
+ * ## Strategy / Dependencies
+ * - **Expo modules (preferred):** expo-camera (camera; fallback expo-image-picker), expo-location (location),
+ *   expo-media-library / expo-image-picker (photo library), expo-notifications (notifications),
+ *   expo-contacts (contacts), expo-calendar (calendar, iOS), expo-av (microphone, iOS),
+ *   expo-local-authentication (biometrics).
+ * - **Android:** PermissionsAndroid for camera, storage, location, notifications, contacts, calendar, phone, sms, bluetooth.
+ * - **Expo not covering:** reminders, speechRecognition, tracking → optional **react-native-permissions** fallback
+ *   when the package is installed (`npm install react-native-permissions`).
  *
- * **Edge cases**
- * - Missing permission / not on platform: returns `status: 'unavailable'` with a message.
- * - Platform-specific: e.g. phone is Android-only; background location may require foreground first.
- * - Blocked (user chose "Don't ask again"): `canAskAgain === false`, `status === 'blocked'`;
- *   use `showPermissionSettingsAlert` or `openAppSettings()` to guide the user.
- * - iOS limited photo library (iOS 14+): `status === 'limited'`, `ios.scope === 'limited'`; handle in UI.
- * - iOS background location: request foreground/always first, then locationBackground; see requestLocation( { background: true } ).
- * - iOS tracking (14.5+): requires App Tracking Transparency and NSUserTrackingUsageDescription; some permissions need Xcode capabilities (e.g. Push Notifications, Background Modes).
+ * ## Platform differences (critical)
+ * | Permission           | iOS | Android | Notes |
+ * |---------------------|-----|---------|-------|
+ * | camera              | Expo / RNP | PermissionsAndroid / Expo | expo-camera preferred on device |
+ * | photoLibrary        | Expo (limited scope iOS 14+) | Expo / PermissionsAndroid | Android 13+ uses READ_MEDIA_* |
+ * | location            | expo-location | PermissionsAndroid | Foreground first, then background |
+ * | locationBackground  | expo-location | PermissionsAndroid (API 29+) | Request foreground before background |
+ * | notifications      | expo-notifications | POST_NOTIFICATIONS (API 33+) | |
+ * | microphone          | expo-av | PermissionsAndroid | |
+ * | calendar            | expo-calendar (iOS) | PermissionsAndroid | |
+ * | contacts            | expo-contacts | PermissionsAndroid | |
+ * | phone               | —   | Android only | READ_PHONE_STATE |
+ * | sms                 | —   | Android only | READ_SMS, RECEIVE_SMS |
+ * | storage             | N/A (granted) | READ/WRITE_EXTERNAL_STORAGE or READ_MEDIA_* (API 33+) | |
+ * | bluetooth           | —   | Android 12+ only | BLUETOOTH_CONNECT, BLUETOOTH_SCAN |
+ * | reminders           | RNP or unavailable | Unavailable | No Expo module; use react-native-permissions on iOS |
+ * | speechRecognition   | RNP or unavailable | RNP or unavailable | |
+ * | tracking            | iOS 14.5+ only (RNP) | N/A | App Tracking Transparency |
+ * | biometrics / faceId / touchId | expo-local-authentication | N/A (use passcode) | Not supported in Expo Go |
  *
- * **Integration with other helpers**
- * - logger_helper: Logs permission check/request and errors when `setLoggerService()` is set.
- * - toast_helper: Shows permission status messages (granted/denied/blocked) when `setToastService()` is set (e.g. after legacy requestPermission).
- * - snackbar_helper: Shows permission alerts and "Open Settings" actionable warnings (e.g. when blocked or in showPermissionSettingsAlert).
+ * ## Edge cases
+ * - **Missing / not on platform:** returns `status: 'unavailable'` with a message.
+ * - **Blocked ("Don't ask again"):** `canAskAgain === false`, `status === 'blocked'`; use `showPermissionSettingsAlert()` or `openAppSettings()`.
+ * - **iOS limited photo library (14+):** `status === 'limited'`, `ios.scope === 'limited'`; handle in UI (e.g. "Select more photos").
+ * - **iOS background location:** request foreground/always first, then `request('locationBackground')` or `requestLocation({ background: true })`.
+ * - **Expo Go:** Face ID / biometrics return unavailable; use a development build.
  *
- * **TypeScript**: All types (PermissionType, PermissionStatus, options) are in `./permissions/types`.
- * **Exports**: Use `import { permissionsHandler, checkPermission, requestPermission } from 'masterfabric-expo-core'`
- * or from `./permissions` index.
+ * ## Integration with other helpers
+ * - **logger_helper:** Logs check/request when `setLoggerService()` is set.
+ * - **toast_helper:** Status toasts when `setToastService()` is set (e.g. legacy `requestPermission`).
+ * - **snackbar_helper:** "Open Settings" and alerts when blocked.
+ *
+ * ## TypeScript & exports
+ * Types: `./permissions/types`. Import: `import { permissionsHandler, checkPermission, requestPermission } from 'masterfabric-expo-core'`.
  *
  * @example
  * // Check before use
  * const status = await permissionsHandler.check('camera');
  * if (status.granted) startCamera();
  * else if (status.canAskAgain) await permissionsHandler.request('camera', { rationale: '...' });
- * else showPermissionSettingsAlert('camera');
+ * else permissionsHandler.showSettingsAlert('camera');
  *
  * @example
- * // Request with options
+ * // Request with options (platform-aware)
  * const result = await permissionsHandler.requestCamera({ includePhotoLibrary: true });
  * const loc = await permissionsHandler.requestLocation({ accuracy: 'high', background: true });
  *
  * @example
- * // Legacy API (snake_case permission names)
+ * // Legacy API (snake_case)
  * const legacy = await requestPermission('photo_library', { message: 'Select photos', showSettingsAlert: true });
  */
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
@@ -73,6 +91,157 @@ import { getAndroidManifestEntries as getAndroidManifestEntriesFromConfig } from
 import { getLoggerService } from './logger_helper';
 import { getToastService } from './toast_helper';
 import { snackbarHelper } from './snackbar_helper';
+
+// --- react-native-permissions fallback (inlined; optional peer dependency) ---
+const RNP_RESULTS = {
+  UNAVAILABLE: 'unavailable',
+  DENIED: 'denied',
+  GRANTED: 'granted',
+  LIMITED: 'limited',
+  BLOCKED: 'blocked',
+} as const;
+type RNPResult = (typeof RNP_RESULTS)[keyof typeof RNP_RESULTS];
+type RNPModule = {
+  check: (permission: string) => Promise<RNPResult>;
+  request: (permission: string) => Promise<RNPResult>;
+  PERMISSIONS: { IOS: Record<string, string>; ANDROID: Record<string, string> };
+  RESULTS: Record<string, RNPResult>;
+};
+let rnPermissionsModule: RNPModule | null = null;
+let rnpLoadAttempted = false;
+function getRNPermissions(): RNPModule | null {
+  if (rnpLoadAttempted) return rnPermissionsModule;
+  rnpLoadAttempted = true;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional peer dependency
+    const RNP = require('react-native-permissions');
+    if (RNP?.check && RNP?.request && RNP?.PERMISSIONS) rnPermissionsModule = RNP as RNPModule;
+  } catch {
+    /* not installed */
+  }
+  return rnPermissionsModule;
+}
+function toRNPPermissionStatus(result: RNPResult): PermissionStatus {
+  const granted = result === RNP_RESULTS.GRANTED || result === RNP_RESULTS.LIMITED;
+  const status =
+    result === RNP_RESULTS.GRANTED ? ('granted' as const)
+      : result === RNP_RESULTS.LIMITED ? ('limited' as const)
+      : result === RNP_RESULTS.BLOCKED ? ('blocked' as const)
+      : result === RNP_RESULTS.UNAVAILABLE ? ('unavailable' as const)
+      : ('denied' as const);
+  return {
+    granted,
+    canAskAgain: result !== RNP_RESULTS.BLOCKED && result !== RNP_RESULTS.UNAVAILABLE,
+    status,
+    blocked: result === RNP_RESULTS.BLOCKED,
+    limited: result === RNP_RESULTS.LIMITED,
+  };
+}
+function getRNPPermissionKey(permission: PermissionType): string | null {
+  const RNP = getRNPermissions();
+  if (!RNP) return null;
+  const perms = Platform.OS === 'ios' ? RNP.PERMISSIONS.IOS : RNP.PERMISSIONS.ANDROID;
+  if (!perms) return null;
+  let key: string | undefined;
+  if (permission === 'reminders') key = 'REMINDERS';
+  else if (permission === 'speechRecognition') key = 'SPEECH_RECOGNITION';
+  else if (permission === 'tracking') key = 'APP_TRACKING_TRANSPARENCY';
+  else if (permission === 'motionFitness') key = Platform.OS === 'ios' ? 'MOTION' : 'BODY_SENSORS';
+  else if (permission === 'health') key = 'HEALTH';
+  else if (permission === 'siri') key = 'SIRI';
+  else if (permission === 'nearbyInteractions') key = 'NEARBY_INTERACTION';
+  if (!key || !(key in perms)) return null;
+  return (perms as Record<string, string>)[key];
+}
+function getRNPPermissionKeys(permission: PermissionType): string[] | null {
+  const RNP = getRNPermissions();
+  if (!RNP || Platform.OS !== 'android') return null;
+  const perms = RNP.PERMISSIONS.ANDROID as Record<string, string>;
+  if (!perms) return null;
+  if (permission === 'sms') {
+    const read = perms.READ_SMS, receive = perms.RECEIVE_SMS;
+    if (read && receive) return [read, receive];
+    return null;
+  }
+  if (permission === 'bluetooth') {
+    const connect = perms.BLUETOOTH_CONNECT, scan = perms.BLUETOOTH_SCAN;
+    if (connect && scan) return [connect, scan];
+    return null;
+  }
+  if (permission === 'photoLibrary') {
+    const images = perms.READ_MEDIA_IMAGES, video = perms.READ_MEDIA_VIDEO;
+    if (images && video) return [images, video];
+    return null;
+  }
+  return null;
+}
+async function checkRNPPermission(permission: PermissionType): Promise<PermissionStatus | null> {
+  const RNP = getRNPermissions();
+  const key = getRNPPermissionKey(permission);
+  if (!RNP || !key) return null;
+  try {
+    const result = (await RNP.check(key)) as RNPResult;
+    return toRNPPermissionStatus(result);
+  } catch {
+    return null;
+  }
+}
+async function requestRNPPermission(permission: PermissionType): Promise<PermissionStatus | null> {
+  const RNP = getRNPermissions();
+  const key = getRNPPermissionKey(permission);
+  if (!RNP || !key) return null;
+  try {
+    const result = (await RNP.request(key)) as RNPResult;
+    return toRNPPermissionStatus(result);
+  } catch {
+    return null;
+  }
+}
+async function checkRNPPermissionMultiple(permission: PermissionType): Promise<PermissionStatus | null> {
+  const keys = getRNPPermissionKeys(permission);
+  if (!keys?.length) return null;
+  const RNP = getRNPermissions();
+  if (!RNP) return null;
+  try {
+    const results = await Promise.all(keys.map((k) => RNP.check(k) as Promise<RNPResult>));
+    const anyBlocked = results.some((r) => r === RNP_RESULTS.BLOCKED);
+    const anyUnavailable = results.some((r) => r === RNP_RESULTS.UNAVAILABLE);
+    const allGranted = results.every((r) => r === RNP_RESULTS.GRANTED || r === RNP_RESULTS.LIMITED);
+    return {
+      granted: allGranted,
+      canAskAgain: !anyBlocked && !anyUnavailable,
+      status: allGranted ? 'granted' : anyBlocked ? 'blocked' : anyUnavailable ? 'unavailable' : 'denied',
+      blocked: anyBlocked,
+    };
+  } catch {
+    return null;
+  }
+}
+async function requestRNPPermissionMultiple(permission: PermissionType): Promise<PermissionStatus | null> {
+  const keys = getRNPPermissionKeys(permission);
+  if (!keys?.length) return null;
+  const RNP = getRNPermissions();
+  if (!RNP) return null;
+  try {
+    const results: RNPResult[] = [];
+    for (const k of keys) results.push((await RNP.request(k)) as RNPResult);
+    const anyBlocked = results.some((r) => r === RNP_RESULTS.BLOCKED);
+    const anyUnavailable = results.some((r) => r === RNP_RESULTS.UNAVAILABLE);
+    const allGranted = results.every((r) => r === RNP_RESULTS.GRANTED || r === RNP_RESULTS.LIMITED);
+    return {
+      granted: allGranted,
+      canAskAgain: !anyBlocked && !anyUnavailable,
+      status: allGranted ? 'granted' : anyBlocked ? 'blocked' : anyUnavailable ? 'unavailable' : 'denied',
+      blocked: anyBlocked,
+    };
+  } catch {
+    return null;
+  }
+}
+function isRNPPermissionsAvailable(): boolean {
+  return getRNPermissions() !== null;
+}
+// --- end RNP fallback ---
 
 /** Log permission action only when logger service is set (no throw). */
 function logPermission(
@@ -368,8 +537,12 @@ const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   camera: 'Camera',
   microphone: 'Microphone',
   photoLibrary: 'Photos and Videos',
+  mediaLibrary: 'Media Library',
+  musicLibrary: 'Music Library',
   storage: 'Storage (Files)',
   location: 'Location',
+  locationWhenInUse: 'Location (When In Use)',
+  locationAlways: 'Location (Always)',
   locationBackground: 'Location (Background)',
   notifications: 'Notifications',
   contacts: 'Contacts',
@@ -377,10 +550,19 @@ const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   phone: 'Phone',
   reminders: 'Reminders',
   bluetooth: 'Bluetooth',
+  bluetoothScan: 'Bluetooth Scan',
+  bluetoothConnect: 'Bluetooth Connect',
+  bluetoothAdvertise: 'Bluetooth Advertise',
   faceId: 'Face ID',
   touchId: 'Touch ID',
   biometrics: 'Biometrics',
   sms: 'SMS',
+  speechRecognition: 'Speech Recognition',
+  siri: 'Siri',
+  tracking: 'Tracking',
+  nearbyInteractions: 'Nearby Interactions',
+  motionFitness: 'Motion & Fitness',
+  health: 'Health',
 };
 
 /**
@@ -441,43 +623,35 @@ export const permissionsHandler = {
       return unavailableStatus('expo-camera or expo-image-picker required; run on device');
     }
     if (effective === 'photoLibrary') {
+      if (Platform.OS === 'android') {
+        if (isExpoGo()) {
+          return unavailableStatus(
+            'Photos permission is not supported in Expo Go. Use a development build (expo run:android).'
+          );
+        }
+        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        if (apiLevel >= 33) {
+          const rnpStatus = await checkRNPPermissionMultiple('photoLibrary');
+          if (rnpStatus) return rnpStatus;
+        }
+        try {
+          return await getAndroidPhotoLibraryStatus();
+        } catch {
+          return mockStatus(false, true);
+        }
+      }
       const mediaLib = getMediaLibrary();
       const picker = getImagePicker();
       if (mediaLib?.getPermissionsAsync) {
         try {
-          const granular = Platform.OS === 'android' ? MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO : undefined;
-          const r = await mediaLib.getPermissionsAsync(false, granular);
+          // This branch runs when not Android; granular is only for Android 13+
+          const r = await mediaLib.getPermissionsAsync(false, undefined);
           return fromMediaLibraryResponse({
             granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
             status: r.status,
             canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
             accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
           });
-        } catch {
-          return mockStatus(false, true);
-        }
-      }
-      if (Platform.OS === 'android') {
-        try {
-          if ((Platform.Version as number) >= 33) {
-            const [images, video] = await Promise.all([
-              PermissionsAndroid.check(ANDROID_READ_MEDIA_IMAGES as never),
-              PermissionsAndroid.check(ANDROID_READ_MEDIA_VIDEO as never),
-            ]);
-            const granted = images || video;
-            return {
-              granted,
-              canAskAgain: true,
-              status: granted ? 'granted' : 'denied',
-              blocked: false,
-            };
-          }
-          const granted = await PermissionsAndroid.check(ANDROID_READ_EXTERNAL_STORAGE as never);
-          return {
-            granted,
-            canAskAgain: true,
-            status: granted ? 'granted' : 'denied',
-          };
         } catch {
           return mockStatus(false, true);
         }
@@ -669,6 +843,13 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return unavailableStatus('SMS permission is Android only');
       }
+      if (isExpoGo()) {
+        return unavailableStatus(
+          'SMS permission is not supported in Expo Go. Use a development build (expo run:android).'
+        );
+      }
+      const rnpStatus = await checkRNPPermissionMultiple('sms');
+      if (rnpStatus) return rnpStatus;
       try {
         const [readSms, receiveSms] = await Promise.all([
           PermissionsAndroid.check(ANDROID_READ_SMS as never),
@@ -688,8 +869,14 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
+      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+      // Expo Go manifest has READ_MEDIA_* removed (API 33+); READ_EXTERNAL_STORAGE exists only for API ≤32.
+      if (isExpoGo() && apiLevel >= 33) {
+        return unavailableStatus(
+          'Storage permission is not supported in Expo Go on Android 13+. Use a development build (expo run:android).'
+        );
+      }
       try {
-        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
         if (apiLevel >= 33) {
           const [images, video] = await Promise.all([
             PermissionsAndroid.check(ANDROID_READ_MEDIA_IMAGES as never),
@@ -730,6 +917,13 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return unavailableStatus('Bluetooth permission is Android only');
       }
+      if (isExpoGo()) {
+        return unavailableStatus(
+          'Bluetooth permission is not supported in Expo Go. Use a development build (expo run:android).'
+        );
+      }
+      const rnpStatus = await checkRNPPermissionMultiple('bluetooth');
+      if (rnpStatus) return rnpStatus;
       try {
         const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
         if (apiLevel >= 31) {
@@ -766,6 +960,33 @@ export const permissionsHandler = {
         return unavailableStatus('Biometric check failed.');
       }
     }
+    // Permissions not covered by Expo: try react-native-permissions when installed
+    if (
+      effective === 'reminders' ||
+      effective === 'speechRecognition' ||
+      effective === 'tracking' ||
+      effective === 'motionFitness' ||
+      effective === 'health' ||
+      effective === 'siri' ||
+      effective === 'nearbyInteractions'
+    ) {
+      const rnpStatus = await checkRNPPermission(effective);
+      if (rnpStatus) return rnpStatus;
+      if (effective === 'reminders')
+        return unavailableStatus('Reminders: install react-native-permissions for iOS');
+      if (effective === 'speechRecognition')
+        return unavailableStatus('Speech recognition: install react-native-permissions');
+      if (effective === 'tracking')
+        return unavailableStatus('Tracking (ATT) is iOS 14.5+ only; install react-native-permissions');
+      if (effective === 'motionFitness')
+        return unavailableStatus('Motion & Fitness: install react-native-permissions');
+      if (effective === 'health')
+        return unavailableStatus('Health: install react-native-permissions');
+      if (effective === 'siri')
+        return unavailableStatus('Siri: install react-native-permissions (iOS)');
+      if (effective === 'nearbyInteractions')
+        return unavailableStatus('Nearby Interactions: install react-native-permissions (iOS 16+)');
+    }
     return unavailableStatus(`Permission ${permission} not implemented`);
   },
 
@@ -780,11 +1001,15 @@ export const permissionsHandler = {
     const effective = getCanonicalPermission(permission);
     logPermission('info', 'Permission request', { permission: effective });
     if (effective === 'camera') {
-      // Android: always call request() so the system shows "Allow/Deny" when not yet granted.
-      // (If already granted, request() returns GRANTED without showing the dialog.)
+      // Android: show rationale then system "Allow/Deny" dialog (development build only; Expo Go uses host manifest).
       if (Platform.OS === 'android') {
         try {
-          const result = await PermissionsAndroid.request(ANDROID_CAMERA as never);
+          const rationale = {
+            title: _options?.title ?? 'Camera',
+            message: _options?.rationale ?? 'This app needs camera access to take photos and videos.',
+            buttonPositive: 'OK',
+          };
+          const result = await PermissionsAndroid.request(ANDROID_CAMERA as never, rationale);
           const granted = result === PermissionsAndroid.RESULTS.GRANTED;
           const canAskAgain = result !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           return {
@@ -830,29 +1055,38 @@ export const permissionsHandler = {
     }
     if (effective === 'photoLibrary') {
       const rationale = _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.';
-      // On Android, always use PermissionsAndroid so the system permission dialog is shown reliably.
-      // expo-media-library.requestPermissionsAsync can skip the dialog on some builds/Expo Go.
       if (Platform.OS === 'android') {
+        if (isExpoGo()) {
+          return unavailableStatus(
+            'Photos permission is not supported in Expo Go. Use a development build (expo run:android).'
+          );
+        }
         const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        if (apiLevel >= 33) {
+          const rnpResult = await requestRNPPermissionMultiple('photoLibrary');
+          if (rnpResult) return rnpResult;
+        }
         const rationaleObj = {
           title: _options?.title ?? 'Photos and Videos',
           message: rationale,
           buttonPositive: 'OK',
         };
         try {
+          // Always use PermissionsAndroid so the system permission dialog is shown.
+          // expo-image-picker requestMediaLibraryPermissionsAsync often does not show the dialog (e.g. in Expo Go).
           let canAskAgain = true;
           if (apiLevel >= 33) {
-            const results = await PermissionsAndroid.requestMultiple(
+            const results = await (PermissionsAndroid.requestMultiple as (permissions: string[], rationale?: object) => Promise<Record<string, string>>)(
               [ANDROID_READ_MEDIA_IMAGES, ANDROID_READ_MEDIA_VIDEO] as never[],
               rationaleObj
             );
-            const r1 = results[ANDROID_READ_MEDIA_IMAGES];
-            const r2 = results[ANDROID_READ_MEDIA_VIDEO];
+            const r1 = results[ANDROID_READ_MEDIA_IMAGES as keyof typeof results];
+            const r2 = results[ANDROID_READ_MEDIA_VIDEO as keyof typeof results];
             canAskAgain =
               r1 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN &&
               r2 !== PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN;
           } else {
-            const result = await PermissionsAndroid.request(
+            const result = await (PermissionsAndroid.request as (permission: string, rationale?: object) => Promise<string>)(
               ANDROID_READ_EXTERNAL_STORAGE as never,
               rationaleObj
             );
@@ -870,12 +1104,15 @@ export const permissionsHandler = {
           return mockStatus(false, true);
         }
       }
-      // iOS: use expo-media-library or expo-image-picker
+      // iOS: use expo-media-library or expo-image-picker. accessLevel 'addOnly' => writeOnly: true (iOS 14+).
       const mediaLib = getMediaLibrary();
       const picker = getImagePicker();
+      const photoOpts = _options as PhotoLibraryOptions | undefined;
+      const writeOnly = photoOpts?.accessLevel === 'addOnly';
       if (mediaLib?.requestPermissionsAsync) {
         try {
-          const r = await mediaLib.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
+          // This branch runs when not Android; on Android we use PermissionsAndroid above
+          const r = await mediaLib.requestPermissionsAsync(writeOnly);
           return fromMediaLibraryResponse({
             granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
             status: r.status,
@@ -889,7 +1126,7 @@ export const permissionsHandler = {
       }
       if (picker?.requestMediaLibraryPermissionsAsync) {
         try {
-          const r = await picker.requestMediaLibraryPermissionsAsync(false);
+          const r = await picker.requestMediaLibraryPermissionsAsync(writeOnly);
           return fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
         } catch (e) {
           throw e;
@@ -1186,12 +1423,18 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
+      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+      // Expo Go has READ_MEDIA_* removed on Android 13+; on API ≤32 storage is in Expo Go manifest.
+      if (isExpoGo() && apiLevel >= 33) {
+        return unavailableStatus(
+          'Storage permission is not supported in Expo Go on Android 13+. Use a development build (expo run:android).'
+        );
+      }
       const rationale = {
         title: _options?.title ?? 'Storage',
         message: _options?.rationale ?? 'This app needs storage access to download and upload files.',
         buttonPositive: 'OK',
       };
-      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
       try {
         let granted: boolean;
         let canAskAgain: boolean;
@@ -1242,18 +1485,29 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return unavailableStatus('SMS permission is Android only');
       }
+      if (isExpoGo()) {
+        return unavailableStatus(
+          'SMS permission is not supported in Expo Go. Use a development build (expo run:android).'
+        );
+      }
+      const rnpResult = await requestRNPPermissionMultiple('sms');
+      if (rnpResult) return rnpResult;
       const rationale = {
         title: _options?.title ?? 'SMS',
         message: _options?.rationale ?? 'This app needs SMS access to read or send messages (Android).',
         buttonPositive: 'OK',
       };
       try {
-        const results = await PermissionsAndroid.requestMultiple(
-          [ANDROID_READ_SMS, ANDROID_RECEIVE_SMS] as never[],
+        // Request READ_SMS and RECEIVE_SMS one by one so the system shows a native dialog for each.
+        // requestMultiple can skip showing dialogs on some devices/Android versions.
+        const readResult = await PermissionsAndroid.request(
+          ANDROID_READ_SMS as never,
           rationale
         );
-        const readResult = results[ANDROID_READ_SMS];
-        const receiveResult = results[ANDROID_RECEIVE_SMS];
+        const receiveResult = await PermissionsAndroid.request(
+          ANDROID_RECEIVE_SMS as never,
+          rationale
+        );
         const granted =
           readResult === PermissionsAndroid.RESULTS.GRANTED &&
           receiveResult === PermissionsAndroid.RESULTS.GRANTED;
@@ -1276,6 +1530,33 @@ export const permissionsHandler = {
     }
     if (effective === 'biometrics' || effective === 'faceId' || effective === 'touchId') {
       return this.requestBiometrics(_options as BiometricPermissionOptions);
+    }
+    // Permissions not covered by Expo: try react-native-permissions when installed
+    if (
+      effective === 'reminders' ||
+      effective === 'speechRecognition' ||
+      effective === 'tracking' ||
+      effective === 'motionFitness' ||
+      effective === 'health' ||
+      effective === 'siri' ||
+      effective === 'nearbyInteractions'
+    ) {
+      const rnpStatus = await requestRNPPermission(effective);
+      if (rnpStatus) return rnpStatus;
+      if (effective === 'reminders')
+        return unavailableStatus('Reminders: install react-native-permissions for iOS');
+      if (effective === 'speechRecognition')
+        return unavailableStatus('Speech recognition: install react-native-permissions');
+      if (effective === 'tracking')
+        return unavailableStatus('Tracking (ATT) is iOS 14.5+ only; install react-native-permissions');
+      if (effective === 'motionFitness')
+        return unavailableStatus('Motion & Fitness: install react-native-permissions');
+      if (effective === 'health')
+        return unavailableStatus('Health: install react-native-permissions');
+      if (effective === 'siri')
+        return unavailableStatus('Siri: install react-native-permissions (iOS)');
+      if (effective === 'nearbyInteractions')
+        return unavailableStatus('Nearby Interactions: install react-native-permissions (iOS 16+)');
     }
     return unavailableStatus(`Permission ${permission} not implemented`);
   },
@@ -1415,22 +1696,29 @@ export const permissionsHandler = {
     if (Platform.OS !== 'android') {
       return unavailableStatus('Bluetooth permission is Android only');
     }
+    if (isExpoGo()) {
+      return unavailableStatus(
+        'Bluetooth permission is not supported in Expo Go. Use a development build (expo run:android).'
+      );
+    }
     const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
     if (apiLevel < 31) {
       return unavailableStatus('Bluetooth runtime permission requires Android 12+');
     }
+    const rnpResult = await requestRNPPermissionMultiple('bluetooth');
+    if (rnpResult) return rnpResult;
     const rationale = {
       title: options?.title ?? 'Bluetooth',
       message: options?.rationale ?? 'This app needs Bluetooth to connect to nearby devices.',
       buttonPositive: 'OK',
     };
     try {
-      const results = await PermissionsAndroid.requestMultiple(
+      const results = await (PermissionsAndroid.requestMultiple as (permissions: string[], rationale?: object) => Promise<Record<string, string>>)(
         [ANDROID_BLUETOOTH_CONNECT, ANDROID_BLUETOOTH_SCAN] as never[],
         rationale
       );
-      const connectResult = results[ANDROID_BLUETOOTH_CONNECT];
-      const scanResult = results[ANDROID_BLUETOOTH_SCAN];
+      const connectResult = results[ANDROID_BLUETOOTH_CONNECT as keyof typeof results];
+      const scanResult = results[ANDROID_BLUETOOTH_SCAN as keyof typeof results];
       const granted =
         connectResult === PermissionsAndroid.RESULTS.GRANTED &&
         scanResult === PermissionsAndroid.RESULTS.GRANTED;
@@ -1842,3 +2130,11 @@ export function usePermissions() {
     openAppSettings,
   };
 }
+
+export {
+  checkRNPPermission,
+  requestRNPPermission,
+  checkRNPPermissionMultiple,
+  requestRNPPermissionMultiple,
+  isRNPPermissionsAvailable,
+};

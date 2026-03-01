@@ -4,8 +4,12 @@ export * from './connectivity';
 // Platform Helpers
 export * from './platform';
 
-// Permission Helpers
-export * from './permissions';
+// Permission Helpers (types, config, handler + RNP fallback exports)
+export * from './permissions/types';
+export * from './permissions/constants';
+export * from './permissions/ios-config';
+export * from './permissions/android-config';
+export * from './permissions_handler_helper';
 
 // Accessibility Helpers
 export * from './accessibility';
