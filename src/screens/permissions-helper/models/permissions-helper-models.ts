@@ -1,6 +1,6 @@
+import type { PermissionStatus } from 'masterfabric-expo-core';
 import type { ReactNode } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { PermissionStatus } from 'masterfabric-expo-core';
 import type { PermissionKey } from '../constants/permissions-helper.constants';
 
 /** State for a single permission row (status + loading). */
@@ -101,3 +101,4 @@ export interface PermissionCardProps {
 }
 
 export type { PermissionKey } from '../constants/permissions-helper.constants';
+
