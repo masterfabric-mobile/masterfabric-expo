@@ -1,24 +1,23 @@
 import { t } from '@/src/shared/i18n';
-import { getThemeColors, ScreenHeader, ThemedText, useTheme } from 'masterfabric-expo-core';
 import { useFocusEffect } from '@react-navigation/native';
+import {
+  getThemeColors,
+  ScreenHeader,
+  ThemedText,
+  useTheme,
+} from 'masterfabric-expo-core';
 import React, { useCallback } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  ANDROID_PERMISSION_TO_I18N,
-  IOS_KEY_TO_I18N,
-  PERMISSION_LABEL_KEYS,
-} from '../constants/permissions-helper.constants';
+import { PERMISSION_LABEL_KEYS } from '../constants/permissions-helper.constants';
 import { usePermissionsHelperViewModel } from '../hooks/use-permissions-helper-view-model';
 import {
-  configPreviewSectionStyles,
   getPermissionsHelperScreenDynamicStyles,
   locationDetailStyles,
   permissionCardStyles,
   permissionsHelperScreenStyles as styles,
 } from '../styles/permissions-helper-screen.styles';
 import { getPermissionStatusDisplay } from '../utils';
-import { ConfigPreviewSection } from './config-preview-section';
 import { LocationPermissionDetail } from './location-permission-detail';
 import { PermissionCard } from './permission-card';
 
@@ -40,8 +39,6 @@ export function PermissionsHelperScreen() {
     requestAttempted,
     isAnyRequestInProgress,
     locationPermissionInfo,
-    iosEntries,
-    androidEntries,
   } = usePermissionsHelperViewModel();
 
   useFocusEffect(
@@ -49,29 +46,6 @@ export function PermissionsHelperScreen() {
       refreshStatusesSilent();
     }, [refreshStatusesSilent])
   );
-
-  const iosConfigContent =
-    iosEntries.length > 0
-      ? iosEntries
-          .map((e) => {
-            const i18nKey = IOS_KEY_TO_I18N[e.key];
-            const val = i18nKey ? t(i18nKey) : e.value;
-            return `<key>${e.key}</key>\n<string>${val}</string>`;
-          })
-          .join('\n\n')
-      : t('helpers.permissionsHelper.noConfig');
-
-  const androidConfigContent =
-    androidEntries.length > 0
-      ? androidEntries
-          .map((e) => {
-            const suffix = e.permission.replace('android.permission.', '');
-            const i18nKey = ANDROID_PERMISSION_TO_I18N[suffix];
-            const desc = i18nKey ? t(i18nKey) : e.description;
-            return `<!-- ${desc} -->\n<uses-permission android:name="${e.permission}" />`;
-          })
-          .join('\n\n')
-      : t('helpers.permissionsHelper.noConfig');
 
   return (
     <SafeAreaView
@@ -93,11 +67,21 @@ export function PermissionsHelperScreen() {
             disabled={isAnyRequestInProgress}
             style={[
               styles.settingsBtn,
-              { backgroundColor: colors.buttonBackground, opacity: isAnyRequestInProgress ? 0.6 : 1 },
+              {
+                backgroundColor: colors.buttonBackground,
+                opacity: isAnyRequestInProgress ? 0.6 : 1,
+              },
             ]}
             activeOpacity={0.8}
           >
-            <ThemedText style={[styles.settingsBtnText, { color: colors.text }] as ThemedTextStyle}>
+            <ThemedText
+              style={
+                [
+                  styles.settingsBtnText,
+                  { color: colors.text },
+                ] as ThemedTextStyle
+              }
+            >
               {t('helpers.permissionsHelper.openSettings')}
             </ThemedText>
           </TouchableOpacity>
@@ -106,32 +90,45 @@ export function PermissionsHelperScreen() {
             disabled={isAnyRequestInProgress}
             style={[
               styles.settingsBtn,
-              { backgroundColor: colors.buttonBackground, opacity: isAnyRequestInProgress ? 0.6 : 1 },
+              {
+                backgroundColor: colors.buttonBackground,
+                opacity: isAnyRequestInProgress ? 0.6 : 1,
+              },
             ]}
             activeOpacity={0.8}
           >
-            <ThemedText style={[styles.settingsBtnText, { color: colors.text }] as ThemedTextStyle}>
+            <ThemedText
+              style={
+                [
+                  styles.settingsBtnText,
+                  { color: colors.text },
+                ] as ThemedTextStyle
+              }
+            >
               {t('helpers.permissionsHelper.refreshStatuses')}
             </ThemedText>
           </TouchableOpacity>
         </View>
 
-        <ThemedText style={[styles.hintText, { color: colors.inactiveText }] as ThemedTextStyle}>
-          {t('helpers.permissionsHelper.changePermissionHint')}
+        <ThemedText
+          style={
+            [styles.hintText, { color: colors.inactiveText }] as ThemedTextStyle
+          }
+        >
+          {t('helpers.permissionsHelper.changePermissionHint')}{' · '}
+          {t('helpers.permissionsHelper.platformHint')}
         </ThemedText>
 
-        {permissionKeys.map((key) => {
+        {permissionKeys.map(key => {
           const status = statuses[key];
           const isLoad = loading[key];
           const isAnyLoading = Object.values(loading).some(Boolean);
           const labelKey = PERMISSION_LABEL_KEYS[key] ?? key;
           const label = t(labelKey);
-          const statusDisplay = getPermissionStatusDisplay(status, t, colors, {
-            requestAttempted: requestAttempted[key],
-          });
+          const statusDisplay = getPermissionStatusDisplay(status, t, colors);
 
           const statusContent =
-            key === 'location' && locationPermissionInfo && requestAttempted[key] ? (
+            key === 'location' && locationPermissionInfo ? (
               <LocationPermissionDetail
                 info={locationPermissionInfo}
                 labels={{
@@ -185,17 +182,35 @@ export function PermissionsHelperScreen() {
             ) : (
               <View style={styles.statusColumn}>
                 <View style={styles.statusRow}>
-                  <View style={[styles.statusDot, { backgroundColor: statusDisplay.color }]} />
-                  <ThemedText style={[styles.statusText, { color: statusDisplay.color }] as ThemedTextStyle}>
+                  <View
+                    style={[
+                      styles.statusDot,
+                      { backgroundColor: statusDisplay.color },
+                    ]}
+                  />
+                  <ThemedText
+                    style={
+                      [
+                        styles.statusText,
+                        { color: statusDisplay.color },
+                      ] as ThemedTextStyle
+                    }
+                  >
                     {statusDisplay.label}
                   </ThemedText>
                 </View>
-                {status?.status === 'unavailable' && status?.message ? (
+                {status?.status === 'unavailable' &&
+                (statusDisplay.unavailableExplanation ?? status?.message) ? (
                   <ThemedText
-                    style={[styles.statusSubtext, { color: colors.inactiveText }] as ThemedTextStyle}
-                    numberOfLines={2}
+                    style={
+                      [
+                        styles.statusSubtext,
+                        { color: colors.inactiveText },
+                      ] as ThemedTextStyle
+                    }
+                    numberOfLines={3}
                   >
-                    {status.message}
+                    {statusDisplay.unavailableExplanation ?? status?.message}
                   </ThemedText>
                 ) : null}
               </View>
@@ -218,23 +233,6 @@ export function PermissionsHelperScreen() {
             />
           );
         })}
-
-        <ConfigPreviewSection
-          title={t('helpers.permissionsHelper.iosConfig')}
-          content={iosConfigContent}
-          styles={configPreviewSectionStyles}
-          titleStyle={{ color: colors.sectionTitle }}
-          blockStyle={{ backgroundColor: colors.cardBackground }}
-          codeStyle={{ color: colors.inactiveText }}
-        />
-        <ConfigPreviewSection
-          title={t('helpers.permissionsHelper.androidConfig')}
-          content={androidConfigContent}
-          styles={configPreviewSectionStyles}
-          titleStyle={{ color: colors.sectionTitle }}
-          blockStyle={{ backgroundColor: colors.cardBackground }}
-          codeStyle={{ color: colors.inactiveText }}
-        />
       </ScrollView>
     </SafeAreaView>
   );

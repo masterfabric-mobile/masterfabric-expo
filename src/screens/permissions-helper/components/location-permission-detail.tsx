@@ -15,7 +15,7 @@ export function LocationPermissionDetail({
   preciseStatusStyle,
 }: LocationPermissionDetailProps) {
   return (
-    <View style={[styleSet.block, { marginTop: 4 }]}>
+    <View style={styleSet.block}>
       <View style={styleSet.row}>
         <ThemedText style={[styleSet.labelText, labelStyle] as ThemedTextStyle}>
           {labels.foregroundLabel}
