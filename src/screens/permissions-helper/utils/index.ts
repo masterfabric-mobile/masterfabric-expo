@@ -32,7 +32,8 @@ export function getPermissionStatusDisplay(
     message?: string;
   } | null,
   t: (key: string) => string,
-  colors: ThemeColors
+  colors: ThemeColors,
+  _options?: { permissionKey?: string }
 ): { label: string; color: string; unavailableExplanation?: string } {
   if (status != null) {
     const s = status.status;

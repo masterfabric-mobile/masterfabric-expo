@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   PERMISSION_LABEL_KEYS,
   PERMISSION_KEYS,
+  PERMISSIONS_AVAILABLE_IN_EXPO_GO,
 } from '../constants/permissions-helper.constants';
 import { usePermissionsHelperViewModel } from '../hooks/use-permissions-helper-view-model';
 import {
@@ -166,7 +167,9 @@ export function PermissionsHelperScreen() {
           const isAnyLoading = Object.values(loading).some(Boolean);
           const labelKey = PERMISSION_LABEL_KEYS[key] ?? key;
           const label = t(labelKey);
-          const statusDisplay = getPermissionStatusDisplay(status, t, colors);
+          const statusDisplay = getPermissionStatusDisplay(status, t, colors, {
+            permissionKey: key,
+          });
 
           const statusContent =
             key === 'location' && locationPermissionInfo ? (
@@ -241,6 +244,7 @@ export function PermissionsHelperScreen() {
                   </ThemedText>
                 </View>
                 {status?.status === 'unavailable' &&
+                !PERMISSIONS_AVAILABLE_IN_EXPO_GO.includes(key) &&
                 (statusDisplay.unavailableExplanation ?? status?.message) ? (
                   <ThemedText
                     style={
