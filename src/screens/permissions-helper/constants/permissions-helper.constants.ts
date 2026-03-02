@@ -28,6 +28,13 @@ export const PERMISSION_KEYS = [
   'bluetooth',
 ] as const;
 
+export const PERMISSIONS_AVAILABLE_IN_EXPO_GO: readonly PermissionKey[] = [
+  'photoLibrary',
+  'storage',
+  'sms',
+  'bluetooth',
+];
+
 export type PermissionKey = (typeof PERMISSION_KEYS)[number];
 
 export const PERMISSION_LABELS: Record<PermissionKey, string> = {

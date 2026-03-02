@@ -532,6 +532,9 @@ function getLocalAuthentication(): {
 /** Status listeners (Issue #28). */
 const statusListeners = new Map<PermissionType, Set<StatusCallback>>();
 
+/** Biometrics: once authenticated this session, skip prompt on subsequent Request taps. */
+let biometricsAuthenticatedThisSession = false;
+
 /** Display names for settings alert. */
 const PERMISSION_DISPLAY_NAMES: Record<string, string> = {
   camera: 'Camera',
@@ -939,9 +942,6 @@ export const permissionsHandler = {
       }
     }
     if (effective === 'biometrics' || effective === 'faceId' || effective === 'touchId') {
-      if (isExpoGo()) {
-        return unavailableStatus('Face ID is not supported in Expo Go. Use a development build on a real device.');
-      }
       const LocalAuth = getLocalAuthentication();
       if (!LocalAuth) {
         return unavailableStatus('Face ID requires expo-local-authentication and a development build (not Expo Go).');
@@ -953,7 +953,7 @@ export const permissionsHandler = {
         ]);
         if (!hasHardware) return unavailableStatus('No Face ID / Touch ID hardware on this device.');
         if (!isEnrolled) return unavailableStatus('No face or fingerprint enrolled in device settings.');
-        return { granted: false, canAskAgain: true, status: 'unknown' };
+        return { granted: true, canAskAgain: true, status: 'granted' };
       } catch (e) {
         logPermission('warning', 'Biometrics check failed', { error: e });
         return unavailableStatus('Biometric check failed.');
@@ -1054,12 +1054,30 @@ export const permissionsHandler = {
     }
     if (effective === 'photoLibrary') {
       const rationale = _options?.rationale ?? 'This app needs access to your photos and videos to select or save media.';
-      if (Platform.OS === 'android') {
-        if (isExpoGo()) {
-          return unavailableStatus(
-            'Photos permission is not supported in Expo Go. Use a development build (expo run:android).'
-          );
+      const photoOpts = _options as PhotoLibraryOptions | undefined;
+      const writeOnly = photoOpts?.accessLevel === 'addOnly';
+      const mediaLib = getMediaLibrary();
+      const picker = getImagePicker();
+      if (Platform.OS === 'android' && isExpoGo() && (mediaLib?.requestPermissionsAsync || picker?.requestMediaLibraryPermissionsAsync)) {
+        try {
+          if (mediaLib?.requestPermissionsAsync) {
+            const r = await mediaLib.requestPermissionsAsync(writeOnly, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
+            return fromMediaLibraryResponse({
+              granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
+              status: r.status,
+              canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+              accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
+            });
+          }
+          if (picker?.requestMediaLibraryPermissionsAsync) {
+            const r = await picker.requestMediaLibraryPermissionsAsync(writeOnly);
+            return fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
+          }
+        } catch (e) {
+          logPermission('warning', 'Photo library request failed (Expo Go fallback)', { error: e });
         }
+      }
+      if (Platform.OS === 'android') {
         const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
         if (apiLevel >= 33) {
           const rnpResult = await requestRNPPermissionMultiple('photoLibrary');
@@ -1071,8 +1089,6 @@ export const permissionsHandler = {
           buttonPositive: 'OK',
         };
         try {
-          // Always use PermissionsAndroid so the system permission dialog is shown.
-          // expo-image-picker requestMediaLibraryPermissionsAsync often does not show the dialog (e.g. in Expo Go).
           let canAskAgain = true;
           if (apiLevel >= 33) {
             const results = await (PermissionsAndroid.requestMultiple as (permissions: string[], rationale?: object) => Promise<Record<string, string>>)(
@@ -1104,10 +1120,6 @@ export const permissionsHandler = {
         }
       }
       // iOS: use expo-media-library or expo-image-picker. accessLevel 'addOnly' => writeOnly: true (iOS 14+).
-      const mediaLib = getMediaLibrary();
-      const picker = getImagePicker();
-      const photoOpts = _options as PhotoLibraryOptions | undefined;
-      const writeOnly = photoOpts?.accessLevel === 'addOnly';
       if (mediaLib?.requestPermissionsAsync) {
         try {
           // This branch runs when not Android; on Android we use PermissionsAndroid above
@@ -1246,6 +1258,28 @@ export const permissionsHandler = {
       return unavailableStatus('expo-location required; run on device');
     }
     if (effective === 'notifications') {
+      // Try expo-notifications first on both platforms (shows popup in Expo Go on Android too)
+      const notif = getNotifications();
+      if (notif?.requestPermissionsAsync) {
+        try {
+          const opts = _options as NotificationPermissionOptions | undefined;
+          const r = await notif.requestPermissionsAsync({
+            ios: {
+              allowAlert: opts?.alert ?? true,
+              allowBadge: opts?.badge ?? true,
+              allowSound: opts?.sound ?? true,
+            },
+          });
+          return fromExpoResponse({
+            granted: r.status === 'granted',
+            canAskAgain: r.canAskAgain ?? true,
+            status: r.status,
+          });
+        } catch {
+          // Fall through to PermissionsAndroid on Android
+        }
+      }
+      // Android fallback when expo-notifications failed or is not installed
       if (Platform.OS === 'android') {
         try {
           const rationale = {
@@ -1265,26 +1299,6 @@ export const permissionsHandler = {
             status: granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
             blocked: !canAskAgain,
           };
-        } catch {
-          return mockStatus(false, true);
-        }
-      }
-      const notif = getNotifications();
-      if (notif?.requestPermissionsAsync) {
-        try {
-          const opts = _options as NotificationPermissionOptions | undefined;
-          const r = await notif.requestPermissionsAsync({
-            ios: {
-              allowAlert: opts?.alert ?? true,
-              allowBadge: opts?.badge ?? true,
-              allowSound: opts?.sound ?? true,
-            },
-          });
-          return fromExpoResponse({
-            granted: r.status === 'granted',
-            canAskAgain: r.canAskAgain ?? true,
-            status: r.status,
-          });
         } catch {
           return mockStatus(false, true);
         }
@@ -1428,13 +1442,21 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
-      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
-      // Expo Go has READ_MEDIA_* removed on Android 13+; on API ≤32 storage is in Expo Go manifest.
-      if (isExpoGo() && apiLevel >= 33) {
-        return unavailableStatus(
-          'Storage permission is not supported in Expo Go on Android 13+. Use a development build (expo run:android).'
-        );
+      const mediaLibForStorage = getMediaLibrary();
+      if (isExpoGo() && mediaLibForStorage?.requestPermissionsAsync) {
+        try {
+          const r = await mediaLibForStorage.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
+          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
+          return {
+            granted,
+            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+            status: granted ? 'granted' : 'denied',
+          };
+        } catch (e) {
+          logPermission('warning', 'Storage request failed (Expo Go media fallback)', { error: e });
+        }
       }
+      const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
       const rationale = {
         title: _options?.title ?? 'Storage',
         message: _options?.rationale ?? 'This app needs storage access to download and upload files.',
@@ -1489,11 +1511,6 @@ export const permissionsHandler = {
     if (effective === 'sms') {
       if (Platform.OS !== 'android') {
         return unavailableStatus('SMS permission is Android only');
-      }
-      if (isExpoGo()) {
-        return unavailableStatus(
-          'SMS permission is not supported in Expo Go. Use a development build (expo run:android).'
-        );
       }
       const rnpResult = await requestRNPPermissionMultiple('sms');
       if (rnpResult) return rnpResult;
@@ -1701,11 +1718,6 @@ export const permissionsHandler = {
     if (Platform.OS !== 'android') {
       return unavailableStatus('Bluetooth permission is Android only');
     }
-    if (isExpoGo()) {
-      return unavailableStatus(
-        'Bluetooth permission is not supported in Expo Go. Use a development build (expo run:android).'
-      );
-    }
     const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
     if (apiLevel < 31) {
       return unavailableStatus('Bluetooth runtime permission requires Android 12+');
@@ -1751,9 +1763,6 @@ export const permissionsHandler = {
    * @example permissionsHandler.requestBiometrics({ fallbackTitle: 'Use Passcode', promptMessage: 'Authenticate to continue' })
    */
   async requestBiometrics(options?: BiometricPermissionOptions): Promise<PermissionStatus> {
-    if (isExpoGo()) {
-      return unavailableStatus('Face ID is not supported in Expo Go. Use a development build on a real device.');
-    }
     const LocalAuth = getLocalAuthentication();
     if (!LocalAuth) {
       logPermission('warning', 'expo-local-authentication not available');
@@ -1767,11 +1776,16 @@ export const permissionsHandler = {
       if (!hasHardware) return unavailableStatus('No Face ID / Touch ID hardware on this device.');
       if (!isEnrolled) return unavailableStatus('No face or fingerprint enrolled in device settings.');
 
+      if (biometricsAuthenticatedThisSession) {
+        return { granted: true, canAskAgain: true, status: 'granted' };
+      }
+
       const result = await LocalAuth.authenticateAsync({
         promptMessage: options?.promptMessage ?? 'Authenticate with Face ID or Touch ID',
         fallbackLabel: options?.fallbackTitle ?? 'Use Passcode',
       });
       if (result.success) {
+        biometricsAuthenticatedThisSession = true;
         return { granted: true, canAskAgain: true, status: 'granted' };
       }
       const errorCode = (result as { error?: string }).error ?? '';

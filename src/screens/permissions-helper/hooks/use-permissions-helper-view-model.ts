@@ -207,15 +207,20 @@ export function usePermissionsHelperViewModel() {
         const type: PermissionType = key;
         const status = await permissionsHandler.check(type);
         const prev = usePermissionsHelperStore.getState().statuses[key];
+        // Only keep "blocked" if current check also says canAskAgain: false (user really chose "Don't ask again")
         const resolved =
-          !status.granted && prev?.status === 'blocked'
+          !status.granted &&
+          prev?.status === 'blocked' &&
+          status.canAskAgain === false
             ? {
                 ...status,
                 status: 'blocked' as const,
                 blocked: true,
                 canAskAgain: false,
               }
-            : status;
+            : key === 'biometrics' && prev?.status === 'granted' && !status.granted
+              ? prev
+              : status;
         setStatus(key, resolved);
       } catch {
         setStatus(key, null);
