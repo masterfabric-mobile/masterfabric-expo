@@ -626,11 +626,6 @@ export const permissionsHandler = {
     }
     if (effective === 'photoLibrary') {
       if (Platform.OS === 'android') {
-        if (isExpoGo()) {
-          return unavailableStatus(
-            'Photos permission is not supported in Expo Go. Use a development build (expo run:android).'
-          );
-        }
         const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
         if (apiLevel >= 33) {
           const rnpStatus = await checkRNPPermissionMultiple('photoLibrary');
@@ -845,11 +840,6 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return unavailableStatus('SMS permission is Android only');
       }
-      if (isExpoGo()) {
-        return unavailableStatus(
-          'SMS permission is not supported in Expo Go. Use a development build (expo run:android).'
-        );
-      }
       const rnpStatus = await checkRNPPermissionMultiple('sms');
       if (rnpStatus) return rnpStatus;
       try {
@@ -872,12 +862,6 @@ export const permissionsHandler = {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
       const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
-      // Expo Go manifest has READ_MEDIA_* removed (API 33+); READ_EXTERNAL_STORAGE exists only for API ≤32.
-      if (isExpoGo() && apiLevel >= 33) {
-        return unavailableStatus(
-          'Storage permission is not supported in Expo Go on Android 13+. Use a development build (expo run:android).'
-        );
-      }
       try {
         if (apiLevel >= 33) {
           const [images, video] = await Promise.all([
@@ -918,11 +902,6 @@ export const permissionsHandler = {
     if (effective === 'bluetooth') {
       if (Platform.OS !== 'android') {
         return unavailableStatus('Bluetooth permission is Android only');
-      }
-      if (isExpoGo()) {
-        return unavailableStatus(
-          'Bluetooth permission is not supported in Expo Go. Use a development build (expo run:android).'
-        );
       }
       const rnpStatus = await checkRNPPermissionMultiple('bluetooth');
       if (rnpStatus) return rnpStatus;
@@ -1058,30 +1037,38 @@ export const permissionsHandler = {
       const writeOnly = photoOpts?.accessLevel === 'addOnly';
       const mediaLib = getMediaLibrary();
       const picker = getImagePicker();
-      if (Platform.OS === 'android' && isExpoGo() && (mediaLib?.requestPermissionsAsync || picker?.requestMediaLibraryPermissionsAsync)) {
-        try {
-          if (mediaLib?.requestPermissionsAsync) {
+      if (Platform.OS === 'android') {
+        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        let lastStatus: PermissionStatus | null = null;
+        if (mediaLib?.requestPermissionsAsync) {
+          try {
             const r = await mediaLib.requestPermissionsAsync(writeOnly, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
-            return fromMediaLibraryResponse({
+            lastStatus = fromMediaLibraryResponse({
               granted: (r as { granted?: boolean }).granted ?? r.status === 'granted',
               status: r.status,
               canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
               accessPrivileges: (r as { accessPrivileges?: string }).accessPrivileges as 'all' | 'limited' | 'none' | undefined,
             });
+            if (lastStatus.granted) return lastStatus;
+          } catch (e) {
+            logPermission('warning', 'Photo library request (expo-media-library) failed', { error: e });
           }
-          if (picker?.requestMediaLibraryPermissionsAsync) {
-            const r = await picker.requestMediaLibraryPermissionsAsync(writeOnly);
-            return fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
-          }
-        } catch (e) {
-          logPermission('warning', 'Photo library request failed (Expo Go fallback)', { error: e });
         }
-      }
-      if (Platform.OS === 'android') {
-        const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
+        if (picker?.requestMediaLibraryPermissionsAsync) {
+          try {
+            const r = await picker.requestMediaLibraryPermissionsAsync(writeOnly);
+            lastStatus = fromMediaLibraryResponse(r as { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' });
+            if (lastStatus.granted) return lastStatus;
+          } catch (e) {
+            logPermission('warning', 'Photo library request (expo-image-picker) failed', { error: e });
+          }
+        }
         if (apiLevel >= 33) {
           const rnpResult = await requestRNPPermissionMultiple('photoLibrary');
-          if (rnpResult) return rnpResult;
+          if (rnpResult) {
+            if (rnpResult.granted) return rnpResult;
+            lastStatus = rnpResult;
+          }
         }
         const rationaleObj = {
           title: _options?.title ?? 'Photos and Videos',
@@ -1115,7 +1102,8 @@ export const permissionsHandler = {
             status: verified.granted ? 'granted' : (canAskAgain ? 'denied' : 'blocked'),
           };
         } catch (e) {
-          logPermission('warning', 'Photo library permission request failed', { error: e });
+          logPermission('warning', 'Photo library permission request (PermissionsAndroid) failed', { error: e });
+          if (lastStatus) return lastStatus;
           return mockStatus(false, true);
         }
       }
@@ -1443,17 +1431,19 @@ export const permissionsHandler = {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
       const mediaLibForStorage = getMediaLibrary();
-      if (isExpoGo() && mediaLibForStorage?.requestPermissionsAsync) {
+      if (mediaLibForStorage?.requestPermissionsAsync) {
         try {
           const r = await mediaLibForStorage.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
           const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
-          return {
-            granted,
-            canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
-            status: granted ? 'granted' : 'denied',
-          };
+          if (granted) {
+            return {
+              granted: true,
+              canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
+              status: 'granted',
+            };
+          }
         } catch (e) {
-          logPermission('warning', 'Storage request failed (Expo Go media fallback)', { error: e });
+          logPermission('warning', 'Storage request (expo-media-library) failed', { error: e });
         }
       }
       const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
