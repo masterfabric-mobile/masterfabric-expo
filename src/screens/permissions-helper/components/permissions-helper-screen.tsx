@@ -15,6 +15,8 @@ import {
   PERMISSION_LABEL_KEYS,
   PERMISSION_KEYS,
   PERMISSIONS_AVAILABLE_IN_EXPO_GO,
+  IOS_KEY_TO_I18N,
+  ANDROID_PERMISSION_TO_I18N,
 } from '../constants/permissions-helper.constants';
 import { usePermissionsHelperViewModel } from '../hooks/use-permissions-helper-view-model';
 import {
@@ -37,8 +39,12 @@ function formatIOSConfigContent(): string {
   const entries = permissionsHandler.getIOSInfoPlistEntries(permissionKeysForConfig);
   return entries
     .map(
-      (e) =>
-        `<key>${e.key}</key>\n<string>${e.value}</string>\n<!-- ${e.description} -->`
+      (e) => {
+        const i18nKey = IOS_KEY_TO_I18N[e.key];
+        const localizedValue = i18nKey ? t(i18nKey) : e.value;
+        const commentText = i18nKey ? localizedValue : e.description;
+        return `<key>${e.key}</key>\n<string>${localizedValue}</string>\n<!-- ${commentText} -->`;
+      }
     )
     .join('\n\n');
 }
@@ -57,7 +63,10 @@ function formatAndroidConfigContent(): string {
         e.usesPermissionFlags != null
           ? ` android:usesPermissionFlags="${e.usesPermissionFlags}"`
           : '';
-      return `<uses-permission ${name}${maxSdk}${flags} />\n<!-- ${e.description} -->`;
+      const suffix = e.permission.split('.').pop() ?? e.permission;
+      const i18nKey = ANDROID_PERMISSION_TO_I18N[suffix];
+      const commentText = i18nKey ? t(i18nKey) : e.description;
+      return `<uses-permission ${name}${maxSdk}${flags} />\n<!-- ${commentText} -->`;
     })
     .join('\n');
 }
@@ -167,7 +176,15 @@ export function PermissionsHelperScreen() {
           const isAnyLoading = Object.values(loading).some(Boolean);
           const labelKey = PERMISSION_LABEL_KEYS[key] ?? key;
           const label = t(labelKey);
-          const statusDisplay = getPermissionStatusDisplay(status, t, colors, {
+          // Face ID / biyometri: sadece kullanıcı "İstek"e basıp onayladıktan sonra "Verildi" göster
+          const mustRequestFirst = key === 'biometrics';
+          const displayStatus =
+            mustRequestFirst &&
+            !requestAttempted[key] &&
+            status?.status === 'granted'
+              ? { status: 'denied' as const, granted: false, canAskAgain: true }
+              : status;
+          const statusDisplay = getPermissionStatusDisplay(displayStatus, t, colors, {
             permissionKey: key,
           });
 

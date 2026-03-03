@@ -3,6 +3,12 @@ import type { PermissionType } from 'masterfabric-expo-core';
 /** AsyncStorage key for which permissions the user has tapped "Request" at least once. */
 export const STORAGE_KEY_REQUEST_ATTEMPTED = 'permissionsHelper.requestAttempted';
 
+/** AsyncStorage key for last known statuses (all permissions) so they persist across restarts. */
+export const STORAGE_KEY_LAST_STATUSES = 'permissionsHelper.lastStatuses';
+
+/** Eski anahtar: sadece granted/limited kaydediyordu; yeni anahtara taşımak için okunur. */
+export const STORAGE_KEY_LAST_GRANTED_STATUSES_LEGACY = 'permissionsHelper.lastGrantedStatuses';
+
 /** Timeout for permission request (ms); after this we fall back to check(). */
 export const REQUEST_TIMEOUT_MS = 20000;
 

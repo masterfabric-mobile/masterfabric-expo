@@ -29,14 +29,21 @@ export function getPermissionStatusDisplay(
     status: string;
     granted: boolean;
     canAskAgain?: boolean;
+    limited?: boolean;
     message?: string;
+    ios?: { scope?: 'full' | 'limited' };
   } | null,
   t: (key: string) => string,
   colors: ThemeColors,
   _options?: { permissionKey?: string }
 ): { label: string; color: string; unavailableExplanation?: string } {
   if (status != null) {
-    const s = status.status;
+    // Sınırlı erişim (limited) verildiyse "Reddedildi" değil "Sınırlı" göster
+    const isLimited =
+      status.status === 'limited' ||
+      status.limited === true ||
+      status.ios?.scope === 'limited';
+    const s = isLimited ? 'limited' : status.status;
     const key = STATUS_I18N[s] || s;
     const themeKey = STATUS_BADGE_THEME_KEYS[s] ?? 'inactiveText';
     const color = colors[themeKey] ?? colors.inactiveText;
