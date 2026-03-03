@@ -1,5 +1,6 @@
 import { useSnackbar } from '@/src/shared/hooks/use-snackbar';
 import { t } from '@/src/shared/i18n';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   permissionsHandler,
   type PermissionStatus,
@@ -13,9 +14,36 @@ import {
   REQUEST_TIMEOUT_MS,
   REQUEST_TIMEOUT_PHOTOLIBRARY_MS,
   SKIP_CHECK_AFTER_REQUEST_MS,
+  STORAGE_KEY_LAST_GRANTED_STATUSES_LEGACY,
+  STORAGE_KEY_LAST_STATUSES,
 } from '../constants/permissions-helper.constants';
 import type { LocationPermissionInfo } from '../models/permissions-helper-models';
 import { usePermissionsHelperStore } from '../store/permissions-helper-store';
+
+async function loadPersistedStatuses(): Promise<void> {
+  try {
+    let raw = await AsyncStorage.getItem(STORAGE_KEY_LAST_STATUSES);
+    if (!raw) {
+      raw = await AsyncStorage.getItem(STORAGE_KEY_LAST_GRANTED_STATUSES_LEGACY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Partial<Record<PermissionKey, PermissionStatus | null>>;
+        if (parsed && typeof parsed === 'object') {
+          usePermissionsHelperStore.getState().rehydrateStatuses(parsed);
+          AsyncStorage.setItem(STORAGE_KEY_LAST_STATUSES, raw).catch(() => {});
+          AsyncStorage.removeItem(STORAGE_KEY_LAST_GRANTED_STATUSES_LEGACY).catch(() => {});
+        }
+        return;
+      }
+      return;
+    }
+    const parsed = JSON.parse(raw) as Partial<Record<PermissionKey, PermissionStatus | null>>;
+    if (parsed && typeof parsed === 'object') {
+      usePermissionsHelperStore.getState().rehydrateStatuses(parsed);
+    }
+  } catch {
+    // ignore
+  }
+}
 
 export function usePermissionsHelperViewModel() {
   const {
@@ -167,6 +195,16 @@ export function usePermissionsHelperViewModel() {
           }
         }
         setStatus(key, status);
+        if (
+          (key === 'biometrics' || key === 'photoLibrary') &&
+          (status.granted || status.status === 'limited')
+        ) {
+          const current = usePermissionsHelperStore.getState().statuses;
+          AsyncStorage.setItem(
+            STORAGE_KEY_LAST_STATUSES,
+            JSON.stringify(current)
+          ).catch(() => {});
+        }
         lastRequestedRef.current = { key, time: Date.now() };
         setRequestAttempted(key, true);
         if (!silent && (status.status === 'blocked' || status.blocked)) {
@@ -196,6 +234,10 @@ export function usePermissionsHelperViewModel() {
   );
 
   const checkAll = useCallback(async () => {
+    await loadPersistedStatuses();
+    const store = usePermissionsHelperStore.getState();
+    const stickyBiometrics = store.statuses.biometrics;
+    const stickyPhotoLibrary = store.statuses.photoLibrary;
     const now = Date.now();
     for (const key of PERMISSION_KEYS) {
       if (currentRequestKeyRef.current === key) continue;
@@ -206,21 +248,43 @@ export function usePermissionsHelperViewModel() {
       try {
         const type: PermissionType = key;
         const status = await permissionsHandler.check(type);
-        const prev = usePermissionsHelperStore.getState().statuses[key];
-        // Only keep "blocked" if current check also says canAskAgain: false (user really chose "Don't ask again")
+        const prev =
+          key === 'biometrics'
+            ? stickyBiometrics
+            : key === 'photoLibrary'
+              ? stickyPhotoLibrary
+              : usePermissionsHelperStore.getState().statuses[key];
+        const prevWasLimited =
+          key === 'photoLibrary' &&
+          (prev?.status === 'limited' ||
+            prev?.limited === true ||
+            prev?.ios?.scope === 'limited');
+        const prevWasBlocked = prev?.status === 'blocked' || prev?.blocked === true;
+        // Sınırlı erişim verilmişse check() bazen "denied" döndürebilir; ezmeyelim
         const resolved =
-          !status.granted &&
-          prev?.status === 'blocked' &&
-          status.canAskAgain === false
+          prevWasLimited && !status.granted && status.status !== 'limited'
             ? {
-                ...status,
-                status: 'blocked' as const,
-                blocked: true,
-                canAskAgain: false,
+                ...prev!,
+                status: 'limited' as const,
+                granted: true,
+                limited: true,
+                blocked: false,
+                ...(prev?.ios?.scope === 'limited' && { ios: { scope: 'limited' as const } }),
               }
-            : key === 'biometrics' && prev?.status === 'granted' && !status.granted
-              ? prev
-              : status;
+            : prevWasBlocked
+              ? prev!
+              : !status.granted && status.canAskAgain === false
+                ? {
+                    ...status,
+                    status: 'blocked' as const,
+                    blocked: true,
+                    canAskAgain: false,
+                  }
+                : key === 'biometrics' &&
+                    (prev?.status === 'granted' || prev?.granted === true) &&
+                    !status.granted
+                  ? prev
+                  : status;
         setStatus(key, resolved);
       } catch {
         setStatus(key, null);
@@ -267,7 +331,32 @@ export function usePermissionsHelperViewModel() {
                 const status = await permissionsHandler.check(
                   currentKey as PermissionType
                 );
-                setStatus(currentKey, status);
+                const prev = usePermissionsHelperStore.getState().statuses[currentKey];
+                const prevWasLimited =
+                  currentKey === 'photoLibrary' &&
+                  (prev?.status === 'limited' ||
+                    prev?.limited === true ||
+                    prev?.ios?.scope === 'limited');
+                const prevWasBlocked =
+                  prev?.status === 'blocked' || prev?.blocked === true;
+                const resolved =
+                  prevWasLimited && !status.granted && status.status !== 'limited'
+                    ? {
+                        ...prev!,
+                        status: 'limited' as const,
+                        granted: true,
+                        limited: true,
+                        blocked: false,
+                        ...(prev?.ios?.scope === 'limited' && { ios: { scope: 'limited' as const } }),
+                      }
+                    : prevWasBlocked
+                      ? prev!
+                      : currentKey === 'biometrics' &&
+                          (prev?.status === 'granted' || prev?.granted === true) &&
+                          !status.granted
+                        ? prev
+                        : status;
+                setStatus(currentKey, resolved);
                 setRequestAttempted(currentKey, true);
               } catch {
                 // ignore

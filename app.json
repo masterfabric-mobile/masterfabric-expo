@@ -19,7 +19,14 @@
                              "supportsTablet":  true,
                              "icon":  "./src/assets/images/app_icon.png",
                              "bundleIdentifier":  "com.masterfabric.expo.ios",
-                             "buildNumber":  "3"
+                             "buildNumber":  "3",
+                             "infoPlist":  {
+                                 "CFBundleAllowMixedLocalizations":  true
+                             }
+                         },
+                 "locales":  {
+                             "en":  "./locales/ios/en.json",
+                             "tr":  "./locales/ios/tr.json"
                          },
                  "android":  {
                                  "adaptiveIcon":  {

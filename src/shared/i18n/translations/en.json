@@ -477,7 +477,7 @@
       "unavailableReasonBluetoothAndroid12": "Bluetooth permission requires Android 12 or higher.",
       "unavailableReasonExpoModuleRunOnDevice": "Requires the corresponding Expo module; run on a real device (not simulator).",
       "unavailableReasonNoHardwareOrNotEnrolled": "No biometric hardware or no face/fingerprint enrolled in device settings.",
-      "statusLimited": "Limited (iOS)",
+      "statusLimited": "Limited access",
       "statusUnknown": "Not yet requested",
       "locationInfoForeground": "Foreground",
       "locationInfoBackground": "Background",

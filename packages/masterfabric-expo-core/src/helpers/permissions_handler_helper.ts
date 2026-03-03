@@ -383,6 +383,7 @@ function fromExpoResponse(
 /**
  * Map expo-image-picker / expo-media-library MediaLibraryPermissionResponse.
  * iOS: accessPrivileges 'all' | 'limited' | 'none'. When undefined (e.g. Android), use granted/status.
+ * Sınırlı erişim (limited) = kullanıcı "Seçili fotoğraflar" seçti; granted sayılır, "Reddedildi" gösterilmemeli.
  */
 function fromMediaLibraryResponse(
   r: { granted?: boolean; status?: string; canAskAgain?: boolean; accessPrivileges?: 'all' | 'limited' | 'none' }
@@ -1430,22 +1431,8 @@ export const permissionsHandler = {
       if (Platform.OS !== 'android') {
         return { granted: true, canAskAgain: true, status: 'granted' as const };
       }
-      const mediaLibForStorage = getMediaLibrary();
-      if (mediaLibForStorage?.requestPermissionsAsync) {
-        try {
-          const r = await mediaLibForStorage.requestPermissionsAsync(false, MEDIA_LIBRARY_GRANULAR_PHOTO_VIDEO);
-          const granted = (r as { granted?: boolean }).granted ?? r.status === 'granted';
-          if (granted) {
-            return {
-              granted: true,
-              canAskAgain: (r as { canAskAgain?: boolean }).canAskAgain ?? true,
-              status: 'granted',
-            };
-          }
-        } catch (e) {
-          logPermission('warning', 'Storage request (expo-media-library) failed', { error: e });
-        }
-      }
+      // Depolama için doğrudan sistem izin diyaloğu (Allow/Don't allow) kullan; expo-media-library
+      // bazı cihazlarda galeri/photo picker açıyor, bu yüzden atlanıyor.
       const apiLevel = typeof Platform.Version === 'string' ? parseInt(String(Platform.Version), 10) : (Platform.Version as number);
       const rationale = {
         title: _options?.title ?? 'Storage',

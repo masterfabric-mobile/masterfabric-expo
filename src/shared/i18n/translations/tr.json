@@ -477,7 +477,7 @@
       "unavailableReasonBluetoothAndroid12": "Bluetooth izni için Android 12 veya üstü gerekir.",
       "unavailableReasonExpoModuleRunOnDevice": "İlgili Expo modülü gerekir; gerçek cihazda (simülatör değil) çalıştırın.",
       "unavailableReasonNoHardwareOrNotEnrolled": "Biyometrik donanım yok veya cihaz ayarlarında yüz/parmak izi kayıtlı değil.",
-      "statusLimited": "Sınırlı (iOS)",
+      "statusLimited": "Sınırlı erişim",
       "statusUnknown": "Henüz istenmedi",
       "locationInfoForeground": "Ön plan",
       "locationInfoBackground": "Arka plan",
