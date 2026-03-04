@@ -22,6 +22,7 @@ export function ProfileScreen() {
     settings,
     handleSignInPress,
     handleSignOutPress,
+    handleNotificationsPress,
     handleLanguagePress,
     handleThemePress,
     handleDietaryPreferencesPress,
