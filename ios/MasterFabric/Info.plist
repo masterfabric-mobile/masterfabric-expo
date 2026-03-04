@@ -78,6 +78,30 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Uygulamanin etkinlikleri planlamak icin takvim erisimine ihtiyaci var.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Uygulamanin etkinlikleri planlamak icin takvim erisimine ihtiyaci var.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Uygulamanin hatirlatici olusturmak icin hatirlaticilar erisimine ihtiyaci var.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>Uygulamanin hatirlatici olusturmak icin hatirlaticilar erisimine ihtiyaci var.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Uygulamanin fotograf ve video cekmek icin kamera erisimine ihtiyaci var.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Uygulamanin ses ve video kaydi icin mikrofon erisimine ihtiyaci var.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Uygulamanin fotograf ve video secmek icin galeri erisimine ihtiyaci var.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Uygulamanin fotograflari kaydetmek icin galeri erisimine ihtiyaci var.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Uygulamanin icerik paylasmak icin kisi listesine erisimine ihtiyaci var.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Uygulamanin konum tabanli ozellikler icin konum erisimine ihtiyaci var.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Uygulamanin arka planda konum tabanli ozellikler icin konum erisimine ihtiyaci var.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Uygulamanin guvenli giris icin Face ID erisimine ihtiyaci var.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>

@@ -1,139 +1,103 @@
 {
-    "expo":  {
-                 "name":  "MasterFabric",
-                 "slug":  "masterfabric-expo",
-                 "description":  "Modern mobile platform for fabric design and management applications",
-                 "version":  "1.0.0",
-                 "orientation":  "portrait",
-                 "icon":  "./src/assets/images/app_icon.png",
-                 "scheme":  "masterfabricexpo",
-                 "userInterfaceStyle":  "automatic",
-                 "newArchEnabled":  true,
-                 "primaryColor":  "#000000",
-                 "splash":  {
-                                "image":  "./src/assets/images/splash-icon.png",
-                                "resizeMode":  "contain",
-                                "backgroundColor":  "#000000"
-                            },
-                 "ios":  {
-                             "supportsTablet":  true,
-                             "icon":  "./src/assets/images/app_icon.png",
-                             "bundleIdentifier":  "com.masterfabric.expo.ios",
-                             "buildNumber":  "3",
-                             "infoPlist":  {
-                                 "CFBundleAllowMixedLocalizations":  true
-                             }
-                         },
-                 "locales":  {
-                             "en":  "./locales/ios/en.json",
-                             "tr":  "./locales/ios/tr.json"
-                         },
-                 "android":  {
-                                 "adaptiveIcon":  {
-                                                      "foregroundImage":  "./src/assets/images/app_icon.png",
-                                                      "backgroundColor":  "#ffffff"
-                                                  },
-                                 "edgeToEdgeEnabled":  true,
-                                 "package":  "com.masterfabric.expo.android",
-                                 "versionCode":  3,
-"permissions":  [
-                                                    "android.permission.CAMERA",
-                                                    "android.permission.RECORD_AUDIO",
-                                                    "android.permission.READ_EXTERNAL_STORAGE",
-                                                    "android.permission.WRITE_EXTERNAL_STORAGE",
-                                                    "android.permission.READ_MEDIA_IMAGES",
-                                                    "android.permission.READ_MEDIA_VIDEO",
-                                                    "android.permission.ACCESS_FINE_LOCATION",
-                                                    "android.permission.ACCESS_COARSE_LOCATION",
-                                                    "android.permission.ACCESS_BACKGROUND_LOCATION",
-                                                    "android.permission.POST_NOTIFICATIONS",
-                                                    "android.permission.READ_CONTACTS",
-                                                    "android.permission.WRITE_CONTACTS",
-                                                    "android.permission.READ_CALENDAR",
-                                                    "android.permission.WRITE_CALENDAR",
-                                                    "android.permission.READ_PHONE_STATE",
-                                                    "android.permission.READ_SMS",
-                                                    "android.permission.RECEIVE_SMS",
-                                                    "android.permission.BLUETOOTH_CONNECT",
-                                                    "android.permission.BLUETOOTH_SCAN",
-                                                    "android.permission.BLUETOOTH_ADVERTISE",
-                                                    "android.permission.SEND_SMS",
-                                                    "android.permission.READ_MEDIA_AUDIO",
-                                                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
-                                                    "android.permission.BODY_SENSORS"
-                                                ]
-                             },
-                 "web":  {
-                             "bundler":  "metro",
-                             "output":  "static",
-                             "favicon":  "./src/assets/images/favicon.png"
-                         },
-                 "plugins":  [
-                                 "./plugins/add-media-permissions.js",
-                                 "expo-router",
-                                 "expo-dev-client",
-                                 [
-                                     "expo-splash-screen",
-                                     {
-                                         "image":  "./src/assets/images/splash-icon.png",
-                                         "imageWidth":  200,
-                                         "resizeMode":  "contain",
-                                         "backgroundColor":  "#ffffff"
-                                     }
-                                 ],
-                                 [
-                                     "expo-media-library",
-                                     {
-                                         "photosPermission":  "The app needs gallery access to select photos and videos.",
-                                         "savePhotosPermission":  "The app needs permission to save photos to your library.",
-                                         "isAccessMediaLocationEnabled":  false,
-                                         "granularPermissions":  ["photo", "video"]
-                                     }
-                                 ],
-                                 [
-                                     "expo-image-picker",
-                                     {
-                                         "photosPermission":  "The app needs gallery access to select photos and videos.",
-                                         "cameraPermission":  "The app needs camera access to take photos and videos.",
-                                         "microphonePermission":  "The app needs microphone access for video recording."
-                                     }
-                                 ],
-                                 [
-                                     "expo-av",
-                                     {
-                                         "microphonePermission":  "The app needs microphone access for audio recording."
-                                     }
-                                 ],
-                                 [
-                                     "expo-calendar",
-                                     {
-                                         "calendarPermission":  "The app needs calendar access to plan events."
-                                     }
-                                 ],
-                                [
-                                    "expo-contacts",
-                                    {
-                                        "contactsPermission": "The app needs access to your contacts to share content."
-                                    }
-                                ],
-                                [
-                                    "expo-local-authentication",
-                                    {
-                                        "faceIDPermission": "Allow the app to use Face ID for secure sign-in."
-                                    }
-                                ]
-                            ],
-                 "experiments":  {
-                                     "typedRoutes":  true
-                                 },
-                 "extra":  {
-                               "router":  {
-
-                                          },
-                               "eas":  {
-                                           "projectId":  "da5b233a-cb42-4494-94c7-2b1427d32ebf"
-                                       }
-                           },
-                 "owner":  "gurkanfikretgunak"
-             }
+  "expo": {
+    "name": "MasterFabric",
+    "slug": "masterfabric-expo",
+    "description": "Modern mobile platform for fabric design and management applications",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/app_icon.png",
+    "scheme": "masterfabricexpo",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "primaryColor": "#000000",
+    "splash": {
+      "image": "./src/assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./src/assets/images/app_icon.png",
+      "bundleIdentifier": "com.masterfabric.expo.ios",
+      "buildNumber": "3",
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
+        "NSCalendarsFullAccessUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
+        "NSRemindersUsageDescription": "Uygulamanın hatırlatıcı oluşturmak için hatırlatıcılar erişimine ihtiyacı var.",
+        "NSRemindersFullAccessUsageDescription": "Uygulamanın hatırlatıcı oluşturmak için hatırlatıcılar erişimine ihtiyacı var.",
+        "NSCameraUsageDescription": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+        "NSMicrophoneUsageDescription": "Uygulamanın ses ve video kaydı için mikrofon erişimine ihtiyacı var.",
+        "NSPhotoLibraryUsageDescription": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+        "NSPhotoLibraryAddUsageDescription": "Uygulamanın fotoğrafları kaydetmek için galeri erişimine ihtiyacı var.",
+        "NSContactsUsageDescription": "Uygulamanın içerik paylaşmak için kişi listesine erişimine ihtiyacı var.",
+        "NSLocationWhenInUseUsageDescription": "Uygulamanın konum tabanlı özellikler için konum erişimine ihtiyacı var.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Uygulamanın arka planda konum tabanlı özellikler için konum erişimine ihtiyacı var.",
+        "NSFaceIDUsageDescription": "Uygulamanın güvenli giriş için Face ID erişimine ihtiyacı var."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/app_icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.masterfabric.expo.android",
+      "versionCode": 3
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./src/assets/images/favicon.png"
+    },
+    "plugins": [
+      "./plugins/add-media-permissions.js",
+      "expo-router",
+      "expo-dev-client",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./src/assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+          "cameraPermission": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+          "microphonePermission": "Uygulamanın video kaydı için mikrofon erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "da5b233a-cb42-4494-94c7-2b1427d32ebf"
+      }
+    },
+    "owner": "gurkanfikretgunak"
+  }
 }
