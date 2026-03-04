@@ -14,9 +14,9 @@ export function StatsSection({ stats }: StatsSectionProps) {
   return (
     <View style={profileStyles.statsSection}>
       <View style={profileStyles.statsRow}>
-        <StatCard value={stats.saved} label={t('profile.stats.saved')} />
-        <StatCard value={stats.created} label={t('profile.stats.created')} />
-        <StatCard value={stats.followers} label={t('profile.stats.followers')} />
+        <StatCard value={stats.favorites} label={t('profile.stats.favorites')} />
+        <StatCard value={stats.recipesCooked} label={t('profile.stats.recipesCooked')} />
+        <StatCard value={stats.dayStreak} label={t('profile.stats.dayStreak')} />
       </View>
     </View>
   );

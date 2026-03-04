@@ -22,11 +22,12 @@ export function ProfileScreen() {
     settings,
     handleSignInPress,
     handleSignOutPress,
-    handleNotificationsPress,
+    handleLanguagePress,
+    handleThemePress,
     handleDietaryPreferencesPress,
     handleHelpSupportPress,
     handleEditProfilePress,
-    handleSettingsPress,
+    locale,
   } = useProfileViewModel();
 
   return (
@@ -45,10 +46,10 @@ export function ProfileScreen() {
         <View style={[profileStyles.headerSide, profileStyles.headerSideRight]}>
           <TouchableOpacity
             style={profileStyles.headerButton}
-            onPress={handleSettingsPress}
+            onPress={handleNotificationsPress}
             activeOpacity={0.7}
           >
-            <Ionicons name="settings-outline" size={24} color={RecipioColors.text} />
+            <Ionicons name="notifications-outline" size={24} color={RecipioColors.text} />
           </TouchableOpacity>
         </View>
       </View>
@@ -71,8 +72,10 @@ export function ProfileScreen() {
         <KitchenProSection />
         <SettingsSection
           settings={settings}
+          locale={locale}
           isSignedIn={isSignedIn}
-          onNotificationsPress={handleNotificationsPress}
+          onLanguagePress={handleLanguagePress}
+          onThemePress={handleThemePress}
           onDietaryPreferencesPress={handleDietaryPreferencesPress}
           onHelpSupportPress={handleHelpSupportPress}
           onSignOutPress={handleSignOutPress}

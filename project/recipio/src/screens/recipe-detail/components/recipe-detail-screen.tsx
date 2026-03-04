@@ -68,6 +68,10 @@ export function RecipeDetailScreen() {
           <TouchableOpacity
             style={recipeDetailStyles.headerBtn}
             onPress={handleBack}
+            activeOpacity={0.7}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
           >
             <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
           </TouchableOpacity>
@@ -103,10 +107,14 @@ export function RecipeDetailScreen() {
           </View>
         )}
       </View>
-      <View style={[recipeDetailStyles.header, { backgroundColor: 'transparent' }]}>
+      <View style={[recipeDetailStyles.header, { backgroundColor: 'transparent' }]} pointerEvents="box-none">
         <TouchableOpacity
           style={recipeDetailStyles.headerBtn}
           onPress={handleBack}
+          activeOpacity={0.7}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
         >
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>

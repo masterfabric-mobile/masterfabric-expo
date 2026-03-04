@@ -15,9 +15,9 @@ interface ProfileStore {
 }
 
 const defaultStats: ProfileStats = {
-  saved: 0,
-  created: 0,
-  followers: 0,
+  favorites: 0,
+  recipesCooked: 0,
+  dayStreak: 0,
 };
 
 const defaultSettings: ProfileSettings = {

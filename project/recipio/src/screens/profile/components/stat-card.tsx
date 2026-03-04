@@ -10,7 +10,7 @@ export function StatCard({ value, label }: StatCardProps) {
   return (
     <View style={profileStyles.statCard}>
       <Text style={profileStyles.statValue}>{value}</Text>
-      <Text style={profileStyles.statLabel} numberOfLines={1}>
+      <Text style={profileStyles.statLabel} numberOfLines={2} allowFontScaling>
         {label}
       </Text>
     </View>

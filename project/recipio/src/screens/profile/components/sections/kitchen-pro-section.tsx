@@ -10,7 +10,10 @@ export function KitchenProSection() {
   const { t } = useI18n();
 
   const handleUpgrade = () => {
-    // TODO: Navigate to upgrade / paywall
+    // TODO: Navigate to paywall; after successful purchase call:
+    // import { updateUserPlan, PLAN_SLUGS } from '@/shared/services/user-service';
+    // await updateUserPlan(PLAN_SLUGS.KITCHEN_PRO, expiryDate);
+    // Plan is stored in Supabase profiles.plan_slug and shown on home (Current Plan card).
   };
 
   return (

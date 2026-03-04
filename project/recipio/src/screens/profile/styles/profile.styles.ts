@@ -123,6 +123,7 @@ export const profileStyles = StyleSheet.create({
     color: RecipioColors.text,
     marginTop: 4,
     letterSpacing: 0.3,
+    textAlign: 'center',
   },
   // Kitchen Pro
   kitchenProSection: {

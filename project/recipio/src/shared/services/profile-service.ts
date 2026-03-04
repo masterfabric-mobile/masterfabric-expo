@@ -34,23 +34,41 @@ export async function getProfileFromSupabase(): Promise<ProfileUser | null> {
   }
 }
 
+/** Consecutive calendar days (UTC date) with at least one tried recipe, ending today. */
+function computeDayStreak(dates: string[]): number {
+  if (dates.length === 0) return 0;
+  const set = new Set(dates.map((d) => d.slice(0, 10)));
+  let check = new Date().toISOString().slice(0, 10);
+  let streak = 0;
+  while (set.has(check)) {
+    streak++;
+    const t = new Date(check + 'T12:00:00Z').getTime() - 86400000;
+    check = new Date(t).toISOString().slice(0, 10);
+  }
+  return streak;
+}
+
 export async function getProfileStatsFromSupabase(userId: string): Promise<ProfileStats> {
   try {
     const supabase = getSupabaseClient();
-    if (!supabase) return { saved: 0, created: 0, followers: 0 };
+    if (!supabase) return { favorites: 0, recipesCooked: 0, dayStreak: 0 };
 
-    const [savedRes, createdRes] = await Promise.all([
+    const [favRes, triedRes, triedDatesRes] = await Promise.all([
       supabase.from('favorites').select('*', { count: 'exact', head: true }).eq('user_id', userId),
-      supabase.from('recipes').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+      supabase.from('tried_recipes').select('*', { count: 'exact', head: true }).eq('user_id', userId),
+      supabase.from('tried_recipes').select('created_at').eq('user_id', userId),
     ]);
 
+    const dates = (triedDatesRes.data ?? []).map((r: { created_at: string }) => r.created_at);
+    const dayStreak = computeDayStreak(dates);
+
     return {
-      saved: savedRes.count ?? 0,
-      created: createdRes.count ?? 0,
-      followers: 0,
+      favorites: favRes.count ?? 0,
+      recipesCooked: triedRes.count ?? 0,
+      dayStreak,
     };
   } catch {
-    return { saved: 0, created: 0, followers: 0 };
+    return { favorites: 0, recipesCooked: 0, dayStreak: 0 };
   }
 }
 
@@ -61,7 +79,7 @@ export async function syncSessionToStore(
   const user = await getProfileFromSupabase();
   if (!user) {
     setSignedIn(false, null);
-    setStats({ saved: 0, created: 0, followers: 0 });
+    setStats({ favorites: 0, recipesCooked: 0, dayStreak: 0 });
     return false;
   }
   const stats = await getProfileStatsFromSupabase(user.id);

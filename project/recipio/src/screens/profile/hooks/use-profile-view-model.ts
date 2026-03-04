@@ -7,7 +7,7 @@ import { syncSessionToStore } from '@/shared/services/profile-service';
 import { useProfileStore } from '../store/profile-store';
 
 export function useProfileViewModel() {
-  const { t } = useI18n();
+  const { t, locale, setLocale } = useI18n();
   const router = useRouter();
   const {
     isSignedIn,
@@ -60,17 +60,24 @@ export function useProfileViewModel() {
     // TODO: open edit profile / photo picker
   }, []);
 
-  const handleSettingsPress = useCallback(() => {
-    // TODO: open app settings or settings modal
-  }, []);
-
   const handleNotificationsPress = useCallback(() => {
     setSettings({ notifications: !settings.notifications });
   }, [settings.notifications, setSettings]);
 
+  const handleLanguagePress = useCallback(() => {
+    const next = locale === 'en' ? 'tr' : 'en';
+    setLocale(next);
+    setSettings({ language: next });
+  }, [locale, setLocale, setSettings]);
+
+  const handleThemePress = useCallback(() => {
+    const next = settings.theme === 'dark' ? 'light' : 'dark';
+    setSettings({ theme: next });
+  }, [settings.theme, setSettings]);
+
   const handleDietaryPreferencesPress = useCallback(() => {
-    // TODO: navigate to dietary preferences
-  }, []);
+    router.push('/dietary-preferences');
+  }, [router]);
 
   const handleHelpSupportPress = useCallback(() => {
     // TODO: navigate to help & support
@@ -82,11 +89,13 @@ export function useProfileViewModel() {
     user,
     stats,
     settings,
+    locale,
     handleSignInPress,
     handleSignOutPress,
     handleEditProfilePress,
-    handleSettingsPress,
     handleNotificationsPress,
+    handleLanguagePress,
+    handleThemePress,
     handleDietaryPreferencesPress,
     handleHelpSupportPress,
   };

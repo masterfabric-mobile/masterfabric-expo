@@ -82,7 +82,13 @@ export function useRecipeSearchViewModel() {
     [recent]
   );
 
-  const handleBack = useCallback(() => router.back(), [router]);
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  }, [router]);
 
   const handleRecipePress = useCallback(
     async (recipe: RecipeCard) => {

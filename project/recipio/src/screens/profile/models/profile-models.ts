@@ -10,9 +10,9 @@ export interface ProfileUser {
 }
 
 export interface ProfileStats {
-  saved: number;
-  created: number;
-  followers: number;
+  favorites: number;
+  recipesCooked: number;
+  dayStreak: number;
 }
 
 export type ThemeOption = 'light' | 'dark';

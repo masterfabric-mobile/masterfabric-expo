@@ -78,7 +78,13 @@ export function useRecipeDetailViewModel() {
     [load, setServings]
   );
 
-  const handleBack = useCallback(() => router.back(), [router]);
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  }, [router]);
 
   return {
     recipe,

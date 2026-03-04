@@ -1,8 +1,40 @@
 /**
  * User service - profile and greeting
+ * Current plan (Pro Chef, Kitchen Chef, Kitchen Pro) is stored in Supabase profiles.plan_slug
  */
 
 import { getSupabaseClient } from './supabase-service';
+
+/** Plan slugs in DB; must match Supabase profiles.plan_slug */
+export const PLAN_SLUGS = {
+  FREE: 'free',
+  PRO_CHEF: 'pro_chef',
+  KITCHEN_CHEF: 'kitchen_chef',
+  KITCHEN_PRO: 'kitchen_pro',
+} as const;
+
+export type PlanSlug = (typeof PLAN_SLUGS)[keyof typeof PLAN_SLUGS];
+
+/** Display names for Current Plan card */
+const PLAN_DISPLAY_NAMES: Record<string, string> = {
+  [PLAN_SLUGS.FREE]: '',
+  [PLAN_SLUGS.PRO_CHEF]: 'Pro Chef',
+  [PLAN_SLUGS.KITCHEN_CHEF]: 'Kitchen Chef',
+  [PLAN_SLUGS.KITCHEN_PRO]: 'Kitchen Pro',
+};
+
+function planSlugToCurrentPlan(
+  planSlug: string | null | undefined,
+  planExpiresAt: string | null | undefined
+): { name: string; isActive: boolean } {
+  const slug = (planSlug ?? PLAN_SLUGS.FREE).toLowerCase();
+  const name = PLAN_DISPLAY_NAMES[slug] ?? (slug !== PLAN_SLUGS.FREE ? slug : '');
+  if (slug === PLAN_SLUGS.FREE || !name) {
+    return { name: '', isActive: false };
+  }
+  const isActive = !planExpiresAt || new Date(planExpiresAt) > new Date();
+  return { name, isActive };
+}
 
 export interface UserProfile {
   id?: string;
@@ -50,18 +82,18 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('display_name, avatar_url')
+      .select('display_name, avatar_url, plan_slug, plan_expires_at')
       .eq('id', user.id)
       .maybeSingle();
+
+    const row = profile as { plan_slug?: string; plan_expires_at?: string } | undefined;
+    const currentPlan = planSlugToCurrentPlan(row?.plan_slug, row?.plan_expires_at);
 
     return {
       id: user.id,
       name: profile?.display_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
       avatarUrl: profile?.avatar_url,
-      currentPlan: {
-        name: 'Pro Chef',
-        isActive: true,
-      },
+      currentPlan,
     };
   } catch {
     return getAnonymousProfile();
@@ -109,5 +141,34 @@ export async function getMonthlyRecipesCount(): Promise<MonthlyRecipesCount> {
     return { saved, limit };
   } catch {
     return { saved: 0, limit: 50 };
+  }
+}
+
+/**
+ * Update the current user's plan in Supabase (e.g. after upgrade).
+ * Call this when user purchases Pro Chef, Kitchen Chef, Kitchen Pro.
+ */
+export async function updateUserPlan(planSlug: PlanSlug, expiresAt?: Date | null): Promise<boolean> {
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase) return false;
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+    if (userError || !user) return false;
+
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        plan_slug: planSlug,
+        plan_expires_at: expiresAt?.toISOString() ?? null,
+      })
+      .eq('id', user.id);
+
+    return !error;
+  } catch {
+    return false;
   }
 }

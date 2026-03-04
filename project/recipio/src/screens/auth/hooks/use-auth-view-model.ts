@@ -124,7 +124,7 @@ export function useAuthViewModel() {
           email: loginEmail.value,
           photoUrl: null,
         });
-        setStats({ saved: 0, created: 0, followers: 0 });
+        setStats({ favorites: 0, recipesCooked: 0, dayStreak: 0 });
         showAlert(t('auth.loginSuccess'));
         router.replace('/(tabs)/profile');
       }
@@ -200,7 +200,7 @@ export function useAuthViewModel() {
           email: registerEmail.value.trim(),
           photoUrl: null,
         });
-        setStats({ saved: 0, created: 0, followers: 0 });
+        setStats({ favorites: 0, recipesCooked: 0, dayStreak: 0 });
         showAlert(t('auth.registrationSuccess'));
         router.replace('/(tabs)/profile');
       }

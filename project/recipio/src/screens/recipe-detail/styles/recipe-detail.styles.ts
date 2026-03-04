@@ -22,10 +22,13 @@ export const recipeDetailStyles = StyleSheet.create({
   headerBtn: {
     width: 44,
     height: 44,
+    minWidth: 44,
+    minHeight: 44,
     borderRadius: 22,
     backgroundColor: 'rgba(0,0,0,0.45)',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 11,
   },
   hero: {
     width: '100%',

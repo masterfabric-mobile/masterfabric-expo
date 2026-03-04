@@ -7,8 +7,10 @@ import { RecipioColors } from '@/shared/constants/recipio-colors';
 
 interface SettingsSectionProps {
   settings: ProfileSettings;
+  locale: string;
   isSignedIn: boolean;
-  onNotificationsPress?: () => void;
+  onLanguagePress?: () => void;
+  onThemePress?: () => void;
   onDietaryPreferencesPress?: () => void;
   onHelpSupportPress?: () => void;
   onSignOutPress?: () => void;
@@ -16,8 +18,10 @@ interface SettingsSectionProps {
 
 export function SettingsSection({
   settings,
+  locale,
   isSignedIn,
-  onNotificationsPress,
+  onLanguagePress,
+  onThemePress,
   onDietaryPreferencesPress,
   onHelpSupportPress,
   onSignOutPress,
@@ -32,22 +36,6 @@ export function SettingsSection({
       <View style={profileStyles.settingsCard}>
         <TouchableOpacity
           style={profileStyles.settingsRow}
-          onPress={onNotificationsPress}
-          activeOpacity={0.7}
-        >
-          <View style={profileStyles.settingsRowLeft}>
-            <View style={profileStyles.settingsRowIcon}>
-              <Ionicons name="notifications-outline" size={22} color={RecipioColors.text} />
-            </View>
-            <Text style={profileStyles.settingsRowLabel}>
-              {t('profile.settings.notifications')}
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={profileStyles.settingsRow}
           onPress={onDietaryPreferencesPress}
           activeOpacity={0.7}
         >
@@ -59,6 +47,44 @@ export function SettingsSection({
               {t('profile.settings.dietaryPreferences')}
             </Text>
           </View>
+          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={profileStyles.settingsRow}
+          onPress={onLanguagePress}
+          activeOpacity={0.7}
+        >
+          <View style={profileStyles.settingsRowLeft}>
+            <View style={profileStyles.settingsRowIcon}>
+              <Ionicons name="language-outline" size={22} color={RecipioColors.text} />
+            </View>
+            <Text style={profileStyles.settingsRowLabel}>
+              {t('profile.settings.language')}
+            </Text>
+          </View>
+          <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
+            {locale === 'tr' ? t('profile.settings.languageValueTr') : t('profile.settings.languageValue')}
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={profileStyles.settingsRow}
+          onPress={onThemePress}
+          activeOpacity={0.7}
+        >
+          <View style={profileStyles.settingsRowLeft}>
+            <View style={profileStyles.settingsRowIcon}>
+              <Ionicons name="contrast-outline" size={22} color={RecipioColors.text} />
+            </View>
+            <Text style={profileStyles.settingsRowLabel}>
+              {t('profile.settings.theme')}
+            </Text>
+          </View>
+          <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
+            {settings.theme === 'dark' ? t('profile.settings.themeValue') : t('profile.settings.themeLight')}
+          </Text>
           <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
         </TouchableOpacity>
 
