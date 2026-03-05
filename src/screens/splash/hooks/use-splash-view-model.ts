@@ -9,8 +9,6 @@ import { useSplashStore } from '../store/splash-store';
 import { createSplashSteps, getProgressPercentage } from '../utils';
 import { shouldShowOnboarding } from 'masterfabric-expo-core';
 
-/** Permissions (notifications, location, etc.) are requested only when the user taps Request in the Permissions Helper screen, not on app launch. */
-
 export function useSplashViewModel() {
   const [progress, setProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState('');
