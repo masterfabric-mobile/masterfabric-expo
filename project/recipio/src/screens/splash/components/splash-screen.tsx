@@ -1,4 +1,5 @@
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,6 +9,7 @@ import {
 } from '../styles/splash-screen.styles';
 
 export function SplashScreen() {
+  const { t } = useI18n();
   return (
     <SafeAreaView style={splashScreenStyles.container}>
       <View style={splashScreenStyles.content}>
@@ -18,8 +20,8 @@ export function SplashScreen() {
             style={splashScreenStyles.icon}
           />
         </View>
-        <Text style={splashScreenStyles.title}>Recipe App</Text>
-        <Text style={splashScreenStyles.slogan}>TASTE THE DIFFERENCE</Text>
+        <Text style={splashScreenStyles.title}>{t('splash.title')}</Text>
+        <Text style={splashScreenStyles.slogan}>{t('splash.slogan')}</Text>
       </View>
       <View style={splashScreenStyles.loaderSection}>
         <ActivityIndicator
@@ -27,7 +29,7 @@ export function SplashScreen() {
           color={RecipioColors.primaryAccent}
           style={splashScreenStyles.loader}
         />
-        <Text style={splashScreenStyles.loadingLabel}>LOADING</Text>
+        <Text style={splashScreenStyles.loadingLabel}>{t('splash.loading')}</Text>
       </View>
     </SafeAreaView>
   );

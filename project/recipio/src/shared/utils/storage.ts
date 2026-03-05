@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEYS = {
   ONBOARDING_COMPLETED: '@recipio/onboarding_completed',
   LOCALE: '@recipio/locale',
+  THEME: '@recipio/theme',
 } as const;
 
 export const storage = {
@@ -33,6 +34,16 @@ export const storage = {
   async getLocale(): Promise<'en' | 'tr' | null> {
     const value = await AsyncStorage.getItem(STORAGE_KEYS.LOCALE);
     if (value === 'en' || value === 'tr') return value;
+    return null;
+  },
+
+  async setTheme(theme: 'dark' | 'light'): Promise<void> {
+    await AsyncStorage.setItem(STORAGE_KEYS.THEME, theme);
+  },
+
+  async getTheme(): Promise<'dark' | 'light' | null> {
+    const value = await AsyncStorage.getItem(STORAGE_KEYS.THEME);
+    if (value === 'dark' || value === 'light') return value;
     return null;
   },
 };

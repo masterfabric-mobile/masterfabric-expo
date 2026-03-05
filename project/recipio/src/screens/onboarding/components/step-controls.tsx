@@ -1,4 +1,5 @@
 import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useI18n } from '@/shared/i18n';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface StepControlsProps {
@@ -18,13 +19,14 @@ export function StepControls({
   onSkip,
   onComplete,
 }: StepControlsProps) {
+  const { t } = useI18n();
   const isLastStep = currentStep === totalSteps - 1;
 
   return (
     <View style={styles.container}>
       {currentStep > 0 ? (
         <TouchableOpacity onPress={onBack} style={styles.sideButton}>
-          <Text style={styles.sideLabel}>Back</Text>
+          <Text style={styles.sideLabel}>{t('onboarding.back')}</Text>
         </TouchableOpacity>
       ) : (
         <View style={styles.sidePlaceholder} />
@@ -35,13 +37,13 @@ export function StepControls({
         style={styles.primaryButton}
       >
         <Text style={styles.primaryLabel}>
-          {isLastStep ? 'Get Started' : 'Next'}
+          {isLastStep ? t('onboarding.getStarted') : t('onboarding.next')}
         </Text>
       </TouchableOpacity>
 
       {!isLastStep ? (
         <TouchableOpacity onPress={onSkip} style={styles.sideButton}>
-          <Text style={styles.sideLabel}>Skip</Text>
+          <Text style={styles.sideLabel}>{t('onboarding.skip')}</Text>
         </TouchableOpacity>
       ) : (
         <View style={styles.sidePlaceholder} />

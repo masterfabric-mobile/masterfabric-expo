@@ -5,6 +5,12 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getSupabaseClient } from './supabase-service';
+import {
+  getAllergenKeywords,
+  recipeContainsAllergen,
+  recipeMatchesDiet,
+  type DietaryPrefsForFilter,
+} from '@/shared/utils/dietary-filter';
 
 export interface RecipeCard {
   id: number;
@@ -14,6 +20,8 @@ export interface RecipeCard {
   time: string;
   difficulty: string;
   categorySlug?: string;
+  /** From recipes.diet_slugs; used for diet filtering */
+  dietSlugs?: string[];
 }
 
 /** Recipe card with compatibility match for ingredient-based search */
@@ -29,15 +37,17 @@ export interface RecipeFilters {
   isFree?: boolean;
   /** Locale for time/difficulty from recipe_translations (e.g. 'en', 'tr') */
   locale?: string;
+  /** When set, recipes containing these allergens are excluded and only recipes matching diet are shown */
+  dietaryPreferences?: DietaryPrefsForFilter | null;
 }
 
 const DEFAULT_TIME = '25 Mins';
 const DEFAULT_DIFFICULTY = 'Easy';
 
 /**
- * Fetch prep_time_minutes and difficulty from recipe_translations for given recipe ids and locale.
- * Requires migration 0010_add_recipe_prep_time_difficulty.sql.
- * On 400 (e.g. columns missing or schema cache stale), retries with recipe_id only and uses defaults.
+ * Fetch recipe_ids from recipe_translations for given ids and locale, with default time/difficulty.
+ * Uses only recipe_id so the request never returns 400 when prep_time_minutes/difficulty
+ * columns are missing (migration 0010_add_recipe_prep_time_difficulty.sql not run).
  */
 async function getRecipeTimeDifficultyMap(
   supabase: SupabaseClient,
@@ -49,38 +59,43 @@ async function getRecipeTimeDifficultyMap(
   try {
     const { data, error } = await supabase
       .from('recipe_translations')
-      .select('recipe_id, prep_time_minutes, difficulty')
+      .select('recipe_id')
       .in('recipe_id', recipeIds)
       .eq('locale', locale);
 
-    if (error) {
-      // 400 often means prep_time_minutes/difficulty columns don't exist (migration 0010 not run)
-      // or PostgREST schema cache is stale. Retry with recipe_id only so request succeeds.
-      const fallback = await supabase
-        .from('recipe_translations')
-        .select('recipe_id')
-        .in('recipe_id', recipeIds)
-        .eq('locale', locale);
-      if (!fallback.error && fallback.data?.length) {
-        for (const row of fallback.data as { recipe_id: number }[]) {
-          map.set(row.recipe_id, { time: DEFAULT_TIME, difficulty: DEFAULT_DIFFICULTY });
-        }
-      }
-      return map;
-    }
+    if (error || !data?.length) return map;
 
-    for (const row of (data ?? []) as {
-      recipe_id: number;
-      prep_time_minutes: number | null;
-      difficulty: string | null;
-    }[]) {
-      const mins = row.prep_time_minutes ?? 25;
-      const timeStr = mins > 0 ? `${mins} Mins` : DEFAULT_TIME;
-      const difficultyStr = (row.difficulty?.trim() || DEFAULT_DIFFICULTY);
-      map.set(row.recipe_id, { time: timeStr, difficulty: difficultyStr });
+    for (const row of data as { recipe_id: number }[]) {
+      map.set(row.recipe_id, { time: DEFAULT_TIME, difficulty: DEFAULT_DIFFICULTY });
     }
   } catch (err) {
     console.warn('getRecipeTimeDifficultyMap error:', err);
+  }
+  return map;
+}
+
+/** Fetch title and description per recipe in the given locale for card display. */
+async function getRecipeTitleDescriptionMap(
+  supabase: SupabaseClient,
+  recipeIds: number[],
+  locale: string
+): Promise<Map<number, { title: string; description: string }>> {
+  const map = new Map<number, { title: string; description: string }>();
+  if (recipeIds.length === 0) return map;
+  try {
+    const { data } = await supabase
+      .from('recipe_translations')
+      .select('recipe_id, title, description')
+      .in('recipe_id', recipeIds)
+      .eq('locale', locale);
+    for (const row of (data ?? []) as { recipe_id: number; title?: string; description?: string }[]) {
+      map.set(row.recipe_id, {
+        title: (row.title ?? '').trim(),
+        description: (row.description ?? '').trim(),
+      });
+    }
+  } catch (err) {
+    console.warn('getRecipeTitleDescriptionMap error:', err);
   }
   return map;
 }
@@ -93,12 +108,14 @@ export async function getCookTonightRecipes(
     if (!supabase) return [];
 
     const limit = filters?.limit ?? 5;
+    const dietaryPrefs = filters?.dietaryPreferences ?? null;
+    const fetchLimit = dietaryPrefs ? Math.max(limit * 4, 20) : limit;
 
     const { data, error } = await supabase
       .from('v_public_recipe_cards')
       .select('recipe_id, title, description, cover_image_url, category_slug')
       .eq('is_free', true)
-      .limit(limit);
+      .limit(fetchLimit);
 
     if (error) {
       if (error.code === 'PGRST205') {
@@ -113,22 +130,143 @@ export async function getCookTonightRecipes(
     const rows = data || [];
     const recipeIds = rows.map((r) => r.recipe_id);
     const locale = filters?.locale ?? 'en';
-    const timeDifficultyMap = await getRecipeTimeDifficultyMap(supabase, recipeIds, locale);
+    const [timeDifficultyMap, titleDescMap] = await Promise.all([
+      getRecipeTimeDifficultyMap(supabase, recipeIds, locale),
+      getRecipeTitleDescriptionMap(supabase, recipeIds, locale),
+    ]);
 
-    return rows.map((r) => {
+    let cards: RecipeCard[] = rows.map((r) => {
       const meta = timeDifficultyMap.get(r.recipe_id);
+      const tr = titleDescMap.get(r.recipe_id);
+      const title = (tr?.title && tr.title.length > 0) ? tr.title : (r.title || `Recipe #${r.recipe_id}`);
+      const description = (tr?.description && tr.description.length > 0) ? tr.description : (r.description || '');
       return {
         id: r.recipe_id,
-        title: r.title || `Recipe #${r.recipe_id}`,
-        description: r.description || '',
+        title,
+        description,
         imageUrl: r.cover_image_url || '',
         time: meta?.time ?? DEFAULT_TIME,
         difficulty: meta?.difficulty ?? DEFAULT_DIFFICULTY,
         categorySlug: (r as { category_slug?: string }).category_slug,
       };
     });
+
+    if (dietaryPrefs) {
+      cards = await filterRecipesByDietary(cards, dietaryPrefs);
+      cards = cards.slice(0, limit);
+    }
+
+    return cards;
   } catch (err) {
     console.error('getCookTonightRecipes error:', err);
+    return [];
+  }
+}
+
+/**
+ * Map from app category slug (home UI) to Supabase categories.slug.
+ * Seed uses: breakfast, soups, salads, main-courses, desserts, appetizers.
+ */
+const SUPABASE_CATEGORY_SLUG_MAP: Record<string, string> = {
+  breakfast: 'breakfast',
+  lunch: 'main-courses',
+  dinner: 'main-courses',
+  snack: 'appetizers',
+  dessert: 'desserts',
+  soup: 'soups',
+  salad: 'salads',
+  appetizer: 'appetizers',
+};
+
+/** Category slug + i18n key + image for home categories carousel */
+export const RECIPE_CATEGORIES: { slug: string; labelKey: string; imageUrl: string }[] = [
+  { slug: 'breakfast', labelKey: 'home.categoryBreakfast', imageUrl: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&q=80' },
+  { slug: 'lunch', labelKey: 'home.categoryLunch', imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80' },
+  { slug: 'dinner', labelKey: 'home.categoryDinner', imageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80' },
+  { slug: 'snack', labelKey: 'home.categorySnack', imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&q=80' },
+  { slug: 'dessert', labelKey: 'home.categoryDessert', imageUrl: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80' },
+  { slug: 'soup', labelKey: 'home.categorySoup', imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&q=80' },
+  { slug: 'salad', labelKey: 'home.categorySalad', imageUrl: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80' },
+  { slug: 'appetizer', labelKey: 'home.categoryAppetizer', imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&q=80' },
+];
+
+export interface RecipesByCategoryOptions {
+  limit?: number;
+  locale?: string;
+  dietaryPreferences?: DietaryPrefsForFilter | null;
+}
+
+/**
+ * Resolve app category slug to Supabase categories.slug (for v_public_recipe_cards).
+ * Uses SUPABASE_CATEGORY_SLUG_MAP so UI slugs (e.g. soup, dessert) match DB slugs (soups, desserts).
+ */
+function resolveCategorySlugForDb(appSlug: string): string {
+  const key = appSlug.trim().toLowerCase();
+  return SUPABASE_CATEGORY_SLUG_MAP[key] ?? key;
+}
+
+/**
+ * Fetch recipe cards by category (e.g. for home categories section).
+ * Uses v_public_recipe_cards; titles/descriptions come from recipe_translations in the requested locale.
+ */
+export async function getRecipesByCategory(
+  categorySlug: string,
+  options?: RecipesByCategoryOptions
+): Promise<RecipeCard[]> {
+  if (!categorySlug?.trim()) return [];
+  const limit = options?.limit ?? 20;
+  const locale = options?.locale ?? 'en';
+  const dietaryPrefs = options?.dietaryPreferences ?? null;
+  const fetchLimit = dietaryPrefs ? Math.max(limit * 3, 40) : limit;
+  const dbSlug = resolveCategorySlugForDb(categorySlug);
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase) return [];
+
+    const { data, error } = await supabase
+      .from('v_public_recipe_cards')
+      .select('recipe_id, title, description, cover_image_url, category_slug')
+      .eq('is_free', true)
+      .eq('category_slug', dbSlug)
+      .limit(fetchLimit);
+
+    if (error) {
+      console.warn('getRecipesByCategory error:', error);
+      return [];
+    }
+    const rows = data ?? [];
+
+    if (rows.length === 0) return [];
+
+    const recipeIds = rows.map((r) => r.recipe_id);
+    const [timeDifficultyMap, titleDescMap] = await Promise.all([
+      getRecipeTimeDifficultyMap(supabase, recipeIds, locale),
+      getRecipeTitleDescriptionMap(supabase, recipeIds, locale),
+    ]);
+
+    let cards: RecipeCard[] = rows.map((r) => {
+      const meta = timeDifficultyMap.get(r.recipe_id);
+      const tr = titleDescMap.get(r.recipe_id);
+      const title = (tr?.title && tr.title.length > 0) ? tr.title : (r.title || `Recipe #${r.recipe_id}`);
+      const description = (tr?.description && tr.description.length > 0) ? tr.description : (r.description || '');
+      return {
+        id: r.recipe_id,
+        title,
+        description,
+        imageUrl: r.cover_image_url || '',
+        time: meta?.time ?? DEFAULT_TIME,
+        difficulty: meta?.difficulty ?? DEFAULT_DIFFICULTY,
+        categorySlug: (r as { category_slug?: string }).category_slug,
+      };
+    });
+
+    if (dietaryPrefs) {
+      cards = await filterRecipesByDietary(cards, dietaryPrefs);
+      cards = cards.slice(0, limit);
+    }
+    return cards;
+  } catch (err) {
+    console.error('getRecipesByCategory error:', err);
     return [];
   }
 }
@@ -184,10 +322,12 @@ async function fetchRecipesFromTable(limit: number): Promise<RecipeCard[]> {
  * Get ingredient names per recipe (first variant).
  * Fetches both 'en' and 'tr' from ingredient_translations so user input in either
  * language (e.g. "yumurta" or "egg") matches the same recipe ingredient.
+ * displayName is in the requested locale so UI shows ingredient names in user's language.
  * Returns Map<recipeId, { displayName, matchSet }[]> — one item per ingredient with its name variants.
  */
 async function getRecipeIngredientNamesMap(
-  recipeIds: number[]
+  recipeIds: number[],
+  displayLocale: string = 'en'
 ): Promise<Map<number, { displayName: string; matchSet: Set<string> }[]>> {
   const supabase = getSupabaseClient();
   const map = new Map<number, { displayName: string; matchSet: Set<string> }[]>();
@@ -225,17 +365,32 @@ async function getRecipeIngredientNamesMap(
 
     const idToDisplay = new Map<number, string>();
     const idToAllNames = new Map<number, string[]>();
-    for (const row of names as { ingredient_id: number; name: string; locale: string }[]) {
+    const rows = names as { ingredient_id: number; name: string; locale: string }[];
+    for (const row of rows) {
       const name = (row.name ?? '').trim();
       if (!name) continue;
-      if (row.locale === 'en') idToDisplay.set(row.ingredient_id, name);
       const list = idToAllNames.get(row.ingredient_id) ?? [];
       if (!list.includes(name)) list.push(name);
       idToAllNames.set(row.ingredient_id, list);
     }
-    for (const row of names as { ingredient_id: number; name: string; locale: string }[]) {
+    // Prefer display name in requested locale, then 'en', then any
+    for (const row of rows) {
       const id = row.ingredient_id;
-      if (!idToDisplay.has(id)) idToDisplay.set(id, (row.name ?? '').trim());
+      const name = (row.name ?? '').trim();
+      if (!name) continue;
+      if (row.locale === displayLocale) idToDisplay.set(id, name);
+    }
+    for (const row of rows) {
+      const id = row.ingredient_id;
+      const name = (row.name ?? '').trim();
+      if (!name) continue;
+      if (!idToDisplay.has(id) && row.locale === 'en') idToDisplay.set(id, name);
+    }
+    for (const row of rows) {
+      const id = row.ingredient_id;
+      const name = (row.name ?? '').trim();
+      if (!name) continue;
+      if (!idToDisplay.has(id)) idToDisplay.set(id, name);
     }
 
     const seen = new Set<string>();
@@ -266,6 +421,60 @@ function normalizeForMatch(s: string): string {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, ' ');
+}
+
+/** Fetch diet_slugs from recipes table for given ids (for diet filtering). */
+async function getRecipeDietSlugsMap(
+  recipeIds: number[]
+): Promise<Map<number, string[]>> {
+  const supabase = getSupabaseClient();
+  const map = new Map<number, string[]>();
+  if (!supabase || recipeIds.length === 0) return map;
+  try {
+    const { data } = await supabase
+      .from('recipes')
+      .select('id, diet_slugs')
+      .in('id', recipeIds);
+    for (const row of (data ?? []) as { id: number; diet_slugs?: string[] | null }[]) {
+      map.set(row.id, Array.isArray(row.diet_slugs) ? row.diet_slugs : []);
+    }
+  } catch (err) {
+    console.warn('getRecipeDietSlugsMap error:', err);
+  }
+  return map;
+}
+
+/** Apply dietary filter: exclude allergens, optionally restrict to diet match. */
+async function filterRecipesByDietary<T extends { id: number; dietSlugs?: string[] }>(
+  cards: T[],
+  dietaryPrefs: DietaryPrefsForFilter
+): Promise<T[]> {
+  if (cards.length === 0) return [];
+  const hasAllergyFilter =
+    dietaryPrefs.allergySlugs.length > 0 || dietaryPrefs.customAllergies.length > 0;
+  const hasDietFilter = dietaryPrefs.dietSlugs.length > 0;
+  if (!hasAllergyFilter && !hasDietFilter) return cards;
+
+  const recipeIds = cards.map((c) => c.id);
+  const [dietSlugsMap, ingredientMap] = await Promise.all([
+    getRecipeDietSlugsMap(recipeIds),
+    hasAllergyFilter ? getRecipeIngredientNamesMap(recipeIds) : Promise.resolve(new Map()),
+  ]);
+  const allergenKeywords = getAllergenKeywords(
+    dietaryPrefs.allergySlugs,
+    dietaryPrefs.customAllergies
+  );
+
+  return cards.filter((card) => {
+    if (hasAllergyFilter) {
+      const ingredients = ingredientMap.get(card.id) ?? [];
+      if (recipeContainsAllergen(ingredients, allergenKeywords)) return false;
+    }
+    const recipeDietSlugs = dietSlugsMap.get(card.id) ?? card.dietSlugs ?? [];
+    if (hasDietFilter && !recipeMatchesDiet(recipeDietSlugs, dietaryPrefs.dietSlugs))
+      return false;
+    return true;
+  });
 }
 
 /**
@@ -312,13 +521,14 @@ function computeMatch(
  */
 export async function getRecipesByIngredients(
   userIngredients: string[],
-  options?: { limit?: number; locale?: string }
+  options?: { limit?: number; locale?: string; dietaryPreferences?: DietaryPrefsForFilter | null }
 ): Promise<RecipeCardWithMatch[]> {
   const limit = options?.limit ?? 20;
   const normalizedUser = userIngredients.map((i) => i.trim()).filter(Boolean);
   const locale = options?.locale ?? 'en';
+  const dietaryPreferences = options?.dietaryPreferences ?? null;
   if (normalizedUser.length === 0) {
-    const list = await getCookTonightRecipes({ limit, locale });
+    const list = await getCookTonightRecipes({ limit, locale, dietaryPreferences });
     return list.map((r) => ({
       ...r,
       matchPercent: 0,
@@ -328,11 +538,11 @@ export async function getRecipesByIngredients(
     }));
   }
 
-  const cards = await getCookTonightRecipes({ limit, locale });
+  const cards = await getCookTonightRecipes({ limit, locale, dietaryPreferences });
   if (cards.length === 0) return [];
 
   const recipeIds = cards.map((c) => c.id);
-  const ingredientMap = await getRecipeIngredientNamesMap(recipeIds);
+  const ingredientMap = await getRecipeIngredientNamesMap(recipeIds, locale);
 
   const withMatch: RecipeCardWithMatch[] = cards.map((card) => {
     const items = ingredientMap.get(card.id) ?? [];
@@ -356,36 +566,49 @@ export async function getRecipesByIngredients(
 /** Search recipes by title (for Recipe Search screen) */
 export async function searchRecipes(
   query: string,
-  options?: { locale?: string }
+  options?: { locale?: string; dietaryPreferences?: DietaryPrefsForFilter | null }
 ): Promise<RecipeCard[]> {
   const locale = options?.locale ?? 'en';
-  if (!query.trim()) return getCookTonightRecipes({ limit: 10, locale });
+  const dietaryPreferences = options?.dietaryPreferences ?? null;
+  if (!query.trim()) return getCookTonightRecipes({ limit: 10, locale, dietaryPreferences });
   try {
     const supabase = getSupabaseClient();
     if (!supabase) return [];
 
+    const fetchLimit = dietaryPreferences ? 60 : 20;
     const { data: cards } = await supabase
       .from('v_public_recipe_cards')
       .select('recipe_id, title, description, cover_image_url, category_slug')
       .eq('is_free', true)
       .ilike('title', `%${query.trim()}%`)
-      .limit(20);
+      .limit(fetchLimit);
 
     if (cards?.length) {
       const recipeIds = cards.map((r) => r.recipe_id);
-      const timeDifficultyMap = await getRecipeTimeDifficultyMap(supabase, recipeIds, locale);
-      return cards.map((r) => {
+      const [timeDifficultyMap, titleDescMap] = await Promise.all([
+        getRecipeTimeDifficultyMap(supabase, recipeIds, locale),
+        getRecipeTitleDescriptionMap(supabase, recipeIds, locale),
+      ]);
+      let result: RecipeCard[] = cards.map((r) => {
         const meta = timeDifficultyMap.get(r.recipe_id);
+        const tr = titleDescMap.get(r.recipe_id);
+        const title = (tr?.title && tr.title.length > 0) ? tr.title : (r.title || `Recipe #${r.recipe_id}`);
+        const description = (tr?.description && tr.description.length > 0) ? tr.description : (r.description || '');
         return {
           id: r.recipe_id,
-          title: r.title || `Recipe #${r.recipe_id}`,
-          description: r.description || '',
+          title,
+          description,
           imageUrl: r.cover_image_url || '',
           time: meta?.time ?? DEFAULT_TIME,
           difficulty: meta?.difficulty ?? DEFAULT_DIFFICULTY,
           categorySlug: (r as { category_slug?: string }).category_slug,
         };
       });
+      if (dietaryPreferences) {
+        result = await filterRecipesByDietary(result, dietaryPreferences);
+        result = result.slice(0, 20);
+      }
+      return result;
     }
 
     const { data: recipes } = await supabase
@@ -403,7 +626,7 @@ export async function searchRecipes(
           .from('recipe_translations')
           .select('title, description')
           .eq('recipe_id', r.id)
-          .eq('locale', 'en')
+          .eq('locale', locale)
           .or(`title.ilike.%${query.trim()}%,description.ilike.%${query.trim()}%`)
           .single();
 
@@ -422,6 +645,64 @@ export async function searchRecipes(
     return withTranslations.filter(Boolean) as RecipeCard[];
   } catch (err) {
     console.error('searchRecipes error:', err);
+    return [];
+  }
+}
+
+/**
+ * Fetch recipe cards by ids (e.g. for favorites list).
+ * Preserves order of ids; missing or unpublished recipes are omitted.
+ * When dietaryPreferences is set, recipes containing user's allergens are excluded.
+ */
+export async function getRecipesByIds(
+  ids: number[],
+  options?: { locale?: string; dietaryPreferences?: DietaryPrefsForFilter | null }
+): Promise<RecipeCard[]> {
+  if (ids.length === 0) return [];
+  const locale = options?.locale ?? 'en';
+  const dietaryPreferences = options?.dietaryPreferences ?? null;
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase) return [];
+
+    const { data: cards, error } = await supabase
+      .from('v_public_recipe_cards')
+      .select('recipe_id, title, description, cover_image_url, category_slug')
+      .in('recipe_id', ids)
+      .eq('is_free', true);
+
+    if (error || !cards?.length) {
+      if (error) console.warn('getRecipesByIds error:', error);
+      return [];
+    }
+
+    const recipeIds = cards.map((r) => r.recipe_id);
+    const [timeDifficultyMap, titleDescMap] = await Promise.all([
+      getRecipeTimeDifficultyMap(supabase, recipeIds, locale),
+      getRecipeTitleDescriptionMap(supabase, recipeIds, locale),
+    ]);
+    let result: RecipeCard[] = cards.map((r) => {
+      const meta = timeDifficultyMap.get(r.recipe_id);
+      const tr = titleDescMap.get(r.recipe_id);
+      const title = (tr?.title && tr.title.length > 0) ? tr.title : (r.title || `Recipe #${r.recipe_id}`);
+      const description = (tr?.description && tr.description.length > 0) ? tr.description : (r.description || '');
+      return {
+        id: r.recipe_id,
+        title,
+        description,
+        imageUrl: r.cover_image_url || '',
+        time: meta?.time ?? DEFAULT_TIME,
+        difficulty: meta?.difficulty ?? DEFAULT_DIFFICULTY,
+        categorySlug: (r as { category_slug?: string }).category_slug,
+      } as RecipeCard;
+    });
+    if (dietaryPreferences) {
+      result = await filterRecipesByDietary(result, dietaryPreferences);
+    }
+    const cardMap = new Map(result.map((c) => [c.id, c]));
+    return ids.filter((id) => cardMap.has(id)).map((id) => cardMap.get(id)!);
+  } catch (err) {
+    console.error('getRecipesByIds error:', err);
     return [];
   }
 }
@@ -466,7 +747,7 @@ export async function getRecipeDetail(
 
     const [cardRes, trRes, stepsRes, variantsRes, statsRes] = await Promise.all([
       supabase.from('v_public_recipe_cards').select('recipe_id, title, description, cover_image_url').eq('recipe_id', id).maybeSingle(),
-      supabase.from('recipe_translations').select('title, description, tips, prep_time_minutes, difficulty').eq('recipe_id', id).eq('locale', locale).maybeSingle(),
+      supabase.from('recipe_translations').select('title, description, tips').eq('recipe_id', id).eq('locale', locale).maybeSingle(),
       supabase.from('recipe_steps').select('step_number, text').eq('recipe_id', id).eq('locale', locale).order('step_number', { ascending: true }),
       supabase.from('recipe_variants').select('id, servings').eq('recipe_id', id).order('servings', { ascending: true }),
       supabase.from('recipe_stats').select('comment_count').eq('recipe_id', id).maybeSingle(),

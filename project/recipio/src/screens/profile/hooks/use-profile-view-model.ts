@@ -4,6 +4,7 @@ import { Alert, Platform } from 'react-native';
 import { useI18n } from '@/shared/i18n';
 import { getSupabaseClient } from '@/shared/services/supabase-service';
 import { syncSessionToStore } from '@/shared/services/profile-service';
+import { storage } from '@/shared/utils/storage';
 import { useProfileStore } from '../store/profile-store';
 
 export function useProfileViewModel() {
@@ -25,8 +26,12 @@ export function useProfileViewModel() {
     const supabase = getSupabaseClient();
     if (!supabase) return;
     setLoading(true);
-    syncSessionToStore(setSignedIn, setStats).finally(() => setLoading(false));
-  }, [setSignedIn, setStats, setLoading]);
+    (async () => {
+      const savedTheme = await storage.getTheme();
+      if (savedTheme) setSettings({ theme: savedTheme });
+      await syncSessionToStore(setSignedIn, setStats, setSettings);
+    })().finally(() => setLoading(false));
+  }, [setSignedIn, setStats, setSettings, setLoading]);
 
   const handleSignInPress = useCallback(() => {
     router.push('/auth');
@@ -56,13 +61,9 @@ export function useProfileViewModel() {
     );
   }, [t, performSignOut]);
 
-  const handleEditProfilePress = useCallback(() => {
-    // TODO: open edit profile / photo picker
-  }, []);
-
   const handleNotificationsPress = useCallback(() => {
-    setSettings({ notifications: !settings.notifications });
-  }, [settings.notifications, setSettings]);
+    router.push('/notifications');
+  }, [router]);
 
   const handleLanguagePress = useCallback(() => {
     const next = locale === 'en' ? 'tr' : 'en';
@@ -73,6 +74,7 @@ export function useProfileViewModel() {
   const handleThemePress = useCallback(() => {
     const next = settings.theme === 'dark' ? 'light' : 'dark';
     setSettings({ theme: next });
+    storage.setTheme(next).catch(() => {});
   }, [settings.theme, setSettings]);
 
   const handleDietaryPreferencesPress = useCallback(() => {
@@ -80,8 +82,8 @@ export function useProfileViewModel() {
   }, [router]);
 
   const handleHelpSupportPress = useCallback(() => {
-    // TODO: navigate to help & support
-  }, []);
+    router.push('/help-support');
+  }, [router]);
 
   return {
     isLoading: useProfileStore((s) => s.isLoading),
@@ -92,7 +94,6 @@ export function useProfileViewModel() {
     locale,
     handleSignInPress,
     handleSignOutPress,
-    handleEditProfilePress,
     handleNotificationsPress,
     handleLanguagePress,
     handleThemePress,

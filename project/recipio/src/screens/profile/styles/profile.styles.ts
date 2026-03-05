@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
 
-export const profileStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: RecipioColors.background,
-  },
+export function createProfileStyles(colors: RecipioColorsPalette) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
   scroll: {
     flex: 1,
   },
@@ -20,7 +21,7 @@ export const profileStyles = StyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: RecipioColors.border,
+    borderBottomColor: colors.border,
   },
   headerSide: {
     minWidth: 40,
@@ -32,7 +33,7 @@ export const profileStyles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: RecipioColors.text,
+    color: colors.text,
   },
   headerButton: {
     padding: 8,
@@ -52,34 +53,23 @@ export const profileStyles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
-  },
-  avatarEditBadge: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: RecipioColors.primaryAccent,
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: colors.border,
   },
   userName: {
     fontSize: 22,
     fontWeight: '700',
-    color: RecipioColors.text,
+    color: colors.text,
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
   },
   guestSubtext: {
     fontSize: 14,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     textAlign: 'center',
     marginTop: 8,
     paddingHorizontal: 24,
@@ -92,7 +82,7 @@ export const profileStyles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     letterSpacing: 0.5,
     marginBottom: 12,
     textTransform: 'uppercase',
@@ -103,10 +93,10 @@ export const profileStyles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
     paddingVertical: 16,
     paddingHorizontal: 12,
     alignItems: 'center',
@@ -115,12 +105,12 @@ export const profileStyles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: '700',
-    color: RecipioColors.primaryAccent,
+    color: colors.primaryAccent,
   },
   statLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: RecipioColors.text,
+    color: colors.text,
     marginTop: 4,
     letterSpacing: 0.3,
     textAlign: 'center',
@@ -131,10 +121,10 @@ export const profileStyles = StyleSheet.create({
     paddingVertical: 16,
   },
   kitchenProCard: {
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
     flexDirection: 'row',
     padding: 16,
@@ -153,16 +143,16 @@ export const profileStyles = StyleSheet.create({
   kitchenProTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: RecipioColors.text,
+    color: colors.text,
   },
   kitchenProDescription: {
     fontSize: 13,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     lineHeight: 18,
     marginBottom: 12,
   },
   kitchenProButton: {
-    backgroundColor: RecipioColors.primaryAccent,
+    backgroundColor: colors.primaryAccent,
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -177,12 +167,30 @@ export const profileStyles = StyleSheet.create({
     width: 100,
     height: 88,
     borderRadius: 12,
-    backgroundColor: RecipioColors.border,
+    backgroundColor: colors.border,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  kitchenProImagePhoto: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+  },
+  kitchenProImageBadge: {
+    position: 'absolute',
+    bottom: 6,
+    right: 6,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   accountSectionTitle: {
     fontSize: 12,
     fontWeight: '600',
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     letterSpacing: 0.5,
     marginBottom: 12,
     textTransform: 'uppercase',
@@ -194,10 +202,10 @@ export const profileStyles = StyleSheet.create({
     paddingBottom: 16,
   },
   settingsCard: {
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   settingsRow: {
@@ -207,7 +215,7 @@ export const profileStyles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: RecipioColors.border,
+    borderBottomColor: colors.border,
     gap: 12,
   },
   settingsRowLast: {
@@ -226,16 +234,16 @@ export const profileStyles = StyleSheet.create({
   settingsRowLabel: {
     fontSize: 16,
     fontWeight: '500',
-    color: RecipioColors.text,
+    color: colors.text,
   },
   settingsRowLabelLogout: {
     fontSize: 16,
     fontWeight: '500',
-    color: RecipioColors.primaryAccent,
+    color: colors.primaryAccent,
   },
   settingsRowValue: {
     fontSize: 15,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
   },
   // Sign in (guest)
   actionsSection: {
@@ -243,7 +251,7 @@ export const profileStyles = StyleSheet.create({
     paddingTop: 24,
   },
   signInButton: {
-    backgroundColor: RecipioColors.primaryAccent,
+    backgroundColor: colors.primaryAccent,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -254,4 +262,5 @@ export const profileStyles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
-});
+  });
+}

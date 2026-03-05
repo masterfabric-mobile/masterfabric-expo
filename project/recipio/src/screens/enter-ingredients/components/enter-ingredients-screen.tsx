@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { getRecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
 import { useEnterIngredientsViewModel } from '../hooks/use-enter-ingredients-view-model';
 import { enterIngredientsStyles } from '../styles/enter-ingredients.styles';
@@ -49,7 +49,7 @@ export function EnterIngredientsScreen() {
     <View style={enterIngredientsStyles.container}>
       <View style={enterIngredientsStyles.header}>
         <TouchableOpacity style={enterIngredientsStyles.backBtn} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+          <Ionicons name="arrow-back" size={24} color={getRecipioColors(false).text} />
         </TouchableOpacity>
         <Text style={enterIngredientsStyles.title}>{t('enterIngredients.title')}</Text>
         <TouchableOpacity
@@ -88,7 +88,7 @@ export function EnterIngredientsScreen() {
             <TextInput
               style={enterIngredientsStyles.input}
               placeholder={t('enterIngredients.placeholder')}
-              placeholderTextColor={RecipioColors.textSecondary}
+              placeholderTextColor={getRecipioColors(false).textSecondary}
               value={inputValue}
               onChangeText={setInputValue}
               onSubmitEditing={handleAddIngredient}
@@ -126,7 +126,7 @@ export function EnterIngredientsScreen() {
                     <Ionicons
                       name="close-circle"
                       size={20}
-                      color={RecipioColors.textSecondary}
+                      color={getRecipioColors(false).textSecondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -146,7 +146,7 @@ export function EnterIngredientsScreen() {
                     key={food}
                     style={[
                       enterIngredientsStyles.suggestionChip,
-                      isAdded && { opacity: 0.6, borderColor: RecipioColors.primaryAccent },
+                      isAdded && { opacity: 0.6, borderColor: getRecipioColors(false).primaryAccent },
                     ]}
                     onPress={() => handleAddSuggestion(food)}
                     activeOpacity={0.7}

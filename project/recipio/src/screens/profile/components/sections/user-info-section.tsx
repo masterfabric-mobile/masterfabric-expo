@@ -1,40 +1,27 @@
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, Text, View } from 'react-native';
 import { useI18n } from '@/shared/i18n';
 import type { ProfileUser } from '../../models/profile-models';
-import { profileStyles } from '../../styles/profile.styles';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { createProfileStyles } from '../../styles/profile.styles';
+import { getDefaultAvatarUrl } from '../../utils/profile-utils';
 
 interface UserInfoSectionProps {
   user: ProfileUser | null;
   isSignedIn: boolean;
-  onEditPress?: () => void;
+  profileStyles: ReturnType<typeof createProfileStyles>;
 }
 
-export function UserInfoSection({ user, isSignedIn, onEditPress }: UserInfoSectionProps) {
+export function UserInfoSection({ user, isSignedIn, profileStyles }: UserInfoSectionProps) {
   const { t } = useI18n();
+  const avatarUri = user?.photoUrl ?? getDefaultAvatarUrl(user?.id ?? user?.email ?? 'guest');
 
   return (
     <View style={profileStyles.userSection}>
       <View style={profileStyles.avatarWrapper}>
-        {user?.photoUrl ? (
-          <Image
-            source={{ uri: user.photoUrl }}
-            style={profileStyles.avatar}
-            resizeMode="cover"
-          />
-        ) : (
-          <View style={profileStyles.avatar} />
-        )}
-        {isSignedIn && (
-          <TouchableOpacity
-            style={profileStyles.avatarEditBadge}
-            onPress={onEditPress}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="pencil" size={14} color="#FFFFFF" />
-          </TouchableOpacity>
-        )}
+        <Image
+          source={{ uri: avatarUri }}
+          style={profileStyles.avatar}
+          resizeMode="cover"
+        />
       </View>
       {isSignedIn && user ? (
         <>

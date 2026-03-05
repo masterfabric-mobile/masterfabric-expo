@@ -1,4 +1,4 @@
 export const FAVORITES_PLACEHOLDER = {
-  title: 'Favorites (Phase 2)',
-  subtext: 'Your saved recipes will appear here',
+  title: 'Henüz favori tarif yok',
+  subtext: 'Tarif detayında kalp ikonuna basarak tarifleri favorilere ekleyebilirsiniz. Favorileriniz burada listelenecek.',
 } as const;

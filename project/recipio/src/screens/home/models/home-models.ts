@@ -10,6 +10,7 @@ export interface RecipeCard {
 export interface ActivityItem {
   id: string;
   type: 'saved' | 'finished';
+  recipeId: number;
   recipeTitle: string;
   recipeImageUrl?: string;
   timeAgo: string;

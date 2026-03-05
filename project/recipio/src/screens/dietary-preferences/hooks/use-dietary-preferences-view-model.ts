@@ -4,6 +4,9 @@ import {
   getDietaryPreferences,
   updateDietaryPreferences,
 } from '@/shared/services/dietary-preferences-service';
+import { useSnackbar } from '@/shared/hooks/use-snackbar';
+import { useI18n } from '@/shared/i18n';
+import { useProfileStore } from '@/screens/profile/store/profile-store';
 import type { DietaryPreferences } from '../models/dietary-preferences-models';
 import { DIET_SLUGS, ALLERGY_SLUGS } from '../models/dietary-preferences-models';
 
@@ -15,6 +18,9 @@ const defaultPrefs: DietaryPreferences = {
 
 export function useDietaryPreferencesViewModel() {
   const router = useRouter();
+  const { t } = useI18n();
+  const { success: showSuccess, error: showError } = useSnackbar();
+  const setSettings = useProfileStore((s) => s.setSettings);
   const [prefs, setPrefs] = useState<DietaryPreferences>(defaultPrefs);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -70,8 +76,20 @@ export function useDietaryPreferencesViewModel() {
     setSaving(true);
     const ok = await updateDietaryPreferences(prefs);
     setSaving(false);
-    if (ok) router.back();
-  }, [prefs, router]);
+    if (ok) {
+      setSettings({
+        dietaryPreferences: {
+          dietSlugs: prefs.dietSlugs,
+          allergySlugs: prefs.allergySlugs,
+          customAllergies: prefs.customAllergies,
+        },
+      });
+      showSuccess(t('dietaryPreferences.saveSuccess'));
+      router.back();
+    } else {
+      showError(t('dietaryPreferences.saveError'));
+    }
+  }, [prefs, router, setSettings, t, showSuccess, showError]);
 
   return {
     prefs,

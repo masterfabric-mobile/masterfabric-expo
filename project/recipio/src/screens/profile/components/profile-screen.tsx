@@ -1,17 +1,20 @@
+import { useMemo } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useProfileViewModel } from '../hooks/use-profile-view-model';
 import { UserInfoSection } from './sections/user-info-section';
 import { StatsSection } from './sections/stats-section';
 import { KitchenProSection } from './sections/kitchen-pro-section';
 import { SettingsSection } from './sections/settings-section';
-import { profileStyles } from '../styles/profile.styles';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { createProfileStyles } from '../styles/profile.styles';
 
 export function ProfileScreen() {
+  const colors = useRecipioColors();
+  const profileStyles = useMemo(() => createProfileStyles(colors), [colors]);
   const { t } = useI18n();
   const router = useRouter();
   const {
@@ -27,7 +30,6 @@ export function ProfileScreen() {
     handleThemePress,
     handleDietaryPreferencesPress,
     handleHelpSupportPress,
-    handleEditProfilePress,
     locale,
   } = useProfileViewModel();
 
@@ -40,7 +42,7 @@ export function ProfileScreen() {
             onPress={() => router.back()}
             activeOpacity={0.7}
           >
-            <Ionicons name="chevron-back" size={24} color={RecipioColors.text} />
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
         <Text style={profileStyles.title}>{t('profile.title')}</Text>
@@ -50,13 +52,13 @@ export function ProfileScreen() {
             onPress={handleNotificationsPress}
             activeOpacity={0.7}
           >
-            <Ionicons name="notifications-outline" size={24} color={RecipioColors.text} />
+            <Ionicons name="notifications-outline" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
       </View>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 48 }}>
-          <ActivityIndicator size="large" color={RecipioColors.primaryAccent} />
+          <ActivityIndicator size="large" color={colors.primaryAccent} />
         </View>
       ) : (
       <ScrollView
@@ -67,14 +69,16 @@ export function ProfileScreen() {
         <UserInfoSection
           user={user}
           isSignedIn={isSignedIn}
-          onEditPress={handleEditProfilePress}
+          profileStyles={profileStyles}
         />
-        {isSignedIn && <StatsSection stats={stats} />}
-        <KitchenProSection />
+        {isSignedIn && <StatsSection stats={stats} profileStyles={profileStyles} />}
+        <KitchenProSection profileStyles={profileStyles} />
         <SettingsSection
           settings={settings}
           locale={locale}
           isSignedIn={isSignedIn}
+          profileStyles={profileStyles}
+          colors={colors}
           onLanguagePress={handleLanguagePress}
           onThemePress={handleThemePress}
           onDietaryPreferencesPress={handleDietaryPreferencesPress}

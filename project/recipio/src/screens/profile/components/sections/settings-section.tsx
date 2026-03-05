@@ -2,13 +2,15 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useI18n } from '@/shared/i18n';
 import type { ProfileSettings } from '../../models/profile-models';
-import { profileStyles } from '../../styles/profile.styles';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
+import { createProfileStyles } from '../../styles/profile.styles';
 
 interface SettingsSectionProps {
   settings: ProfileSettings;
   locale: string;
   isSignedIn: boolean;
+  profileStyles: ReturnType<typeof createProfileStyles>;
+  colors: RecipioColorsPalette;
   onLanguagePress?: () => void;
   onThemePress?: () => void;
   onDietaryPreferencesPress?: () => void;
@@ -20,6 +22,8 @@ export function SettingsSection({
   settings,
   locale,
   isSignedIn,
+  profileStyles,
+  colors,
   onLanguagePress,
   onThemePress,
   onDietaryPreferencesPress,
@@ -41,13 +45,13 @@ export function SettingsSection({
         >
           <View style={profileStyles.settingsRowLeft}>
             <View style={profileStyles.settingsRowIcon}>
-              <Ionicons name="heart-outline" size={22} color={RecipioColors.text} />
+              <Ionicons name="heart-outline" size={22} color={colors.text} />
             </View>
             <Text style={profileStyles.settingsRowLabel}>
               {t('profile.settings.dietaryPreferences')}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -57,7 +61,7 @@ export function SettingsSection({
         >
           <View style={profileStyles.settingsRowLeft}>
             <View style={profileStyles.settingsRowIcon}>
-              <Ionicons name="language-outline" size={22} color={RecipioColors.text} />
+              <Ionicons name="language-outline" size={22} color={colors.text} />
             </View>
             <Text style={profileStyles.settingsRowLabel}>
               {t('profile.settings.language')}
@@ -66,7 +70,7 @@ export function SettingsSection({
           <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
             {locale === 'tr' ? t('profile.settings.languageValueTr') : t('profile.settings.languageValue')}
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -76,7 +80,7 @@ export function SettingsSection({
         >
           <View style={profileStyles.settingsRowLeft}>
             <View style={profileStyles.settingsRowIcon}>
-              <Ionicons name="contrast-outline" size={22} color={RecipioColors.text} />
+              <Ionicons name="contrast-outline" size={22} color={colors.text} />
             </View>
             <Text style={profileStyles.settingsRowLabel}>
               {t('profile.settings.theme')}
@@ -85,7 +89,7 @@ export function SettingsSection({
           <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
             {settings.theme === 'dark' ? t('profile.settings.themeValue') : t('profile.settings.themeLight')}
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -95,13 +99,13 @@ export function SettingsSection({
         >
           <View style={profileStyles.settingsRowLeft}>
             <View style={profileStyles.settingsRowIcon}>
-              <Ionicons name="help-circle-outline" size={22} color={RecipioColors.text} />
+              <Ionicons name="help-circle-outline" size={22} color={colors.text} />
             </View>
             <Text style={profileStyles.settingsRowLabel}>
               {t('profile.settings.helpSupport')}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color={RecipioColors.textSecondary} />
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         {isSignedIn && (
@@ -112,7 +116,7 @@ export function SettingsSection({
           >
             <View style={profileStyles.settingsRowLeft}>
               <View style={profileStyles.settingsRowIcon}>
-                <Ionicons name="log-out-outline" size={22} color={RecipioColors.primaryAccent} />
+                <Ionicons name="log-out-outline" size={22} color={colors.primaryAccent} />
               </View>
               <Text style={profileStyles.settingsRowLabelLogout}>
                 {t('profile.signOut')}

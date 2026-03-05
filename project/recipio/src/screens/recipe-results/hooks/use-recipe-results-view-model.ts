@@ -2,10 +2,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo } from 'react';
 import {
   getCookTonightRecipes,
+  getRecipesByCategory,
   getRecipesByIngredients,
   type RecipeCardWithMatch,
 } from '@/shared/services/recipe-service';
 import { useI18n } from '@/shared/i18n';
+import { useProfileStore } from '@/screens/profile/store/profile-store';
 import { useRecipeResultsStore } from '../store/recipe-results-store';
 import {
   parseIngredientsParam,
@@ -28,7 +30,8 @@ function toCardWithMatch(
 export function useRecipeResultsViewModel() {
   const router = useRouter();
   const { locale } = useI18n();
-  const params = useLocalSearchParams<{ ingredients?: string }>();
+  const params = useLocalSearchParams<{ ingredients?: string; category?: string }>();
+  const dietaryPreferences = useProfileStore((s) => s.settings.dietaryPreferences);
   const { recipes, loading, sortType, setRecipes, setLoading, setSortType } =
     useRecipeResultsStore();
 
@@ -38,22 +41,38 @@ export function useRecipeResultsViewModel() {
   );
 
   const ingredientList = parseIngredientsParam(params.ingredients);
+  const categorySlug = typeof params.category === 'string' ? params.category.trim() : '';
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      if (ingredientList.length > 0) {
-        const list = await getRecipesByIngredients(ingredientList, { limit: 20, locale });
-        // Show only recipes with at least one matching ingredient (exclude 0% match)
+      const dietaryPrefs = dietaryPreferences ?? undefined;
+      if (categorySlug) {
+        const list = await getRecipesByCategory(categorySlug, {
+          limit: 30,
+          locale,
+          dietaryPreferences: dietaryPrefs,
+        });
+        setRecipes(list.map(toCardWithMatch));
+      } else if (ingredientList.length > 0) {
+        const list = await getRecipesByIngredients(ingredientList, {
+          limit: 20,
+          locale,
+          dietaryPreferences: dietaryPrefs,
+        });
         setRecipes(list.filter((r) => r.matchPercent > 0));
       } else {
-        const list = await getCookTonightRecipes({ limit: 20, locale });
+        const list = await getCookTonightRecipes({
+          limit: 20,
+          locale,
+          dietaryPreferences: dietaryPrefs,
+        });
         setRecipes(list.map(toCardWithMatch));
       }
     } finally {
       setLoading(false);
     }
-  }, [params.ingredients, locale, setRecipes, setLoading]);
+  }, [params.ingredients, params.category, categorySlug, locale, dietaryPreferences, setRecipes, setLoading]);
 
   useEffect(() => {
     load();
@@ -73,14 +92,17 @@ export function useRecipeResultsViewModel() {
   );
 
   const title =
-    ingredientList.length > 0
-      ? `Recipe Suggestions (${recipes.length})`
-      : 'Recipe results';
+    categorySlug
+      ? `Recipe results`
+      : ingredientList.length > 0
+        ? `Recipe Suggestions (${recipes.length})`
+        : 'Recipe results';
 
   return {
     recipes: sortedRecipes,
     loading,
     ingredientList,
+    categorySlug,
     title,
     sortType,
     setSortType,

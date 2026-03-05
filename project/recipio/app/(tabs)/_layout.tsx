@@ -1,22 +1,16 @@
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-
-const DASHBOARD_COLORS = {
-  background: RecipioColors.background,
-  tabBar: RecipioColors.cardBackground,
-  active: RecipioColors.primaryAccent,
-  inactive: RecipioColors.textSecondary,
-};
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 
 export default function TabsLayout() {
+  const colors = useRecipioColors();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: DASHBOARD_COLORS.tabBar },
-        tabBarActiveTintColor: DASHBOARD_COLORS.active,
-        tabBarInactiveTintColor: DASHBOARD_COLORS.inactive,
+        tabBarStyle: { backgroundColor: colors.cardBackground },
+        tabBarActiveTintColor: colors.primaryAccent,
+        tabBarInactiveTintColor: colors.textSecondary,
       }}
     >
       <Tabs.Screen

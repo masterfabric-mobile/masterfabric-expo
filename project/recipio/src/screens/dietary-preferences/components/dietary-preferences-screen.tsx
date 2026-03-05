@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -9,9 +9,9 @@ import {
   View,
 } from 'react-native';
 import { useI18n } from '@/shared/i18n';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useDietaryPreferencesViewModel } from '../hooks/use-dietary-preferences-view-model';
-import { dietaryPreferencesStyles } from '../styles/dietary-preferences.styles';
+import { createDietaryPreferencesStyles } from '../styles/dietary-preferences.styles';
 import type { DietSlug, AllergySlug } from '../models/dietary-preferences-models';
 
 const DIET_LABEL_KEYS: Record<DietSlug, string> = {
@@ -34,6 +34,8 @@ const ALLERGY_LABEL_KEYS: Record<AllergySlug, string> = {
 
 export function DietaryPreferencesScreen() {
   const { t } = useI18n();
+  const colors = useRecipioColors();
+  const dietaryPreferencesStyles = useMemo(() => createDietaryPreferencesStyles(colors), [colors]);
   const {
     prefs,
     loading,
@@ -58,7 +60,7 @@ export function DietaryPreferencesScreen() {
   if (loading) {
     return (
       <View style={[dietaryPreferencesStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color={RecipioColors.primaryAccent} />
+        <ActivityIndicator size="large" color={colors.primaryAccent} />
       </View>
     );
   }
@@ -68,7 +70,7 @@ export function DietaryPreferencesScreen() {
       <View style={dietaryPreferencesStyles.header}>
         <View style={dietaryPreferencesStyles.headerSide}>
           <TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={12}>
-            <Ionicons name="chevron-back" size={24} color={RecipioColors.text} />
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
         <Text style={dietaryPreferencesStyles.headerTitle}>
@@ -84,7 +86,7 @@ export function DietaryPreferencesScreen() {
       >
         <View style={dietaryPreferencesStyles.section}>
           <View style={dietaryPreferencesStyles.sectionHeader}>
-            <Ionicons name="restaurant-outline" size={20} color={RecipioColors.text} />
+            <Ionicons name="restaurant-outline" size={20} color={colors.text} />
             <Text style={dietaryPreferencesStyles.sectionTitle}>
               {t('dietaryPreferences.diets')}
             </Text>
@@ -118,7 +120,7 @@ export function DietaryPreferencesScreen() {
 
         <View style={dietaryPreferencesStyles.section}>
           <View style={dietaryPreferencesStyles.sectionHeader}>
-            <Ionicons name="warning-outline" size={20} color={RecipioColors.text} />
+            <Ionicons name="warning-outline" size={20} color={colors.text} />
             <Text style={dietaryPreferencesStyles.sectionTitle}>
               {t('dietaryPreferences.allergies')}
             </Text>
@@ -127,7 +129,7 @@ export function DietaryPreferencesScreen() {
             <TextInput
               style={dietaryPreferencesStyles.input}
               placeholder={t('dietaryPreferences.addOtherAllergy')}
-              placeholderTextColor={RecipioColors.textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={customInput}
               onChangeText={setCustomInput}
               returnKeyType="done"

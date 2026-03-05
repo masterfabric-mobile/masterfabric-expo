@@ -24,6 +24,7 @@ const defaultSettings: ProfileSettings = {
   language: 'en',
   theme: 'dark',
   notifications: true,
+  dietaryPreferences: null,
 };
 
 export const useProfileStore = create<ProfileStore>((set) => ({
@@ -43,5 +44,6 @@ export const useProfileStore = create<ProfileStore>((set) => ({
       isSignedIn: false,
       user: null,
       stats: defaultStats,
+      settings: defaultSettings,
     }),
 }));

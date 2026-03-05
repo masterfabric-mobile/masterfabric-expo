@@ -1,12 +1,19 @@
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useI18n } from '@/shared/i18n';
-import { profileStyles } from '../../styles/profile.styles';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { createProfileStyles } from '../../styles/profile.styles';
 
 const GOLD = '#FFD700';
 
-export function KitchenProSection() {
+// Premium kitchen mockup (Unsplash – free to use)
+const KITCHEN_PRO_MOCKUP_URI =
+  'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&q=80';
+
+interface KitchenProSectionProps {
+  profileStyles: ReturnType<typeof createProfileStyles>;
+}
+
+export function KitchenProSection({ profileStyles }: KitchenProSectionProps) {
   const { t } = useI18n();
 
   const handleUpgrade = () => {
@@ -39,7 +46,16 @@ export function KitchenProSection() {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={profileStyles.kitchenProImage} />
+        <View style={profileStyles.kitchenProImage}>
+          <Image
+            source={{ uri: KITCHEN_PRO_MOCKUP_URI }}
+            style={profileStyles.kitchenProImagePhoto}
+            resizeMode="cover"
+          />
+          <View style={profileStyles.kitchenProImageBadge}>
+            <MaterialCommunityIcons name="diamond-stone" size={20} color={GOLD} />
+          </View>
+        </View>
       </View>
     </View>
   );

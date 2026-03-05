@@ -25,7 +25,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function useAuthViewModel() {
   const { t } = useI18n();
   const router = useRouter();
-  const { setSignedIn, setStats } = useProfileStore();
+  const { setSignedIn, setStats, setSettings } = useProfileStore();
   const [activeTab, setActiveTab] = useState<AuthTab>('login');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
@@ -110,7 +110,7 @@ export function useAuthViewModel() {
           setIsSubmitting(false);
           return;
         }
-        const synced = await syncSessionToStore(setSignedIn, setStats);
+        const synced = await syncSessionToStore(setSignedIn, setStats, setSettings);
         if (synced) {
           showAlert(t('auth.loginSuccess'));
           router.replace('/(tabs)/profile');
@@ -139,6 +139,7 @@ export function useAuthViewModel() {
     showAlert,
     setSignedIn,
     setStats,
+    setSettings,
     router,
   ]);
 
@@ -181,7 +182,7 @@ export function useAuthViewModel() {
           return;
         }
         if (data.session) {
-          const synced = await syncSessionToStore(setSignedIn, setStats);
+          const synced = await syncSessionToStore(setSignedIn, setStats, setSettings);
           if (synced) {
             showAlert(t('auth.registrationSuccess'));
             router.replace('/(tabs)/profile');
@@ -223,6 +224,7 @@ export function useAuthViewModel() {
     showAlert,
     setSignedIn,
     setStats,
+    setSettings,
     router,
   ]);
 

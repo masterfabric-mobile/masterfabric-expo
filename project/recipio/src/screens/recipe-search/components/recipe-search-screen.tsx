@@ -1,19 +1,23 @@
+import { useMemo } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useRecipeSearchViewModel } from '../hooks/use-recipe-search-view-model';
-import { recipeSearchStyles } from '../styles/recipe-search.styles';
+import { createRecipeSearchStyles } from '../styles/recipe-search.styles';
 import { RecipeRow } from './recipe-row';
 
 export function RecipeSearchScreen() {
+  const colors = useRecipioColors();
+  const recipeSearchStyles = useMemo(() => createRecipeSearchStyles(colors), [colors]);
   const {
     query,
     recent,
@@ -37,18 +41,18 @@ export function RecipeSearchScreen() {
           style={recipeSearchStyles.backBtn}
           onPress={handleBack}
         >
-          <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <View style={recipeSearchStyles.searchWrap}>
           <Ionicons
             name="search"
             size={20}
-            color={RecipioColors.textSecondary}
+            color={colors.textSecondary}
           />
           <TextInput
             style={recipeSearchStyles.searchInput}
             placeholder={t('recipeSearch.placeholder')}
-            placeholderTextColor={RecipioColors.textSecondary}
+            placeholderTextColor={colors.textSecondary}
             value={query}
             onChangeText={handleQueryChange}
             onSubmitEditing={handleSearch}
@@ -71,25 +75,44 @@ export function RecipeSearchScreen() {
             ) : null}
           </View>
           {recent.length > 0 ? (
-            <View style={recipeSearchStyles.chipWrap}>
+            <View style={recipeSearchStyles.recentList}>
               {recent.map((item) => (
                 <TouchableOpacity
                   key={item.id}
-                  style={recipeSearchStyles.chip}
+                  style={recipeSearchStyles.card}
                   onPress={() => handleRecentSelect(item.id)}
+                  activeOpacity={0.8}
                 >
-                  <Text style={recipeSearchStyles.chipText}>{item.title}</Text>
+                  {item.imageUrl ? (
+                    <Image
+                      source={{ uri: item.imageUrl }}
+                      style={recipeSearchStyles.cardImage}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <View
+                      style={[
+                        recipeSearchStyles.cardImage,
+                        { justifyContent: 'center', alignItems: 'center' },
+                      ]}
+                    >
+                      <Text style={{ fontSize: 28 }}>🍳</Text>
+                    </View>
+                  )}
+                  <View style={recipeSearchStyles.cardBody}>
+                    <Text style={recipeSearchStyles.cardTitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
+                  </View>
                   <TouchableOpacity
+                    style={recipeSearchStyles.recentRowRemove}
                     onPress={async (e) => {
                       e.stopPropagation();
                       await handleRemoveRecent(item.id);
                     }}
+                    hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
                   >
-                    <Ionicons
-                      name="close-circle"
-                      size={18}
-                      color={RecipioColors.textSecondary}
-                    />
+                    <Ionicons name="close-circle" size={24} color={colors.textSecondary} />
                   </TouchableOpacity>
                 </TouchableOpacity>
               ))}
@@ -106,27 +129,29 @@ export function RecipeSearchScreen() {
 
       {loading ? (
         <View style={recipeSearchStyles.empty}>
-          <ActivityIndicator size="large" color={RecipioColors.primaryAccent} />
+          <ActivityIndicator size="large" color={colors.primaryAccent} />
         </View>
       ) : (
         <FlatList
           data={results}
           keyExtractor={(r) => String(r.id)}
           contentContainerStyle={recipeSearchStyles.list}
-            ListEmptyComponent={
-              searched ? (
-                <View style={recipeSearchStyles.empty}>
-                  <Text style={recipeSearchStyles.emptyText}>
-                    {query.trim()
-                      ? t('recipeSearch.noResults')
-                      : t('recipeSearch.typeToSearch')}
-                  </Text>
-                </View>
-              ) : null
-            }
+          ListEmptyComponent={
+            searched ? (
+              <View style={recipeSearchStyles.empty}>
+                <Text style={recipeSearchStyles.emptyText}>
+                  {query.trim()
+                    ? t('recipeSearch.noResults')
+                    : t('recipeSearch.typeToSearch')}
+                </Text>
+              </View>
+            ) : null
+          }
           renderItem={({ item }) => (
             <RecipeRow
               recipe={item}
+              cardStyles={recipeSearchStyles}
+              colors={colors}
               onPress={() => handleRecipePress(item)}
             />
           )}

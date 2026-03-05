@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { getRecipioColors } from '@/shared/constants/recipio-colors';
 import { Platform } from 'react-native';
+
+const colors = getRecipioColors(false);
 
 export const enterIngredientsStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: RecipioColors.background,
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -15,7 +17,7 @@ export const enterIngredientsStyles = StyleSheet.create({
     paddingTop: Platform.OS === 'web' ? 12 : 44,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: RecipioColors.border,
+    borderBottomColor: colors.border,
   },
   backBtn: {
     padding: 8,
@@ -24,7 +26,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '700',
-    color: RecipioColors.text,
+    color: colors.text,
   },
   clearBtn: {
     padding: 8,
@@ -32,7 +34,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   clearBtnText: {
     fontSize: 15,
     fontWeight: '600',
-    color: RecipioColors.primaryAccent,
+    color: colors.primaryAccent,
   },
   scroll: {
     flex: 1,
@@ -45,13 +47,13 @@ export const enterIngredientsStyles = StyleSheet.create({
   sectionLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     letterSpacing: 0.5,
     marginBottom: 8,
   },
   hint: {
     fontSize: 14,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     marginBottom: 16,
   },
   inputRow: {
@@ -63,18 +65,18 @@ export const enterIngredientsStyles = StyleSheet.create({
   input: {
     flex: 1,
     height: 48,
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: RecipioColors.text,
+    color: colors.text,
   },
   addBtn: {
     height: 48,
     paddingHorizontal: 20,
-    backgroundColor: RecipioColors.primaryAccent,
+    backgroundColor: colors.primaryAccent,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -93,7 +95,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   ingredientsTitle: {
     fontSize: 12,
     fontWeight: '600',
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     letterSpacing: 0.5,
   },
   tagList: {
@@ -105,18 +107,18 @@ export const enterIngredientsStyles = StyleSheet.create({
   tag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 20,
     paddingVertical: 8,
     paddingLeft: 14,
     paddingRight: 8,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
     gap: 6,
   },
   tagText: {
     fontSize: 14,
-    color: RecipioColors.text,
+    color: colors.text,
     fontWeight: '500',
   },
   tagRemove: {
@@ -124,7 +126,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   },
   cta: {
     height: 52,
-    backgroundColor: RecipioColors.primaryAccent,
+    backgroundColor: colors.primaryAccent,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -136,7 +138,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   },
   emptyListHint: {
     fontSize: 14,
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     marginBottom: 24,
     fontStyle: 'italic',
   },
@@ -146,7 +148,7 @@ export const enterIngredientsStyles = StyleSheet.create({
   suggestionLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: RecipioColors.textSecondary,
+    color: colors.textSecondary,
     letterSpacing: 0.5,
     marginBottom: 12,
   },
@@ -158,14 +160,14 @@ export const enterIngredientsStyles = StyleSheet.create({
   suggestionChip: {
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: RecipioColors.cardBackground,
+    backgroundColor: colors.cardBackground,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: RecipioColors.border,
+    borderColor: colors.border,
   },
   suggestionChipText: {
     fontSize: 14,
-    color: RecipioColors.text,
+    color: colors.text,
     fontWeight: '500',
   },
 });

@@ -3,7 +3,13 @@
  */
 
 import { getSupabaseClient } from './supabase-service';
-import type { ProfileUser, ProfileStats } from '@/screens/profile/models/profile-models';
+import { getDietaryPreferences } from './dietary-preferences-service';
+import type {
+  ProfileUser,
+  ProfileStats,
+  ProfileSettings,
+  DietaryPreferencesInProfile,
+} from '@/screens/profile/models/profile-models';
 
 export async function getProfileFromSupabase(): Promise<ProfileUser | null> {
   try {
@@ -72,18 +78,35 @@ export async function getProfileStatsFromSupabase(userId: string): Promise<Profi
   }
 }
 
+const defaultDietaryPreferences: DietaryPreferencesInProfile = {
+  dietSlugs: [],
+  allergySlugs: [],
+  customAllergies: [],
+};
+
 export async function syncSessionToStore(
   setSignedIn: (signedIn: boolean, user?: ProfileUser | null) => void,
-  setStats: (stats: Partial<ProfileStats>) => void
+  setStats: (stats: Partial<ProfileStats>) => void,
+  setSettings?: (settings: Partial<ProfileSettings>) => void
 ): Promise<boolean> {
   const user = await getProfileFromSupabase();
   if (!user) {
     setSignedIn(false, null);
     setStats({ favorites: 0, recipesCooked: 0, dayStreak: 0 });
+    if (setSettings) setSettings({ dietaryPreferences: null });
     return false;
   }
-  const stats = await getProfileStatsFromSupabase(user.id);
+  const [stats, dietaryPrefs] = await Promise.all([
+    getProfileStatsFromSupabase(user.id),
+    getDietaryPreferences(),
+  ]);
   setSignedIn(true, user);
   setStats(stats);
+  if (setSettings) {
+    setSettings({
+      dietaryPreferences:
+        dietaryPrefs ?? defaultDietaryPreferences,
+    });
+  }
   return true;
 }

@@ -1,52 +1,79 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Text, View } from 'react-native';
-import { dashboardStyles } from '../styles/dashboard.styles';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { useI18n } from '@/shared/i18n';
+import { createHomeStyles } from '../styles/home.styles';
 import type { CurrentPlan } from '../models/home-models';
 
-interface CurrentPlanCardProps extends CurrentPlan {}
+interface CurrentPlanCardProps extends CurrentPlan {
+  homeStyles: ReturnType<typeof createHomeStyles>;
+  onPress?: () => void;
+}
 
 export function CurrentPlanCard({
+  homeStyles,
   name,
   isActive,
   recipesSaved,
   recipesLimit,
+  onPress,
 }: CurrentPlanCardProps) {
-  const progress = Math.min((recipesSaved / recipesLimit) * 100, 100);
+  const { t } = useI18n();
+  const progress = recipesLimit > 0 ? Math.min((recipesSaved / recipesLimit) * 100, 100) : 0;
 
-  return (
-    <View style={dashboardStyles.planCard}>
-      <View style={dashboardStyles.planHeader}>
-        <Text style={dashboardStyles.planTitle}>CURRENT PLAN</Text>
-        {isActive && (
-          <View style={dashboardStyles.planStatus}>
-            <View style={dashboardStyles.planStatusBadge}>
+  const content = (
+    <>
+      <View style={homeStyles.planHeader}>
+        <Text style={homeStyles.planTitle}>{t('home.currentPlan')}</Text>
+        {isActive && name ? (
+          <View style={homeStyles.planStatus}>
+            <View style={homeStyles.planStatusBadge}>
               <Ionicons name="checkmark" size={12} color="#FFFFFF" />
             </View>
-            <Text style={dashboardStyles.planStatusText}>Active</Text>
+            <Text style={homeStyles.planStatusText}>{t('home.active')}</Text>
           </View>
-        )}
+        ) : null}
       </View>
-      <Text style={dashboardStyles.planName}>{name}</Text>
-      <Text style={dashboardStyles.planDescription}>Monthly Recipes Saved</Text>
-      <View style={dashboardStyles.progressBarContainer}>
-        <View style={[dashboardStyles.progressBarBg, { flex: 1 }]}>
-          <View
-            style={[
-              dashboardStyles.progressBar,
-              {
-                width: `${progress}%`,
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                bottom: 0,
-              },
-            ]}
-          />
-        </View>
-        <Text style={dashboardStyles.progressText}>
-          {recipesSaved}/{recipesLimit}
-        </Text>
-      </View>
-    </View>
+      {name ? (
+        <>
+          <Text style={homeStyles.planName}>{name}</Text>
+          <Text style={homeStyles.planDescription}>{t('home.monthlyRecipesSaved')}</Text>
+          <View style={homeStyles.progressBarContainer}>
+            <View style={[homeStyles.progressBarBg, { flex: 1 }]}>
+              <View
+                style={[
+                  homeStyles.progressBar,
+                  {
+                    width: `${progress}%`,
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                  },
+                ]}
+              />
+            </View>
+            <Text style={homeStyles.progressText}>
+              {recipesSaved}/{recipesLimit}
+            </Text>
+          </View>
+        </>
+      ) : (
+        <Text style={homeStyles.planDescription}>{t('home.noPlanSubtext')}</Text>
+      )}
+    </>
   );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={homeStyles.planCard}
+        onPress={onPress}
+        activeOpacity={0.85}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return <View style={homeStyles.planCard}>{content}</View>;
 }

@@ -9,16 +9,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useEffect, useRef } from 'react';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import { useEffect, useMemo, useRef } from 'react';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useI18n } from '@/shared/i18n';
 import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
+import { ConfirmModal } from '@/shared/components/ConfirmModal';
 import { useRecipeDetailViewModel } from '../hooks/use-recipe-detail-view-model';
-import { recipeDetailStyles } from '../styles/recipe-detail.styles';
+import { createRecipeDetailStyles } from '../styles/recipe-detail.styles';
 import { SERVINGS_OPTIONS } from '../models/recipe-detail-models';
 
 export function RecipeDetailScreen() {
   const containerRef = useRef<View>(null);
+  const colors = useRecipioColors();
+  const recipeDetailStyles = useMemo(() => createRecipeDetailStyles(colors), [colors]);
   const {
     recipe,
     loading,
@@ -27,6 +30,10 @@ export function RecipeDetailScreen() {
     toggleFavorite,
     onServingsChange,
     handleBack,
+    handleStartCooking,
+    removeFavoriteModalVisible,
+    closeRemoveFavoriteModal,
+    confirmRemoveFavorite,
   } = useRecipeDetailViewModel();
   const { t } = useI18n();
 
@@ -46,7 +53,7 @@ export function RecipeDetailScreen() {
       >
         <ActivityIndicator
           size="large"
-          color={RecipioColors.primaryAccent}
+          color={colors.primaryAccent}
         />
       </View>
     );
@@ -61,7 +68,7 @@ export function RecipeDetailScreen() {
             {
               position: 'relative',
               paddingTop: Platform.OS === 'web' ? 12 : 44,
-              backgroundColor: RecipioColors.background,
+              backgroundColor: colors.background,
             },
           ]}
         >
@@ -71,9 +78,9 @@ export function RecipeDetailScreen() {
             activeOpacity={0.7}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
-            accessibilityLabel="Go back"
+            accessibilityLabel={t('common.goBack')}
           >
-            <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+            <Ionicons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
         <View style={recipeDetailStyles.error}>
@@ -114,7 +121,7 @@ export function RecipeDetailScreen() {
           activeOpacity={0.7}
           hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
           accessibilityRole="button"
-          accessibilityLabel="Go back"
+          accessibilityLabel={t('common.goBack')}
         >
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
@@ -125,7 +132,7 @@ export function RecipeDetailScreen() {
           <Ionicons
             name={favorite ? 'heart' : 'heart-outline'}
             size={24}
-            color={favorite ? RecipioColors.error : '#FFFFFF'}
+            color={favorite ? colors.error : '#FFFFFF'}
           />
         </TouchableOpacity>
       </View>
@@ -143,7 +150,7 @@ export function RecipeDetailScreen() {
               <Ionicons
                 name="star"
                 size={16}
-                color={RecipioColors.primaryAccent}
+                color={colors.primaryAccent}
               />
               <Text style={recipeDetailStyles.metaText}>
                 {recipe.rating} ({recipe.reviewCount ?? 0})
@@ -154,7 +161,7 @@ export function RecipeDetailScreen() {
             <Ionicons
               name="time-outline"
               size={16}
-              color={RecipioColors.textSecondary}
+              color={colors.textSecondary}
             />
             <Text style={recipeDetailStyles.metaText}>{formatRecipeTime(t, recipe.time)}</Text>
           </View>
@@ -162,14 +169,14 @@ export function RecipeDetailScreen() {
             <Ionicons
               name="restaurant-outline"
               size={16}
-              color={RecipioColors.textSecondary}
+              color={colors.textSecondary}
             />
             <Text style={recipeDetailStyles.metaText}>{formatRecipeDifficulty(t, recipe.difficulty)}</Text>
           </View>
         </View>
 
         <View style={recipeDetailStyles.servingsRow}>
-          <Text style={recipeDetailStyles.servingsLabel}>SERVINGS</Text>
+          <Text style={recipeDetailStyles.servingsLabel}>{t('recipeDetail.servings')}</Text>
           <View style={recipeDetailStyles.servingsPills}>
             {SERVINGS_OPTIONS.map((n) => (
               <TouchableOpacity
@@ -193,7 +200,7 @@ export function RecipeDetailScreen() {
             ))}
           </View>
           <Text style={[recipeDetailStyles.metaText, { marginTop: 6 }]}>
-            {servings} kişilik
+            {t('recipeDetail.servingsFor', { count: servings })}
           </Text>
         </View>
 
@@ -223,26 +230,26 @@ export function RecipeDetailScreen() {
                   recipeDetailStyles.nutritionLabelKcal,
                 ]}
               >
-                Kcal
+                {t('recipeDetail.nutritionKcal')}
               </Text>
             </View>
             <View style={recipeDetailStyles.nutritionCard}>
               <Text style={recipeDetailStyles.nutritionValue}>
                 {recipe.nutrition.protein}g
               </Text>
-              <Text style={recipeDetailStyles.nutritionLabel}>PROT</Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>{t('recipeDetail.nutritionProt')}</Text>
             </View>
             <View style={recipeDetailStyles.nutritionCard}>
               <Text style={recipeDetailStyles.nutritionValue}>
                 {recipe.nutrition.carbs}g
               </Text>
-              <Text style={recipeDetailStyles.nutritionLabel}>CARB</Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>{t('recipeDetail.nutritionCarb')}</Text>
             </View>
             <View style={recipeDetailStyles.nutritionCard}>
               <Text style={recipeDetailStyles.nutritionValue}>
                 {recipe.nutrition.fat}g
               </Text>
-              <Text style={recipeDetailStyles.nutritionLabel}>FAT</Text>
+              <Text style={recipeDetailStyles.nutritionLabel}>{t('recipeDetail.nutritionFat')}</Text>
             </View>
           </View>
         )}
@@ -265,7 +272,7 @@ export function RecipeDetailScreen() {
         {recipe.steps && recipe.steps.length > 0 && (
           <>
             <Text style={recipeDetailStyles.stepsSectionTitle}>
-              Preparation
+              {t('recipeDetail.preparation')}
             </Text>
             {recipe.steps.map((step, i) => (
               <View key={`step-${i}`} style={recipeDetailStyles.stepRow}>
@@ -283,16 +290,16 @@ export function RecipeDetailScreen() {
             <Ionicons
               name="bulb"
               size={22}
-              color={RecipioColors.primaryAccent}
+              color={colors.primaryAccent}
             />
             <View style={{ flex: 1 }}>
               <Text
                 style={[
                   recipeDetailStyles.sectionTitle,
-                  { marginBottom: 6, color: RecipioColors.text },
+                  { marginBottom: 6, color: colors.text },
                 ]}
               >
-                Chef's Tip
+                {t('recipeDetail.chefTip')}
               </Text>
               <Text style={recipeDetailStyles.chefTipText}>{recipe.chefTip}</Text>
             </View>
@@ -301,13 +308,23 @@ export function RecipeDetailScreen() {
 
         <TouchableOpacity
           style={recipeDetailStyles.cta}
-          onPress={() => {}}
+          onPress={handleStartCooking}
           activeOpacity={0.8}
         >
           <Ionicons name="flame" size={22} color="#FFFFFF" />
-          <Text style={recipeDetailStyles.ctaText}>Start Cooking</Text>
+          <Text style={recipeDetailStyles.ctaText}>{t('recipeDetail.startCooking')}</Text>
         </TouchableOpacity>
       </ScrollView>
+      <ConfirmModal
+        visible={removeFavoriteModalVisible}
+        title={t('favorites.removeConfirmTitle')}
+        message={t('favorites.removeConfirmMessage')}
+        cancelText={t('favorites.removeConfirmCancel')}
+        confirmText={t('favorites.removeConfirmRemove')}
+        onCancel={closeRemoveFavoriteModal}
+        onConfirm={confirmRemoveFavorite}
+        destructive
+      />
     </View>
   );
 }

@@ -24,7 +24,13 @@ export function useEnterIngredientsViewModel() {
     });
   };
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
 
   return {
     inputValue,

@@ -6,4 +6,5 @@ export type {
   CurrentPlan,
   RecipeCard,
 } from './models/home-models';
+export type { HomeProfile, HomeState } from './store/home-store';
 export { getGreeting } from './utils';

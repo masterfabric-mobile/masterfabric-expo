@@ -4,6 +4,8 @@ const MAX_RECENT = 8;
 export interface RecentRecipe {
   id: number;
   title: string;
+  /** Optional; stored when user opens recipe from search so recent list can show card with image. */
+  imageUrl?: string;
 }
 
 export async function getRecentSearches(): Promise<RecentRecipe[]> {
@@ -24,7 +26,7 @@ export async function saveRecentRecipe(recipe: RecentRecipe): Promise<void> {
   if (!recipe.title?.trim()) return;
   const recent = await getRecentSearches();
   const next = [
-    { id: recipe.id, title: recipe.title.trim() },
+    { id: recipe.id, title: recipe.title.trim(), imageUrl: recipe.imageUrl ?? undefined },
     ...recent.filter((r) => r.id !== recipe.id),
   ].slice(0, MAX_RECENT);
   const AsyncStorage = (
