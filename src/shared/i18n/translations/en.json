@@ -1648,6 +1648,10 @@
     "onesignalHelper": {
       "title": "OneSignal Helper",
       "description": "Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)"
+    },
+    "fcmHelper": {
+      "title": "FCM Helper",
+      "description": "Firebase Cloud Messaging: token, permission, and foreground/opened notifications (iOS/Android)"
     }
   },
   "documentation": {

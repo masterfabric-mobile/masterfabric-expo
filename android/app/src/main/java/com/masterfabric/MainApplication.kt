@@ -1,4 +1,4 @@
-package com.masterfabric.expo.android
+package com.masterfabric
 
 import android.app.Application
 import android.content.res.Configuration

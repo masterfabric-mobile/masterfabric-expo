@@ -1592,6 +1592,10 @@
     "onesignalHelper": {
       "title": "OneSignal Yardımcısı",
       "description": "OneSignal ile uzak push bildirimleri; init, izin, kullanıcı ID ve abonelik (.env'deki App ID)"
+    },
+    "fcmHelper": {
+      "title": "FCM Yardımcısı",
+      "description": "Firebase Cloud Messaging: token, izin ve ön planda/açılan bildirimler (iOS/Android)"
     }
   },
   "documentation": {

@@ -19,7 +19,8 @@
       "supportsTablet": true,
       "icon": "./src/assets/images/app_icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "3"
+      "buildNumber": "3",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +29,8 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.masterfabric.expo.android",
-      "versionCode": 3
+      "versionCode": 3,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
