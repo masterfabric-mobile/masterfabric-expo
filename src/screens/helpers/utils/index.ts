@@ -65,6 +65,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'notifications-outline';
     case 'onesignal-helper':
       return 'notifications-outline';
+    case 'fcm-helper':
+      return 'flame-outline';
     default:
       return 'help-outline';
   }
@@ -121,6 +123,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#FF9500'; // Orange for notification helpers
     case 'onesignal-helper':
       return '#1E88E5'; // Blue for OneSignal/remote push
+    case 'fcm-helper':
+      return '#F5820D'; // Firebase/FCM orange
     default:
       return '#8E8E93';
   }
@@ -324,6 +328,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     icon: 'notifications-outline',
     color: '#1E88E5',
     route: '/onesignal-helper',
+    available: true,
+    category: 'device-helpers'
+  },
+  {
+    id: 'fcm-helper',
+    name: 'FCM Helper',
+    description: 'Firebase Cloud Messaging: token, permission, and foreground/opened notifications (iOS/Android)',
+    icon: 'flame-outline',
+    color: '#F5820D',
+    route: '/fcm-helper',
     available: true,
     category: 'device-helpers'
   }

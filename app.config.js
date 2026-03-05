@@ -30,7 +30,13 @@ const appJson = require('./app.json');
 // OneSignal plugin must be first so native module is linked in development builds (expo run:ios/android).
 const isProduction = process.env.EXPO_PUBLIC_ENVIRONMENT === 'production' || process.env.NODE_ENV === 'production';
 const oneSignalPlugin = ['onesignal-expo-plugin', { mode: isProduction ? 'production' : 'development' }];
-const plugins = [oneSignalPlugin, ...(appJson.expo.plugins || [])];
+const plugins = [
+  oneSignalPlugin,
+  '@react-native-firebase/app',
+  '@react-native-firebase/messaging',
+  ['expo-build-properties', { ios: { useFrameworks: 'static' } }],
+  ...(appJson.expo.plugins || []),
+];
 
 module.exports = {
   expo: {

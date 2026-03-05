@@ -40,6 +40,7 @@ target 'MasterFabric' do
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
+  pod 'GoogleUtilities', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -50,19 +51,19 @@ target 'MasterFabric' do
   )
 
   post_install do |installer|
+    # Firebase static libs: GoogleUtilities must define modules for Swift pods (FirebaseCoreInternal)
+    installer.pods_project.targets.each do |target|
+      if target.name == 'GoogleUtilities'
+        target.build_configurations.each do |config|
+          config.build_settings['DEFINES_MODULE'] = 'YES'
+        end
+      end
+    end
     react_native_post_install(
       installer,
       config[:reactNativePath],
       :mac_catalyst_enabled => false,
       :ccache_enabled => ccache_enabled?(podfile_properties),
     )
-
-    # Don't treat third-party Pod warnings as errors (EXAV, RNScreens, ExpoModulesCore, etc. have nullability/umbrella header warnings)
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
-        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
-      end
-    end
   end
 end
