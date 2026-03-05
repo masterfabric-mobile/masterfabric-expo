@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.masterfabric"
+    namespace "com.masterfabric.expo.android"
     defaultConfig {
-        applicationId "com.masterfabric"
+        applicationId "com.masterfabric.expo.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
