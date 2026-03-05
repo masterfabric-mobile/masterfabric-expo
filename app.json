@@ -20,7 +20,6 @@
       "icon": "./src/assets/images/app_icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
       "buildNumber": "3",
-<<<<<<< HEAD
       "infoPlist": {
         "NSCalendarsUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
         "NSCalendarsFullAccessUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
@@ -34,10 +33,8 @@
         "NSLocationWhenInUseUsageDescription": "Uygulamanın konum tabanlı özellikler için konum erişimine ihtiyacı var.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Uygulamanın arka planda konum tabanlı özellikler için konum erişimine ihtiyacı var.",
         "NSFaceIDUsageDescription": "Uygulamanın güvenli giriş için Face ID erişimine ihtiyacı var."
-      }
-=======
+      },
       "googleServicesFile": "./GoogleService-Info.plist"
->>>>>>> upstream/dev
     },
     "android": {
       "adaptiveIcon": {
