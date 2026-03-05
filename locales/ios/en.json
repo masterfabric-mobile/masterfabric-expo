@@ -1,0 +1,13 @@
+{
+  "NSCameraUsageDescription": "This app needs camera access to take photos and videos.",
+  "NSMicrophoneUsageDescription": "This app needs microphone access to record audio.",
+  "NSPhotoLibraryUsageDescription": "This app needs gallery access to select photos and videos.",
+  "NSPhotoLibraryAddUsageDescription": "This app needs permission to save photos and videos to your library.",
+  "NSLocationWhenInUseUsageDescription": "This app needs your location to show nearby places.",
+  "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs your location to track your route.",
+  "NSLocationAlwaysUsageDescription": "This app needs background location to track your route.",
+  "NSContactsUsageDescription": "This app needs contacts access to help you share content.",
+  "NSCalendarsUsageDescription": "This app needs calendar access to schedule events.",
+  "NSFaceIDUsageDescription": "This app uses Face ID for secure sign-in.",
+  "NSBluetoothAlwaysUsageDescription": "This app needs Bluetooth to connect to nearby devices."
+}

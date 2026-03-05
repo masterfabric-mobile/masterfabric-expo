@@ -72,9 +72,6 @@
   "devDependencies": {
     "@types/react": "~19.1.10",
     "@types/react-native": "^0.72.0",
-    "expo-battery": "^10.0.8",
-    "expo-notifications": "^0.28.0",
-    "expo-web-browser": "^15.0.10",
     "typescript": "^5.0.0"
   },
   "repository": {
@@ -86,6 +83,12 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
+    "glob": "^13.0.0",
+    "minimatch": "^10.2.1",
     "react-native-get-random-values": "~1.11.0"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "glob": "^13.0.0"
   }
 }
