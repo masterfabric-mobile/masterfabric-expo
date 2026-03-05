@@ -27,6 +27,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "xcode": "open ios/MasterFabric.xcworkspace",
     "web": "expo start --web",
     "build:ios": "./scripts/build-ipa.sh",
     "build:ios:eas": "./scripts/build-ipa.sh eas",
