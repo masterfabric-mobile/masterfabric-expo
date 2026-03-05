@@ -33,6 +33,7 @@
     "clean:android": "node -e \"const fs=require('fs'),p='android/app/build',q='android/build';[p,q].forEach(d=>{try{fs.rmSync(d,{recursive:true});console.log('Removed '+d)}catch(e){}})\"",
     "clean:ios": "node -e \"const fs=require('fs'),d='ios/build';try{fs.rmSync(d,{recursive:true});console.log('Removed '+d)}catch(e){}\"",
     "clean": "npm run clean:android && npm run clean:ios",
+    "xcode": "open ios/MasterFabric.xcworkspace",
     "web": "expo start --web",
     "build:ios": "./scripts/build-ipa.sh",
     "build:ios:eas": "./scripts/build-ipa.sh eas",

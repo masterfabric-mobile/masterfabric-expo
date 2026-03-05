@@ -34,7 +34,11 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Uygulamanın arka planda konum tabanlı özellikler için konum erişimine ihtiyacı var.",
         "NSFaceIDUsageDescription": "Uygulamanın güvenli giriş için Face ID erişimine ihtiyacı var."
       },
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"],
+        "FirebaseAppDelegateProxyEnabled": true
+      }
     },
     "android": {
       "adaptiveIcon": {
