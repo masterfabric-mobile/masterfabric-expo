@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "740103328934",
+    "project_id": "masterfabric-expo-9b4ac",
+    "storage_bucket": "masterfabric-expo-9b4ac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:740103328934:android:b66827811633c742db5067",
+        "android_client_info": {
+          "package_name": "com.masterfabric.expo.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC01aqcmu6ELqdLD_F38rG_WKxsQ-RZ4zw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
