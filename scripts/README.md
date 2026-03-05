@@ -470,9 +470,10 @@ grep -E "versionName|versionCode" android/app/src/main/AndroidManifest.xml
 # Build and run on simulator
 npm run ios
 
-# Or open Xcode
-open ios/MasterFabric.xcworkspace
-# Then select a simulator and press Cmd+R
+# Or open Xcode (from repo root; use .xcworkspace when using CocoaPods)
+npm run xcode
+# or: open ios/MasterFabric.xcworkspace
+# Then select a simulator or device and press Cmd+R
 ```
 
 ---
@@ -589,6 +590,7 @@ npm run build:android:check    # Diagnostic check
 # Development commands
 npm run ios                    # Run on iOS simulator
 npm run android                # Run on Android device/emulator
+npm run xcode                  # Open iOS project in Xcode (MasterFabric.xcworkspace)
 npm run reset-project          # Reset project to clean state
 ```
 

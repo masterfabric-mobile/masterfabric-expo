@@ -20,7 +20,11 @@
       "icon": "./src/assets/images/app_icon.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
       "buildNumber": "3",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"],
+        "FirebaseAppDelegateProxyEnabled": true
+      }
     },
     "android": {
       "adaptiveIcon": {
