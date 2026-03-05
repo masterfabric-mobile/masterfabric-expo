@@ -84,6 +84,19 @@ export * from './stores/hapticStore';
 export * from './components/local-notification-helper';
 export * from './hooks/useLocalNotificationHelper';
 
+// OneSignal Helper (remote push, iOS/Android; requires react-native-onesignal)
+export { onesignalHelper } from './helpers/onesignal';
+export type {
+  OneSignalForegroundWillShowHandler,
+  OneSignalInitOptions,
+  OneSignalHelper,
+  OneSignalLogLevel,
+  OneSignalNotificationClickEvent,
+  OneSignalNotificationClickHandler,
+  OneSignalPermissionStatus,
+  OneSignalSubscriptionState,
+} from './helpers/onesignal';
+
 // Shared Video Player & Haptic Components
 export * from './components/video-player-haptic-helper/HapticFeedbackCard';
 export * from './components/video-player-haptic-helper/VideoDisplayCard';

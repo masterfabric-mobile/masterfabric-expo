@@ -172,7 +172,6 @@ export function HapticHelperView() {
       <ScreenHeader
         title="Haptic Helper"
         subtitle="Test haptic feedback types and controls"
-        variant="minimal"
       />
       <ScrollView
         style={hapticHelperViewStyles.scrollView}

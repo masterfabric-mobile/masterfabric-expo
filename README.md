@@ -90,6 +90,17 @@ npx expo start
 
 - Press `i` for iOS, `a` for Android, or scan QR with Expo Go.
 
+### Running on a physical iOS/Android device (development build)
+
+If the app stays on a **black screen** on a real device:
+
+1. **Metro must be running** and the device must reach it:
+   - **Same Wi‑Fi:** Start with `npx expo start`, then run the app from the device (or use `npx expo run:ios --device` so Metro starts and the app is installed with the correct server URL).
+   - **Different network / remote:** Use tunnel: `npx expo start --tunnel`, then open the app on the device and connect to the shown URL if the dev client asks.
+2. **Build and run in one go (recommended):**  
+   `npx expo run:ios --device`  
+   This builds, installs, starts Metro, and points the app at your Mac.
+
 ---
 
 ## 📱 Platforms

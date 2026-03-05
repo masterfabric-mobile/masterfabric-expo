@@ -63,6 +63,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'globe-outline';
     case 'local-notification-helper':
       return 'notifications-outline';
+    case 'onesignal-helper':
+      return 'notifications-outline';
     default:
       return 'help-outline';
   }
@@ -117,6 +119,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for web viewer helpers
     case 'local-notification-helper':
       return '#FF9500'; // Orange for notification helpers
+    case 'onesignal-helper':
+      return '#1E88E5'; // Blue for OneSignal/remote push
     default:
       return '#8E8E93';
   }
@@ -300,6 +304,16 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     icon: 'notifications-outline',
     color: '#FF9500',
     route: '/local-notification-helper',
+    available: true,
+    category: 'device-helpers'
+  },
+  {
+    id: 'onesignal-helper',
+    name: 'OneSignal Helper',
+    description: 'Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)',
+    icon: 'notifications-outline',
+    color: '#1E88E5',
+    route: '/onesignal-helper',
     available: true,
     category: 'device-helpers'
   }
