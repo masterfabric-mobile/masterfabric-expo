@@ -4,8 +4,12 @@ export * from './connectivity';
 // Platform Helpers
 export * from './platform';
 
-// Permission Helpers
-export * from './permissions';
+// Permission Helpers (types, config, handler + RNP fallback exports)
+export * from './permissions/types';
+export * from './permissions/constants';
+export * from './permissions/ios-config';
+export * from './permissions/android-config';
+export * from './permissions_handler_helper';
 
 // Accessibility Helpers
 export * from './accessibility';
@@ -58,46 +62,8 @@ export * from './app_icon_helper';
 // Video Player & Haptic Helper
 export * from './videoPlayerHapticHelper';
 
-// Double Extension Helper (truncate, formatCurrency excluded — conflict with string_helper; use doubleHelper.truncate/formatCurrency)
-export {
-  ceil,
-  clamp,
-  CurrencyLocaleValidationError,
-  DoubleExtensionHelper,
-  doubleHelper,
-  floor,
-  formatClean,
-  formatCompact,
-  formatPercentage,
-  isApproximatelyEqual,
-  isFiniteNumber,
-  isPositiveNumber,
-  isValidCurrency,
-  isValidLocale,
-  isZero,
-  NumericInputValidationError,
-  round,
-  safeAdd,
-  safeDivide,
-  safeMultiply,
-  safeSubtract,
-  TextInputValidationError,
-  toClean,
-  toCompact,
-  toCurrency,
-  toCurrencyStrict,
-  toPercentage,
-  toPrecision,
-  validateNumberInput,
-  validateTextInput,
-} from './double_extension_helper';
-export type {
-  CompactOptions,
-  CurrencyOptions,
-  PercentageOptions,
-  PrecisionOptions,
-  TextValidationOptions,
-} from './double_extension_helper';
+// Double Extension Helper — import as: import { doubleExtensionHelper } from '...'
+export * as doubleExtensionHelper from './double_extension_helper';
 
 // Web Viewer Helper
 export * from './web_viewer_helper';

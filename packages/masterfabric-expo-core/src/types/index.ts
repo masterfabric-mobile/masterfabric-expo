@@ -35,6 +35,7 @@ export interface ThemeColors {
   buttonBackgroundHover: string;
   buttonBorder: string;
   activeButton: string;
+  activeButtonText: string;
   inactiveText: string;
   surfaceBackground: string;
   surfaceBorder: string;

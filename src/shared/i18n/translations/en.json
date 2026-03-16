@@ -247,7 +247,7 @@
       "minLength": "At least 8 characters",
       "uppercase": "Uppercase letter (A-Z)",
       "lowercase": "Lowercase letter (a-z)",
-        "number": "Number (0-9)",
+      "number": "Number (0-9)",
       "specialChar": "Special character (e.g. !@#$%^&*)"
     },
     "passwordsMatch": "Passwords match"
@@ -320,7 +320,7 @@
       "dark": "Dark",
       "system": "System",
       "lightDescription": "Clean and bright appearance",
-      "darkDescription": "Eye-friendly dark appearance", 
+      "darkDescription": "Eye-friendly dark appearance",
       "systemDescription": "Follow device settings"
     },
     "notifications": {
@@ -354,7 +354,7 @@
     "subtitle": "Stay updated with your latest activities",
     "stageBadge": {
       "development": "DEV MODE",
-      "debug": "DEBUG MODE", 
+      "debug": "DEBUG MODE",
       "production": "LIVE MODE",
       "release": "LIVE MODE"
     },
@@ -392,7 +392,7 @@
   "deviceInfo": {
     "title": "Device Information",
     "platform": "Platform",
-    "device": "Device", 
+    "device": "Device",
     "brand": "Brand",
     "os": "OS",
     "app": "App",
@@ -451,7 +451,136 @@
       "title": "App Icon Helper",
       "description": "Change your app icon dynamically on iOS devices"
     },
+
     "title": "OneSignal Helpers",
+
+    "permissionsHelper": {
+      "title": "Permissions Helper",
+      "description": "Request and check permissions",
+      "check": "Check",
+      "request": "Request",
+      "status": "Status",
+      "notChecked": "Not checked",
+      "notYetRequested": "Not yet requested",
+      "refreshAll": "Refresh all",
+      "openSettings": "Open Settings",
+      "allChecked": "All permissions checked",
+      "iosConfig": "iOS Info.plist",
+      "androidConfig": "Android Manifest",
+      "noConfig": "—",
+      "statusGranted": "Granted",
+      "statusDenied": "Denied",
+      "statusBlocked": "Blocked (Don't ask again)",
+      "statusUnavailable": "Unavailable",
+      "statusWorksInExpoGo": "Works in Expo Go",
+      "statusWorksInExpoGoAndDevBuild": "Works in Expo Go, dev build & real device",
+      "unavailableReasonExpoGo": "Not supported in Expo Go (not in its manifest). Use a development build on a real device.",
+      "unavailableReasonAndroidOnly": "This permission is only available on Android.",
+      "unavailableReasonIosOnly": "This permission is only available on iOS.",
+      "unavailableReasonBluetoothAndroid12": "Bluetooth permission requires Android 12 or higher.",
+      "unavailableReasonExpoModuleRunOnDevice": "Requires the corresponding Expo module; run on a real device (not simulator).",
+      "unavailableReasonNoHardwareOrNotEnrolled": "No biometric hardware or no face/fingerprint enrolled in device settings.",
+      "statusLimited": "Limited access",
+      "statusUnknown": "Not yet requested",
+      "locationInfoForeground": "Foreground",
+      "locationInfoBackground": "Background",
+      "locationInfoPrecise": "Precise",
+      "promptToRequest": "Tap Request to show Android or iPhone's native permission dialog (Allow/Block).",
+      "resetPermissions": "Reset permissions",
+      "resetComplete": "Permissions reset",
+      "resetConfirmTitle": "Reset permissions",
+      "resetConfirmMessage": "To reset all permissions, open Settings and revoke them for this app. Then return here to refresh the status.",
+      "refreshStatuses": "Refresh statuses",
+      "refreshCompleted": "Statuses updated",
+      "changePermissionHint": "Change in Settings, then tap Refresh.",
+      "platformHint": "SMS & Bluetooth: Android only.",
+      "permissionCamera": "Camera",
+      "permissionMicrophone": "Microphone",
+      "permissionPhotoLibrary": "Gallery",
+      "permissionStorage": "Storage (Files)",
+      "permissionLocation": "Location",
+      "permissionLocationBackground": "Location (Background)",
+      "permissionNotifications": "Notifications",
+      "permissionCalendar": "Calendar",
+      "permissionContacts": "Contacts",
+      "permissionPhone": "Phone",
+      "permissionReminders": "Reminders",
+      "permissionBluetooth": "Bluetooth",
+      "permissionBiometrics": "Face ID / Touch ID / Biometrics",
+      "permissionSpeechRecognition": "Speech Recognition",
+      "permissionTracking": "Tracking (iOS 14.5+ ATT)",
+      "permissionSms": "SMS (Android)",
+      "rationale": {
+        "camera": "This app needs camera access to take photos.",
+        "microphone": "This app needs microphone access to record audio.",
+        "photoLibrary": "This app needs photos and videos access to select media.",
+        "storage": "This app needs storage access to download and upload files.",
+        "location": "This app needs location access to show nearby places.",
+        "locationBackground": "This app needs background location to track your route.",
+        "calendar": "This app needs calendar access to schedule events.",
+        "contacts": "We need contacts access to help you share with friends.",
+        "phone": "This app needs phone access to identify your device.",
+        "reminders": "This app needs reminders access to create and manage your reminders.",
+        "bluetooth": "This app needs Bluetooth access to connect to nearby devices.",
+        "notifications": "This app would like to send you notifications for updates and reminders.",
+        "biometrics": "This app uses Face ID / Touch ID / Biometrics for secure sign-in.",
+        "biometricsFallback": "Use Passcode",
+        "speechRecognition": "This app needs speech recognition access to convert speech to text.",
+        "tracking": "This app would like permission to track your activity across apps and websites.",
+        "sms": "This app needs SMS access to read or send messages (Android).",
+        "settingsMessage": "Permission was denied. Open Settings to enable it.",
+        "deniedOpenSettings": "No dialog appeared (common on Xiaomi/Redmi). Open Settings to grant the permission.",
+        "unavailableOpenSettings": "Permission could not be requested from the app. Open Settings to enable it manually."
+      },
+      "config": {
+        "ios": {
+          "camera": "This app needs camera access to take photos and videos.",
+          "microphone": "This app needs microphone access to record audio.",
+          "photoLibrary": "This app needs photos and videos access to save and select media.",
+          "photoLibraryAdd": "This app needs permission to save photos to your library.",
+          "locationWhenInUse": "This app needs your location to show nearby places.",
+          "locationAlways": "This app needs your location to track your route.",
+          "locationBackground": "This app needs background location to track your route.",
+          "calendar": "This app needs calendar access to schedule events.",
+          "contacts": "We need contacts access to help you share with friends.",
+          "faceId": "This app uses Face ID to authenticate securely.",
+          "bluetooth": "This app needs Bluetooth to connect to nearby devices."
+        },
+        "android": {
+          "camera": "Camera",
+          "microphone": "Microphone",
+          "photoLibrary": "Photos and Videos",
+          "location": "Location",
+          "notifications": "Notifications",
+          "CAMERA": "Camera",
+          "RECORD_AUDIO": "Microphone",
+          "READ_EXTERNAL_STORAGE": "Read storage (legacy)",
+          "WRITE_EXTERNAL_STORAGE": "Write storage (legacy)",
+          "READ_MEDIA_IMAGES": "Read media images",
+          "READ_MEDIA_VIDEO": "Read media video",
+          "READ_MEDIA_AUDIO": "Read media audio",
+          "READ_MEDIA_VISUAL_USER_SELECTED": "Gallery partial access (Android 14+)",
+          "ACCESS_FINE_LOCATION": "Fine location",
+          "ACCESS_COARSE_LOCATION": "Coarse location",
+          "ACCESS_BACKGROUND_LOCATION": "Background location",
+          "POST_NOTIFICATIONS": "Notifications (API 33+)",
+          "READ_CALENDAR": "Read calendar",
+          "WRITE_CALENDAR": "Write calendar",
+          "READ_CONTACTS": "Read contacts",
+          "WRITE_CONTACTS": "Write contacts",
+          "READ_PHONE_STATE": "Read phone state",
+          "USE_BIOMETRIC": "Biometrics (fingerprint / face)",
+          "SEND_SMS": "Send SMS",
+          "RECEIVE_SMS": "Receive SMS",
+          "READ_SMS": "Read SMS",
+          "BLUETOOTH": "Bluetooth (legacy)",
+          "BLUETOOTH_SCAN": "Bluetooth scan",
+          "BLUETOOTH_CONNECT": "Bluetooth connect",
+          "BLUETOOTH_ADVERTISE": "Bluetooth advertise"
+        }
+      }
+    },
+    "title": "Helpers",
     "subtitle": "Utility tools and development helpers",
     "stringHelper": {
       "title": "String Helper",
@@ -842,7 +971,7 @@
       "description": "Date and time manipulation utilities for formatting, parsing, and calculations"
     },
     "numberHelper": {
-      "title": "Number Helper", 
+      "title": "Number Helper",
       "description": "Number formatting, validation, and mathematical operations utilities"
     },
     "validationHelper": {
@@ -1648,6 +1777,10 @@
     "onesignalHelper": {
       "title": "OneSignal Helper",
       "description": "Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)"
+    },
+    "fcmHelper": {
+      "title": "FCM Helper",
+      "description": "Firebase Cloud Messaging: token, permission, and foreground/opened notifications (iOS/Android)"
     }
   },
   "documentation": {
@@ -1705,14 +1838,14 @@
           "title": "Web Viewer Helper",
           "description": "Display HTML content and web URLs within the app using WebView"
         },
-    "uiSizeHelper": {
-      "title": "UI Size Helper",
-      "description": "Sizing system, spacing, typography, and responsive design utilities"
-    },
-    "appIconHelper": {
-      "title": "App Icon Helper",
-      "description": "Change your app icon dynamically on iOS devices"
-    }
+        "uiSizeHelper": {
+          "title": "UI Size Helper",
+          "description": "Sizing system, spacing, typography, and responsive design utilities"
+        },
+        "appIconHelper": {
+          "title": "App Icon Helper",
+          "description": "Change your app icon dynamically on iOS devices"
+        }
       },
       "core": {
         "title": "Core System",

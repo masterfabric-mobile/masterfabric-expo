@@ -6,37 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>MasterFabric</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundleAlternateIcons</key>
-		<dict>
-			<key>AppIcon1</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon1</string>
-				</array>
-			</dict>
-			<key>AppIcon2</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon2</string>
-				</array>
-			</dict>
-		</dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>AppIcon</string>
-			</array>
-		</dict>
-	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -46,27 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>masterfabricexpo</string>
-				<string>com.masterfabric.expo.ios</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>exp+masterfabric-expo</string>
-			</array>
-		</dict>
-	</array>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>1</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>LSMinimumSystemVersion</key>
 	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -78,16 +35,42 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+
+	<key>NSCalendarsUsageDescription</key>
+	<string>Uygulamanin etkinlikleri planlamak icin takvim erisimine ihtiyaci var.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Uygulamanin etkinlikleri planlamak icin takvim erisimine ihtiyaci var.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Uygulamanin hatirlatici olusturmak icin hatirlaticilar erisimine ihtiyaci var.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>Uygulamanin hatirlatici olusturmak icin hatirlaticilar erisimine ihtiyaci var.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Uygulamanin fotograf ve video cekmek icin kamera erisimine ihtiyaci var.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Uygulamanin ses ve video kaydi icin mikrofon erisimine ihtiyaci var.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Uygulamanin fotograf ve video secmek icin galeri erisimine ihtiyaci var.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Uygulamanin fotograflari kaydetmek icin galeri erisimine ihtiyaci var.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Uygulamanin icerik paylasmak icin kisi listesine erisimine ihtiyaci var.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Uygulamanin konum tabanli ozellikler icin konum erisimine ihtiyaci var.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Uygulamanin arka planda konum tabanli ozellikler icin konum erisimine ihtiyaci var.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Uygulamanin guvenli giris icin Face ID erisimine ihtiyaci var.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
 	</array>
+
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>remote-notification</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
@@ -95,24 +78,14 @@
 	<array>
 		<string>arm64</string>
 	</array>
-	<key>UIRequiresFullScreen</key>
-	<false/>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Automatic</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

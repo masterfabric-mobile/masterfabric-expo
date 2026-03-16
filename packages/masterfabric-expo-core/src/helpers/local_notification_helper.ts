@@ -21,13 +21,13 @@
  */
 
 import { Platform, Linking } from 'react-native';
-import type { PermissionStatus } from './permissions';
+import type { PermissionStatus } from './permissions/types';
 import {
   checkPermission as permissionsCheck,
   requestPermission as permissionsRequest,
   showPermissionSettingsAlert,
   openAppSettings,
-} from './permissions';
+} from './permissions_handler_helper';
 import { DEFAULT_CHANNEL_ID, DEFAULT_CHANNELS } from './notifications/constants';
 import type {
   NotificationOptions,
