@@ -113,7 +113,7 @@ export function ResponsiveExample() {
             color: colors.text,
           }}
         >
-          This text size adapts based on screen width. On phones it's {Sizing.typography.fontSize.m}px, 
+          This text size adapts based on screen width. On phones it is {Sizing.typography.fontSize.m}px, 
           on tablets {Sizing.typography.fontSize.l}px, and on desktop {Sizing.typography.fontSize.xl}px.
         </ThemedText>
       </View>

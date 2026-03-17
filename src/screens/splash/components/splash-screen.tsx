@@ -16,7 +16,7 @@ import { ProgressSection } from './sections/progress-section';
 function SplashScreenContent() {
   const { isLoading, progress, currentTask } = useSplashViewModel();
   const { trackActivity, isDark } = useMasterView();
-  const colors = useThemeColors(isDark);
+  const colors = useThemeColors();
   
   // Track activity when component mounts
   React.useEffect(() => {

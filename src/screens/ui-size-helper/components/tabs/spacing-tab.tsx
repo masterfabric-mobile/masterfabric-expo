@@ -189,7 +189,7 @@ export function SpacingTab() {
               textAlign: 'center',
             }}
           >
-            Spacer size="m" = {Sizing.spacer.m}px
+            Spacer size=m = {Sizing.spacer.m}px
           </ThemedText>
         </ThemedView>
       </ThemedView>

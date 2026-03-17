@@ -54,14 +54,14 @@ export function useTypographyHelperViewModel() {
       ? calculateLetterSpacing(scaledFontSize, testInput.letterSpacing)
       : 0;
 
-    const fontWeight = normalizeFontWeight(testInput.fontWeight || 400);
+    const fontWeight = normalizeFontWeight((testInput.fontWeight as any) ?? '400');
     const textDecoration = testInput.textDecoration?.join(' ') || 'none';
 
     const previewData: TypographyPreview = {
       fontSize: scaledFontSize,
       lineHeight,
       letterSpacing,
-      fontWeight,
+      fontWeight: fontWeight as any,
       fontStyle: testInput.fontStyle || 'normal',
       fontFamily: testInput.fontFamily || 'System',
       textDecoration,
@@ -72,7 +72,7 @@ export function useTypographyHelperViewModel() {
         fontSize: scaledFontSize,
         lineHeight,
         letterSpacing,
-        fontWeight,
+        fontWeight: fontWeight as any,
         fontStyle: testInput.fontStyle || 'normal',
         fontFamily: testInput.fontFamily,
         textDecorationLine: textDecoration === 'none' ? 'none' : textDecoration as any,

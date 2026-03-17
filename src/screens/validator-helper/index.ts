@@ -1,4 +1,4 @@
-import { setValidatorHelperEmailValidator } from 'masterfabric-expo-core/src/helpers/validator_helper';
+import { setValidatorHelperEmailValidator } from 'masterfabric-expo-core';
 import { isValidEmail } from './utils/validator-helper-utils';
 
 // Initialize validator helper's email validation

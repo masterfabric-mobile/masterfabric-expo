@@ -15,15 +15,16 @@ import { navigationConfig } from './navigation-config';
 export function AppNavigator() {
   const colorScheme = useColorScheme();
   const { locale } = useLocale(); // This will trigger re-render on locale change
+  const themeKey = colorScheme === 'dark' ? 'dark' : 'light';
 
   return (
     <Stack
       screenOptions={{
         ...navigationConfig.defaultScreenOptions,
         headerStyle: {
-          backgroundColor: Colors[colorScheme ?? 'light'].background,
+          backgroundColor: Colors[themeKey].background,
         },
-        headerTintColor: Colors[colorScheme ?? 'light'].text,
+        headerTintColor: Colors[themeKey].text,
         headerTitleStyle: {
           fontWeight: '600',
         },

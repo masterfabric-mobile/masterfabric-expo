@@ -205,6 +205,8 @@ export function InputExample() {
               Email
             </ThemedText>
             <TextInput
+              keyboardType="email-address"
+              autoCapitalize="none"
               style={{
                 height: Sizing.input.height[selectedSize],
                 width: '100%',
@@ -216,8 +218,6 @@ export function InputExample() {
                 backgroundColor: colors.inputBackground,
                 color: colors.text,
                 fontSize: Sizing.typography.fontSize.m,
-                keyboardType: 'email-address',
-                autoCapitalize: 'none',
               }}
               placeholder="Enter your email"
               placeholderTextColor={colors.placeholderText}

@@ -38,13 +38,33 @@ import type {
   OneSignalSubscriptionState,
 } from './types';
 
-type OneSignalSDK = typeof import('react-native-onesignal');
-/** Runtime API: the object that has initialize, Notifications, User, etc. (named export OneSignal from the package) */
-type OneSignalAPI = OneSignalSDK['OneSignal'];
+type OneSignalModuleType = typeof import('react-native-onesignal');
+type OneSignalAPI = {
+  initialize: (appId: string) => void;
+  Notifications: {
+    requestPermission: (fallbackToSettings?: boolean) => Promise<boolean | [boolean, unknown]>;
+    getPermissionAsync: () => Promise<boolean>;
+    canRequestPermission?: () => Promise<boolean>;
+    addEventListener?: (event: string, cb: (...args: any[]) => void) => () => void;
+  };
+  User?: {
+    pushSubscription?: {
+      optedIn?: boolean;
+      optIn?: () => Promise<void>;
+      optOut?: () => Promise<void>;
+      id?: unknown;
+      token?: unknown;
+    };
+  };
+  Debug?: { setLogLevel?: (level: number) => void };
+  LogLevel?: { Verbose?: number };
+  login?: (externalUserId: string) => Promise<void> | void;
+  logout?: () => Promise<void> | void;
+};
 
-let OneSignalModule: OneSignalSDK | null = null;
+let OneSignalModule: OneSignalModuleType | null = null;
 
-async function getOneSignalModule(): Promise<OneSignalSDK> {
+async function getOneSignalModule(): Promise<OneSignalModuleType> {
   if (OneSignalModule) return OneSignalModule;
   try {
     OneSignalModule = await import('react-native-onesignal');

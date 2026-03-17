@@ -35,7 +35,6 @@ export function SnackbarHelperScreen() {
       <ScreenHeader
         title={t('helpers.snackbarHelper.title')}
         subtitle={t('helpers.snackbarHelper.description')}
-        variant="minimal"
       />
 
       <ScrollView

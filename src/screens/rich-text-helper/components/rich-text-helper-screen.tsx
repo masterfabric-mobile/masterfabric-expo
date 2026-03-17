@@ -27,7 +27,6 @@ export function RichTextHelperScreen() {
       <ScreenHeader
         title={t('helpers.richTextHelper.title')}
         subtitle={t('helpers.richTextHelper.description')}
-        variant="minimal"
       />
       <ScrollView
         style={richTextHelperScreenStyles.scrollView}

@@ -431,7 +431,7 @@ export function SpacingExample() {
               color: colors.bodyText,
             }}
           >
-            • uiSizeHelper.getSpacing('m') = {uiSizeHelper.getSpacing('m')}px
+            • uiSizeHelper.getSpacing(m) = {uiSizeHelper.getSpacing('m')}px
           </ThemedText>
         </ThemedView>
       </ThemedView>

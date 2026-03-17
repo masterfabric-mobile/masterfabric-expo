@@ -21,11 +21,12 @@ interface ThemeProviderProps {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [themeMode, setThemeModeState] = useState<ThemeMode>('system');
   const systemColorScheme = useColorScheme();
+  const systemTheme: 'light' | 'dark' = systemColorScheme === 'dark' ? 'dark' : 'light';
 
   // Determine current theme based on mode, with fallback to 'light'
   const currentTheme: 'light' | 'dark' = 
     themeMode === 'system' 
-      ? (systemColorScheme || 'light') 
+      ? systemTheme
       : themeMode;
 
   useEffect(() => {

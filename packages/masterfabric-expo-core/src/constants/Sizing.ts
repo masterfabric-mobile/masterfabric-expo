@@ -9,6 +9,7 @@ export const Sizing = {
   // SPACING - 8pt Grid System
   // ============================================
   spacing: {
+    none: 0,
     xxs: baseUnit * 0.25,  // 2px
     xs: baseUnit * 0.5,    // 4px
     s: baseUnit,           // 8px
@@ -20,6 +21,7 @@ export const Sizing = {
   },
 
   padding: {
+    none: 0,
     xxs: baseUnit * 0.25,
     xs: baseUnit * 0.5,
     s: baseUnit,
@@ -31,6 +33,7 @@ export const Sizing = {
   },
 
   margin: {
+    none: 0,
     xxs: baseUnit * 0.25,
     xs: baseUnit * 0.5,
     s: baseUnit,
@@ -42,6 +45,7 @@ export const Sizing = {
   },
 
   gap: {
+    none: 0,
     xxs: baseUnit * 0.25,
     xs: baseUnit * 0.5,
     s: baseUnit,
@@ -95,8 +99,17 @@ export const Sizing = {
   // BORDER RADIUS
   // ============================================
   borderRadius: {
+    none: 0,
+    xxs: 2,
+    xs: 4,
+    s: 6,
+    m: 8,
+    l: 12,
+    xl: 16,
+    xxl: 24,
     small: 7,
     large: 13,
+    round: 9999,
   },
 
   // ============================================
@@ -129,6 +142,7 @@ export const Sizing = {
     half: '50%',
     third: '33.333%',
     quarter: '25%',
+    auto: 'auto',
   },
 
   height: {
@@ -144,6 +158,7 @@ export const Sizing = {
     half: '50%',
     third: '33.333%',
     quarter: '25%',
+    auto: 'auto',
   },
 
   minWidth: {
@@ -360,12 +375,18 @@ export const Sizing = {
       half: '50%',
       third: '33.333%',
       auto: 'auto',
+      small: '85%',
+      medium: '92%',
+      large: '100%',
     },
     minHeight: {
       xs: 80,
       s: 120,
       m: 160,
       l: 200,
+      small: 120,
+      medium: 160,
+      large: 200,
     },
   },
 
@@ -764,6 +785,7 @@ export const Sizing = {
   // SPACER
   // ============================================
   spacer: {
+    none: 0,
     xxs: baseUnit * 0.25,
     xs: baseUnit * 0.5,
     s: baseUnit,

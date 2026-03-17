@@ -112,6 +112,11 @@ export interface ThemeColors {
   snackbarSwitchActiveLight: string;
   snackbarSwitchInactiveDark: string;
   snackbarSwitchInactiveLight: string;
+
+  // Optional extra semantic colors (used by some helper screens)
+  secondary?: string;
+  tertiary?: string;
+  error?: string;
 }
 
 // Navigation Types

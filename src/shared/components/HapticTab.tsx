@@ -8,10 +8,11 @@ import { getThemeColors, useMasterView } from 'masterfabric-expo-core';
 export function HapticTab(props: BottomTabBarButtonProps) {
   const { isDark } = useMasterView();
   const colors = getThemeColors(isDark);
+  const { ref, ...rest } = props as any;
 
   return (
     <Pressable
-      {...props}
+      {...rest}
       style={[
         styles.tabButton,
         props.accessibilityState?.selected && [

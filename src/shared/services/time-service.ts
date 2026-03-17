@@ -1,4 +1,4 @@
-import * as TimeHelpers from 'masterfabric-expo-core/src/helpers/time_helper';
+import * as TimeHelpers from 'masterfabric-expo-core';
 
 class TimeService {
   private static instance: TimeService;

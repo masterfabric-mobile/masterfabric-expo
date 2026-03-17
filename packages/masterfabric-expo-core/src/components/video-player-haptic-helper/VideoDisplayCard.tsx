@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { View, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
-import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import { ThemedText } from '../ThemedText';
 import { ThemedView } from '../ThemedView';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -54,55 +54,66 @@ export function VideoDisplayCard({
   const { currentTheme } = useTheme();
   const isDark = currentTheme === 'dark';
   const colors = getThemeColors(isDark);
-  const videoRef = useRef<Video>(null);
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const selectedVideo = SAMPLE_VIDEOS[selectedVideoIndex];
 
-  // Sync playback state with video
+  const player = useVideoPlayer(selectedVideo.uri, (p) => {
+    p.loop = true;
+    p.timeUpdateEventInterval = 0.5;
+  });
+
+  // Keep player state in sync with props
   useEffect(() => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.playAsync();
+    player.volume = volume;
+  }, [player, volume]);
+
+  useEffect(() => {
+    player.playbackRate = playbackRate;
+  }, [player, playbackRate]);
+
+  useEffect(() => {
+    if (isPlaying) player.play();
+    else player.pause();
+  }, [player, isPlaying]);
+
+  useEffect(() => {
+    const statusSub = player.addListener('statusChange', ({ status, error }) => {
+      setIsBuffering(status === 'loading');
+      if (status === 'error') {
+        console.warn('Video player error', error);
+        setHasError(true);
       } else {
-        videoRef.current.pauseAsync();
+        setHasError(false);
       }
-    }
-  }, [isPlaying]);
+    });
 
-  // Sync volume
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.setVolumeAsync(volume);
-    }
-  }, [volume]);
-
-  // Sync playback rate
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.setRateAsync(playbackRate, true);
-    }
-  }, [playbackRate]);
-
-  const handlePlaybackStatusUpdate = useCallback((status: AVPlaybackStatus) => {
-    if (status.isLoaded) {
-      setIsBuffering(status.isBuffering);
-      setHasError(false);
+    const playingSub = player.addListener('playingChange', ({ isPlaying: nowPlaying }) => {
       onPlaybackStatusUpdate?.({
-        isPlaying: status.isPlaying,
-        positionMillis: status.positionMillis,
-        durationMillis: status.durationMillis || 0,
-        isBuffering: status.isBuffering,
+        isPlaying: nowPlaying,
+        positionMillis: Math.floor(player.currentTime * 1000),
+        durationMillis: Math.floor(player.duration * 1000),
+        isBuffering: player.status === 'loading',
       });
-    }
-  }, [onPlaybackStatusUpdate]);
+    });
 
-  const handleError = useCallback((error: string) => {
-    console.error('Video playback error:', error);
-    setHasError(true);
-  }, []);
+    const timeSub = player.addListener('timeUpdate', ({ currentTime }) => {
+      onPlaybackStatusUpdate?.({
+        isPlaying: player.playing,
+        positionMillis: Math.floor(currentTime * 1000),
+        durationMillis: Math.floor(player.duration * 1000),
+        isBuffering: player.status === 'loading',
+      });
+    });
+
+    return () => {
+      statusSub.remove();
+      playingSub.remove();
+      timeSub.remove();
+    };
+  }, [player, onPlaybackStatusUpdate]);
 
   const handleVideoPress = useCallback(() => {
     if (isPlaying) {
@@ -196,18 +207,11 @@ export function VideoDisplayCard({
           </View>
         ) : (
           <>
-            <Video
-              ref={videoRef}
-              source={{ uri: selectedVideo.uri }}
+            <VideoView
+              player={player}
               style={styles.video}
-              resizeMode={ResizeMode.CONTAIN}
-              isLooping
-              onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
-              onError={handleError}
-              useNativeControls={false}
-              shouldPlay={isPlaying}
-              volume={volume}
-              rate={playbackRate}
+              nativeControls={false}
+              contentFit="contain"
             />
             
             {/* Play/Pause Overlay */}

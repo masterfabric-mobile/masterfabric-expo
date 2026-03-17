@@ -25,6 +25,9 @@ export const activitySectionStyles = StyleSheet.create({
     shadowRadius: Sizing.spacing.s,
     elevation: Sizing.elevation.m,
   },
+  activitiesList: {
+    gap: Sizing.gap.s,
+  },
   activityItem: {
     flexDirection: Sizing.layout.flexDirection.row,
     paddingHorizontal: Sizing.padding.m,
