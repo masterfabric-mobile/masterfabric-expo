@@ -19,6 +19,20 @@
       "icon": "./src/assets/images/app_icon_square.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
       "buildNumber": "3",
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
+        "NSCalendarsFullAccessUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
+        "NSRemindersUsageDescription": "Uygulamanın hatırlatıcı oluşturmak için hatırlatıcılar erişimine ihtiyacı var.",
+        "NSRemindersFullAccessUsageDescription": "Uygulamanın hatırlatıcı oluşturmak için hatırlatıcılar erişimine ihtiyacı var.",
+        "NSCameraUsageDescription": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+        "NSMicrophoneUsageDescription": "Uygulamanın ses ve video kaydı için mikrofon erişimine ihtiyacı var.",
+        "NSPhotoLibraryUsageDescription": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+        "NSPhotoLibraryAddUsageDescription": "Uygulamanın fotoğrafları kaydetmek için galeri erişimine ihtiyacı var.",
+        "NSContactsUsageDescription": "Uygulamanın içerik paylaşmak için kişi listesine erişimine ihtiyacı var.",
+        "NSLocationWhenInUseUsageDescription": "Uygulamanın konum tabanlı özellikler için konum erişimine ihtiyacı var.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Uygulamanın arka planda konum tabanlı özellikler için konum erişimine ihtiyacı var.",
+        "NSFaceIDUsageDescription": "Uygulamanın güvenli giriş için Face ID erişimine ihtiyacı var."
+      },
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "UIBackgroundModes": ["remote-notification"],
@@ -40,6 +54,7 @@
       "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/add-media-permissions.js",
       "expo-router",
       "expo-dev-client",
       [
@@ -49,6 +64,32 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+          "cameraPermission": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+          "microphonePermission": "Uygulamanın video kaydı için mikrofon erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var."
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Uygulamanın içerik paylaşmak için kişi listesine erişime ihtiyacı var."
         }
       ]
     ],

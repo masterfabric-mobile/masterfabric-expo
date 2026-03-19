@@ -22,11 +22,17 @@
     "masterfabric"
   ],
   "license": "AGPL-3.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "clean:android": "node -e \"const fs=require('fs'),p='android/app/build',q='android/build';[p,q].forEach(d=>{try{fs.rmSync(d,{recursive:true});console.log('Removed '+d)}catch(e){}})\"",
+    "clean:ios": "node -e \"const fs=require('fs'),d='ios/build';try{fs.rmSync(d,{recursive:true});console.log('Removed '+d)}catch(e){}\"",
+    "clean": "npm run clean:android && npm run clean:ios",
     "xcode": "open ios/MasterFabric.xcworkspace",
     "postinstall": "rm -rf packages/masterfabric-expo-core/node_modules",
     "web": "expo start --web",
@@ -82,7 +88,7 @@
     "expo-web-browser": "~55.0.9",
     "firebase": "^12.8.0",
     "i18n-js": "^4.5.1",
-    "masterfabric-expo-core": "file:packages/masterfabric-expo-core",
+    "masterfabric-expo-core": "workspace:*",
     "onesignal-expo-plugin": "^2.1.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -114,6 +120,11 @@
     "prettier": "^3.7.4",
     "react-test-renderer": "19.2.0",
     "typescript": "~5.9.2"
+  },
+  "overrides": {
+    "ajv": "^8.18.0",
+    "minimatch": "^10.2.1",
+    "glob": "^13.0.0"
   },
   "private": true
 }

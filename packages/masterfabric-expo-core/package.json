@@ -83,6 +83,12 @@
     "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
+    "glob": "^13.0.0",
+    "minimatch": "^10.2.1",
     "react-native-get-random-values": "~1.11.0"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "glob": "^13.0.0"
   }
 }

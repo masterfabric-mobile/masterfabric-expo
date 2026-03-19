@@ -1,0 +1,13 @@
+{
+  "NSCameraUsageDescription": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
+  "NSMicrophoneUsageDescription": "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var.",
+  "NSPhotoLibraryUsageDescription": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
+  "NSPhotoLibraryAddUsageDescription": "Uygulamanın fotoğraf ve videoları kütüphanenize kaydetmek için izne ihtiyacı var.",
+  "NSLocationWhenInUseUsageDescription": "Uygulamanın yakındaki yerleri göstermek için konumunuza ihtiyacı var.",
+  "NSLocationAlwaysAndWhenInUseUsageDescription": "Uygulamanın rotanızı takip etmek için konumunuza ihtiyacı var.",
+  "NSLocationAlwaysUsageDescription": "Uygulamanın rotanızı takip etmek için arka planda konum erişimine ihtiyacı var.",
+  "NSContactsUsageDescription": "Uygulamanın paylaşım için rehber erişimine ihtiyacı var.",
+  "NSCalendarsUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
+  "NSFaceIDUsageDescription": "Uygulama güvenli giriş için Face ID kullanır.",
+  "NSBluetoothAlwaysUsageDescription": "Uygulamanın yakındaki cihazlara bağlanması için Bluetooth erişimine ihtiyacı var."
+}

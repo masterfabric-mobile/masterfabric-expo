@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, AppState, InteractionManager, Platform } from 'react-native';
-import type { PermissionStatus } from '../helpers/permissions';
+import type { PermissionStatus } from '../helpers/permissions/types';
 import { localNotificationHelper } from '../helpers/local_notification_helper';
 import type { ScheduledNotification } from '../helpers/notifications/types';
 
