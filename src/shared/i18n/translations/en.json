@@ -447,11 +447,6 @@
       "title": "Firebase Helper",
       "description": "Auth, analytics (web only), and Firestore utilities"
     },
-    "appIconHelper": {
-      "title": "App Icon Helper",
-      "description": "Change your app icon dynamically on iOS devices"
-    },
-
     "title": "OneSignal Helpers",
 
     "permissionsHelper": {
@@ -1841,10 +1836,6 @@
         "uiSizeHelper": {
           "title": "UI Size Helper",
           "description": "Sizing system, spacing, typography, and responsive design utilities"
-        },
-        "appIconHelper": {
-          "title": "App Icon Helper",
-          "description": "Change your app icon dynamically on iOS devices"
         }
       },
       "core": {

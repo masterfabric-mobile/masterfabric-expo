@@ -51,8 +51,6 @@ export const getHelperIcon = (helperId: string): string => {
       return 'open-outline';
     case 'ui-size-helper':
       return 'resize-outline';
-    case 'app-icon-helper':
-      return 'apps-outline';
     case 'video-player-helper':
       return 'play-circle-outline';
     case 'haptic-helper':
@@ -109,8 +107,6 @@ export const getHelperColor = (helperId: string): string => {
       return '#007AFF'; // Blue for URL/launcher helpers
     case 'ui-size-helper':
       return '#5856D6'; // Purple for UI sizing helpers
-    case 'app-icon-helper':
-      return '#007AFF'; // Blue for app icon helpers
     case 'video-player-helper':
       return '#FF2D55'; // Pink for video player helpers
     case 'haptic-helper':
@@ -260,16 +256,6 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     route: '/ui-size-helper',
     available: true,
     category: 'ui-helpers'
-  },
-  {
-    id: 'app-icon-helper',
-    name: 'App Icon Helper',
-    description: 'Change your app icon dynamically on iOS devices',
-    icon: 'apps-outline',
-    color: '#007AFF',
-    route: '/app-icon-helper',
-    available: true,
-    category: 'device-helpers'
   },
   {
     id: 'video-player-helper',
