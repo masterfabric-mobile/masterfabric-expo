@@ -124,8 +124,8 @@ Then:
 
 ### Bundle Identifiers
 
-- **iOS**: `com.recipio.app`
-- **Android**: `com.recipio.app`
+- **iOS**: `com.masterfabric.recipio`
+- **Android**: `com.masterfabric.recipio`
 
 ## 📝 Development Notes
 

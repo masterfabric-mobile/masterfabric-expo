@@ -12,10 +12,10 @@
     "plugins": ["expo-router"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.recipio.app"
+      "bundleIdentifier": "com.masterfabric.recipio"
     },
     "android": {
-      "package": "com.recipio.app"
+      "package": "com.masterfabric.recipio"
     },
     "extra": {
       "supabaseUrl": "https://dxgskeazfmclhnfybloh.supabase.co",
