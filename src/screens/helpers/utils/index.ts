@@ -67,6 +67,8 @@ export const getHelperIcon = (helperId: string): string => {
       return 'notifications-outline';
     case 'fcm-helper':
       return 'flame-outline';
+    case 'file-download-helper':
+      return 'download-outline';
     default:
       return 'help-outline';
   }
@@ -119,8 +121,8 @@ export const getHelperColor = (helperId: string): string => {
       return '#5856D6'; // Purple for number/double helpers
     case 'web-viewer-helper':
       return '#007AFF'; // Blue for web viewer helpers
-    case 'local-notification-helper':
-      return '#FF9500'; // Orange for notification helpers
+    case 'file-download-helper':
+      return '#007AFF'; // Blue for file download helper
     case 'onesignal-helper':
       return '#1E88E5'; // Blue for OneSignal/remote push
     case 'fcm-helper':
@@ -139,7 +141,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#34C759',
     route: '/string-helper',
     available: true,
-    category: 'string-helpers'
+    category: 'string-helpers',
   },
   {
     id: 'logger-helper',
@@ -149,17 +151,18 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#5856D6',
     route: '/logger-helper',
     available: true,
-    category: 'dev-helpers'
+    category: 'dev-helpers',
   },
   {
     id: 'snackbar-helper',
     name: 'Snackbar Helper',
-    description: 'Snackbar notification utilities with action buttons and positioning',
+    description:
+      'Snackbar notification utilities with action buttons and positioning',
     icon: 'notifications-outline',
     color: '#007AFF',
     route: '/snackbar-helper',
     available: true,
-    category: 'ui-helpers'
+    category: 'ui-helpers',
   },
   {
     id: 'firebase-helper',
@@ -169,7 +172,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#F5820D',
     route: '/firebase-helper',
     available: true,
-    category: 'integrations'
+    category: 'integrations',
   },
   {
     id: 'toast-helper',
@@ -179,7 +182,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#FF3B30',
     route: '/toast-helper',
     available: true,
-    category: 'ui-helpers'
+    category: 'ui-helpers',
   },
   {
     id: 'time-helper',
@@ -189,27 +192,29 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#FF9500',
     route: '/time-helper',
     available: true,
-    category: 'time-helpers'
+    category: 'time-helpers',
   },
   {
     id: 'battery-helper',
     name: 'Battery Helper',
-    description: 'Battery level, charging status, low power mode, and device information',
+    description:
+      'Battery level, charging status, low power mode, and device information',
     icon: 'battery-charging-outline',
     color: '#34C759',
     route: '/battery-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'permissions-helper',
     name: 'Permissions Helper',
-    description: 'Test device permissions: camera, photo library, location, notifications',
+    description:
+      'Test device permissions: camera, photo library, location, notifications',
     icon: 'shield-checkmark-outline',
     color: '#34C759',
     route: '/permissions-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'rich-text-helper',
@@ -219,17 +224,18 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#AF52DE',
     route: '/rich-text-helper',
     available: true,
-    category: 'text-helpers'
+    category: 'text-helpers',
   },
   {
     id: 'typography-helper',
     name: 'Typography Helper',
-    description: 'Typography utilities, font scaling, and text styling with Flutter-style copyWith pattern',
+    description:
+      'Typography utilities, font scaling, and text styling with Flutter-style copyWith pattern',
     icon: 'text-outline',
     color: '#007AFF',
     route: '/typography-helper',
     available: true,
-    category: 'text-helpers'
+    category: 'text-helpers',
   },
   {
     id: 'validator-helper',
@@ -239,7 +245,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#FF3B30',
     route: '/validator-helper',
     available: true,
-    category: 'validation-helpers'
+    category: 'validation-helpers',
   },
   {
     id: 'url-launcher-helper',
@@ -249,17 +255,18 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#007AFF',
     route: '/url-launcher-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'ui-size-helper',
     name: 'UI Size Helper',
-    description: 'Responsive sizing utilities, spacing, padding, margins, and layout helpers',
+    description:
+      'Responsive sizing utilities, spacing, padding, margins, and layout helpers',
     icon: 'resize-outline',
     color: '#5856D6',
     route: '/ui-size-helper',
     available: true,
-    category: 'ui-helpers'
+    category: 'ui-helpers',
   },
   {
     id: 'app-icon-helper',
@@ -269,7 +276,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#007AFF',
     route: '/app-icon-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'video-player-helper',
@@ -279,7 +286,7 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#FF2D55',
     route: '/video-player-helper',
     available: true,
-    category: 'ui-helpers'
+    category: 'ui-helpers',
   },
   {
     id: 'haptic-helper',
@@ -289,57 +296,60 @@ export const createDefaultHelperItems = (): HelperItem[] => [
     color: '#FF6B9D',
     route: '/haptic-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'double-extension-helper',
     name: 'Double Extension Helper',
-    description: 'Precision, formatting, and safe math for numbers (currency, percentage, compact, clamp)',
+    description:
+      'Precision, formatting, and safe math for numbers (currency, percentage, compact, clamp)',
     icon: 'calculator-outline',
     color: '#5856D6',
     route: '/double-extension-helper',
     available: true,
-    category: 'number-helpers'
+    category: 'number-helpers',
   },
   {
     id: 'web-viewer-helper',
     name: 'Web Viewer Helper',
-    description: 'Display HTML content and web URLs within the app using WebView',
+    description:
+      'Display HTML content and web URLs within the app using WebView',
     icon: 'globe-outline',
     color: '#007AFF',
     route: '/web-viewer-helper',
     available: true,
-    category: 'ui-helpers'
+    category: 'ui-helpers',
   },
   {
-    id: 'local-notification-helper',
-    name: 'Local Notification Helper',
-    description: 'Schedule, manage, and handle local notifications with permissions, badges, channels, and categories',
-    icon: 'notifications-outline',
-    color: '#FF9500',
-    route: '/local-notification-helper',
+    id: 'file-download-helper',
+    name: 'File Download Helper',
+    description: 'Download files with progress, resume, and debug tools',
+    icon: 'download-outline',
+    color: '#007AFF',
+    route: '/file-download-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'dev-helpers',
   },
   {
     id: 'onesignal-helper',
     name: 'OneSignal Helper',
-    description: 'Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)',
+    description:
+      'Remote push notifications via OneSignal; init, permission, user ID, and subscription (App ID from .env)',
     icon: 'notifications-outline',
     color: '#1E88E5',
     route: '/onesignal-helper',
     available: true,
-    category: 'device-helpers'
+    category: 'device-helpers',
   },
   {
     id: 'fcm-helper',
     name: 'FCM Helper',
-    description: 'Firebase Cloud Messaging: token, permission, and foreground/opened notifications (iOS/Android)',
+    description:
+      'Firebase Cloud Messaging: token, permission, and foreground/opened notifications (iOS/Android)',
     icon: 'flame-outline',
     color: '#F5820D',
     route: '/fcm-helper',
     available: true,
-    category: 'device-helpers'
-  }
+    category: 'device-helpers',
+  },
 ];
-

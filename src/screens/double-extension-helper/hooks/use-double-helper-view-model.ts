@@ -1,5 +1,9 @@
 import { t } from '@/src/shared/i18n';
-import { doubleExtensionHelper, snackbarHelper } from 'masterfabric-expo-core';
+import {
+  CurrencyLocaleValidationError,
+  doubleHelper,
+  snackbarHelper,
+} from 'masterfabric-expo-core';
 import { useCallback } from 'react';
 import { DEFAULT_TEST_INPUT } from '../constants/double-helper.constants';
 import type {
@@ -8,8 +12,6 @@ import type {
     NormalizedDoubleTestInput,
 } from '../models/double-helper-models';
 import { useDoubleHelperStore } from '../store/double-helper-store';
-
-const { CurrencyLocaleValidationError, doubleHelper } = doubleExtensionHelper;
 
 function hasEmptyFields(input: DoubleTestInput): boolean {
   return (
