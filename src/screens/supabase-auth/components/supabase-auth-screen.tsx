@@ -110,6 +110,11 @@ export function SupabaseAuthScreen() {
     return !emailError && !passwordError && state.email.trim() && state.password.trim();
   };
 
+  const envValues = {
+    EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
+    EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+  } as const;
+
   const envRows = [
     { key: 'EXPO_PUBLIC_SUPABASE_URL', label: 'Supabase URL', icon: 'globe' },
     { key: 'EXPO_PUBLIC_SUPABASE_ANON_KEY', label: 'Anon Key', icon: 'lock' },
@@ -160,8 +165,8 @@ export function SupabaseAuthScreen() {
           {envRows.map((row) => (
             <View key={row.key} style={supabaseAuthScreenStyles.envRow}>
               <Text style={[supabaseAuthScreenStyles.envLabel, { color: colors.labelText }]}>{row.label}:</Text>
-              <Text style={[supabaseAuthScreenStyles.envValue, { color: process.env[row.key as keyof typeof process.env] ? supabaseGreen : '#ef4444' }]}>
-                {process.env[row.key as keyof typeof process.env] ? '✓ Set' : '✗ Missing'}
+              <Text style={[supabaseAuthScreenStyles.envValue, { color: envValues[row.key as keyof typeof envValues] ? supabaseGreen : '#ef4444' }]}>
+                {envValues[row.key as keyof typeof envValues] ? '✓ Set' : '✗ Missing'}
               </Text>
             </View>
           ))}
@@ -192,7 +197,7 @@ export function SupabaseAuthScreen() {
               </View>
               <ScrollView style={supabaseAuthScreenStyles.modalScrollView} showsVerticalScrollIndicator={false}>
                 {envRows.map((row) => {
-                  const value = process.env[row.key as keyof typeof process.env];
+                  const value = envValues[row.key as keyof typeof envValues];
                   const displayValue = value || 'Not set';
                   return (
                     <View key={row.key} style={supabaseAuthScreenStyles.modalEnvRow}>

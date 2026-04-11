@@ -40,7 +40,7 @@ export function LayoutPreviewExample() {
     <ScrollView
       style={{ flex: 1 }}
       contentContainerStyle={{
-        padding: containerPadding,
+        padding: typeof containerPadding === 'number' ? containerPadding : Sizing.padding.m,
       }}
       showsVerticalScrollIndicator={false}
     >

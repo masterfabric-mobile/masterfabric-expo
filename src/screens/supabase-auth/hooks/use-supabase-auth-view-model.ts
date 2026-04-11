@@ -65,7 +65,7 @@ export function useSupabaseAuthViewModel() {
     }
 
     try {
-      const { data } = supabaseIntegration.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      const { subscription } = supabaseIntegration.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
         console.log('[SupabaseAuth] Auth state changed:', event, session?.user?.id);
         if (session?.user) {
           setUser(session.user);
@@ -76,9 +76,7 @@ export function useSupabaseAuthViewModel() {
       });
 
       return () => {
-        if (data?.subscription) {
-          data.subscription.unsubscribe();
-        }
+        subscription?.unsubscribe?.();
       };
     } catch (e: any) {
       console.error('[SupabaseAuth] Error subscribing to auth:', e);

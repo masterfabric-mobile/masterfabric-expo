@@ -25,11 +25,13 @@
 
 // ---- Types ----
 
+import type { TextStyle } from 'react-native';
+
 export interface TextStyleObject {
   fontSize?: number;
   lineHeight?: number;
   letterSpacing?: number;
-  fontWeight?: string | number;
+  fontWeight?: TextStyle['fontWeight'];
   fontStyle?: 'normal' | 'italic';
   fontFamily?: string;
   textDecorationLine?: 'none' | 'underline' | 'line-through' | 'underline line-through';
@@ -500,7 +502,7 @@ export function getTypographyStyleFromSizing(
   sizing: {
     typography: {
       fontSize: Record<string, number>;
-      fontWeight: Record<string, string>;
+      fontWeight: Record<string, TextStyle['fontWeight']>;
       lineHeight: Record<string, number>;
     };
   },
@@ -509,7 +511,8 @@ export function getTypographyStyleFromSizing(
   lineHeightKey: string = 'normal'
 ): TextStyleObject {
   const fontSize = sizing.typography.fontSize[fontSizeKey] || sizing.typography.fontSize.m;
-  const fontWeight = sizing.typography.fontWeight[fontWeightKey] || sizing.typography.fontWeight.normal;
+  const fontWeight =
+    sizing.typography.fontWeight[fontWeightKey] ?? sizing.typography.fontWeight.normal ?? ('400' as TextStyle['fontWeight']);
   const lineHeightMultiplier = sizing.typography.lineHeight[lineHeightKey] || sizing.typography.lineHeight.normal;
   const lineHeight = fontSize * lineHeightMultiplier;
   

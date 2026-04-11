@@ -19,7 +19,7 @@ export function NavigationContainer({ children }: NavigationContainerProps) {
   return (
     <RNNavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-      linking={navigationConfig.linking}
+      linking={navigationConfig.linking as any}
       documentTitle={{
         formatter: (options, route) => 
           `${options?.title ?? route?.name ?? t('app.name')} - ${t('app.name')}`

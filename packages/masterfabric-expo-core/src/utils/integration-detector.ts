@@ -6,13 +6,23 @@ import { MasterViewConfig } from '../core/MasterViewCore';
 export function detectIntegrations(): Partial<MasterViewConfig> {
   const config: Partial<MasterViewConfig> = {};
 
+  const normalizeEnvironment = (
+    value: string | undefined
+  ): 'development' | 'production' | 'staging' | undefined => {
+    if (!value) return undefined;
+    const v = value.toLowerCase();
+    if (v === 'development' || v === 'production' || v === 'staging') return v;
+    return undefined;
+  };
+
   // Detect Sentry
   const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
   if (sentryDsn) {
     config.enableSentry = true;
     config.sentryConfig = {
       dsn: sentryDsn,
-      environment: process.env.EXPO_PUBLIC_ENVIRONMENT || (__DEV__ ? 'development' : 'production'),
+      environment:
+        normalizeEnvironment(process.env.EXPO_PUBLIC_ENVIRONMENT) ?? (__DEV__ ? 'development' : 'production'),
       debug: __DEV__,
       enableAutoSessionTracking: true,
       enableNativeCrashHandling: true,

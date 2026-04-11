@@ -34,7 +34,16 @@ const plugins = [
   oneSignalPlugin,
   '@react-native-firebase/app',
   '@react-native-firebase/messaging',
-  ['expo-build-properties', { ios: { useFrameworks: 'static' } }],
+  'expo-video',
+  [
+    'expo-build-properties',
+    {
+      ios: {
+        useFrameworks: 'static',
+        buildReactNativeFromSource: true,
+      },
+    },
+  ],
   ...(appJson.expo.plugins || []),
 ];
 

@@ -67,7 +67,7 @@ export const navigationConfig = {
 
   // Deep linking configuration
   linking: {
-    prefixes: ['masterfabricexpo://'],
+    prefixes: ['masterfabricexpo://'] as unknown as string[],
     config: {
       screens: {
         splash: '/splash',

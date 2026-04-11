@@ -1,7 +1,7 @@
 import { Button } from '@/src/shared/components/button';
 import { t } from '@/src/shared/i18n';
 import {
-    doubleExtensionHelper,
+    doubleHelper,
     getThemeColors,
     snackbarHelper,
     ThemedText,
@@ -14,7 +14,7 @@ import { BORDER_OPACITY_SUFFIX, DEFAULT_TEST_INPUT, NUMERIC_INPUT_RANGE } from '
 import type { DoubleTestInput } from '../models/double-helper-models';
 import { doubleInputFieldStyles } from '../styles/double-input-field.styles';
 
-const { isValidCurrency, isValidLocale } = doubleExtensionHelper;
+const { isValidCurrency, isValidLocale } = doubleHelper;
 
 interface DoubleInputFieldProps {
   testInput: DoubleTestInput;

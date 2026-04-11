@@ -5,19 +5,18 @@
     "description": "Modern mobile platform for fabric design and management applications",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/app_icon.png",
+    "icon": "./src/assets/images/app_icon_square.png",
     "scheme": "masterfabricexpo",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "primaryColor": "#000000",
     "splash": {
-      "image": "./src/assets/images/splash-icon.png",
+      "image": "./src/assets/images/splash-icon-square.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
     "ios": {
       "supportsTablet": true,
-      "icon": "./src/assets/images/app_icon.png",
+      "icon": "./src/assets/images/app_icon_square.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
       "buildNumber": "3",
       "infoPlist": {
@@ -42,10 +41,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/app_icon.png",
+        "foregroundImage": "./src/assets/images/app_icon_square.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.masterfabric.expo.android",
       "versionCode": 3,
       "googleServicesFile": "./google-services.json"
@@ -62,7 +60,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/splash-icon.png",
+          "image": "./src/assets/images/splash-icon-square.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -74,12 +72,6 @@
           "photosPermission": "Uygulamanın fotoğraf ve video seçmek için galeri erişimine ihtiyacı var.",
           "cameraPermission": "Uygulamanın fotoğraf ve video çekmek için kamera erişimine ihtiyacı var.",
           "microphonePermission": "Uygulamanın video kaydı için mikrofon erişimine ihtiyacı var."
-        }
-      ],
-      [
-        "expo-av",
-        {
-          "microphonePermission": "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
         }
       ],
       [

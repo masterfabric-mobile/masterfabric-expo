@@ -12,7 +12,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import 'firebase/auth';
 import { ThemeProvider as MasterViewThemeProvider, initMasterView, useTheme } from 'masterfabric-expo-core';
-import { connectivityHelper } from 'masterfabric-expo-core/src/helpers/connectivity';
+import { connectivityHelper } from 'masterfabric-expo-core';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-get-random-values';
@@ -54,17 +54,14 @@ export default function RootLayout() {
   // (e.g. when Metro is unreachable or initMasterView hangs)
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setAppReady((ready) => {
-        if (!ready) {
-          console.warn('[RootLayout] App ready timeout – showing UI anyway (check Metro connection on device)');
-          SplashScreen.hideAsync();
-          return true;
-        }
-        return ready;
-      });
+      if (!isAppReady) {
+        console.warn('[RootLayout] App ready timeout – showing UI anyway (check Metro connection on device)');
+        setAppReady(true);
+        SplashScreen.hideAsync();
+      }
     }, 12000);
     return () => clearTimeout(timeout);
-  }, [setAppReady]);
+  }, [isAppReady, setAppReady]);
 
   useEffect(() => {
     if (loaded) {

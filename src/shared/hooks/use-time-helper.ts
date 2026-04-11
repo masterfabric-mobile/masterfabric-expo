@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import * as TimeHelpers from 'masterfabric-expo-core/src/helpers/time_helper';
+import * as TimeHelpers from 'masterfabric-expo-core';
 
 export function useTimeHelper() {
   const formatDate = useCallback((date: string | Date, format?: string, locale?: string) => {

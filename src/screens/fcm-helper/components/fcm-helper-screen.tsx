@@ -61,7 +61,8 @@ export function FcmHelperScreen() {
   useEffect(() => {
     if (!messaging || !isNative) return;
     const unsub = messaging().onMessage(async (remoteMessage) => {
-      const body = remoteMessage.notification?.body ?? remoteMessage.data?.body ?? JSON.stringify(remoteMessage.data ?? {});
+      const maybeBody = remoteMessage.notification?.body ?? remoteMessage.data?.body ?? remoteMessage.data ?? {};
+      const body = typeof maybeBody === 'string' ? maybeBody : JSON.stringify(maybeBody);
       setLastMessage(body);
     });
     return () => unsub();

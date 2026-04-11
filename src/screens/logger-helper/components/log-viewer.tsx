@@ -1,7 +1,7 @@
 import { loggerService } from '@/src/shared/services/logger-service';
 import { Ionicons } from '@expo/vector-icons';
 import { Sizing, getThemeColors, typographyHelper, useTheme } from 'masterfabric-expo-core';
-import type { LogLevel } from 'masterfabric-expo-core/src/helpers/logger_helper';
+import type { LogLevel } from 'masterfabric-expo-core';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 
