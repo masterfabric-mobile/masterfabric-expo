@@ -5,11 +5,11 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Platform, Pressable, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useSnackbarStore } from '@/shared/store/snackbar-store';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import type { SnackbarType } from '@/shared/models/snackbar-models';
 
 const HORIZONTAL_MARGIN = 16;
@@ -25,33 +25,68 @@ function getWindowWidth(): number {
   }
 }
 
-const TYPE_CONFIG: Record<
-  SnackbarType,
-  { icon: keyof typeof Ionicons.glyphMap; bg: string; iconColor: string }
-> = {
-  success: {
-    icon: 'checkmark-circle',
-    bg: RecipioColors.success,
-    iconColor: '#FFFFFF',
-  },
-  error: {
-    icon: 'close-circle',
-    bg: RecipioColors.error,
-    iconColor: '#FFFFFF',
-  },
-  info: {
-    icon: 'information-circle',
-    bg: RecipioColors.cardBackground,
-    iconColor: RecipioColors.primaryAccent,
-  },
-};
-
 export function Snackbar() {
   const insets = useSafeAreaInsets();
   const visible = useSnackbarStore((s) => s.visible);
   const message = useSnackbarStore((s) => s.message);
   const type = useSnackbarStore((s) => s.type);
   const hide = useSnackbarStore((s) => s.hide);
+  const colors = useRecipioColors();
+
+  const typeConfig = useMemo<
+    Record<SnackbarType, { icon: keyof typeof Ionicons.glyphMap; bg: string; iconColor: string }>
+  >(
+    () => ({
+      success: {
+        icon: 'checkmark-circle',
+        bg: colors.success,
+        iconColor: '#FFFFFF',
+      },
+      error: {
+        icon: 'close-circle',
+        bg: colors.error,
+        iconColor: '#FFFFFF',
+      },
+      info: {
+        icon: 'information-circle',
+        bg: colors.cardBackground,
+        iconColor: colors.primaryAccent,
+      },
+    }),
+    [colors]
+  );
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        wrapper: {
+          position: 'absolute',
+          zIndex: 9999,
+        },
+        snackbar: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          width: '100%',
+          paddingVertical: 14,
+          paddingHorizontal: 16,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: colors.border,
+          minHeight: 52,
+        },
+        icon: {
+          marginRight: 12,
+        },
+        message: {
+          flex: 1,
+          minWidth: 0,
+          fontSize: 15,
+          color: colors.text,
+          fontWeight: '500',
+        },
+      }),
+    [colors]
+  );
 
   const [windowWidth, setWindowWidth] = useState(getWindowWidth);
   useEffect(() => {
@@ -97,7 +132,7 @@ export function Snackbar() {
 
   if (!visible) return null;
 
-  const config = TYPE_CONFIG[type];
+  const config = typeConfig[type];
 
   return (
     <Animated.View
@@ -131,31 +166,3 @@ export function Snackbar() {
     </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    zIndex: 9999,
-  },
-  snackbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: RecipioColors.border,
-    minHeight: 52,
-  },
-  icon: {
-    marginRight: 12,
-  },
-  message: {
-    flex: 1,
-    minWidth: 0,
-    fontSize: 15,
-    color: RecipioColors.text,
-    fontWeight: '500',
-  },
-});

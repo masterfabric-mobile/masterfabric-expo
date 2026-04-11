@@ -1,9 +1,10 @@
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { ComponentProps } from 'react';
+import { useMemo } from 'react';
 import { Text, View } from 'react-native';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import type { OnboardingStep } from '../models/onboarding-models';
-import { onboardingScreenStyles } from '../styles/onboarding-screen.styles';
+import { createOnboardingScreenStyles } from '../styles/onboarding-screen.styles';
 
 const STEP_ICON_SIZE = 52;
 
@@ -12,6 +13,11 @@ interface StepContentProps {
 }
 
 export function StepContent({ step }: StepContentProps) {
+  const colors = useRecipioColors();
+  const onboardingScreenStyles = useMemo(
+    () => createOnboardingScreenStyles(colors),
+    [colors]
+  );
   const iconName = (step.icon ?? 'chef-hat') as ComponentProps<
     typeof MaterialCommunityIcons
   >['name'];
@@ -22,7 +28,7 @@ export function StepContent({ step }: StepContentProps) {
         <MaterialCommunityIcons
           name={iconName}
           size={STEP_ICON_SIZE}
-          color={RecipioColors.text}
+          color={colors.text}
         />
       </View>
       <Text style={onboardingScreenStyles.stepTitle}>{step.title}</Text>

@@ -3,7 +3,7 @@
  * Current plan (Pro Chef, Kitchen Chef, Kitchen Pro) is stored in Supabase profiles.plan_slug
  */
 
-import { getSupabaseClient } from './supabase-service';
+import { getAuthUser, getSupabaseClient } from './supabase-service';
 
 /** Plan slugs in DB; must match Supabase profiles.plan_slug */
 export const PLAN_SLUGS = {
@@ -71,12 +71,8 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
     const supabase = getSupabaseClient();
     if (!supabase) return getAnonymousProfile();
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
+    const user = await getAuthUser(supabase);
+    if (!user) {
       return getAnonymousProfile();
     }
 
@@ -112,9 +108,7 @@ export async function getMonthlyRecipesCount(): Promise<MonthlyRecipesCount> {
       1
     ).toISOString();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getAuthUser(supabase);
     if (!user) return { saved: 0, limit: 50 };
 
     const limit = 50;
@@ -153,11 +147,8 @@ export async function updateUserPlan(planSlug: PlanSlug, expiresAt?: Date | null
     const supabase = getSupabaseClient();
     if (!supabase) return false;
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) return false;
+    const user = await getAuthUser(supabase);
+    if (!user) return false;
 
     const { error } = await supabase
       .from('profiles')

@@ -3,7 +3,7 @@
  * Configuration from app.json extra or EXPO_PUBLIC_* env vars
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 
 // .env öncelikli (EXPO_PUBLIC_*), yoksa app.json extra
@@ -52,4 +52,22 @@ export function getSupabaseClient(): SupabaseClient | null {
 
 export function isSupabaseConfigured(): boolean {
   return !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+}
+
+/**
+ * Current auth user for REST calls. Prefer getSession() (local) over getUser()
+ * (network round-trip); flaky networks were breaking favorites and profile sync.
+ */
+export async function getAuthUser(supabase: SupabaseClient): Promise<User | null> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (session?.user) return session.user;
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+  if (!error && user) return user;
+  return null;
 }

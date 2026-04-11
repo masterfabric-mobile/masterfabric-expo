@@ -1,5 +1,6 @@
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
+import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface StepControlsProps {
@@ -20,6 +21,48 @@ export function StepControls({
   onComplete,
 }: StepControlsProps) {
   const { t } = useI18n();
+  const colors = useRecipioColors();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingHorizontal: 8,
+          paddingTop: 28,
+          paddingBottom: 16,
+          gap: 16,
+        },
+        sideButton: {
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          minWidth: 56,
+        },
+        sidePlaceholder: {
+          width: 56,
+        },
+        sideLabel: {
+          color: colors.textSecondary,
+          fontSize: 16,
+        },
+        primaryButton: {
+          backgroundColor: colors.primaryAccent,
+          paddingVertical: 14,
+          paddingHorizontal: 32,
+          borderRadius: 12,
+          minWidth: 140,
+          alignItems: 'center',
+        },
+        primaryLabel: {
+          color: '#FFFFFF',
+          fontWeight: '600',
+          fontSize: 16,
+        },
+      }),
+    [colors]
+  );
+
   const isLastStep = currentStep === totalSteps - 1;
 
   return (
@@ -51,40 +94,3 @@ export function StepControls({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingTop: 28,
-    paddingBottom: 16,
-    gap: 16,
-  },
-  sideButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    minWidth: 56,
-  },
-  sidePlaceholder: {
-    width: 56,
-  },
-  sideLabel: {
-    color: RecipioColors.textSecondary,
-    fontSize: 16,
-  },
-  primaryButton: {
-    backgroundColor: RecipioColors.primaryAccent,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    minWidth: 140,
-    alignItems: 'center',
-  },
-  primaryLabel: {
-    color: RecipioColors.text,
-    fontWeight: '600',
-    fontSize: 16,
-  },
-});

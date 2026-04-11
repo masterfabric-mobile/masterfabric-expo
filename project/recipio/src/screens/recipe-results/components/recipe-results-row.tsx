@@ -1,22 +1,24 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
+import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
 import type { RecipeCardWithMatch } from '@/shared/services/recipe-service';
 import { formatRecipeDifficulty, formatRecipeTime } from '@/shared/utils/recipe-display';
 import {
   getMatchBadgeStyle,
-  recipeResultsStyles,
+  type RecipeResultsStyles,
 } from '../styles/recipe-results.styles';
 
 interface RecipeResultsRowProps {
   recipe: RecipeCardWithMatch;
+  styles: RecipeResultsStyles;
+  colors: RecipioColorsPalette;
   onPress: () => void;
 }
 
-export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
+export function RecipeResultsRow({ recipe, styles: recipeResultsStyles, colors, onPress }: RecipeResultsRowProps) {
   const { t } = useI18n();
-  const matchStyle = getMatchBadgeStyle(recipe.matchPercent);
+  const matchStyle = getMatchBadgeStyle(recipeResultsStyles, recipe.matchPercent);
   const statusText = recipe.hasAllIngredients
     ? t('recipeResults.youHaveAll')
     : recipe.missingCount === 1 && recipe.missingIngredients[0]
@@ -70,16 +72,16 @@ export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
               <Ionicons
                 name="checkmark-circle"
                 size={14}
-                color={RecipioColors.success}
+                color={colors.success}
               />
             ) : recipe.missingCount === 1 ? (
               <Ionicons
                 name="cart-outline"
                 size={14}
-                color={RecipioColors.error}
+                color={colors.error}
               />
             ) : (
-              <Ionicons name="warning" size={14} color={RecipioColors.orange} />
+              <Ionicons name="warning" size={14} color={colors.orange} />
             )}
             <Text style={[recipeResultsStyles.cardStatusText, statusColor]}>
               {statusText}
@@ -88,7 +90,7 @@ export function RecipeResultsRow({ recipe, onPress }: RecipeResultsRowProps) {
           <Ionicons
             name="chevron-forward"
             size={20}
-            color={RecipioColors.textSecondary}
+            color={colors.textSecondary}
           />
         </View>
       </View>

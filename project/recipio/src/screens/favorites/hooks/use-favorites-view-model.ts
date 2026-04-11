@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
@@ -31,10 +31,6 @@ export function useFavoritesViewModel() {
       setLoading(false);
     }
   }, [locale, dietaryPreferences, setLoading, setRecipes]);
-
-  useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
 
   useFocusEffect(
     useCallback(() => {

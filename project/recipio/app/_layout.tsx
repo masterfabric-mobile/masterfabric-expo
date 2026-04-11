@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { Platform, useWindowDimensions, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { I18nProvider } from '@/shared/i18n';
 import { Snackbar } from '@/shared/components/Snackbar';
@@ -72,6 +73,7 @@ export default function RootLayout() {
     return (
       <ThemeProvider defaultTheme={theme} enablePersistence={false}>
         <RecipioThemeSync />
+        <SafeAreaProvider>
         <I18nProvider>
           <Snackbar />
           <View
@@ -97,6 +99,7 @@ export default function RootLayout() {
             </View>
           </View>
         </I18nProvider>
+        </SafeAreaProvider>
       </ThemeProvider>
     );
   }
@@ -104,10 +107,12 @@ export default function RootLayout() {
   return (
     <ThemeProvider defaultTheme={theme} enablePersistence={false}>
       <RecipioThemeSync />
+      <SafeAreaProvider>
       <I18nProvider>
         <Snackbar />
         {stack}
       </I18nProvider>
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

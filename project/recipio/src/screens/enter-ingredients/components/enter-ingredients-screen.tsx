@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useMemo } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,10 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { getRecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useEnterIngredientsViewModel } from '../hooks/use-enter-ingredients-view-model';
-import { enterIngredientsStyles } from '../styles/enter-ingredients.styles';
+import { createEnterIngredientsStyles } from '../styles/enter-ingredients.styles';
 
 const SUGGESTED_INGREDIENT_KEYS = [
   'ingredient.egg',
@@ -30,6 +31,11 @@ const SUGGESTED_INGREDIENT_KEYS = [
 
 export function EnterIngredientsScreen() {
   const { t } = useI18n();
+  const colors = useRecipioColors();
+  const enterIngredientsStyles = useMemo(
+    () => createEnterIngredientsStyles(colors),
+    [colors]
+  );
   const {
     inputValue,
     ingredients,
@@ -49,7 +55,7 @@ export function EnterIngredientsScreen() {
     <View style={enterIngredientsStyles.container}>
       <View style={enterIngredientsStyles.header}>
         <TouchableOpacity style={enterIngredientsStyles.backBtn} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color={getRecipioColors(false).text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={enterIngredientsStyles.title}>{t('enterIngredients.title')}</Text>
         <TouchableOpacity
@@ -88,7 +94,7 @@ export function EnterIngredientsScreen() {
             <TextInput
               style={enterIngredientsStyles.input}
               placeholder={t('enterIngredients.placeholder')}
-              placeholderTextColor={getRecipioColors(false).textSecondary}
+              placeholderTextColor={colors.textSecondary}
               value={inputValue}
               onChangeText={setInputValue}
               onSubmitEditing={handleAddIngredient}
@@ -126,7 +132,7 @@ export function EnterIngredientsScreen() {
                     <Ionicons
                       name="close-circle"
                       size={20}
-                      color={getRecipioColors(false).textSecondary}
+                      color={colors.textSecondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -146,7 +152,7 @@ export function EnterIngredientsScreen() {
                     key={food}
                     style={[
                       enterIngredientsStyles.suggestionChip,
-                      isAdded && { opacity: 0.6, borderColor: getRecipioColors(false).primaryAccent },
+                      isAdded && { opacity: 0.6, borderColor: colors.primaryAccent },
                     ]}
                     onPress={() => handleAddSuggestion(food)}
                     activeOpacity={0.7}

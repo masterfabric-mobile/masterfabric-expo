@@ -1,12 +1,19 @@
 import { ThemedView } from '@masterfabric-expo/core';
+import { useMemo } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useOnboardingViewModel } from '../hooks/use-onboarding-view-model';
+import { createOnboardingScreenStyles } from '../styles/onboarding-screen.styles';
 import { StepContent } from './step-content';
 import { StepControls } from './step-controls';
 import { StepIndicator } from './step-indicator';
-import { onboardingScreenStyles } from '../styles/onboarding-screen.styles';
 
 export function OnboardingScreen() {
+  const colors = useRecipioColors();
+  const onboardingScreenStyles = useMemo(
+    () => createOnboardingScreenStyles(colors),
+    [colors]
+  );
   const {
     currentStep,
     steps,

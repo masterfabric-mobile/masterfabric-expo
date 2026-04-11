@@ -3,7 +3,7 @@
  * Table: favorites (user_id, recipe_id)
  */
 
-import { getSupabaseClient } from './supabase-service';
+import { getAuthUser, getSupabaseClient } from './supabase-service';
 import type { RecipeCard } from './recipe-service';
 import { getRecipesByIds } from './recipe-service';
 import type { DietaryPrefsForFilter } from '@/shared/utils/dietary-filter';
@@ -11,9 +11,8 @@ import type { DietaryPrefsForFilter } from '@/shared/utils/dietary-filter';
 export async function getCurrentUserId(): Promise<string | null> {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error || !user) return null;
-  return user.id;
+  const user = await getAuthUser(supabase);
+  return user?.id ?? null;
 }
 
 /** Get list of recipe IDs favorited by the current user */
@@ -84,7 +83,10 @@ export async function addFavorite(recipeId: number): Promise<FavoriteResult> {
 
   if (error) {
     if (error.code === '23505') return { success: true }; // already exists
-    console.warn('addFavorite error:', error.code, error.message);
+    console.warn(
+      'addFavorite error:',
+      [error.code, error.message, error.details].filter(Boolean).join(' | ') || error
+    );
     return { success: false, reason: 'error' };
   }
   return { success: true };
@@ -105,7 +107,10 @@ export async function removeFavorite(recipeId: number): Promise<FavoriteResult> 
     .eq('recipe_id', recipeId);
 
   if (error) {
-    console.warn('removeFavorite error:', error.code, error.message);
+    console.warn(
+      'removeFavorite error:',
+      [error.code, error.message, error.details].filter(Boolean).join(' | ') || error
+    );
     return { success: false, reason: 'error' };
   }
   return { success: true };

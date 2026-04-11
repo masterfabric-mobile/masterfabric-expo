@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useMemo } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -6,11 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { RECIPE_CATEGORIES } from '@/shared/services/recipe-service';
 import { useRecipeResultsViewModel } from '../hooks/use-recipe-results-view-model';
-import { recipeResultsStyles } from '../styles/recipe-results.styles';
+import { createRecipeResultsStyles } from '../styles/recipe-results.styles';
 import { RecipeResultsRow } from './recipe-results-row';
 
 export function RecipeResultsScreen() {
@@ -23,6 +24,8 @@ export function RecipeResultsScreen() {
     handleRecipePress,
   } = useRecipeResultsViewModel();
   const { t } = useI18n();
+  const colors = useRecipioColors();
+  const recipeResultsStyles = useMemo(() => createRecipeResultsStyles(colors), [colors]);
 
   if (loading) {
     return (
@@ -34,7 +37,7 @@ export function RecipeResultsScreen() {
       >
         <ActivityIndicator
           size="large"
-          color={RecipioColors.primaryAccent}
+          color={colors.primaryAccent}
         />
       </View>
     );
@@ -51,7 +54,7 @@ export function RecipeResultsScreen() {
           accessibilityRole="button"
           accessibilityLabel={t('common.goBack')}
         >
-          <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={recipeResultsStyles.title}>
           {categorySlug
@@ -87,6 +90,8 @@ export function RecipeResultsScreen() {
         renderItem={({ item }) => (
           <RecipeResultsRow
             recipe={item}
+            styles={recipeResultsStyles}
+            colors={colors}
             onPress={() => handleRecipePress(item.id)}
           />
         )}

@@ -2,7 +2,7 @@
  * Profile service — Supabase profile + stats for profile screen
  */
 
-import { getSupabaseClient } from './supabase-service';
+import { getAuthUser, getSupabaseClient } from './supabase-service';
 import { getDietaryPreferences } from './dietary-preferences-service';
 import type {
   ProfileUser,
@@ -16,12 +16,8 @@ export async function getProfileFromSupabase(): Promise<ProfileUser | null> {
     const supabase = getSupabaseClient();
     if (!supabase) return null;
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) return null;
+    const user = await getAuthUser(supabase);
+    if (!user) return null;
 
     const { data: profile } = await supabase
       .from('profiles')

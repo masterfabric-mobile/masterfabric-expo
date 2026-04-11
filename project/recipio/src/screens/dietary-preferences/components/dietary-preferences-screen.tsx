@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/shared/i18n';
 import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useDietaryPreferencesViewModel } from '../hooks/use-dietary-preferences-view-model';
@@ -59,14 +60,17 @@ export function DietaryPreferencesScreen() {
 
   if (loading) {
     return (
-      <View style={[dietaryPreferencesStyles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+      <SafeAreaView
+        style={[dietaryPreferencesStyles.container, { justifyContent: 'center', alignItems: 'center' }]}
+        edges={['top', 'bottom', 'left', 'right']}
+      >
         <ActivityIndicator size="large" color={colors.primaryAccent} />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={dietaryPreferencesStyles.container}>
+    <SafeAreaView style={dietaryPreferencesStyles.container} edges={['top', 'bottom', 'left', 'right']}>
       <View style={dietaryPreferencesStyles.header}>
         <View style={dietaryPreferencesStyles.headerSide}>
           <TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={12}>
@@ -201,6 +205,6 @@ export function DietaryPreferencesScreen() {
           )}
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

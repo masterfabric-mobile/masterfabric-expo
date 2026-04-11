@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useI18n } from '@/shared/i18n';
@@ -34,7 +35,7 @@ export function ProfileScreen() {
   } = useProfileViewModel();
 
   return (
-    <View style={profileStyles.container}>
+    <SafeAreaView style={profileStyles.container} edges={['top', 'left', 'right']}>
       <View style={profileStyles.header}>
         <View style={profileStyles.headerSide}>
           <TouchableOpacity
@@ -100,6 +101,6 @@ export function ProfileScreen() {
         )}
       </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

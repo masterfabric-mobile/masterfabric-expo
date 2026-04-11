@@ -155,21 +155,25 @@ export function useRecipeDetailViewModel() {
       );
       return;
     }
-    addFavorite(recipe.id).then((result) => {
-      if (result.success) {
-        toggleFavorite();
-        if (user) {
-          getProfileStatsFromSupabase(user.id).then(setStats);
+    addFavorite(recipe.id)
+      .then((result) => {
+        if (result.success) {
+          toggleFavorite();
+          if (user) {
+            getProfileStatsFromSupabase(user.id).then(setStats);
+          }
+          snackbar.success(t('favorites.snackbarAdded'));
+        } else {
+          const message =
+            result.reason === 'not_signed_in'
+              ? t('favorites.snackbarErrorNotSignedIn')
+              : t('favorites.snackbarErrorSave');
+          snackbar.error(message);
         }
-        snackbar.success(t('favorites.snackbarAdded'));
-      } else {
-        const message =
-          result.reason === 'not_signed_in'
-            ? t('favorites.snackbarErrorNotSignedIn')
-            : t('favorites.snackbarErrorSave');
-        snackbar.error(message);
-      }
-    });
+      })
+      .catch(() => {
+        snackbar.error(t('favorites.snackbarErrorSave'));
+      });
   }, [recipe, favorite, toggleFavorite, user, setStats, snackbar, t, performRemoveFavorite]);
 
   return {

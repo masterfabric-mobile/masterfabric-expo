@@ -1,15 +1,22 @@
-import { RecipioColors } from '@/shared/constants/recipio-colors';
-import { useI18n } from '@/shared/i18n';
+import { useMemo } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import {
-  splashScreenStyles,
+  createSplashScreenStyles,
   splashIconSize,
 } from '../styles/splash-screen.styles';
 
 export function SplashScreen() {
   const { t } = useI18n();
+  const colors = useRecipioColors();
+  const splashScreenStyles = useMemo(
+    () => createSplashScreenStyles(colors),
+    [colors]
+  );
+
   return (
     <SafeAreaView style={splashScreenStyles.container}>
       <View style={splashScreenStyles.content}>
@@ -26,7 +33,7 @@ export function SplashScreen() {
       <View style={splashScreenStyles.loaderSection}>
         <ActivityIndicator
           size="large"
-          color={RecipioColors.primaryAccent}
+          color={colors.primaryAccent}
           style={splashScreenStyles.loader}
         />
         <Text style={splashScreenStyles.loadingLabel}>{t('splash.loading')}</Text>

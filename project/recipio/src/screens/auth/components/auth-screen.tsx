@@ -5,7 +5,7 @@
 
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Platform,
   ScrollView,
@@ -15,8 +15,8 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RecipioColors } from '@/shared/constants/recipio-colors';
 import { useI18n } from '@/shared/i18n';
+import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import {
   AUTH_ERROR_COLORS,
   EMAIL_MAX_LENGTH,
@@ -29,7 +29,7 @@ import {
   USERNAME_MAX_LENGTH,
 } from '../constants/auth-constants';
 import { useAuthViewModel } from '../hooks/use-auth-view-model';
-import { authScreenStyles } from '../styles/auth-screen.styles';
+import { createAuthScreenStyles } from '../styles/auth-screen.styles';
 
 export function AuthScreen() {
   const { t } = useI18n();
@@ -65,9 +65,12 @@ export function AuthScreen() {
     checkPasswordRequirements,
   } = useAuthViewModel();
 
+  const colors = useRecipioColors();
+  const authScreenStyles = useMemo(() => createAuthScreenStyles(colors), [colors]);
+
   return (
     <SafeAreaView
-      style={[authScreenStyles.container, { backgroundColor: RecipioColors.background }]}
+      style={authScreenStyles.container}
       edges={['top']}
     >
       <View style={authScreenStyles.headerContainer}>
@@ -75,7 +78,7 @@ export function AuthScreen() {
           style={{ position: 'absolute', left: 24, top: 16, padding: 8 }}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color={RecipioColors.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <View style={authScreenStyles.logoPlaceholder} />
       </View>
@@ -99,7 +102,7 @@ export function AuthScreen() {
                 style={[
                   authScreenStyles.tabButtonText,
                   activeTab === 'login' && {
-                    color: RecipioColors.primaryAccent,
+                    color: colors.primaryAccent,
                     fontWeight: '600',
                   },
                 ]}
@@ -118,7 +121,7 @@ export function AuthScreen() {
                 style={[
                   authScreenStyles.tabButtonText,
                   activeTab === 'register' && {
-                    color: RecipioColors.primaryAccent,
+                    color: colors.primaryAccent,
                     fontWeight: '600',
                   },
                 ]}
@@ -144,7 +147,7 @@ export function AuthScreen() {
                     }}
                     onFocus={() => handleFieldTouch('loginEmail')}
                     placeholder={t('auth.emailPlaceholder')}
-                    placeholderTextColor={RecipioColors.textSecondary}
+                    placeholderTextColor={colors.textSecondary}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
@@ -182,7 +185,7 @@ export function AuthScreen() {
                       }}
                       onFocus={() => handleFieldTouch('loginPassword')}
                       placeholder={t('auth.passwordPlaceholder')}
-                      placeholderTextColor={RecipioColors.textSecondary}
+                      placeholderTextColor={colors.textSecondary}
                       secureTextEntry={!showPassword.login}
                       maxLength={PASSWORD_MAX_LENGTH}
                       autoCapitalize="none"
@@ -201,7 +204,7 @@ export function AuthScreen() {
                             : 'eye-outline'
                         }
                         size={ICON_SIZES.medium}
-                        color={RecipioColors.textSecondary}
+                        color={colors.textSecondary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -215,11 +218,11 @@ export function AuthScreen() {
                       authScreenStyles.checkbox,
                       {
                         backgroundColor: rememberMe
-                          ? RecipioColors.primaryAccent
+                          ? colors.primaryAccent
                           : 'transparent',
                         borderColor: rememberMe
-                          ? RecipioColors.primaryAccent
-                          : RecipioColors.border,
+                          ? colors.primaryAccent
+                          : colors.border,
                       },
                     ]}
                   >
@@ -241,8 +244,8 @@ export function AuthScreen() {
                     {
                       backgroundColor:
                         isLoginFormValid && !isSubmitting
-                          ? RecipioColors.primaryAccent
-                          : RecipioColors.border,
+                          ? colors.primaryAccent
+                          : colors.border,
                     },
                   ]}
                   onPress={handleLogin}
@@ -255,7 +258,7 @@ export function AuthScreen() {
                         color:
                           isLoginFormValid && !isSubmitting
                             ? '#FFF'
-                            : RecipioColors.textSecondary,
+                            : colors.textSecondary,
                       },
                     ]}
                   >
@@ -273,8 +276,8 @@ export function AuthScreen() {
                       {
                         borderColor:
                           !touched.registerFullName || registerFullName.isValid
-                            ? RecipioColors.border
-                            : RecipioColors.error,
+                            ? colors.border
+                            : colors.error,
                       },
                     ]}
                     value={registerFullName.value}
@@ -286,7 +289,7 @@ export function AuthScreen() {
                     }}
                     onFocus={() => handleFieldTouch('registerFullName')}
                     placeholder={t('auth.fullNamePlaceholder')}
-                    placeholderTextColor={RecipioColors.textSecondary}
+                    placeholderTextColor={colors.textSecondary}
                     autoCapitalize="words"
                     autoComplete="name"
                     maxLength={FULL_NAME_MAX_LENGTH}
@@ -307,8 +310,8 @@ export function AuthScreen() {
                       {
                         borderColor:
                           !touched.registerEmail || registerEmail.isValid
-                            ? RecipioColors.border
-                            : RecipioColors.error,
+                            ? colors.border
+                            : colors.error,
                       },
                     ]}
                     value={registerEmail.value}
@@ -320,7 +323,7 @@ export function AuthScreen() {
                     }}
                     onFocus={() => handleFieldTouch('registerEmail')}
                     placeholder={t('auth.emailPlaceholder')}
-                    placeholderTextColor={RecipioColors.textSecondary}
+                    placeholderTextColor={colors.textSecondary}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     autoComplete="email"
@@ -342,8 +345,8 @@ export function AuthScreen() {
                       {
                         borderColor:
                           !touched.registerUsername || registerUsername.isValid
-                            ? RecipioColors.border
-                            : RecipioColors.error,
+                            ? colors.border
+                            : colors.error,
                       },
                     ]}
                     value={registerUsername.value}
@@ -355,7 +358,7 @@ export function AuthScreen() {
                     }}
                     onFocus={() => handleFieldTouch('registerUsername')}
                     placeholder={t('auth.usernamePlaceholder')}
-                    placeholderTextColor={RecipioColors.textSecondary}
+                    placeholderTextColor={colors.textSecondary}
                     autoCapitalize="none"
                     autoComplete="username"
                     maxLength={USERNAME_MAX_LENGTH}
@@ -376,8 +379,8 @@ export function AuthScreen() {
                       {
                         borderColor:
                           !touched.registerPhone || registerPhone.isValid
-                            ? RecipioColors.border
-                            : RecipioColors.error,
+                            ? colors.border
+                            : colors.error,
                       },
                     ]}
                     value={registerPhone.value}
@@ -390,7 +393,7 @@ export function AuthScreen() {
                     }}
                     onFocus={() => handleFieldTouch('registerPhone')}
                     placeholder={t('auth.phonePlaceholder')}
-                    placeholderTextColor={RecipioColors.textSecondary}
+                    placeholderTextColor={colors.textSecondary}
                     keyboardType="phone-pad"
                     autoCapitalize="none"
                     autoComplete="tel"
@@ -413,8 +416,8 @@ export function AuthScreen() {
                         {
                           borderColor:
                             !touched.registerPassword || registerPassword.isValid
-                              ? RecipioColors.border
-                              : RecipioColors.error,
+                              ? colors.border
+                              : colors.error,
                         },
                       ]}
                       value={
@@ -443,7 +446,7 @@ export function AuthScreen() {
                       }}
                       onFocus={() => handleFieldTouch('registerPassword')}
                       placeholder={t('auth.passwordPlaceholderCreate')}
-                      placeholderTextColor={RecipioColors.textSecondary}
+                      placeholderTextColor={colors.textSecondary}
                       secureTextEntry={!showPassword.register}
                       maxLength={PASSWORD_MAX_LENGTH}
                       autoCapitalize="none"
@@ -465,7 +468,7 @@ export function AuthScreen() {
                             : 'eye-outline'
                         }
                         size={ICON_SIZES.medium}
-                        color={RecipioColors.textSecondary}
+                        color={colors.textSecondary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -485,7 +488,7 @@ export function AuthScreen() {
                               color={
                                 req.met
                                   ? AUTH_ERROR_COLORS.success
-                                  : RecipioColors.textSecondary
+                                  : colors.textSecondary
                               }
                             />
                             <Text
@@ -494,7 +497,7 @@ export function AuthScreen() {
                                 {
                                   color: req.met
                                     ? AUTH_ERROR_COLORS.success
-                                    : RecipioColors.textSecondary,
+                                    : colors.textSecondary,
                                 },
                               ]}
                             >
@@ -525,8 +528,8 @@ export function AuthScreen() {
                           borderColor:
                             !touched.registerConfirmPassword ||
                             (isConfirmPasswordValid && passwordsMatch)
-                              ? RecipioColors.border
-                              : RecipioColors.error,
+                              ? colors.border
+                              : colors.error,
                         },
                       ]}
                       value={
@@ -557,7 +560,7 @@ export function AuthScreen() {
                         handleFieldTouch('registerConfirmPassword')
                       }
                       placeholder={t('auth.confirmPasswordPlaceholder')}
-                      placeholderTextColor={RecipioColors.textSecondary}
+                      placeholderTextColor={colors.textSecondary}
                       secureTextEntry={!showPassword.registerConfirm}
                       maxLength={PASSWORD_MAX_LENGTH}
                       autoCapitalize="none"
@@ -579,7 +582,7 @@ export function AuthScreen() {
                             : 'eye-outline'
                         }
                         size={ICON_SIZES.medium}
-                        color={RecipioColors.textSecondary}
+                        color={colors.textSecondary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -636,8 +639,8 @@ export function AuthScreen() {
                     {
                       backgroundColor:
                         isRegisterFormValid && !isSubmitting
-                          ? RecipioColors.primaryAccent
-                          : RecipioColors.border,
+                          ? colors.primaryAccent
+                          : colors.border,
                     },
                   ]}
                   onPress={handleRegister}
@@ -650,7 +653,7 @@ export function AuthScreen() {
                         color:
                           isRegisterFormValid && !isSubmitting
                             ? '#FFF'
-                            : RecipioColors.textSecondary,
+                            : colors.textSecondary,
                       },
                     ]}
                   >
@@ -690,7 +693,7 @@ export function AuthScreen() {
               <Ionicons
                 name="logo-github"
                 size={ICON_SIZES.medium}
-                color={RecipioColors.text}
+                color={colors.text}
               />
               <Text style={authScreenStyles.socialButtonText}>
                 {t('auth.continueWithGitHub')}
@@ -704,7 +707,7 @@ export function AuthScreen() {
                 <Ionicons
                   name="logo-apple"
                   size={ICON_SIZES.medium}
-                  color={RecipioColors.text}
+                  color={colors.text}
                 />
                 <Text style={authScreenStyles.socialButtonText}>
                   {t('auth.continueWithApple')}

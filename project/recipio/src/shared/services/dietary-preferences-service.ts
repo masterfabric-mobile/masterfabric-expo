@@ -2,7 +2,7 @@
  * Dietary preferences — load/save from Supabase profiles
  */
 
-import { getSupabaseClient } from './supabase-service';
+import { getAuthUser, getSupabaseClient } from './supabase-service';
 import type { DietaryPreferences } from '@/screens/dietary-preferences/models/dietary-preferences-models';
 
 export async function getDietaryPreferences(): Promise<DietaryPreferences | null> {
@@ -10,11 +10,8 @@ export async function getDietaryPreferences(): Promise<DietaryPreferences | null
     const supabase = getSupabaseClient();
     if (!supabase) return null;
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) return null;
+    const user = await getAuthUser(supabase);
+    if (!user) return null;
 
     const { data: profile } = await supabase
       .from('profiles')
@@ -38,11 +35,8 @@ export async function updateDietaryPreferences(prefs: DietaryPreferences): Promi
     const supabase = getSupabaseClient();
     if (!supabase) return false;
 
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) return false;
+    const user = await getAuthUser(supabase);
+    if (!user) return false;
 
     const { error } = await supabase
       .from('profiles')
