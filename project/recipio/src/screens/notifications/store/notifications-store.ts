@@ -8,6 +8,8 @@ interface NotificationsStore {
   setLoading: (value: boolean) => void;
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
+  removeItem: (id: string) => void;
+  clearAll: () => void;
 }
 
 export const useNotificationsStore = create<NotificationsStore>((set) => ({
@@ -25,4 +27,9 @@ export const useNotificationsStore = create<NotificationsStore>((set) => ({
     set((state) => ({
       items: state.items.map((item) => ({ ...item, read: true })),
     })),
+  removeItem: (id) =>
+    set((state) => ({
+      items: state.items.filter((item) => item.id !== id),
+    })),
+  clearAll: () => set({ items: [] }),
 }));

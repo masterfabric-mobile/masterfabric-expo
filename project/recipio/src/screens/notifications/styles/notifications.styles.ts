@@ -1,5 +1,6 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
+import { STACK_HEADER_ROW } from '@/shared/constants/stack-screen-header';
 
 export function createNotificationsStyles(colors: RecipioColorsPalette) {
   return StyleSheet.create({
@@ -11,9 +12,9 @@ export function createNotificationsStyles(colors: RecipioColorsPalette) {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingTop: Platform.OS === 'web' ? 16 : 48,
-      paddingBottom: 16,
-      paddingHorizontal: 20,
+      paddingTop: STACK_HEADER_ROW.paddingTop,
+      paddingBottom: STACK_HEADER_ROW.paddingBottom,
+      paddingHorizontal: STACK_HEADER_ROW.paddingHorizontal,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
       backgroundColor: colors.cardBackground,
@@ -22,13 +23,16 @@ export function createNotificationsStyles(colors: RecipioColorsPalette) {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 12,
+      flex: 1,
+      minWidth: 0,
     },
     backButton: {
       padding: 4,
       marginLeft: -4,
     },
     headerTitle: {
-      fontSize: 28,
+      flex: 1,
+      fontSize: 22,
       fontWeight: '700',
       color: colors.text,
       letterSpacing: -0.5,
@@ -42,6 +46,19 @@ export function createNotificationsStyles(colors: RecipioColorsPalette) {
       fontWeight: '600',
       color: colors.primaryAccent,
     },
+    headerRight: {
+      alignItems: 'flex-end',
+      gap: 6,
+    },
+    clearAll: {
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+    },
+    clearAllText: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.error,
+    },
     list: {
       paddingHorizontal: 20,
       paddingTop: 16,
@@ -49,13 +66,27 @@ export function createNotificationsStyles(colors: RecipioColorsPalette) {
     },
     card: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'stretch',
       backgroundColor: colors.cardBackground,
       borderRadius: 12,
-      padding: 16,
+      paddingVertical: 12,
+      paddingLeft: 16,
+      paddingRight: 8,
       marginBottom: 12,
       borderWidth: 1,
       borderColor: colors.border,
+    },
+    cardPressable: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+    cardDelete: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'stretch',
+      minWidth: 44,
+      paddingLeft: 4,
     },
     cardUnread: {
       borderLeftWidth: 4,

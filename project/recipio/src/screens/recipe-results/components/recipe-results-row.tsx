@@ -13,10 +13,18 @@ interface RecipeResultsRowProps {
   recipe: RecipeCardWithMatch;
   styles: RecipeResultsStyles;
   colors: RecipioColorsPalette;
+  /** When false (e.g. category browse), hide match % and pantry status */
+  showIngredientMatch?: boolean;
   onPress: () => void;
 }
 
-export function RecipeResultsRow({ recipe, styles: recipeResultsStyles, colors, onPress }: RecipeResultsRowProps) {
+export function RecipeResultsRow({
+  recipe,
+  styles: recipeResultsStyles,
+  colors,
+  showIngredientMatch = false,
+  onPress,
+}: RecipeResultsRowProps) {
   const { t } = useI18n();
   const matchStyle = getMatchBadgeStyle(recipeResultsStyles, recipe.matchPercent);
   const statusText = recipe.hasAllIngredients
@@ -51,11 +59,13 @@ export function RecipeResultsRow({ recipe, styles: recipeResultsStyles, colors, 
             <Text style={{ fontSize: 48 }}>🍳</Text>
           </View>
         )}
-        <View style={[recipeResultsStyles.matchBadge, matchStyle]}>
-          <Text style={recipeResultsStyles.matchBadgeText}>
-            {t('recipeResults.match', { percent: recipe.matchPercent })}
-          </Text>
-        </View>
+        {showIngredientMatch ? (
+          <View style={[recipeResultsStyles.matchBadge, matchStyle]}>
+            <Text style={recipeResultsStyles.matchBadgeText}>
+              {t('recipeResults.match', { percent: recipe.matchPercent })}
+            </Text>
+          </View>
+        ) : null}
       </View>
       <View style={recipeResultsStyles.cardBody}>
         <Text style={recipeResultsStyles.cardTitle} numberOfLines={2}>
@@ -66,32 +76,47 @@ export function RecipeResultsRow({ recipe, styles: recipeResultsStyles, colors, 
           <Text style={recipeResultsStyles.cardMetaText}>•</Text>
           <Text style={recipeResultsStyles.cardMetaText}>{formatRecipeDifficulty(t, recipe.difficulty)}</Text>
         </View>
-        <View style={recipeResultsStyles.cardStatusRow}>
-          <View style={recipeResultsStyles.cardStatus}>
-            {recipe.hasAllIngredients ? (
+        <View
+          style={[
+            recipeResultsStyles.cardStatusRow,
+            !showIngredientMatch && recipeResultsStyles.cardStatusRowNoMatch,
+          ]}
+        >
+          {showIngredientMatch ? (
+            <>
+              <View style={recipeResultsStyles.cardStatus}>
+                {recipe.hasAllIngredients ? (
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={14}
+                    color={colors.success}
+                  />
+                ) : recipe.missingCount === 1 ? (
+                  <Ionicons
+                    name="cart-outline"
+                    size={14}
+                    color={colors.error}
+                  />
+                ) : (
+                  <Ionicons name="warning" size={14} color={colors.orange} />
+                )}
+                <Text style={[recipeResultsStyles.cardStatusText, statusColor]}>
+                  {statusText}
+                </Text>
+              </View>
               <Ionicons
-                name="checkmark-circle"
-                size={14}
-                color={colors.success}
+                name="chevron-forward"
+                size={20}
+                color={colors.textSecondary}
               />
-            ) : recipe.missingCount === 1 ? (
-              <Ionicons
-                name="cart-outline"
-                size={14}
-                color={colors.error}
-              />
-            ) : (
-              <Ionicons name="warning" size={14} color={colors.orange} />
-            )}
-            <Text style={[recipeResultsStyles.cardStatusText, statusColor]}>
-              {statusText}
-            </Text>
-          </View>
-          <Ionicons
-            name="chevron-forward"
-            size={20}
-            color={colors.textSecondary}
-          />
+            </>
+          ) : (
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.textSecondary}
+            />
+          )}
         </View>
       </View>
     </TouchableOpacity>

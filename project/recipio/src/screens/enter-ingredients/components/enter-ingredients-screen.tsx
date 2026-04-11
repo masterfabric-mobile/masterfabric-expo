@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/shared/i18n';
 import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useEnterIngredientsViewModel } from '../hooks/use-enter-ingredients-view-model';
@@ -52,7 +53,7 @@ export function EnterIngredientsScreen() {
   const suggestedFoods = SUGGESTED_INGREDIENT_KEYS.map((key) => t(key));
 
   return (
-    <View style={enterIngredientsStyles.container}>
+    <SafeAreaView style={enterIngredientsStyles.container} edges={['top', 'left', 'right']}>
       <View style={enterIngredientsStyles.header}>
         <TouchableOpacity style={enterIngredientsStyles.backBtn} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={colors.text} />
@@ -178,6 +179,6 @@ export function EnterIngredientsScreen() {
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }

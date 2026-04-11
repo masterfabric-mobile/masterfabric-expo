@@ -32,6 +32,7 @@ export function ProfileScreen() {
     handleDietaryPreferencesPress,
     handleHelpSupportPress,
     locale,
+    unreadNotificationCount,
   } = useProfileViewModel();
 
   return (
@@ -48,13 +49,18 @@ export function ProfileScreen() {
         </View>
         <Text style={profileStyles.title}>{t('profile.title')}</Text>
         <View style={[profileStyles.headerSide, profileStyles.headerSideRight]}>
-          <TouchableOpacity
-            style={profileStyles.headerButton}
-            onPress={handleNotificationsPress}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="notifications-outline" size={24} color={colors.text} />
-          </TouchableOpacity>
+          <View style={profileStyles.headerNotificationWrap}>
+            <TouchableOpacity
+              style={profileStyles.headerButton}
+              onPress={handleNotificationsPress}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="notifications-outline" size={24} color={colors.text} />
+            </TouchableOpacity>
+            {unreadNotificationCount > 0 ? (
+              <View style={profileStyles.notificationUnreadDot} />
+            ) : null}
+          </View>
         </View>
       </View>
       {isLoading ? (

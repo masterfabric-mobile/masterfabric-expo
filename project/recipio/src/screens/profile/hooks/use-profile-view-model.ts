@@ -5,6 +5,8 @@ import { useI18n } from '@/shared/i18n';
 import { getSupabaseClient } from '@/shared/services/supabase-service';
 import { syncSessionToStore } from '@/shared/services/profile-service';
 import { storage } from '@/shared/utils/storage';
+import { fetchNotificationsList } from '@/screens/notifications/utils/fetch-notifications';
+import { useNotificationsStore } from '@/screens/notifications/store/notifications-store';
 import { useProfileStore } from '../store/profile-store';
 
 export function useProfileViewModel() {
@@ -32,6 +34,21 @@ export function useProfileViewModel() {
       await syncSessionToStore(setSignedIn, setStats, setSettings);
     })().finally(() => setLoading(false));
   }, [setSignedIn, setStats, setSettings, setLoading]);
+
+  useEffect(() => {
+    if (useNotificationsStore.getState().items.length > 0) return;
+    let cancelled = false;
+    (async () => {
+      const list = await fetchNotificationsList();
+      if (cancelled) return;
+      if (useNotificationsStore.getState().items.length === 0) {
+        useNotificationsStore.getState().setItems(list);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSignInPress = useCallback(() => {
     router.push('/auth');
@@ -85,6 +102,10 @@ export function useProfileViewModel() {
     router.push('/help-support');
   }, [router]);
 
+  const unreadNotificationCount = useNotificationsStore((s) =>
+    s.items.reduce((n, i) => n + (i.read ? 0 : 1), 0)
+  );
+
   return {
     isLoading: useProfileStore((s) => s.isLoading),
     isSignedIn,
@@ -92,6 +113,7 @@ export function useProfileViewModel() {
     stats,
     settings,
     locale,
+    unreadNotificationCount,
     handleSignInPress,
     handleSignOutPress,
     handleNotificationsPress,

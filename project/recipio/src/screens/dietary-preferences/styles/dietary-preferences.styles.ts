@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
+import { STACK_HEADER_ROW } from '@/shared/constants/stack-screen-header';
 
 export function createDietaryPreferencesStyles(colors: RecipioColorsPalette) {
   return StyleSheet.create({
@@ -19,8 +20,9 @@ export function createDietaryPreferencesStyles(colors: RecipioColorsPalette) {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingVertical: 16,
-      paddingHorizontal: 4,
+      paddingTop: STACK_HEADER_ROW.paddingTop,
+      paddingBottom: STACK_HEADER_ROW.paddingBottom,
+      paddingHorizontal: STACK_HEADER_ROW.paddingHorizontal,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },

@@ -17,38 +17,51 @@ const TYPE_ICON: Record<NotificationItemType['type'], keyof typeof Ionicons.glyp
 interface NotificationItemProps {
   item: NotificationItemType;
   onPress: (item: NotificationItemType) => void;
+  onRemove: (id: string) => void;
   styles: NotificationsStyles;
   colors: RecipioColorsPalette;
 }
 
-export function NotificationItem({ item, onPress, styles, colors }: NotificationItemProps) {
+export function NotificationItem({ item, onPress, onRemove, styles, colors }: NotificationItemProps) {
   const { t } = useI18n();
   const { key: timeKey, count } = getRelativeTimeKey(item.createdAt);
   const timeLabel = count != null ? t(timeKey, { count }) : t(timeKey);
   const icon = TYPE_ICON[item.type];
 
   return (
-    <TouchableOpacity
-      style={[styles.card, !item.read && styles.cardUnread]}
-      onPress={() => onPress(item)}
-      activeOpacity={0.7}
-    >
-      <View style={styles.iconWrap}>
-        <Ionicons
-          name={icon}
-          size={22}
-          color={item.read ? colors.textSecondary : colors.primaryAccent}
-        />
-      </View>
-      <View style={styles.cardBody}>
-        <Text style={styles.cardTitle} numberOfLines={1}>
-          {item.title}
-        </Text>
-        <Text style={styles.cardText} numberOfLines={2}>
-          {item.body}
-        </Text>
-        <Text style={styles.cardTime}>{timeLabel}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={[styles.card, !item.read && styles.cardUnread]}>
+      <TouchableOpacity
+        style={styles.cardPressable}
+        onPress={() => onPress(item)}
+        activeOpacity={0.7}
+      >
+        <View style={styles.iconWrap}>
+          <Ionicons
+            name={icon}
+            size={22}
+            color={item.read ? colors.textSecondary : colors.primaryAccent}
+          />
+        </View>
+        <View style={styles.cardBody}>
+          <Text style={styles.cardTitle} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={styles.cardText} numberOfLines={2}>
+            {item.body}
+          </Text>
+          <Text style={styles.cardTime}>{timeLabel}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.cardDelete}
+        onPress={() => onRemove(item.id)}
+        activeOpacity={0.7}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        accessibilityRole="button"
+        accessibilityLabel={t('notifications.deleteOne')}
+      >
+        <Ionicons name="trash-outline" size={22} color={colors.error} />
+      </TouchableOpacity>
+    </View>
   );
 }

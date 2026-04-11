@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/shared/i18n';
 import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useRecipeSearchViewModel } from '../hooks/use-recipe-search-view-model';
@@ -35,7 +36,7 @@ export function RecipeSearchScreen() {
   const { t } = useI18n();
 
   return (
-    <View style={recipeSearchStyles.container}>
+    <SafeAreaView style={recipeSearchStyles.container} edges={['top', 'left', 'right']}>
       <View style={recipeSearchStyles.header}>
         <TouchableOpacity
           style={recipeSearchStyles.backBtn}
@@ -157,6 +158,6 @@ export function RecipeSearchScreen() {
           )}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 }

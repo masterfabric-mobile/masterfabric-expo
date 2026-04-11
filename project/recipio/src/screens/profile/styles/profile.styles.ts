@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
+import { STACK_HEADER_ROW } from '@/shared/constants/stack-screen-header';
 
 export function createProfileStyles(colors: RecipioColorsPalette) {
   return StyleSheet.create({
@@ -17,9 +18,9 @@ export function createProfileStyles(colors: RecipioColorsPalette) {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 16,
-    paddingBottom: 20,
-    paddingHorizontal: 16,
+    paddingTop: STACK_HEADER_ROW.paddingTop,
+    paddingBottom: STACK_HEADER_ROW.paddingBottom,
+    paddingHorizontal: STACK_HEADER_ROW.paddingHorizontal,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
@@ -37,6 +38,20 @@ export function createProfileStyles(colors: RecipioColorsPalette) {
   },
   headerButton: {
     padding: 8,
+  },
+  headerNotificationWrap: {
+    position: 'relative',
+  },
+  notificationUnreadDot: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.primaryAccent,
+    borderWidth: 2,
+    borderColor: colors.background,
   },
   // User info section
   userSection: {

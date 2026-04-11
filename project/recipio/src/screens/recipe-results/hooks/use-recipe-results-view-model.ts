@@ -42,6 +42,8 @@ export function useRecipeResultsViewModel() {
 
   const ingredientList = parseIngredientsParam(params.ingredients);
   const categorySlug = typeof params.category === 'string' ? params.category.trim() : '';
+  /** Match % and pantry status only when results come from ingredient search (not category or default list) */
+  const showIngredientMatch = ingredientList.length > 0 && !categorySlug;
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,6 +105,7 @@ export function useRecipeResultsViewModel() {
     loading,
     ingredientList,
     categorySlug,
+    showIngredientMatch,
     title,
     sortType,
     setSortType,

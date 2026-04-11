@@ -67,10 +67,9 @@ export function SettingsSection({
               {t('profile.settings.language')}
             </Text>
           </View>
-          <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
+          <Text style={profileStyles.settingsRowValue}>
             {locale === 'tr' ? t('profile.settings.languageValueTr') : t('profile.settings.languageValue')}
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -86,10 +85,9 @@ export function SettingsSection({
               {t('profile.settings.theme')}
             </Text>
           </View>
-          <Text style={[profileStyles.settingsRowLabel, { marginRight: 4 }]}>
+          <Text style={profileStyles.settingsRowValue}>
             {settings.theme === 'dark' ? t('profile.settings.themeValue') : t('profile.settings.themeLight')}
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity

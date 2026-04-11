@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "recipio",
+    "icon": "./src/assets/app_icon.png",
     "splash": {
       "backgroundColor": "#ffffff"
     },
@@ -15,7 +16,11 @@
       "bundleIdentifier": "com.masterfabric.recipio"
     },
     "android": {
-      "package": "com.masterfabric.recipio"
+      "package": "com.masterfabric.recipio",
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/app_icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
     },
     "extra": {
       "supabaseUrl": "https://dxgskeazfmclhnfybloh.supabase.co",

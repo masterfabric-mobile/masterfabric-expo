@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/shared/i18n';
 import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { useHelpSupportViewModel } from '../hooks/use-help-support-view-model';
@@ -27,7 +28,7 @@ export function HelpSupportScreen() {
   const { handleBack, openEmail } = useHelpSupportViewModel();
 
   return (
-    <View style={helpSupportStyles.container}>
+    <SafeAreaView style={helpSupportStyles.container} edges={['top', 'bottom', 'left', 'right']}>
       <View style={helpSupportStyles.header}>
         <View style={helpSupportStyles.headerSide}>
           <TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={12}>
@@ -99,6 +100,6 @@ export function HelpSupportScreen() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

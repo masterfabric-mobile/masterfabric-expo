@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useI18n } from '@/shared/i18n';
 import { useRecipioColors } from '@/shared/hooks/use-recipio-colors';
 import { RECIPE_CATEGORIES } from '@/shared/services/recipe-service';
@@ -20,6 +21,7 @@ export function RecipeResultsScreen() {
     loading,
     ingredientList,
     categorySlug,
+    showIngredientMatch,
     handleBack,
     handleRecipePress,
   } = useRecipeResultsViewModel();
@@ -29,22 +31,23 @@ export function RecipeResultsScreen() {
 
   if (loading) {
     return (
-      <View
+      <SafeAreaView
         style={[
           recipeResultsStyles.container,
           { justifyContent: 'center', alignItems: 'center' },
         ]}
+        edges={['top', 'left', 'right']}
       >
         <ActivityIndicator
           size="large"
           color={colors.primaryAccent}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={recipeResultsStyles.container}>
+    <SafeAreaView style={recipeResultsStyles.container} edges={['top', 'left', 'right']}>
       <View style={recipeResultsStyles.header}>
         <TouchableOpacity
           style={recipeResultsStyles.backBtn}
@@ -92,10 +95,11 @@ export function RecipeResultsScreen() {
             recipe={item}
             styles={recipeResultsStyles}
             colors={colors}
+            showIngredientMatch={showIngredientMatch}
             onPress={() => handleRecipePress(item.id)}
           />
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }

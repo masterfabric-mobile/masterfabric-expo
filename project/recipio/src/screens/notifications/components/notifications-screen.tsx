@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useI18n } from '@/shared/i18n';
@@ -26,14 +27,15 @@ export function NotificationsScreen() {
     items,
     isLoading,
     unreadCount,
-    refetch,
     handleNotificationPress,
     handleMarkAllRead,
+    handleRemoveItem,
+    handleClearAll,
   } = useNotificationsViewModel();
 
   if (isLoading && items.length === 0) {
     return (
-      <View style={notificationsStyles.container}>
+      <SafeAreaView style={notificationsStyles.container} edges={['top', 'left', 'right']}>
         <View style={notificationsStyles.header}>
           <View style={notificationsStyles.headerLeft}>
             <TouchableOpacity
@@ -43,7 +45,7 @@ export function NotificationsScreen() {
             >
               <Ionicons name="chevron-back" size={24} color={colors.text} />
             </TouchableOpacity>
-            <Text style={notificationsStyles.headerTitle}>
+            <Text style={notificationsStyles.headerTitle} numberOfLines={1}>
               {t('notifications.title')}
             </Text>
           </View>
@@ -51,13 +53,13 @@ export function NotificationsScreen() {
         <View style={notificationsStyles.loadingWrap}>
           <ActivityIndicator size="large" color={colors.primaryAccent} />
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   if (items.length === 0) {
     return (
-      <View style={notificationsStyles.container}>
+      <SafeAreaView style={notificationsStyles.container} edges={['top', 'left', 'right']}>
         <View style={notificationsStyles.header}>
           <View style={notificationsStyles.headerLeft}>
             <TouchableOpacity
@@ -67,7 +69,7 @@ export function NotificationsScreen() {
             >
               <Ionicons name="chevron-back" size={24} color={colors.text} />
             </TouchableOpacity>
-            <Text style={notificationsStyles.headerTitle}>
+            <Text style={notificationsStyles.headerTitle} numberOfLines={1}>
               {t('notifications.title')}
             </Text>
           </View>
@@ -81,12 +83,12 @@ export function NotificationsScreen() {
             {t('notifications.emptySubtext')}
           </Text>
         </View>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={notificationsStyles.container}>
+    <SafeAreaView style={notificationsStyles.container} edges={['top', 'left', 'right']}>
       <View style={notificationsStyles.header}>
         <View style={notificationsStyles.headerLeft}>
           <TouchableOpacity
@@ -96,21 +98,32 @@ export function NotificationsScreen() {
           >
             <Ionicons name="chevron-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={notificationsStyles.headerTitle}>
+          <Text style={notificationsStyles.headerTitle} numberOfLines={1}>
             {t('notifications.title')}
           </Text>
         </View>
-        {unreadCount > 0 && (
+        <View style={notificationsStyles.headerRight}>
+          {unreadCount > 0 ? (
+            <TouchableOpacity
+              style={notificationsStyles.markAllRead}
+              onPress={handleMarkAllRead}
+              activeOpacity={0.7}
+            >
+              <Text style={notificationsStyles.markAllReadText}>
+                {t('notifications.markAllRead')}
+              </Text>
+            </TouchableOpacity>
+          ) : null}
           <TouchableOpacity
-            style={notificationsStyles.markAllRead}
-            onPress={handleMarkAllRead}
+            style={notificationsStyles.clearAll}
+            onPress={handleClearAll}
             activeOpacity={0.7}
           >
-            <Text style={notificationsStyles.markAllReadText}>
-              {t('notifications.markAllRead')}
+            <Text style={notificationsStyles.clearAllText}>
+              {t('notifications.clearAll')}
             </Text>
           </TouchableOpacity>
-        )}
+        </View>
       </View>
       <FlatList
         data={items}
@@ -120,11 +133,12 @@ export function NotificationsScreen() {
           <NotificationItem
             item={item}
             onPress={handleNotificationPress}
+            onRemove={handleRemoveItem}
             styles={notificationsStyles}
             colors={colors}
           />
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }

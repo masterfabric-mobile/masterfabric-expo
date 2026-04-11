@@ -1,5 +1,6 @@
 import { Platform, StyleSheet } from 'react-native';
 import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
+import { STACK_HEADER_ROW } from '@/shared/constants/stack-screen-header';
 
 export function createEnterIngredientsStyles(colors: RecipioColorsPalette) {
   return StyleSheet.create({
@@ -11,9 +12,9 @@ export function createEnterIngredientsStyles(colors: RecipioColorsPalette) {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingHorizontal: 20,
-      paddingTop: Platform.OS === 'web' ? 12 : 44,
-      paddingBottom: 12,
+      paddingHorizontal: STACK_HEADER_ROW.paddingHorizontal,
+      paddingTop: Platform.OS === 'web' ? 12 : STACK_HEADER_ROW.paddingTop,
+      paddingBottom: STACK_HEADER_ROW.paddingBottom,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
