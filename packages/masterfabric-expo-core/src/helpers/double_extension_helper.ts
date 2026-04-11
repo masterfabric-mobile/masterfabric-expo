@@ -435,7 +435,7 @@ export function round(value: number, decimals: number): number {
  * truncate(19.999, 2)  // 19.99
  * truncate(-1.239, 2)  // -1.23
  */
-export function truncate(value: number, decimals: number): number {
+function truncate(value: number, decimals: number): number {
   if (!isValidNumber(value)) return value;
   const d = clampDecimals(decimals);
   const mult = Math.pow(10, d);
@@ -576,7 +576,7 @@ export function toCurrencyStrict(value: unknown, options?: CurrencyOptions): str
  * formatCurrency(19.999)        // "$20.00"
  * formatCurrency(100, 'EUR', 'de-DE') // "100,00 €"
  */
-export function formatCurrency(
+function formatCurrency(
   value: number,
   currency: string = 'USD',
   locale?: string
