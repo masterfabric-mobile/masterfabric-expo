@@ -1,0 +1,12 @@
+diff --git a/node_modules/expo-dev-launcher/ios/EXDevLauncherController.m b/node_modules/expo-dev-launcher/ios/EXDevLauncherController.m
+index a99d209..a75e045 100644
+--- a/node_modules/expo-dev-launcher/ios/EXDevLauncherController.m
++++ b/node_modules/expo-dev-launcher/ios/EXDevLauncherController.m
+@@ -620,7 +620,6 @@ -(void)copyToClipboard:(NSString *)content {
+ - (void)setDevMenuAppBridge
+ {
+   DevMenuManager *manager = [DevMenuManager shared];
+-  [manager updateCurrentBridge:self.appBridge];
+ 
+   if (self.manifest != nil) {
+     [manager updateCurrentManifest:self.manifest manifestURL:self.manifestURL];

@@ -66,9 +66,6 @@ export * from './url_launcher_helper';
 // Battery Helper
 export * from './batteryHelper';
 
-// App Icon Helper
-export * from './app_icon_helper';
-
 // Video Player & Haptic Helper
 export * from './videoPlayerHapticHelper';
 

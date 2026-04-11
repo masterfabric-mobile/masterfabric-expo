@@ -8,7 +8,7 @@
  * ## Strategy / Dependencies
  * - **Expo modules (preferred):** expo-camera (camera; fallback expo-image-picker), expo-location (location),
  *   expo-media-library / expo-image-picker (photo library), expo-notifications (notifications),
- *   expo-contacts (contacts), expo-calendar (calendar, iOS), expo-av (microphone, iOS),
+ *   expo-contacts (contacts), expo-calendar (calendar, iOS), optional expo-av (microphone, iOS),
  *   expo-local-authentication (biometrics).
  * - **Android:** PermissionsAndroid for camera, storage, location, notifications, contacts, calendar, phone, sms, bluetooth.
  * - **Expo not covering:** reminders, speechRecognition, tracking → optional **react-native-permissions** fallback
@@ -22,7 +22,7 @@
  * | location            | expo-location | PermissionsAndroid | Foreground first, then background |
  * | locationBackground  | expo-location | PermissionsAndroid (API 29+) | Request foreground before background |
  * | notifications      | expo-notifications | POST_NOTIFICATIONS (API 33+) | |
- * | microphone          | expo-av | PermissionsAndroid | |
+ * | microphone          | expo-av (optional) | PermissionsAndroid | |
  * | calendar            | expo-calendar (iOS) | PermissionsAndroid | |
  * | contacts            | expo-contacts | PermissionsAndroid | |
  * | phone               | —   | Android only | READ_PHONE_STATE |

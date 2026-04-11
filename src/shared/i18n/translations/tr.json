@@ -450,10 +450,6 @@
 
     "title": "OneSignal Yardımcıları",
 
-    "appIconHelper": {
-      "title": "Uygulama İkonu Yardımcısı",
-      "description": "iOS cihazlarında uygulama ikonunu dinamik olarak değiştirin"
-    },
     "permissionsHelper": {
       "title": "İzinler Yardımcısı",
       "description": "İzin iste ve durumunu kontrol et",

@@ -80,7 +80,6 @@ export const navigationConfig = {
         'battery-helper': '/battery-helper',
         'validator-helper': '/validator-helper',
         'url-launcher-helper': '/url-launcher-helper',
-        'app-icon-helper': '/app-icon-helper',
         documentation: '/documentation',
         '(tabs)': {
           screens: {

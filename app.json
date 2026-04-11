@@ -75,12 +75,6 @@
         }
       ],
       [
-        "expo-av",
-        {
-          "microphonePermission": "Uygulamanın ses kaydı için mikrofon erişimine ihtiyacı var."
-        }
-      ],
-      [
         "expo-calendar",
         {
           "calendarPermission": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var."

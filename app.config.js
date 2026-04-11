@@ -35,7 +35,15 @@ const plugins = [
   '@react-native-firebase/app',
   '@react-native-firebase/messaging',
   'expo-video',
-  ['expo-build-properties', { ios: { useFrameworks: 'static' } }],
+  [
+    'expo-build-properties',
+    {
+      ios: {
+        useFrameworks: 'static',
+        buildReactNativeFromSource: true,
+      },
+    },
+  ],
   ...(appJson.expo.plugins || []),
 ];
 
