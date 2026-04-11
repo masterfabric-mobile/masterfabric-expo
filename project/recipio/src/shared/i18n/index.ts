@@ -4,3 +4,4 @@
  */
 
 export const t = (key: string): string => key;
+export { I18nProvider, useI18n } from './context';

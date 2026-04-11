@@ -1,4 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+
+const cardShadow = Platform.select({
+  web: { boxShadow: '0px 2px 8px rgba(0,0,0,0.05)' },
+  default: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+});
 
 export const hapticHelperViewStyles = StyleSheet.create({
   container: {
@@ -24,11 +35,7 @@ export const hapticHelperViewStyles = StyleSheet.create({
     borderWidth: 1.5,
     alignItems: 'center',
     gap: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
   iconContainer: {
     width: 64,
@@ -53,11 +60,7 @@ export const hapticHelperViewStyles = StyleSheet.create({
     padding: 20,
     borderWidth: 1.5,
     gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
   cardTitle: {
     fontSize: 16,
@@ -131,11 +134,7 @@ export const hapticHelperViewStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
     position: 'relative',
   },
   hapticPreviewContainer: {
@@ -179,11 +178,7 @@ export const hapticHelperViewStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...cardShadow,
   },
   testAllButtonText: {
     fontSize: 16,

@@ -1,59 +1,63 @@
 import { StyleSheet } from 'react-native';
-import { RecipioColors } from '../../../shared/constants/recipio-colors';
+import type { RecipioColorsPalette } from '@/shared/constants/recipio-colors';
 
-export const splashScreenStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: RecipioColors.splash.background,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 56,
-    backgroundColor: 'transparent',
-    width: '100%',
-  },
-  logoBadge: {
-    width: 96,
-    height: 96,
-    borderRadius: 28,
-    backgroundColor: RecipioColors.primaryAccent,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
-  },
-  title: {
-    fontSize: 40,
-    fontWeight: '800',
-    color: RecipioColors.splash.title,
-    letterSpacing: 1,
-    marginTop: 24,
-    marginBottom: 24,
-    paddingHorizontal: 48,
-    paddingVertical: 8,
-    textAlign: 'center',
-    alignSelf: 'stretch',
-  },
-  subtitle: {
-    fontSize: 15,
-    color: RecipioColors.splash.subtitle,
-    textAlign: 'center',
-    lineHeight: 22,
-    maxWidth: 260,
-  },
-  loaderContainer: {
-    alignItems: 'center',
-    paddingBottom: 40,
-  },
-  loaderSpinner: {
-    marginBottom: 14,
-  },
-  loaderText: {
-    fontSize: 12,
-    color: RecipioColors.splash.subtitle,
-    letterSpacing: 2,
-  },
-});
+const ICON_WRAPPER_SIZE = 120;
+const ICON_SIZE = 72;
+
+export function createSplashScreenStyles(colors: RecipioColorsPalette) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 40,
+    },
+    iconWrapper: {
+      width: ICON_WRAPPER_SIZE,
+      height: ICON_WRAPPER_SIZE,
+      borderRadius: 28,
+      backgroundColor: colors.cardBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 32,
+    },
+    icon: {
+      color: colors.text,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginBottom: 8,
+    },
+    slogan: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: colors.textSecondary,
+      letterSpacing: 2,
+      marginBottom: 48,
+    },
+    loaderSection: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 56,
+      alignItems: 'center',
+    },
+    loader: {
+      marginBottom: 12,
+    },
+    loadingLabel: {
+      fontSize: 11,
+      fontWeight: '600',
+      color: colors.textSecondary,
+      letterSpacing: 1.5,
+    },
+  });
+}
+
+export const splashIconSize = ICON_SIZE;

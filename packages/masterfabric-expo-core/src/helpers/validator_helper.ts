@@ -3,7 +3,7 @@
  * Comprehensive validation system for form inputs and user data
  */
 
-import { isEmail, isUrl } from './string_helper';
+import { isUrl } from './string_helper';
 
 // Import validator helper's email validation if available
 // This allows validator helper to use its own email validation
@@ -289,9 +289,12 @@ class ValidatorHelper {
    */
   private validateEmail(value: string): string | null {
     if (!value) return ErrorMessages.nonEmpty;
-    // Use validator helper's email validation if available, otherwise use default
-    const emailValidator = validatorHelperIsValidEmail || isEmail;
-    if (!emailValidator(value)) {
+    // Use custom override if set, otherwise use RegexPatterns.email (reliable for common addresses like user@gmail.com)
+    const isValid =
+      validatorHelperIsValidEmail
+        ? validatorHelperIsValidEmail(value)
+        : RegexPatterns.email.test(value);
+    if (!isValid) {
       return ErrorMessages.email;
     }
     return null;

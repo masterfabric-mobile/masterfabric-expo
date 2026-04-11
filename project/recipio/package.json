@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.89.0",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.3",
+    "expo-linear-gradient": "~15.0.8",
     "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.12",
     "expo-status-bar": "~3.0.9",
@@ -29,7 +30,8 @@
   },
   "overrides": {
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "minimatch": "^10.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

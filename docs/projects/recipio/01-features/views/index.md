@@ -15,6 +15,7 @@ List of all screen views in the Recipio app.
 9. **[Favorites View](./07-favorites-view.md)** — Favorite recipes screen
 10. **[History View](./08-history-view.md)** — Recipe history screen
 11. **[Profile View](./09-profile-view.md)** — User profile screen
+12. **[Dietary Preferences View](./10-dietary-preferences-view.md)** — Diet types and allergies (Profile → Account Settings)
 
 ## Navigation Flow
 
@@ -28,4 +29,6 @@ Splash → Onboarding → Home
   Enter Ingredients   Recipe Search      Recipe Detail
         ↓                 ↓
   Recipe Results      Recipe Detail
+
+Profile → Account Settings → Dietary Preferences
 ```

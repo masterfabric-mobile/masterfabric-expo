@@ -6,6 +6,10 @@ const workspaceRoot = path.resolve(projectRoot, '../..');
 
 const config = getDefaultConfig(projectRoot);
 
+// Avoid "Cannot use 'import.meta' outside a module" on web: use legacy resolution
+// instead of package.json "exports" (which can pull in ESM-only builds).
+config.resolver.unstable_enablePackageExports = false;
+
 config.watchFolders = [workspaceRoot];
 config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
