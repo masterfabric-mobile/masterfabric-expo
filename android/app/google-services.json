@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:740103328934:android:b66827811633c742db5067",
+        "mobilesdk_app_id": "1:740103328934:android:506aa37b9191f34cdb5067",
         "android_client_info": {
-          "package_name": "com.masterfabric.expo.android"
+          "package_name": "com.masterfabric.expo.android.app"
         }
       },
       "oauth_client": [],

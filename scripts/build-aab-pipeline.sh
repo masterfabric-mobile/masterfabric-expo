@@ -80,13 +80,13 @@ command_exists() {
 extract_app_info() {
     if [ -f "app.json" ]; then
         APP_NAME=$(node -e "console.log(require('./app.json').expo.name)" 2>/dev/null || echo "MasterFabric")
-        PACKAGE_NAME=$(node -e "console.log(require('./app.json').expo.android.package)" 2>/dev/null || echo "com.masterfabric.expo.android")
+        PACKAGE_NAME=$(node -e "console.log(require('./app.json').expo.android.package)" 2>/dev/null || echo "com.masterfabric.expo.android.app")
         APP_VERSION=$(node -e "console.log(require('./app.json').expo.version)" 2>/dev/null || echo "1.0.0")
         VERSION_CODE=$(node -e "console.log(require('./app.json').expo.android.versionCode)" 2>/dev/null || echo "1")
     else
         # Fallback values
         APP_NAME="MasterFabric"
-        PACKAGE_NAME="com.masterfabric.expo.android"
+        PACKAGE_NAME="com.masterfabric.expo.android.app"
         APP_VERSION="1.0.0"
         VERSION_CODE="1"
     fi

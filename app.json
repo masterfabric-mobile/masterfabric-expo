@@ -18,7 +18,7 @@
       "supportsTablet": true,
       "icon": "./src/assets/images/app_icon_square.png",
       "bundleIdentifier": "com.masterfabric.expo.ios",
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "NSCalendarsUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
         "NSCalendarsFullAccessUsageDescription": "Uygulamanın etkinlikleri planlamak için takvim erişimine ihtiyacı var.",
@@ -44,8 +44,8 @@
         "foregroundImage": "./src/assets/images/app_icon_square.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.masterfabric.expo.android",
-      "versionCode": 3,
+      "package": "com.masterfabric.expo.android.app",
+      "versionCode": 4,
       "googleServicesFile": "./google-services.json"
     },
     "web": {

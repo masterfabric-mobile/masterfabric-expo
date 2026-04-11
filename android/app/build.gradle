@@ -81,15 +81,24 @@ def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBu
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+// Release signing: android/expo-app.properties (storeFile path is relative to android/)
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file("expo-app.properties")
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+def releaseKeystoreFile = keystoreProperties['storeFile'] ? rootProject.file(keystoreProperties['storeFile']) : null
+def useReleaseSigning = releaseKeystoreFile != null && releaseKeystoreFile.exists()
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.masterfabric.expo.android'
+    namespace 'com.masterfabric.expo.android.app'
     defaultConfig {
-        applicationId 'com.masterfabric.expo.android'
+        applicationId 'com.masterfabric.expo.android.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 18
@@ -104,15 +113,22 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (useReleaseSigning) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storePassword keystoreProperties['storePassword']
+                storeFile releaseKeystoreFile
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // android/expo-app.properties + app/<name>.jks (paths relative to android/)
+            signingConfig useReleaseSigning ? signingConfigs.release : signingConfigs.debug
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds

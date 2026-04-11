@@ -1,4 +1,4 @@
-package com.masterfabric.expo.android
+package com.masterfabric.expo.android.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

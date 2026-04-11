@@ -14,3 +14,9 @@ local.properties
 
 # Bundle artifacts
 *.jsbundle
+
+# Keystores (paths referenced from expo-app.properties)
+*.jks
+
+# Release signing secrets (store/key passwords, alias)
+expo-app.properties
