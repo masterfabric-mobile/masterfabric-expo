@@ -208,6 +208,10 @@ export interface ScreenHeaderProps {
   onBackPress?: () => void;
   showBackButton?: boolean;
   showStageBadge?: boolean;
+  /** Optional style to make the title larger/more prominent on specific screens. */
+  titleStyle?: { fontSize?: number; fontWeight?: string };
+  /** Optional style for subtitle (e.g. larger size, less faint). */
+  subtitleStyle?: { fontSize?: number; opacity?: number };
 }
 
 // Quick Action Types

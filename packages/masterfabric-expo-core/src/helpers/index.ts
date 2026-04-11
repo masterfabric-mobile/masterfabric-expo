@@ -5,10 +5,20 @@ export * from './connectivity';
 export * from './platform';
 
 // Permission Helpers (types, config, handler + RNP fallback exports)
-export * from './permissions/types';
+export * from './permissions/android-config';
 export * from './permissions/constants';
 export * from './permissions/ios-config';
-export * from './permissions/android-config';
+// Seçici type export: NotificationPermissionOptions ve StatusCallback burada yeniden export edilmiyor
+export type {
+  PermissionStatus,
+  PermissionType,
+  PermissionOptions,
+  StoragePermissionOptions,
+  MediaLibraryOptions,
+  IOSInfoPlistEntry,
+  AndroidManifestEntry,
+  PermissionDescriptions,
+} from './permissions/types';
 export * from './permissions_handler_helper';
 
 // Accessibility Helpers
@@ -17,7 +27,7 @@ export * from './accessibility';
 // String Helpers
 export * from './string_helper';
 
-// Logger Helper    
+// Logger Helper
 export * from './logger_helper';
 
 // Snackbar Helper
@@ -59,8 +69,8 @@ export * from './batteryHelper';
 // Video Player & Haptic Helper
 export * from './videoPlayerHapticHelper';
 
-// Double Extension Helper — import as: import { doubleExtensionHelper } from '...'
-export * as doubleExtensionHelper from './double_extension_helper';
+// Double Extension Helper
+export * from './double_extension_helper';
 
 // Web Viewer Helper
 export * from './web_viewer_helper';
@@ -70,4 +80,7 @@ export * from './local_notification_helper';
 
 // OneSignal Helper (remote push)
 export * from './onesignal';
+
+// File Download Helper
+export * from './file_download_helper';
 
