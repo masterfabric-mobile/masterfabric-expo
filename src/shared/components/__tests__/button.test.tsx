@@ -1,5 +1,15 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
+
+jest.mock('masterfabric-expo-core', () => ({
+  getThemeColors: () => ({ text: '#11181C' }),
+  useTheme: () => ({
+    isDark: false,
+    currentTheme: 'light',
+    setTheme: jest.fn(),
+  }),
+}));
+
 import { Button } from '../button';
 
 describe('Button Component', () => {
